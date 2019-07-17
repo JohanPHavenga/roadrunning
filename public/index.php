@@ -36,6 +36,17 @@
  * @filesource
  */
 
+
+/*
+ *---------------------------------------------------------------
+ * MY GLABAL SETTINGS
+ *---------------------------------------------------------------
+ */ 
+ $ini_array = parse_ini_file("server_config.ini",TRUE);
+ 
+ define("DB_LOCATION", $ini_array['database']['db_location']);
+ define("BASE_PATH", $ini_array['enviroment']['base_path']);
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -53,7 +64,7 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : $ini_array['enviroment']['server']);
 
 /*
  *---------------------------------------------------------------
@@ -97,7 +108,7 @@ switch (ENVIRONMENT)
  * This variable must contain the name of your "system" directory.
  * Set the path if it is not in the same directory as this file.
  */
-	$system_path = 'system';
+	$system_path = 'syscore';
 
 /*
  *---------------------------------------------------------------
@@ -114,7 +125,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$application_folder = 'application';
+	$application_folder = 'app';
 
 /*
  *---------------------------------------------------------------
@@ -129,7 +140,7 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$view_folder = '';
+	$view_folder = 'app/views';
 
 
 /*
@@ -178,7 +189,7 @@ switch (ENVIRONMENT)
  */
 	// $assign_to_config['name_of_config_item'] = 'value of config item';
 
-
+date_default_timezone_set('Africa/Johannesburg');
 
 // --------------------------------------------------------------------
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE

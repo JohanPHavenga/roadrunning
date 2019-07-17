@@ -70,27 +70,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
-$active_group = 'default';
+$active_group = DB_LOCATION;
 $query_builder = TRUE;
 
-$db['default'] = array(
+$db['local'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => '',
-	'password' => '',
-	'database' => '',
+	'username' => 'rr_local',
+	'password' => 't1D!89F7TEiX',
+	'database' => 'roadrjsx_coyote',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
-	'db_debug' => (ENVIRONMENT !== 'production'),
+	'db_debug' => TRUE,
 	'cache_on' => FALSE,
 	'cachedir' => '',
 	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
+	'dbcollat' => 'utf8_unicode_ci',
 	'swap_pre' => '',
 	'encrypt' => FALSE,
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE
+	'save_queries' => FALSE
+);
+
+$db['server'] = array(
+	'dsn'	=> '',
+        'hostname' => 'localhost',
+	'username' => 'roadrjsx_coyote',
+	'password' => 'gSX$Esn-z3;$',
+	'database' => 'roadrjsx_coyote',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => FALSE,
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_unicode_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => FALSE
 );
