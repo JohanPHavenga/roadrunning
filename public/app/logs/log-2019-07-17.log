@@ -1,0 +1,9 @@
+ERROR - 2019-07-17 13:27:25 --> Severity: Notice --> Undefined variable: header_url C:\localhost\coyote\public\app\controllers\Main.php 8
+ERROR - 2019-07-17 13:51:08 --> Severity: Notice --> Undefined variable: lat C:\localhost\coyote\public\app\views\main\home.php 8
+ERROR - 2019-07-17 13:51:08 --> Severity: Notice --> Undefined variable: long C:\localhost\coyote\public\app\views\main\home.php 8
+ERROR - 2019-07-17 13:57:21 --> Severity: Notice --> Undefined variable: long C:\localhost\coyote\public\app\controllers\Main.php 9
+ERROR - 2019-07-17 13:57:24 --> Severity: Notice --> Undefined variable: long C:\localhost\coyote\public\app\controllers\Main.php 9
+ERROR - 2019-07-17 13:57:26 --> Severity: Notice --> Undefined variable: long C:\localhost\coyote\public\app\controllers\Main.php 9
+ERROR - 2019-07-17 13:57:29 --> Severity: Notice --> Undefined variable: long C:\localhost\coyote\public\app\controllers\Main.php 9
+ERROR - 2019-07-17 14:46:17 --> Severity: Notice --> Undefined variable: user_logged_in C:\localhost\coyote\public\app\views\templates\header.php 16
+ERROR - 2019-07-17 14:47:22 --> Severity: error --> Exception: Call to undefined function curl() C:\localhost\coyote\public\app\controllers\Main.php 8
