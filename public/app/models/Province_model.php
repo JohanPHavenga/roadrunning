@@ -4,7 +4,6 @@ class Province_model extends MY_model {
 
     public function __construct() {
         parent::__construct();
-        $this->load->database();
     }
 
     public function get_province_list($id = FALSE) {

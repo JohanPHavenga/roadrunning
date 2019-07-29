@@ -4,62 +4,58 @@ class Login extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->helper('form');
-        $this->load->library('form_validation');
     }
 
-    public function logout() {
-        $this->session->sess_destroy();
-        redirect("/");
-    }
-    
-    public function login() {
-        $this->session->set_userdata("user_logged_in", true);
-        redirect("/");
+    public function logout($confirm=false) {
+        if ($confirm != "confirm") {
+            $this->session->sess_destroy();
+            redirect("/logout/confirm");
+        } else {
+            $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view('login/logout', $this->data_to_views);
+            $this->load->view($this->footer_url, $this->data_to_views);
+        }
     }
 
-    
-    
-    
-    
-    
-    
+
     public function userlogin() {
-        $this->data_to_header['title'] = "User Login";
-        $this->data_to_header['meta_robots'] = "noindex, nofollow";
-        $this->data_to_view['form_url'] = '/login/userlogin/submit';
-        $this->data_to_view['error_url'] = '/login';
-        $this->data_to_view['success_url'] = '/';
+        $this->load->model('user_model');
+        $this->load->model('role_model');
+        $this->data_to_views['page_title'] = "User Login";
+        $this->data_to_views['form_url'] = '/login/userlogin/submit';
+        $this->data_to_views['error_url'] = '/login/userlogin';
+        $this->data_to_views['success_url'] = '/';
 
-        // set validation rules
-        $this->form_validation->set_rules('user_username', 'Username', 'required');
-        $this->form_validation->set_rules('user_password', 'Password', 'required');
+        // validation rules
+        $this->form_validation->set_rules('user_username', 'Username', 'required', ["required" => "Enter your username to log in"]);
+        $this->form_validation->set_rules('user_password', 'Password', 'required', ["required" => "Please enter your password"]);
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
-            $this->load->view($this->header_url, $this->data_to_header);
-            $this->load->view('login/userlogin', $this->data_to_view);
-            $this->load->view($this->footer_url, $this->data_to_footer);
+            $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view('login/userlogin', $this->data_to_views);
+            $this->load->view($this->footer_url, $this->data_to_views);
         } else {
 
             $check_login = $this->user_model->check_login();
 
             if ($check_login) {
-                $this->session->set_userdata("user_logged_in", true);
                 $this->session->set_userdata("user", $check_login);
+                $_SESSION['user']['logged_in'] = true;
+                $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($check_login['user_id']);
                 $this->session->set_flashdata([
                     'alert' => "Login successfull",
                     'status' => "success",
                 ]);
 
-                redirect($this->data_to_view['success_url']);
+                redirect($this->data_to_views['success_url']);
             } else {
                 $this->session->set_flashdata([
                     'alert' => "Login Failed",
                     'status' => "danger",
                 ]);
 
-                redirect($this->data_to_view['error_url']);
+                redirect($this->data_to_views['error_url']);
             }
 
             die("Login failure");

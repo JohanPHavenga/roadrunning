@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
-$active_group = DB_LOCATION;
+$active_group = DB_MAIN;
 $query_builder = TRUE;
 
 $db['local'] = array(
@@ -94,6 +94,29 @@ $db['local'] = array(
 	'failover' => array(),
 	'save_queries' => FALSE
 );
+
+$db['local_log'] = array(
+	'dsn'	=> '',
+	'hostname' => 'localhost',
+	'username' => 'rr_local',
+	'password' => 't1D!89F7TEiX',
+	'database' => 'roadrjsx_coyote_log',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => TRUE,
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_unicode_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => FALSE
+);
+
 
 $db['server'] = array(
 	'dsn'	=> '',

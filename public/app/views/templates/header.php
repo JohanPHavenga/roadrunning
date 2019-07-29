@@ -1,22 +1,31 @@
+<?php
+    if (!isset($page_title)) { $page_title="Coyote 2.0"; }
+?>
+
+
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Coyote</title>
+        <title><?=$page_title;?></title>
     </head>
     <body>
         <p>
-            <a href="/">home</a> |
+            <a href="/">home</a> |            
+            <a href="/about">about</a> |
+            <a href="/mailer/test">mail</a> |
             <?php
-            if ($user_logged_in) {
+            if (isset($_SESSION['user']['logged_in'])) {
                 echo "<a href='/login/logout'>log out</a>";
             } else {
-                echo "<a href='/login/login'>log in</a>";
+                echo "<a href='/login/userlogin'>log in</a>";
             }
             ?>
         </p>
+        <?php 
+         if ($this->session->flashdata()) {
+            echo "<h4>FLASH DATA</h4>";
+             wts($this->session->flashdata()); 
+         }
+         ?>

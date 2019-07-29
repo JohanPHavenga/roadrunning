@@ -8,47 +8,62 @@ class MY_Controller extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        // load global models
-        $this->load->model('province_model');
-        // check login
-        $this->data_to_views['user_logged_in'] = false;
-        if ($this->session->has_userdata('user_logged_in')) {
-            $this->data_to_views['user_logged_in'] = true;
-        }
-
-        $this->data_to_views['province_dropdown'] = $this->province_model->get_province_dropdown_data();
+        // doen checks en set session vars
+        $this->data_to_views['user'] = $this->check_login();
+        $this->data_to_views['province_dropdown'] = $this->check_province_dropdown();
+        // make ini file content available 
+        $this->ini_array = parse_ini_file("server_config.ini", true);
     }
 
-    function CallAPI($method, $url, $data = false) {
-        $curl = curl_init();
-
-        switch ($method) {
-            case "POST":
-                curl_setopt($curl, CURLOPT_POST, 1);
-
-                if ($data)
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                break;
-            case "PUT":
-                curl_setopt($curl, CURLOPT_PUT, 1);
-                break;
-            default:
-                if ($data)
-                    $url = sprintf("%s?%s", $url, http_build_query($data));
+    // ==============================================================================================
+    // SESSION CHECKS
+    // ==============================================================================================
+    function check_login() {
+        // check of user ingelog is. set view variable to user
+        if (isset($_SESSION['user']['logged_in'])) {
+            return $_SESSION['user'];
+        } else {
+            $user['user']['logged_in'] = false;
+            return $user;
         }
+    }
 
-        // Optional Authentication:
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, "username:password");
-
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-        $result = curl_exec($curl);
-
-        curl_close($curl);
-
-        return $result;
+    function check_province_dropdown() {
+        // check of province dropdown in session is
+        if (!$this->session->has_userdata('province_dropdown')) {
+            $this->load->model('province_model');
+            $this->session->set_userdata("province_dropdown", $this->province_model->get_province_dropdown_data());
+        }
+        return $this->session->province_dropdown;
+    }
+    
+    
+    // ==============================================================================================
+    // CENTRAL MAIL FUNCTIONS
+    // ==============================================================================================
+    public function set_email($data) {
+        // THIS FUNCTION ONLY TAKES EMAIL FIELDS AND ADD THEM TO THE EMAIL QUE TABLE
+        // load emailque_model
+        $this->load->model('emailque_model');
+        $required_fields=['to','subject','body'];
+        if (array_keys_exists($required_fields,$data)) {
+            if (isset($data['from'])) { $from=$data['from']; } else { $from=$this->ini_array['email']['from_address']; }
+            if (isset($data['from_name'])) { $from_name=$data['from_name']; } else { $from_name=$this->ini_array['email']['from_name']; }
+            $emailque_data = array(
+                    'emailque_subject' => $data['subject'],
+                    'emailque_to_address' => $data['to'],
+                    'emailque_to_name' => $data['to_name'],
+                    'emailque_body' => $data['body'],
+                    'emailque_status' => 5,
+                    'emailque_from_address' => $from,
+                    'emailque_from_name' => $from_name,
+                    'emailque_bcc_address' => $this->ini_array['email']['bcc_address'],
+                );
+            return $this->emailque_model->set_emailque("add", false, $emailque_data);
+        
+        } else {
+            die("Missing required fields to send email: MY_Controller->send_mail");
+        }
     }
 
 }

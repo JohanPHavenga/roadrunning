@@ -44,7 +44,7 @@
  */ 
  $ini_array = parse_ini_file("server_config.ini",TRUE);
  
- define("DB_LOCATION", $ini_array['database']['db_location']);
+ define("DB_MAIN", $ini_array['database']['db_main']);
  define("BASE_PATH", $ini_array['enviroment']['base_path']);
 
 /*

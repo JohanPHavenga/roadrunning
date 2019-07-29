@@ -57,3 +57,7 @@ $route['seo/sitemap\.xml'] = "seo/sitemap";
 $route['seo'] = 'seo/sitemap';
 
 $route['404'] = 'main/custom_404';
+$route['login'] = 'login/userlogin';
+$route['logout'] = 'login/logout';
+$route['logout/confirm'] = 'login/logout/confirm';
+$route['about'] = 'main/about';
