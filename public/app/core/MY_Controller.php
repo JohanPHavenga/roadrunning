@@ -52,14 +52,19 @@ class MY_Controller extends CI_Controller {
             $emailque_data = array(
                     'emailque_subject' => $data['subject'],
                     'emailque_to_address' => $data['to'],
-                    'emailque_to_name' => $data['to_name'],
                     'emailque_body' => $data['body'],
                     'emailque_status' => 5,
                     'emailque_from_address' => $from,
                     'emailque_from_name' => $from_name,
                     'emailque_bcc_address' => $this->ini_array['email']['bcc_address'],
                 );
-            return $this->emailque_model->set_emailque("add", false, $emailque_data);
+            if ($data['to_name']) { $emailque_data['emailque_to_name']=$data['to_name']; }
+            $params=[
+                "action"=>"add",
+                "data"=>$emailque_data,
+                "id"=>false,
+            ];
+            return $this->emailque_model->set_emailque($params);
         
         } else {
             die("Missing required fields to send email: MY_Controller->send_mail");

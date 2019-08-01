@@ -27,7 +27,7 @@ class Login extends MY_Controller {
         $this->data_to_views['success_url'] = '/';
 
         // validation rules
-        $this->form_validation->set_rules('user_username', 'Username', 'required', ["required" => "Enter your username to log in"]);
+        $this->form_validation->set_rules('user_email', 'Email', 'required', ["required" => "Enter your email address to log in"]);
         $this->form_validation->set_rules('user_password', 'Password', 'required', ["required" => "Please enter your password"]);
 
         // load correct view
@@ -37,7 +37,7 @@ class Login extends MY_Controller {
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
 
-            $check_login = $this->user_model->check_login();
+            $check_login = $this->user_model->check_login($this->input->post('user_email'),$this->input->post('user_password'));
 
             if ($check_login) {
                 $this->session->set_userdata("user", $check_login);

@@ -6,14 +6,6 @@ class User_model extends MY_model {
         parent::__construct();
     }
 
-    private function hash_pass($password) {
-        if ($password) {
-            return sha1($password . "37");
-        } else {
-            return NULL;
-        }
-    }
-
     public function record_count() {
         return $this->db->count_all("users");
     }
@@ -89,79 +81,41 @@ class User_model extends MY_model {
         }
     }
 
-    public function set_user($action, $user_id, $user_data = [], $debug = FALSE) {
-        $role_arr = [];
+    public function set_user($params) {
+        // $action, $user_data=[], $role_arr=[], $user_id=0, $debug=FALSE
 
-        if (empty($user_data)) {
-            // kry data van post af
-            foreach ($this->input->post() as $field => $value) {
-                if ($field == "user_password") {
-                    $user_data[$field] = hash_pass($value);
-                } else {
-                    $user_data[$field] = $value;
-                }
-            }
-//            $user_data = array(
-//                'user_name' => $this->input->post('user_name'),
-//                'user_surname' => $this->input->post('user_surname'),
-//                'user_email' => $this->input->post('user_email'),
-//                'user_contact' => $this->input->post('user_contact'),
-//                'user_username' => $this->input->post('user_username'),
-//                'user_password' => $this->hash_pass($this->input->post('user_password')),
-//                'club_id' => $this->input->post('club_id'),
-//            );
-            $role_arr = $this->input->post('role_id');
-        } else {
-            // way to pass that the user role
-            if ($user_data['role_arr']) {
-                $role_arr = $user_data['role_arr'];
-                unset($user_data['role_arr']);
-            }
-            if (isset($user_data['user_password'])) {
-                $user_data['user_password'] = $this->hash_pass($user_data['user_password']);
-            }
-        }
-
+        $user_data = $params['user_data'];
         $user_data['updated_date'] = date("Y-m-d H:i:s");
-        switch ($action) {
+        switch ($params['action']) {
             case "add":
                 $this->db->trans_start();
                 $this->db->insert('users', $user_data);
                 // get event ID from Insert
                 $user_id = $this->db->insert_id();
-
-                // update data array
-                if (empty($role_arr)) {
-                    $role_arr = [3];
-                } // set role_arr to 'contact' for new users
-                foreach ($role_arr as $role_id) {
+                // insert role
+                foreach ($params['role_arr'] as $role_id) {
                     $this->db->insert('user_role', ["user_id" => $user_id, "role_id" => $role_id]);
                 }
-
                 $this->db->trans_complete();
                 break;
 
             case "edit":
-                // add updated date to both data arrays
-                $user_data['updated_date'] = date("Y-m-d H:i:s");
+                // get ID for ease of use
+                $user_id = $user_data['user_id'];
                 //check of password wat gepost is alreeds gehash is
-                if ($this->check_password($this->input->post('user_password'), $user_id)) {
+                if ($this->check_password($user_data['user_password'], $user_id)) {
                     unset($user_data['user_password']);
                 }
 
                 // start SQL transaction
                 $this->db->trans_start();
                 $this->db->update('users', $user_data, array('user_id' => $user_id));
-
-                if ($role_arr) {
-                    // delete uit user_role
-                    $this->db->where('user_id', $user_id);
-                    $this->db->delete('user_role');
-
-                    // add nuwe entries
-                    foreach ($role_arr as $role_id) {
-                        $this->db->insert('user_role', ["user_id" => $user_id, "role_id" => $role_id]);
-                    }
+                // delete uit user_role
+                $this->db->where('user_id', $user_id);
+                $this->db->delete('user_role');
+                // add nuwe entries
+                foreach ($params['role_arr'] as $role_id) {
+                    $this->db->insert('user_role', ["user_id" => $user_id, "role_id" => $role_id]);
                 }
 
                 $this->db->trans_complete();
@@ -191,11 +145,12 @@ class User_model extends MY_model {
         }
     }
 
-    public function check_login() {
+    public function check_login($email, $password) {
         $user_data = array(
-            'user_username' => $this->input->post('user_username'),
-            'user_password' => $this->hash_pass($this->input->post('user_password')),
+            'user_email' => $email,
+            'user_password' => $this->hash_pass($password),
         );
+
 
         $this->db->select("*");
         $this->db->from("users");

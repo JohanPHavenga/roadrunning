@@ -17,9 +17,9 @@
             <a href="/mailer/test">mail</a> |
             <?php
             if (isset($_SESSION['user']['logged_in'])) {
-                echo "<a href='/login/logout'>log out</a>";
+                echo "<a href='/logout'>log out</a>";
             } else {
-                echo "<a href='/login/userlogin'>log in</a>";
+                echo "<a href='/login/'>log in</a>";
             }
             ?>
         </p>

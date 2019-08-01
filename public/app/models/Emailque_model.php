@@ -77,7 +77,9 @@ class Emailque_model extends MY_model {
         return $this->db->update('emailques', $data, array('emailque_id' => $emailque_id));
     }
 
-    public function set_emailque($action, $emailque_id, $data) {
+    public function set_emailque($params) {
+        $action=$params['action'];
+        $data=$params['data'];
         $data['updated_date'] = date("Y-m-d H:i:s");
         switch ($action) {
             case "add":
@@ -88,6 +90,7 @@ class Emailque_model extends MY_model {
                 $this->db->trans_complete();
                 break;
             case "edit":
+                $emailque_id=$params['id'];
                 $this->db->trans_start();
                 $data['updated_date'] = date("Y-m-d H:i:s");
                 $this->db->update('emailques', $data, array('emailque_id' => $emailque_id));
