@@ -379,7 +379,7 @@ $config['encryption_key'] = 'uXLeu4TT4cX4zTodeET8Xn4g9sKZgMya8slGnYjIrN3juJo3jXA
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'rr_coyote';
-$config['sess_expiration'] = 7200;
+$config['sess_expiration'] = 604800; // 7 days
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
@@ -400,11 +400,11 @@ $config['sess_regenerate_destroy'] = FALSE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
-$config['cookie_prefix']	= 'rr_';
+$config['cookie_prefix']	= 'rr_coyote_';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= TRUE;
-$config['cookie_httponly'] 	= FALSE;
+$config['cookie_httponly'] 	= TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -448,7 +448,7 @@ $config['global_xss_filtering'] = TRUE;
 | 'csrf_regenerate' = Regenerate token on every submission
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
-$config['csrf_protection'] = FALSE;
+$config['csrf_protection'] = TRUE;
 $config['csrf_token_name'] = 'csrf_token_rr_coyote';
 $config['csrf_cookie_name'] = 'csrf_cookie_rr_coyote';
 $config['csrf_expire'] = 7200;

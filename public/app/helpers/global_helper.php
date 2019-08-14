@@ -30,6 +30,14 @@ function encode_parkrun_name($parkrun_name) {
     return urlencode(str_replace(" ", "-", (str_replace("'", "", str_replace("/", " ", $parkrun_name)))));
 }
 
+function hash_pass($password) {
+    if ($password) {
+        return sha1($password . "37");
+    } else {
+        return NULL;
+    }
+}
+
 function my_encrypt($string) {
     if (is_int($string)) {
         return base64_encode($string + 7936181);
@@ -48,5 +56,5 @@ function my_decrypt($decrypt) {
 }
 
 function array_keys_exists(array $keys, array $arr) {
-   return !array_diff_key(array_flip($keys), $arr);
+    return !array_diff_key(array_flip($keys), $arr);
 }

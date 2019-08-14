@@ -8,7 +8,6 @@ class Main extends MY_Controller {
     }
     
     public function index() {
-
         $this->load->view($this->header_url,$this->data_to_views);    
         $this->load->view('main/home',$this->data_to_views);
         $this->load->view($this->footer_url);

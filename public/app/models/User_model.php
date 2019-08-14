@@ -145,14 +145,27 @@ class User_model extends MY_model {
         }
     }
 
-    public function check_login($email, $password) {
+    public function update_user_field($user_data, $user_id) {
+        $user_data['updated_date'] = date("Y-m-d H:i:s");
+        $this->db->trans_start();
+        $this->db->update('users', $user_data, ['user_id' => $user_id]);
+        $this->db->trans_complete();
+
+        // return ID if transaction successfull
+        if ($this->db->trans_status()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function check_credentials($email, $password) {
         $user_data = array(
             'user_email' => $email,
-            'user_password' => $this->hash_pass($password),
+            'user_password' => hash_pass($password),
         );
 
-
-        $this->db->select("*");
+        $this->db->select('user_id,user_name,user_surname,user_email,user_contact');
         $this->db->from("users");
         $this->db->where($user_data);
         $query = $this->db->get();
@@ -164,9 +177,37 @@ class User_model extends MY_model {
         return false;
     }
 
-    private function check_password($password, $id) {
-        $this->db->where('user_password', $password);
-        $this->db->where('user_id', $id);
+    public function check_user_is_confirmed($user_id) {
+        $this->db->select('user_id');
+        $this->db->from("users");
+        $this->db->where('user_id', $user_id);
+        $this->db->where('user_isconfirmed', true);
+        $query = $this->db->get();
+
+        // mag net een user kry
+        if ($query->num_rows() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public function check_user_guid($guid) {
+        $this->db->select('user_id');
+        $this->db->from("users");
+        $this->db->where('user_confirm_guid', $guid);
+        $this->db->where('user_guid_expire > ', date("Y-m-d H:i:s"));
+        $query = $this->db->get();
+
+        // mag net een user kry
+        if ($query->num_rows() == 1) {
+            $row = $query->row();
+            return $row->user_id;
+        }
+        return false;
+    }
+
+    public function check_email($email) {
+        $this->db->where('user_email', $email);
         $this->db->from('users');
         return $this->db->count_all_results();
     }
@@ -175,6 +216,13 @@ class User_model extends MY_model {
         $this->db->select("users.user_id, user_name, user_surname, user_username, club_id");
         $this->db->from("users");
         return $query = $this->db->get();
+    }
+
+    private function check_password($password, $id) {
+        $this->db->where('user_password', $password);
+        $this->db->where('user_id', $id);
+        $this->db->from('users');
+        return $this->db->count_all_results();
     }
 
 }

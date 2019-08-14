@@ -56,11 +56,9 @@ class Role_model extends MY_model {
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-//                $data[] = "Please Select";
             foreach ($query->result_array() as $row) {
                 $data[$row['role_id']] = $row['role_name'];
             }
-//                return array_slice($data, 0, 500, true);
             return $data;
         }
         return false;

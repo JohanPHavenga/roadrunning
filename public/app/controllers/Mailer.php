@@ -8,6 +8,12 @@ class Mailer extends MY_Controller {
         $this->load->model('emailque_model');
     }
 
+    public function index() {
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view('mailer/mailer', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
     public function process_que() {
         $mail_que = $this->fetch_mail_que($this->ini_array['emailque']['que_size']);
         if ($mail_que) {
@@ -25,7 +31,6 @@ class Mailer extends MY_Controller {
     }
 
     private function fetch_mail_que($top = 0) {
-
         $emailque = $this->emailque_model->get_emailque_list($top, 5);
         return $emailque;
     }
@@ -36,14 +41,12 @@ class Mailer extends MY_Controller {
         } else {
             $status_id = 7;
         }
-        $set = $this->emailque_model->set_emailque_status($id, $status_id);
+        $this->emailque_model->set_emailque_status($id, $status_id);
     }
 
     private function send_mail($data = "") {
         $this->load->library('email');
-
-//        wts($this->ini_array);
-
+        
         $config['mailtype'] = 'html';
         $config['smtp_host'] = $this->ini_array['email']['smtp_server'];
         $config['smtp_port'] = $this->ini_array['email']['smtp_port'];

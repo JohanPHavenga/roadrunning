@@ -63,3 +63,5 @@ $route['login'] = 'login/userlogin';
 $route['logout'] = 'login/logout';
 $route['logout/confirm'] = 'login/logout/confirm';
 $route['register'] = 'user/register';
+$route['forgot-password'] = 'user/forgot_password';
+$route['reset-password'] = 'user/reset_password';

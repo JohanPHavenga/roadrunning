@@ -36,5 +36,5 @@ echo "</div>";
 ?>
 <p>
     <a href="/register">Register</a> |
-    <a href="">Forgot Password</a>
+    <a href="/forgot-password">Forgot Password</a>
 </p>

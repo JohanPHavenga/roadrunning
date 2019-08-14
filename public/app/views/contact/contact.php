@@ -1,5 +1,5 @@
-<h2>REGISTER</h2>
-<p>Complete the form below to register as a user on the site</p>
+<h2>CONTACT US</h2>
+<p>Complete the form below to send an email to us</p>
 
 <?php
 echo "<blockquote>";
@@ -44,27 +44,16 @@ echo form_input([
 echo "</div>";
 
 echo "<div>";
-echo form_label('Password *', 'user_password');
-echo form_input([
-    'name' => 'user_password',
-    'id' => 'user_password',
-    'type' => 'password',
+echo form_label('Comment', 'user_comment');
+echo form_textarea([
+    'name' => 'user_comment',
+    'id' => 'user_comment',
     'required' => '',
 ]);
 echo "</div>";
 
 echo "<div>";
-echo form_label('Confirm Password *', 'user_password_conf');
-echo form_input([
-    'name' => 'user_password_conf',
-    'id' => 'user_password_conf',
-    'type' => 'password',
-    'required' => '',
-]);
-echo "</div>";
-
-echo "<div>";
-echo form_submit('', 'Register');
+echo form_submit('', 'Send');
 echo form_reset('', 'Clear');
 echo form_close();
 echo "</div>";

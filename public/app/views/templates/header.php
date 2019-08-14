@@ -14,9 +14,11 @@
         <p>
             <a href="/">home</a> |            
             <a href="/about">about</a> |
-            <a href="/mailer/test">mail</a> |
+            <a href="/contact">contact</a> |
+            <a href="/mailer">mailer</a> |
             <?php
             if (isset($_SESSION['user']['logged_in'])) {
+                echo "<a href='/user/profile'>".$this->session->user['user_name']."</a> | ";
                 echo "<a href='/logout'>log out</a>";
             } else {
                 echo "<a href='/login/'>log in</a>";
