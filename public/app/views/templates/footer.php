@@ -1,5 +1,8 @@
     
 <p>&nbsp;</p>
+<p>
+    <a href="/sitemap">sitemap</a> |            
+    <a href="/terms-conditions">terms & conditions</a>
 <hr>
 <h2>FOOTER INFO</h2>
 

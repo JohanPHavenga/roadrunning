@@ -24,5 +24,12 @@ class Main extends MY_Controller {
         $this->load->view('main/about',$this->data_to_views);
         $this->load->view($this->footer_url,$this->data_to_views);
     }
+    
+    public function terms_conditions() {
+        $this->data_to_views['companyName']="RoadRunningZA";
+        $this->load->view($this->header_url,$this->data_to_views);
+        $this->load->view('main/terms_conditions',$this->data_to_views);
+        $this->load->view($this->footer_url,$this->data_to_views);
+    }
 
 }
