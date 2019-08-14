@@ -9,6 +9,7 @@
     <head>
         <meta charset="UTF-8">
         <title><?=$page_title;?></title>
+        <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <p>
