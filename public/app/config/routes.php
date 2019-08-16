@@ -60,6 +60,8 @@ $route['404'] = 'main/custom_404';
 $route['about'] = 'main/about';
 $route['terms-conditions'] = 'main/terms_conditions';
 
+$route['race-calendar'] = 'calendar';
+
 $route['login'] = 'login/userlogin';
 $route['logout'] = 'login/logout';
 $route['logout/confirm'] = 'login/logout/confirm';

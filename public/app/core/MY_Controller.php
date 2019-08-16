@@ -139,4 +139,34 @@ class MY_Controller extends CI_Controller {
         }
     }
 
+    // ==============================================================================================
+    // SITEMAP
+    // ==============================================================================================
+
+    public function get_static_pages() {
+        return [
+            "home" => "",
+            "about" => "about",
+            "contact" => "contact",
+            "login" => "login",
+            "sitemap" => "sitemap",
+            "terms & conditions" => "terms-conditions",
+        ];
+    }
+
+    // ==============================================================================================
+    // CENTRAL FUNCTIONS
+    // ==============================================================================================
+
+    public function chronologise_data($data_arr, $date_field) {
+        foreach ($data_arr as $id => $row) {
+            $year = date("Y", strtotime($row[$date_field]));
+            $month = date("F", strtotime($row[$date_field]));
+            $day = date("d", strtotime($row[$date_field]));
+
+            $return_data[$year][$month][$day][$id] = $row;
+        }
+        return $return_data;
+    }
+
 }
