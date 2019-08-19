@@ -140,17 +140,47 @@ class MY_Controller extends CI_Controller {
     }
 
     // ==============================================================================================
-    // SITEMAP
+    // SITEMAP STAIC PAGES INFO
     // ==============================================================================================
 
     public function get_static_pages() {
         return [
-            "home" => "",
-            "about" => "about",
-            "contact" => "contact",
-            "login" => "login",
-            "sitemap" => "sitemap",
-            "terms & conditions" => "terms-conditions",
+            "home" => [
+                "loc"=>base_url(),
+                "lastmod"=>date("Y-m-d H:i:s"),
+                "priority"=>1,
+                "changefreq"=>"daily",
+                ],
+            "about" => [
+                "loc"=>base_url("about"),
+                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 month")),
+                "priority"=>1,
+                "changefreq"=>"monthly",
+                ],
+            "contact" => [
+                "loc"=>base_url("contact"),
+                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 year")),
+                "priority"=>1,
+                "changefreq"=>"yearly",
+                ],
+            "login" => [
+                "loc"=>base_url("login"),
+                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 year")),
+                "priority"=>1,
+                "changefreq"=>"yearly",
+                ],
+            "sitemap" => [
+                "loc"=>base_url("sitemap"),
+                "lastmod"=>date("Y-m-d H:i:s"),
+                "priority"=>0.5,
+                "changefreq"=>"daily",
+                ],
+            "terms" => [
+                "loc"=>base_url("terms-conditions"),
+                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 year")),
+                "priority"=>0.5,
+                "changefreq"=>"yearly",
+                ],
         ];
     }
 

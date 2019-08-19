@@ -47,7 +47,7 @@ class Edition_model extends MY_model {
     
     public function get_edition_list($query_params=[]) {
 
-        $this->db->select("edition_id, edition_name, edition_date, edition_slug, event_name");
+        $this->db->select("edition_id, edition_name, edition_date, edition_slug, event_name, editions.created_date, editions.updated_date");
         $this->db->from("editions");
         $this->db->join('events', 'event_id');
         foreach ($query_params as $operator=>$clause_arr) {

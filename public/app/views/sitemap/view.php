@@ -1,14 +1,14 @@
 <h2>Sitemap</h2>
 <ul>
 <?php
-    foreach ($static_pages as $pagename=>$url) {
-        echo "<li><a href='".base_url($url)."'>".ucwords($pagename)."</a></li>";
+    foreach ($static_pages as $pagename=>$page_detail) {
+        echo "<li><a href='".$page_detail['loc']."'>".ucwords($pagename)."</a></li>";
     }
 ?>
 </ul>
     
 <?php
-    foreach ($edition_list as $year => $year_list) {
+    foreach ($edition_arr as $year => $year_list) {
         echo "<h3>$year</h3>";
         foreach ($year_list as $month => $month_list) {
             echo "<h3>$month</h3>";
@@ -24,4 +24,4 @@
 
 <?php
 //wts($static_pages);
-//wts($edition_list);
+//wts($edition_arr);
