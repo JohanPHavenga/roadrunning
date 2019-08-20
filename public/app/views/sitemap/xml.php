@@ -12,6 +12,24 @@
     </url>
     <?php } ?>
     
+    <?php foreach($province_pages as $data) { ?>
+    <url>
+        <loc><?= $data['loc'] ?></loc>
+        <lastmod><?= $data['lastmod'] ?></lastmod>
+        <priority><?=$data['priority'];?></priority>
+        <changefreq><?=$data['changefreq'];?></changefreq>
+    </url>
+    <?php } ?>
+    
+    <?php foreach($region_pages as $data) { ?>
+    <url>
+        <loc><?= $data['loc'] ?></loc>
+        <lastmod><?= $data['lastmod'] ?></lastmod>
+        <priority><?=$data['priority'];?></priority>
+        <changefreq><?=$data['changefreq'];?></changefreq>
+    </url>
+    <?php } ?>
+    
     <?php foreach($edition_list_xml as $data) { ?>
     <url>
         <loc><?= $data['loc'] ?></loc>

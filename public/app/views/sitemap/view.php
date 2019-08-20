@@ -1,12 +1,25 @@
 <h2>Sitemap</h2>
 <ul>
 <?php
-    foreach ($static_pages as $pagename=>$page_detail) {
-        echo "<li><a href='".$page_detail['loc']."'>".ucwords($pagename)."</a></li>";
+    foreach ($static_pages as $page_detail) {
+        echo "<li><a href='".$page_detail['loc']."'>".ucwords($page_detail['display'])."</a></li>";
     }
 ?>
 </ul>
-    
+<ul>
+<?php
+    foreach ($province_pages as $province_id=>$province) {
+        echo "<li><a href='".$province['loc']."'>".ucwords($province['display'])."</a></li>";
+    }
+?>
+</ul>
+<ul>
+<?php
+    foreach ($region_pages as $region_id=>$region) {
+        echo "<li><a href='".$region['loc']."'>".ucwords($region['display'])."</a></li>";
+    }
+?>
+</ul>    
 <?php
     foreach ($edition_arr as $year => $year_list) {
         echo "<h3>$year</h3>";
@@ -24,4 +37,5 @@
 
 <?php
 //wts($static_pages);
+//wts($province_arr);
 //wts($edition_arr);

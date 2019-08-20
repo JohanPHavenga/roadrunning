@@ -6,14 +6,14 @@ class Sitemap extends MY_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('edition_model');
+        $this->load->model('province_model');
+        $this->load->model('region_model');
         // selle vir altwee functions
         $query_params = [
             "order_by" => ["edition_date" => "DESC"],
 //            "where" => ["edition_date > " => date("Y-m-d H:i:s")],
         ];
         $edition_list = $this->edition_model->get_edition_list($query_params);
-
-        $this->data_to_views['static_pages'] = $this->get_static_pages();
         $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
     }
 

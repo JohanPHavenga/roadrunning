@@ -13,7 +13,10 @@ class MY_Controller extends CI_Controller {
         // doen checks en set session vars
         $this->data_to_views['user'] = $this->check_if_user_is_logged_in();
         $this->data_to_views['history'] = $this->check_history();
-        //$this->data_to_views['province_dropdown'] = $this->check_province_dropdown();
+        $this->check_value_refresh();
+        $this->data_to_views['static_pages'] = $this->get_static_pages();
+        $this->data_to_views['province_pages'] = $this->check_province_session();
+        $this->data_to_views['region_pages'] = $this->check_region_session();
     }
 
     // ==============================================================================================
@@ -27,14 +30,29 @@ class MY_Controller extends CI_Controller {
             return $user['user']['logged_in'] = false;
         }
     }
+    
+    private function check_value_refresh() {
+        // check if data was last retrieved a day ago or more, then unsets data to be retrieved again
+        if ((!$this->session->has_userdata('session_value_refresh'))||($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
+            $this->session->unset_userdata("static_pages");
+            $this->session->unset_userdata("province_pages");
+            $this->session->unset_userdata("region_pages");
+            $this->session->set_userdata("session_value_refresh", time());
+        } 
+    }
 
-    private function check_province_dropdown() {
-        // check of province dropdown in session is
-        if (!$this->session->has_userdata('province_dropdown')) {
-            $this->load->model('province_model');
-            $this->session->set_userdata("province_dropdown", $this->province_model->get_province_dropdown_data());
+    private function check_province_session() {
+        if (!$this->session->has_userdata('province_pages')) {
+            $this->session->set_userdata("province_pages", $this->get_province_pages());
         }
-        return $this->session->province_dropdown;
+        return $this->session->province_pages;
+    }
+
+    private function check_region_session() {
+        if (!$this->session->has_userdata('region_pages')) {
+            $this->session->set_userdata("region_pages", $this->get_region_pages());
+        }
+        return $this->session->region_pages;
     }
 
     // ==============================================================================================
@@ -140,48 +158,90 @@ class MY_Controller extends CI_Controller {
     }
 
     // ==============================================================================================
-    // SITEMAP STAIC PAGES INFO
+    // SITEMAP / MENU INFO
     // ==============================================================================================
 
     public function get_static_pages() {
-        return [
+        $static_pages = [
             "home" => [
-                "loc"=>base_url(),
-                "lastmod"=>date("Y-m-d H:i:s"),
-                "priority"=>1,
-                "changefreq"=>"daily",
-                ],
+                "display" => "Home",
+                "loc" => base_url(),
+                "lastmod" => date("Y-m-d H:i:s"),
+                "priority" => 1,
+                "changefreq" => "daily",
+            ],
             "about" => [
-                "loc"=>base_url("about"),
-                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 month")),
-                "priority"=>1,
-                "changefreq"=>"monthly",
-                ],
+                "display" => "About",
+                "loc" => base_url("about"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                "priority" => 1,
+                "changefreq" => "monthly",
+            ],
             "contact" => [
-                "loc"=>base_url("contact"),
-                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 year")),
-                "priority"=>1,
-                "changefreq"=>"yearly",
-                ],
+                "display" => "Contact",
+                "loc" => base_url("contact"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "priority" => 1,
+                "changefreq" => "yearly",
+            ],
             "login" => [
-                "loc"=>base_url("login"),
-                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 year")),
-                "priority"=>1,
-                "changefreq"=>"yearly",
-                ],
+                "display" => "Login",
+                "loc" => base_url("login"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "priority" => 1,
+                "changefreq" => "yearly",
+            ],
             "sitemap" => [
-                "loc"=>base_url("sitemap"),
-                "lastmod"=>date("Y-m-d H:i:s"),
-                "priority"=>0.5,
-                "changefreq"=>"daily",
-                ],
+                "display" => "Sitemap",
+                "loc" => base_url("sitemap"),
+                "lastmod" => date("Y-m-d H:i:s"),
+                "priority" => 0.5,
+                "changefreq" => "daily",
+            ],
             "terms" => [
-                "loc"=>base_url("terms-conditions"),
-                "lastmod"=>date("Y-m-d H:i:s",strtotime("-1 year")),
-                "priority"=>0.5,
-                "changefreq"=>"yearly",
-                ],
+                "display" => "Terms & Conditions",
+                "loc" => base_url("terms-conditions"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "priority" => 0.5,
+                "changefreq" => "yearly",
+            ],
         ];
+
+        $this->session->set_userdata("static_pages", $static_pages);
+        return $static_pages;
+    }
+
+    public function get_province_pages() {
+        $this->load->model('event_model');
+        // get province list from event model to only return those provinces that is in use
+        $province_list = $this->event_model->get_province_list();
+        
+        foreach ($province_list as $province_id => $province) {
+            $p_arr[$province_id] = [
+                "display" => $province['province_name'],
+                "loc" => base_url("province/" . url_title($province['province_name'])),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
+                "priority" => 0.9,
+                "changefreq" => "daily",
+            ];
+        }
+        return $p_arr;
+    }
+
+    public function get_region_pages() {
+        $this->load->model('event_model');
+        $region_list = $this->event_model->get_region_list();
+        
+        foreach ($region_list as $region_id => $region) {
+            $r_arr[$region_id] = [
+                "display" => $region['region_name'],
+                "loc" => base_url("region/" . url_title($region['region_name'])),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
+                "priority" => 0.9,
+                "changefreq" => "daily",
+            ];
+        }
+        return $r_arr;
     }
 
     // ==============================================================================================
@@ -189,6 +249,7 @@ class MY_Controller extends CI_Controller {
     // ==============================================================================================
 
     public function chronologise_data($data_arr, $date_field) {
+        $return_data = [];
         foreach ($data_arr as $id => $row) {
             $year = date("Y", strtotime($row[$date_field]));
             $month = date("F", strtotime($row[$date_field]));
