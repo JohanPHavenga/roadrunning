@@ -36,7 +36,7 @@ class Edition_model extends MY_model {
         $this->db->select("edition_slug");
         $this->db->from("editions");
         $this->db->where("edition_id", $edition_id);
-        $editions_query = $this->db->get();
+        $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $result = $query->result_array();
             return $result[0]['edition_slug'];
@@ -47,9 +47,12 @@ class Edition_model extends MY_model {
     
     public function get_edition_list($query_params=[]) {
 
-        $this->db->select("edition_id, edition_name, edition_date, edition_slug, event_name, editions.created_date, editions.updated_date");
+        $this->db->select("edition_id, edition_name, edition_date, edition_slug, event_name, editions.created_date, editions.updated_date, regions.region_id, provinces.province_id");
         $this->db->from("editions");
         $this->db->join('events', 'event_id');
+        $this->db->join('towns', 'town_id');
+        $this->db->join('regions', 'region_id');
+        $this->db->join('provinces', 'regions.province_id=provinces.province_id');
         foreach ($query_params as $operator=>$clause_arr) {
             foreach ($clause_arr as $field=>$value) {
                 $this->db->$operator($field, $value);

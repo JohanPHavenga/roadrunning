@@ -1,5 +1,5 @@
-<h2>RACE CALENDAR</h2>
-<p>This is the race calendar page<p>
+<h2>RACE CALENDAR FOR <?= strtoupper($province_name);?></h2>
+<p>Races for this province<p>
     
 <?php
     foreach ($edition_arr as $year => $year_list) {
@@ -14,3 +14,4 @@
         }
     }
 ?>
+

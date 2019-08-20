@@ -104,5 +104,19 @@ class Region_model extends MY_model {
             return false;
         }
     }
+    
+    public function get_region_id_from_slug($slug) {
+        $this->db->select("region_id");
+        $this->db->from("regions");
+        $this->db->where("region_slug", $slug);
+        $region_query = $this->db->get();
+
+        if ($region_query->num_rows() > 0) {
+            $result = $region_query->result_array();
+            return $result[0]['region_id'];
+        } else {
+            return false;
+        }
+    }
 
 }

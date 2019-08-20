@@ -13,16 +13,21 @@
     </head>
     <body>
         <p>
-            <a href="/">home</a> |            
-            <a href="/about">about</a> |
-            <a href="/contact">contact</a> |
-            <a href="/mailer">mailer</a> |
+            <?php
+                unset($static_pages['login']);
+                unset($static_pages['terms']);
+                unset($static_pages['sitemap']);
+                foreach ($static_pages as $page) {
+                    echo "<a href='$page[loc]'>$page[display]</a> | ";
+                }
+            ?>
+            <a href="/mailer">Mailer</a> |
             <?php
             if (isset($_SESSION['user']['logged_in'])) {
                 echo "<a href='/user/profile'>".$this->session->user['user_name']."</a> | ";
-                echo "<a href='/logout'>log out</a>";
+                echo "<a href='/logout'>Log Out</a>";
             } else {
-                echo "<a href='/login/'>log in</a>";
+                echo "<a href='/login/'>Log In</a>";
             }
             ?>
         </p>

@@ -33,7 +33,6 @@
         }
     }
 ?>
-</ul>
 
 <?php
 //wts($static_pages);

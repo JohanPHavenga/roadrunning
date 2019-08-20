@@ -17,6 +17,9 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['static_pages'] = $this->get_static_pages();
         $this->data_to_views['province_pages'] = $this->check_province_session();
         $this->data_to_views['region_pages'] = $this->check_region_session();
+        
+        // version test        
+        $this->session->set_userdata("region_selection", [1,2,3,62]);
     }
 
     // ==============================================================================================
@@ -166,9 +169,23 @@ class MY_Controller extends CI_Controller {
             "home" => [
                 "display" => "Home",
                 "loc" => base_url(),
-                "lastmod" => date("Y-m-d H:i:s"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
+            ],
+            "calendar" => [
+                "display" => "Race Calendar",
+                "loc" => base_url("race-calendar"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 day")),
+                "priority" => 1,
+                "changefreq" => "daily",
+            ],
+            "past" => [
+                "display" => "Past Events",
+                "loc" => base_url("calendar/past"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 day")),
+                "priority" => 0.8,
+                "changefreq" => "weekly",
             ],
             "about" => [
                 "display" => "About",
@@ -219,7 +236,7 @@ class MY_Controller extends CI_Controller {
         foreach ($province_list as $province_id => $province) {
             $p_arr[$province_id] = [
                 "display" => $province['province_name'],
-                "loc" => base_url("province/" . url_title($province['province_name'])),
+                "loc" => base_url("province/" . $province['province_slug']),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
                 "priority" => 0.9,
                 "changefreq" => "daily",
@@ -235,7 +252,7 @@ class MY_Controller extends CI_Controller {
         foreach ($region_list as $region_id => $region) {
             $r_arr[$region_id] = [
                 "display" => $region['region_name'],
-                "loc" => base_url("region/" . url_title($region['region_name'])),
+                "loc" => base_url("region/" . $region['region_slug']),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
                 "priority" => 0.9,
                 "changefreq" => "daily",
@@ -259,5 +276,5 @@ class MY_Controller extends CI_Controller {
         }
         return $return_data;
     }
-
+    
 }

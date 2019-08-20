@@ -39,5 +39,19 @@ class Province_model extends MY_model {
         }
         return false;
     }
+    
+    public function get_province_id_from_slug($slug) {
+        $this->db->select("province_id");
+        $this->db->from("provinces");
+        $this->db->where("province_slug", $slug);
+        $province_query = $this->db->get();
+
+        if ($province_query->num_rows() > 0) {
+            $result = $province_query->result_array();
+            return $result[0]['province_id'];
+        } else {
+            return false;
+        }
+    }
 
 }
