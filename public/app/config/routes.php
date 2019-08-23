@@ -59,6 +59,7 @@ $route['seo'] = 'seo/sitemap';
 $route['404'] = 'main/custom_404';
 $route['about'] = 'main/about';
 $route['terms-conditions'] = 'main/terms_conditions';
+$route['version'] = 'main/site_version';
 
 $route['race-calendar'] = 'calendar';
 

@@ -8,8 +8,9 @@
     foreach ($static_pages as $key=>$page) {
         if (!in_array($key, $white_list)) { continue; }
         echo "<a href='$page[loc]'>$page[display]</a> | ";
-    }
+    }    
     ?>
+    <a href="<?=base_url("login/destroy");?>">Kill Session</a>
 </p>
 <hr>
 <h2>FOOTER INFO</h2>

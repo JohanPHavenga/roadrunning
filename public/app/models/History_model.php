@@ -87,4 +87,94 @@ class History_model extends MY_model {
         }
     }
 
+    public function get_most_visited_url_list($from_date = NULL) {
+        if (is_null($from_date)) {
+            $from_date = date("Y-m-d H:i:s", strtotime("-1 month"));
+        }
+        $this->db->select("count(history_url) AS url_count, history_url");
+        $this->db->from("history");
+        $this->db->like('history_url', '/event/');
+        $this->db->where('history_datevisited > ', $from_date);
+        $this->db->group_by("history_url");
+        $this->db->order_by("url_count", "DESC");
+
+//        die($this->db->get_compiled_select());
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function set_history_summary($edition_data, $url_count_data) {
+        $this->db->empty_table('historysum');
+        $this->db->trans_start();
+        $this->db->empty_table('historysum');
+        foreach ($edition_data as $edition_id => $edition) {
+            $historysum_data = [
+                "edition_id" => $edition_id,
+                "edition_name" => $edition['edition_name'],
+                "edition_url" => $url_count_data[$edition_id]['url'],
+                "edition_date" => $edition['edition_date'],
+                "historysum_countyear" => $url_count_data[$edition_id]['count'],
+                "region_id" => $edition['region_id'],
+                "province_id" => $edition['province_id'],
+            ];
+            $this->db->insert('historysum', $historysum_data);
+        }
+        $this->db->trans_complete();
+
+        // return ID if transaction successfull
+        if ($this->db->trans_status()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function update_history_counts($url_count_data,$field) {
+        $this->db->trans_start();
+        foreach ($url_count_data as $edition_id => $count) {
+            $history_data=[$field => $count];
+            $this->db->update('historysum', $history_data, ['edition_id' => $edition_id]);
+        }        
+        $this->db->trans_complete();
+
+        // return true if transaction successfull
+        if ($this->db->trans_status()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function get_history_summary($query_params=[]) {
+
+        $this->db->select("*");
+        $this->db->from("historysum");
+        foreach ($query_params as $operator=>$clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field=>$value) {
+                    $this->db->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
+        }
+//        die($this->db->get_compiled_select());
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
 }

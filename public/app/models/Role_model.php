@@ -40,14 +40,14 @@ class Role_model extends MY_model {
         }
         return false;
     }
-    
-    public function set_user_role($user_id,$role_id) {
+
+    public function set_user_role($user_id, $role_id) {
         $data = array(
             'user_id' => $user_id,
             'role_id' => $role_id,
         );
 
-         return $this->db->insert('user_role', $data);
+        return $this->db->insert('user_role', $data);
     }
 
     public function get_role_dropdown() {

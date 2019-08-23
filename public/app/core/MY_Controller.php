@@ -17,9 +17,6 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['static_pages'] = $this->get_static_pages();
         $this->data_to_views['province_pages'] = $this->check_province_session();
         $this->data_to_views['region_pages'] = $this->check_region_session();
-        
-        // version test        
-        $this->session->set_userdata("region_selection", [1,2,3,62]);
     }
 
     // ==============================================================================================
@@ -33,15 +30,15 @@ class MY_Controller extends CI_Controller {
             return $user['user']['logged_in'] = false;
         }
     }
-    
+
     private function check_value_refresh() {
         // check if data was last retrieved a day ago or more, then unsets data to be retrieved again
-        if ((!$this->session->has_userdata('session_value_refresh'))||($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
+        if ((!$this->session->has_userdata('session_value_refresh')) || ($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
             $this->session->unset_userdata("static_pages");
             $this->session->unset_userdata("province_pages");
             $this->session->unset_userdata("region_pages");
             $this->session->set_userdata("session_value_refresh", time());
-        } 
+        }
     }
 
     private function check_province_session() {
@@ -75,13 +72,12 @@ class MY_Controller extends CI_Controller {
         } else {
             $session_token = get_cookie('session_token');
         }
-
         // check if the url not already in session
         if (!in_array(current_url(), $_SESSION['history'])) {
             // set session variable
             $_SESSION['history'][time()] = current_url();
 
-            // chcek if segment 1 in uri not in exclusion list
+            // chcek if uri not in exclusion list
             if (!$this->segment_exclusion_list(uri_string())) {
                 // check if url has already been counted today for this session. If not add to DB
                 $this->load->model('history_model');
@@ -102,8 +98,9 @@ class MY_Controller extends CI_Controller {
         return $_SESSION['history'];
     }
 
-    private function segment_exclusion_list($segment_1) {
-        if (in_array($segment_1, $this->ini_array['history']['exclusion'])) {
+    private function segment_exclusion_list($uri_string) {
+        $seg=explode("/", $uri_string);
+        if ((in_array($uri_string, $this->ini_array['history']['exclusion'])) || (in_array($seg[0]."/*",$this->ini_array['history']['exclusion']))) {
             return true;
         } else {
             return false;
@@ -201,6 +198,13 @@ class MY_Controller extends CI_Controller {
                 "priority" => 1,
                 "changefreq" => "yearly",
             ],
+            "site_version" => [
+                "display" => "Site Version",
+                "loc" => base_url("version"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "priority" => 0.5,
+                "changefreq" => "yearly",
+            ],
             "login" => [
                 "display" => "Login",
                 "loc" => base_url("login"),
@@ -232,7 +236,7 @@ class MY_Controller extends CI_Controller {
         $this->load->model('event_model');
         // get province list from event model to only return those provinces that is in use
         $province_list = $this->event_model->get_province_list();
-        
+
         foreach ($province_list as $province_id => $province) {
             $p_arr[$province_id] = [
                 "display" => $province['province_name'],
@@ -248,7 +252,7 @@ class MY_Controller extends CI_Controller {
     public function get_region_pages() {
         $this->load->model('event_model');
         $region_list = $this->event_model->get_region_list();
-        
+
         foreach ($region_list as $region_id => $region) {
             $r_arr[$region_id] = [
                 "display" => $region['region_name'],
@@ -276,5 +280,5 @@ class MY_Controller extends CI_Controller {
         }
         return $return_data;
     }
-    
+
 }
