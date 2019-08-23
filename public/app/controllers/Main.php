@@ -16,9 +16,15 @@ class Main extends MY_Controller {
             "where_in" => ["region_id" => $this->session->region_selection,],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
             "order_by" => ["edition_date" => "ASC"],
-            "limit" => 10,
+//            "limit" => 10,
         ];
         $this->data_to_views['featured_events'] = $this->edition_model->get_edition_list($query_params);
+        $query_params = [
+            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
+        ];
+        
+        $this->data_to_views['featured_events_new'] = $this->edition_model->get_edition_list_incl_races($query_params);
 
         // last edited
         $query_params = [
