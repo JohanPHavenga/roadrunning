@@ -139,4 +139,27 @@ class Edition_model extends MY_model {
         return false;
     }
 
+    public function get_edition_detail($id) {
+        $this->db->select("*");
+        $this->db->from("editions");
+        $this->db->join('events', 'event_id');
+        $this->db->join('towns', 'town_id');
+        $this->db->join('regions', 'region_id');
+        $this->db->join('provinces', 'regions.province_id=provinces.province_id');
+        $this->db->join('organising_club', 'event_id', 'left');
+        $this->db->join('clubs', 'club_id', 'left');
+        $this->db->join('edition_user', 'edition_id', 'left');
+        $this->db->join('users', 'user_id', 'left');
+        $this->db->join('edition_asa_member', 'edition_id', 'left');
+        $this->db->join('asa_members', 'asa_member_id', 'left');
+        $this->db->where('edition_id', $id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        } else {
+            return false;
+        }
+    }
+
 }

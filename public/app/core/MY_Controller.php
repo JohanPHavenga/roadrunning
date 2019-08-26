@@ -18,7 +18,16 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['province_pages'] = $this->check_province_session();
         $this->data_to_views['region_pages'] = $this->check_region_session();
     }
-
+    
+    public function show_my_404($msg, $status) {
+        //Using 'location' not work well on some windows systems
+        $this->session->set_flashdata([
+            'alert' => $msg,
+            'status' => $status,
+        ]);
+        redirect('404');
+    }
+    
     // ==============================================================================================
     // SESSION CHECKS
     // ==============================================================================================  
