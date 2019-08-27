@@ -31,6 +31,7 @@ class Main extends MY_Controller {
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
             "order_by" => ["historysum_countmonth" => "DESC"],
+            "limit" => "10",
         ];
         $this->data_to_views['history_sum_month']=$this->history_model->get_history_summary($query_params);
         
