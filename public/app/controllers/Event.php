@@ -37,6 +37,7 @@ class Event extends MY_Controller {
         $this->data_to_views['file_list'] = $this->file_model->get_file_list("edition",$edition_data['edition_id'],true);
         $this->data_to_views['url_list'] = $this->url_model->get_url_list("edition",$edition_data['edition_id']);
         
+        $this->data_to_views['page_title']= substr($edition_data['edition_name'],0,-5)." - ". fdateHumanFull($this->data_to_views['edition_data']['edition_date'],true);
         $this->data_to_views['event_menu'] = $this->get_event_menu($slug);
 
         $this->load->view($this->header_url, $this->data_to_views);
