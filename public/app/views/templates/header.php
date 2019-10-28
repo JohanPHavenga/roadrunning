@@ -26,7 +26,7 @@ if (!isset($page_title)) {
             <a href="/mailer">Mailer</a> |
             <?php
             if ($this->session->user['logged_in']) {
-                echo "<a href='/user/profile'>" . $this->session->user['user_name'] . "</a> | ";
+                echo "<a href='/user/profile'>" . $logged_in_user['user_name'] . "</a> | ";
                 echo "<a href='/logout'>Log Out</a>";
             } else {
                 echo "<a href='/login/'>Log In</a>";

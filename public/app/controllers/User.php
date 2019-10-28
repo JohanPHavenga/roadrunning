@@ -6,6 +6,23 @@ class User extends MY_Controller {
         parent::__construct();
         $this->load->model('user_model');
     }
+    
+    
+    // VIEW PROFILE
+    public function profile() {
+        // load helpers / libraries
+        $this->load->library('table');
+        $this->load->model('usersubscription_model');
+        $this->data_to_view['title'] = "User Profile";
+
+        // GET user subsciptions
+        $this->data_to_views['user_subs']=$this->usersubscription_model->get_usersubscription_detail($this->logged_in_user['user_id']);
+        // load view
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view('user/profile', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+    
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {
@@ -235,16 +252,5 @@ class User extends MY_Controller {
         return $this->set_email($data);
     }
 
-    // VIEW PROFILE
-    public function profile() {
-        // load helpers / libraries
-        $this->load->library('table');
-        $this->data_to_view['title'] = "User Profile";
-
-        // load view
-        $this->load->view($this->header_url, $this->data_to_views);
-        $this->load->view('user/profile', $this->data_to_views);
-        $this->load->view($this->footer_url, $this->data_to_views);
-    }
 
 }

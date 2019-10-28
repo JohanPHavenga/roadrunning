@@ -5,13 +5,14 @@ class MY_Controller extends CI_Controller {
     public $data_to_views = [];
     public $header_url = "/templates/header";
     public $footer_url = "/templates/footer";
+    public $logged_in_user = [];
 
     function __construct() {
         parent::__construct();
         // make ini file content available 
         $this->ini_array = parse_ini_file("server_config.ini", true);
         // doen checks en set session vars
-        $this->data_to_views['user'] = $this->check_if_user_is_logged_in();
+        $this->data_to_views['logged_in_user'] = $this->logged_in_user = $this->check_if_user_is_logged_in();
         $this->data_to_views['history'] = $this->check_history();
         $this->check_value_refresh();
         $this->data_to_views['static_pages'] = $this->get_static_pages();

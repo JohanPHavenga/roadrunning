@@ -17,7 +17,7 @@
 
 <h4>User info</h4>
 <?php
-wts($user);
+wts($logged_in_user);
 ?>
 
 <h4>SESSION</h4>
