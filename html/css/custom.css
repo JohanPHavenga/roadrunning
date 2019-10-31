@@ -1,0 +1,118 @@
+div.reservation-form {
+    border: none;
+}
+
+.text-medium {
+    font-weight: 500;
+}
+
+.topbar-dropdown a.title,
+.topbar-dropdown i {
+    color: #fff;
+}
+
+
+.topbar-dropdown a.title:hover {
+    text-decoration: underline;
+}
+
+#mainMenu nav > ul > li > a {
+    font-size: 1em;
+    font-family: "Open Sans", Arial;
+}
+
+.form-group label,
+button, input, optgroup, select, textarea
+{
+    font-family: "Open Sans", Arial;    
+    font-style: normal;
+}
+
+.owl-carousel .owl-item .race-image img {
+    /*width: 355px;*/
+    height: 236px;
+    object-fit: cover;
+}
+
+/* Color fixes */
+.tabs .nav-tabs .nav-link.active {
+    color:  #26B8F3;
+    border-bottom: 2px solid #26B8F3;
+}
+
+.heading-text.heading-section > h2::before {
+    background-color: #26B8F3;
+}
+
+a:hover span {
+    color:  #26B8F3;
+}
+
+.btn:hover {
+    background-color: #F36126;
+    border-color: #F36126;
+}
+
+/* RACE LLISTING */
+.race {
+    margin-bottom: 100px;
+}
+.race-image {
+
+    border-radius: 4px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.race-image img {
+
+    border-radius: 4px;
+    width: 100%;
+    opacity: 1;
+    transition: all ease 0.3s;
+    cursor: pointer;
+}
+
+.race-image .race-title {
+    background: 
+        rgba(0, 0, 0, 0) linear-gradient(to bottom, transparent 0%,
+        rgba(0, 0, 0, 1) 100%) repeat scroll 0 0;
+    bottom: 0px;
+    color: #fff;
+    font-weight: 600;
+    padding: 20px 10px 10px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 18px;
+    border-radius: 0 0 4px 4px;
+    float: left;
+}
+
+.race-badge {
+    font-family: "Open Sans", Arial;
+    background: 
+        #e01a33 none repeat scroll 0 0;
+    border-radius: 50%;
+    color:
+        #fff;
+    font-size: 0.8333em;
+    font-weight: bold;
+    height: 52px;
+    line-height: 1.0833em;
+    margin: 0;
+    padding: 15px 0 0;
+    position: absolute;
+    right: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    top: 10px;
+    width: 52px;
+    z-index: 1;
+}
+
+.race-details > p {
+    border-bottom: 1px solid #f5f5f5;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+
+}
