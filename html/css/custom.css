@@ -6,19 +6,20 @@ div.reservation-form {
     font-weight: 500;
 }
 
-.topbar-dropdown a.title,
-.topbar-dropdown i {
-    color: #fff;
-}
-
-
-.topbar-dropdown a.title:hover {
-    text-decoration: underline;
-}
-
 #mainMenu nav > ul > li > a {
     font-size: 1em;
-    font-family: "Open Sans", Arial;
+    font-family: "Poppins", "Helvetica", "Arial", sans-serif;
+}
+#mainMenu nav > ul > li .dropdown-menu > li > a {
+    font-size: 1em;
+}
+
+.topbar-dropdown { 
+    font-family: "Poppins", "Helvetica", "Arial", sans-serif;
+}
+
+.header-extras a.btn {
+    margin: 0 5px;
 }
 
 .form-group label,
@@ -34,23 +35,57 @@ button, input, optgroup, select, textarea
     object-fit: cover;
 }
 
+#header .header-inner #logo a > img, 
+#header #header-wrap #logo a > img,
+#header .header-inner #search-logo img {
+    height: 80px;
+    width: 195px;
+}
+
 /* Color fixes */
+
+.heading-text.heading-section > h2::before,
+#search .btn-search-close
+{
+    background-color: #26B8F3;
+}
+.btn:hover {
+    background-color: #F36126;
+    border-color: #F36126;
+}
 .tabs .nav-tabs .nav-link.active {
     color:  #26B8F3;
     border-bottom: 2px solid #26B8F3;
 }
 
-.heading-text.heading-section > h2::before {
-    background-color: #26B8F3;
+.call-to-action.call-to-action-dark {
+    background-color: #181818;
 }
 
 a:hover span {
-    color:  #26B8F3;
+    color: #26B8F3;
+    text-decoration: underline;
 }
 
-.btn:hover {
-    background-color: #F36126;
-    border-color: #F36126;
+#mainMenu nav > ul > li .dropdown-menu > li > a:hover span {
+    color: #fff;
+    text-decoration: none;
+    background-color: #26B8F3;
+}
+
+#footer.inverted a:hover,
+.topbar-dropdown a:hover {
+    color: #26B8F3;
+    text-decoration: none;
+}
+
+
+/* PAGE TITLE */
+#page-title {
+    background-color:#232427;
+    background-image:linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5));
+    background-size: cover; 
+    background-position: center center;
 }
 
 /* RACE LLISTING */
@@ -115,4 +150,29 @@ a:hover span {
     margin-bottom: 12px;
     padding-bottom: 10px;
 
+}
+
+
+
+@media (min-width: 991px) { 
+    .topbar-transparent .topbar-dropdown a.title,
+    .topbar-transparent .topbar-dropdown i {
+        color: #fff;
+    }
+    .topbar-transparent .topbar-dropdown a.title:hover {
+        color: #26B8F3;
+    }
+
+    .topbar-transparent dark a {
+        color: #000;
+        font-weight: 800;    
+    }
+}
+@media (max-width: 991px) { 
+    #search #search-logo {
+        max-width: none;
+    }
+    #search .btn-search-close {
+        margin-top: 6px;
+    }
 }

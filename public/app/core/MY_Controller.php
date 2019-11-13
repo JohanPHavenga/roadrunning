@@ -19,7 +19,7 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['province_pages'] = $this->check_province_session();
         $this->data_to_views['region_pages'] = $this->check_region_session();
     }
-    
+
     public function show_my_404($msg, $status) {
         //Using 'location' not work well on some windows systems
         $this->session->set_flashdata([
@@ -28,7 +28,7 @@ class MY_Controller extends CI_Controller {
         ]);
         redirect('404');
     }
-    
+
     // ==============================================================================================
     // SESSION CHECKS
     // ==============================================================================================  
@@ -109,8 +109,8 @@ class MY_Controller extends CI_Controller {
     }
 
     private function segment_exclusion_list($uri_string) {
-        $seg=explode("/", $uri_string);
-        if ((in_array($uri_string, $this->ini_array['history']['exclusion'])) || (in_array($seg[0]."/*",$this->ini_array['history']['exclusion']))) {
+        $seg = explode("/", $uri_string);
+        if ((in_array($uri_string, $this->ini_array['history']['exclusion'])) || (in_array($seg[0] . "/*", $this->ini_array['history']['exclusion']))) {
             return true;
         } else {
             return false;
@@ -180,40 +180,147 @@ class MY_Controller extends CI_Controller {
                 "priority" => 1,
                 "changefreq" => "daily",
             ],
-            "calendar" => [
-                "display" => "Race Calendar",
-                "loc" => base_url("race-calendar"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 day")),
+            "races" => [
+                "display" => "Races",
+                "loc" => base_url("race/list"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
+                "sub-menu" => [
+                    "upcoming" => [
+                        "display" => "Upcoming Races",
+                        "loc" => base_url("race/upcoming"), //calendar
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "priority" => 1,
+                        "changefreq" => "daily",
+                        "badge" => "POPULAR",
+                    ],
+                    "per_region" => [
+                        "display" => "Per Region",
+                        "loc" => base_url("race/per-region"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "priority" => 1,
+                        "changefreq" => "daily",
+                    ],
+                    "featured" => [
+                        "display" => "Featured Races",
+                        "loc" => base_url("race/featured"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "priority" => 1,
+                        "changefreq" => "daily",
+                    ],
+                    "top10" => [
+                        "display" => "Top 10 most viewed",
+                        "loc" => base_url("race/top10-viewed"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "priority" => 1,
+                        "changefreq" => "daily",
+                    ],
+                    "history" => [
+                        "display" => "History",
+                        "loc" => base_url("race/history"), //calendar/past
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "daily",
+                    ],
+                    "add-listing" => [
+                        "display" => "Add Listing",
+                        "loc" => base_url("race/add"), //calendar/past
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                        "priority" => 0.8,
+                        "changefreq" => "daily",
+                    ],
+                ],
             ],
-            "past" => [
-                "display" => "Past Events",
-                "loc" => base_url("calendar/past"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 day")),
+            "results" => [
+                "display" => "Results",
+                "loc" => base_url("result/race-results"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                 "priority" => 0.8,
                 "changefreq" => "weekly",
+                "sub-menu" => [
+                    "upcoming" => [
+                        "display" => "Race Results",
+                        "loc" => base_url("races/race-results"), 
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "weekly",
+                    ],
+                    "my-results" => [
+                        "display" => "My Results",
+                        "loc" => base_url("result/my-results"), 
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "weekly",
+                        "badge" => "POPULAR",
+                    ],
+                ],
+            ],
+            "faq" => [
+                "display" => "FAQ",
+                "loc" => base_url("faq"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                "priority" => 0.5,
+                "changefreq" => "monthly",
             ],
             "about" => [
                 "display" => "About",
                 "loc" => base_url("about"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
-                "priority" => 1,
+                "priority" => 0.5,
                 "changefreq" => "monthly",
             ],
             "contact" => [
                 "display" => "Contact",
                 "loc" => base_url("contact"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
-                "priority" => 1,
+                "priority" => 0.8,
                 "changefreq" => "yearly",
             ],
-            "site_version" => [
-                "display" => "Site Version",
-                "loc" => base_url("version"),
+            "switch-region" => [
+                "display" => "Switch Region",
+                "loc" => base_url("region/switch"), //version
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
                 "priority" => 0.5,
                 "changefreq" => "yearly",
+            ],
+            "featured-regions" => [
+                "display" => "Show all regions",
+                "loc" => base_url("region"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                "priority" => 0.8,
+                "changefreq" => "monthly",
+                "sub-menu" => [
+                    "upcoming" => [
+                        "display" => "Cape Town",
+                        "loc" => base_url("region/capetown"), 
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "priority" => 1,
+                        "changefreq" => "weekly",
+                        "badge" => "POPULAR",
+                    ],
+                    "gauteng" => [
+                        "display" => "Gauteng",
+                        "loc" => base_url("region/gauteng"), 
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "weekly",
+                    ],
+                    "kzn-coast" => [
+                        "display" => "KZN Coast",
+                        "loc" => base_url("region/kzn-coast"), 
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "weekly",
+                    ],
+                    "garden-route" => [
+                        "display" => "Garden Route",
+                        "loc" => base_url("region/garnde-route"), 
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "weekly",
+                    ],
+                ],
             ],
             "login" => [
                 "display" => "Login",
@@ -233,7 +340,14 @@ class MY_Controller extends CI_Controller {
                 "display" => "Terms & Conditions",
                 "loc" => base_url("terms-conditions"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
-                "priority" => 0.5,
+                "priority" => 0.2,
+                "changefreq" => "yearly",
+            ],
+            "disclaimer" => [
+                "display" => "Disclaimer",
+                "loc" => base_url("disclaimer"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "priority" => 0.2,
                 "changefreq" => "yearly",
             ],
         ];

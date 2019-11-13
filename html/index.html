@@ -13,17 +13,21 @@
 
         <link href="css/color-variations/blue.css" rel="stylesheet" type="text/css" media="screen">
         <link href="css/custom.css" rel="stylesheet">
-
     </head>
-    <body>
+    <body>	
         <div class="body-inner">
 
-            <div id="topbar" class="topbar-transparent dark">
+            <!-- Topbar -->
+            <div id="topbar" class="topbar-transparent topbar-fullwidth dark d-none d-xl-block d-lg-block">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
+<!--                            <ul class="top-menu">
+                                <li><a href="#">Phone: +1 (234) 567-890</a></li>
+                                <li><a href="#">Email: contact@inspiro-media.com</a></li>
+                            </ul>-->
                             <div class="topbar-dropdown">
-                                <i class="fa fa-user"></i> <a class="title" href="#">Login</a>
+                                <i class="fa fa-user"></i> <a class="title" href="#"> Login</a>
                             </div>
                             <div class="topbar-dropdown">
                                 <a class="title" href="#">Western Cape</a>
@@ -34,26 +38,29 @@
                                 <ul>
                                     <li class="social-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
                                     <li class="social-twitter"><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li class="social-google"><a href="#"><i class="fab fa-instagram"></i></a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- end: Topbar -->
 
-
-            <header id="header" data-transparent="true" class="light">
+            <!-- Header -->
+            <header id="header" data-transparent="true" data-fullwidth="true" class="dark">
                 <div class="header-inner">
-                    <div class="container">
-
+                    <div class="container"> <!--Logo-->
                         <div id="logo">
-                            <a href="index.html" class="logo" data-src-dark="images/logo_roboto.png">
-                                <img src="images/logo_roboto.png" alt="RR Logo">
+                            <a href="index.html" class="logo" data-src-dark="images/logo_robo_dark.svg">
+                                <img src="images/logo_robo.svg" alt="RR Logo">
                             </a>
                         </div>
+                        <!--End: Logo-->
 
+                        <!-- Search -->
                         <div id="search">
-                            <div id="search-logo"><img src="images/logo_roboto.png" alt="RR Logo"></div>
+                            <div id="search-logo"><img src="images/logo_robo.svg" alt="RR Logo"></div>
                             <button id="btn-search-close" class="btn-search-close" aria-label="Close search form"><i class="icon-x"></i></button>
                             <form class="search-form" action="search-results-page.html" method="get">
                                 <input class="form-control" name="q" type="search" placeholder="Search..." autocomplete="off" />
@@ -80,7 +87,9 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- end: search -->
 
+                        <!--Header Extras-->
                         <div class="header-extras">
                             <ul>
                                 <li class="d-none d-xl-block d-lg-block">
@@ -91,10 +100,12 @@
                                 </li>
                             </ul>
                         </div>
-
+                        <!--end: Header Extras-->
+                        <!--Navigation Resposnive Trigger-->
                         <div id="mainMenu-trigger">
                             <button class="lines-button x"> <span class="lines"></span> </button>
                         </div>
+                        <!--end: Navigation Resposnive Trigger-->
 
                         <!--Navigation-->
                         <div id="mainMenu">
@@ -102,30 +113,34 @@
                                 <nav>
                                     <ul>
                                         <li><a href="index.html">Home</a></li>
-                                        <li><a href="index.html">Races</a></li>
+                                        <li><a href="index.html">Races</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="">Upcoming<span class="badge badge-danger">POPULAR</span></a></li>
+                                                <li><a href="">Per Region</a></li>
+                                            </ul>
+                                        </li>
                                         <li><a href="index.html">Results</a></li>
                                         <li><a href="index.html">FAQ</a></li>
-                                        <li><a href="index.html">About</a></li>
+                                        <li><a href="about.html">About</a></li>
                                         <li><a href="index.html">Contact</a></li>                                        
                                     </ul>
-                                </nav>
+                                </nav>                                
                             </div>
                         </div>
                         <!--END: NAVIGATION-->
                     </div>
                 </div>
             </header>
-
-
+            <!-- end: Header -->
+            
+            <!-- Slider -->
             <div id="slider" class="inspiro-slider arrows-large arrows-creative dots-creative" data-height-xs="360" data-autoplay-timeout="2600" data-animate-in="fadeIn" data-animate-out="fadeOut" data-items="1" data-loop="true" data-autoplay="true">
 
-                <div class="slide background-overlay-one" style="background-image:url('images/slider/run_02.jpg');">
+                <div class="slide background-overlay-one" style="background-image:url('images/slider/run_02.webp');">
                     <div class="container">
                         <div class="slide-captions d-none d-md-block">
-
                             <h2 class="text-sm no-margin">Any idiot can run</h2>
                             <h2 class="text-medium no-margin">but it takes a special kind of idiot to run a marathon</h2>
-
                         </div>
                     </div>
                 </div>
@@ -133,15 +148,14 @@
                 <div class="slide background-overlay-one" style="background-image:url('images/slider/run_03.webp');">
                     <div class="container">
                         <div class="slide-captions">
-
                             <h2 class="text-sm no-margin text-colored">If a hill has a name</h2>
                             <h2 class="text-medium no-margin">It's probably a pretty tough hill</h2>
-
                         </div>
                     </div>
                 </div>
 
             </div>
+            <!-- end: Slider -->
 
 
             <section class="reservation-form-over no-padding">
@@ -209,22 +223,16 @@
                                                         </div>-->
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <button class="btn m-t-30">Search</button>
+                                    <button class="btn m-t-25">Search</button>
                                 </div>
                             </div>
                         </div>
                     </form>
-
-                    <div class="text-center m-b-20">
-                        <p class="lead">At <b>RoadRunning.co.za</b> our mission is to list running events in a standard way, on a modern multi-platform capable website. 
-                            The goal is to give the user an easy way to find and compare races and allow for easy entry via the various 3rd party 
-                            portals.</p>
-                    </div>
                 </div>
             </section>
 
 
-            <section>
+            <section style="padding-top: 10px;">
                 <div class="container">
                     <div class="heading-text heading-section text-center">
                         <h2>FEATURED RACES</h2>
@@ -511,87 +519,132 @@
                 </div>
             </div>
 
-             <section class="background">
+            <section class="background">
                 <div class="container">
                     <div class="heading-text heading-section text-center">
                         <h2>CHOOSE YOUR REGION</h2>
-                        <span class="lead">To customise the experience on the </span>
+                        <span class="lead">To customise the experience for you we have introduces regions. 
+                            Once set it will show only information from the region(s) you have selected.
+                            This will allow for a more customised, focused view for you regarding races in your area.
+                        </span>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                            
-                        </div>
+                    <div class="text-center p-b-20">
+                        <a href="#" class="btn btn-lg btn-colored">Show me How</a>
                     </div>
+                    <!--                    <div class="row">
+                                            <div class="col-lg-4">
+                    
+                                            </div>
+                                        </div>-->
                 </div>
-             </section>
+            </section>
 
 
-            <footer id="footer">
+            <footer id="footer" class="inverted">
                 <div class="footer-content">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-5">
+                            <div class="col-xl-2 col-lg-2 col-md-3"> 
+                                <!-- Footer widget area 1 -->
                                 <div class="widget">
-                                    <div class="widget-title">Polo HTML5 Template</div>
-                                    <p class="mb-5">Built with love in Fort Worth, Texas, USA<br>
-                                        All rights reserved. Copyright © 2019. INSPIRO.</p>
-                                    <a href="https://themeforest.net/item/polo-responsive-multipurpose-html5-template/13708923" class="btn btn-inverted">Purchase Now</a>
+                                    <h4>RACES</h4>
+                                    <ul class="list">
+                                        <li><a href="#">Upcoming</a></li>
+                                        <li><a href="#">Per region</a></li>
+                                        <li><a href="#">Featured</a></li>
+                                        <li><a href="#">Top 10 most viewed</a></li>
+                                        <li><a href="#">History</a></li>
+                                        <li><a href="#">Add listing</a></li>
+                                    </ul>
                                 </div>
-                            </div> <div class="col-lg-7">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <div class="widget">
-                                            <div class="widget-title">Discover</div>
-                                            <ul class="list">
-                                                <li><a href="#">Features</a></li>
-                                                <li><a href="#">Layouts</a></li>
-                                                <li><a href="#">Corporate</a></li>
-                                                <li><a href="#">Updates</a></li>
-                                                <li><a href="#">Pricing</a></li>
-                                                <li><a href="#">Customers</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="widget">
-                                            <div class="widget-title">Features</div>
-                                            <ul class="list">
-                                                <li><a href="#">Layouts</a></li>
-                                                <li><a href="#">Headers</a></li>
-                                                <li><a href="#">Widgets</a></li>
-                                                <li><a href="#">Footers</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="widget">
-                                            <div class="widget-title">Pages</div>
-                                            <ul class="list">
-                                                <li><a href="#">Portfolio</a></li>
-                                                <li><a href="#">Blog</a></li>
-                                                <li><a href="#">Shop</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="widget">
-                                            <div class="widget-title">Support</div>
-                                            <ul class="list">
-                                                <li><a href="#">Help Desk</a></li>
-                                                <li><a href="#">Documentation</a></li>
-                                                <li><a href="#">Contact Us</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                <!-- end: Footer widget area 1 --> 
+                            </div>
+                            <div class="col-xl-2 col-lg-2 col-md-3"> 
+                                <!-- Footer widget area 2 -->
+                                <div class="widget">
+                                    <h4>RESULTS</h4>
+                                    <ul class="list"> 
+                                        <li><a href="#">Race Results</a></li>
+                                        <li><a href="#">My Results</a></li>
+                                    </ul>
                                 </div>
+                                <!-- end: Footer widget area 2 --> 
                             </div>
 
+                            <div class="col-xl-2 col-lg-2 col-md-3"> 
+                                <!-- Footer widget area 4 -->
+                                <div class="widget">
+                                    <h4>PAGES</h4>
+                                    <ul class="list">
+                                        <li><a href="#">FAQ</a></li>
+                                        <li><a href="#">About Us</a></li>
+                                        <li><a href="#">Contact Us</a></li>
+                                        <li><a href="#">All Races</a></li>
+                                        <li><a href="#">Sitemap</a></li>
+                                    </ul>
+                                </div>
+                                <!-- end: Footer widget area 4 --> 
+                            </div>
+
+                            <div class="col-xl-2 col-lg-2 col-md-3"> 
+                                <!-- Footer widget area 3 -->
+                                <div class="widget">
+                                    <h4> REGIONS</h4>
+                                    <ul class="list">
+                                        <li><a href="#">Cape Town</a></li>
+                                        <li><a href="#">Gauteng</a></li>
+                                        <li><a href="#">KZN Coast</a></li>
+                                        <li><a href="#">Garden Route</a></li>
+                                        <li><a href="#">Show All</a></li>
+                                    </ul>
+                                </div>
+                                <!-- end: Footer widget area 3 --> 
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-12"> 
+                                <!-- Footer widget area 5 -->
+                                <div class="widget clearfix widget-newsletter">
+                                    <h4 class="widget-title"><i class="fa fa-envelope"></i> Sign Up For a Newsletter</h4>
+                                    <p>Monthly newsletter informing you of the latest loaded results as well as the upcoming races
+
+                                    </p>
+                                    <form class="widget-subscribe-form p-r-40" action="include/subscribe-form.php" role="form" method="post" novalidate="novalidate">
+
+
+                                        <div class="input-group">
+                                            <input aria-required="true" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email" type="email">
+                                            <span class="input-group-btn">
+                                                <button type="submit" id="widget-subscribe-submit-button" class="btn"><i class="fa fa-paper-plane"></i></button>
+                                            </span> </div>
+                                    </form>
+                                </div>
+                                <!-- end: Footer widget area 5 --> 
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="copyright-content">
                     <div class="container">
-                        <div class="copyright-text text-center">&copy; 2019 POLO - Responsive Multi-Purpose HTML5 Template. All Rights Reserved.<a href="http://www.inspiro-media.com" target="_blank"> INSPIRO</a> </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- Social icons -->
+                                <div class="social-icons social-icons">
+                                    <ul>
+                                        <li class="social-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                        <li class="social-twitter"><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    </ul>
+                                </div>
+                                <!-- end: Social icons --> 
+                            </div>
+
+                            <div class="col-lg-6 text-right">
+                                <div class="copyright-text">&copy; 2019 RoadRunning.co.za. All Rights Reserved. |
+                                    <a href="https://www.roadrunning.co.za/disclaimer"> Disclaimer</a> |
+                                    <a href="https://www.roadrunning.co.za/sitemap"> Sitemap</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </footer>

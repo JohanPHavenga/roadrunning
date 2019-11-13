@@ -1,4 +1,190 @@
-body {
-  font-family: calibri;
-  font-size: 12pt;
+/*
+    CUSTOM CSS RULES
+*/
+
+div.reservation-form {
+    border: none;
+}
+
+.text-medium {
+    font-weight: 500;
+}
+
+#mainMenu nav > ul > li > a {
+    font-size: 1em;
+    font-family: "Poppins", "Helvetica", "Arial", sans-serif;
+}
+#mainMenu nav > ul > li .dropdown-menu > li > a {
+    font-size: 1em;
+}
+
+.topbar-dropdown { 
+    font-family: "Poppins", "Helvetica", "Arial", sans-serif;
+}
+
+.header-extras a.btn {
+    margin: 0 5px;
+}
+
+.form-group label,
+button, input, optgroup, select, textarea
+{
+    font-family: "Open Sans", Arial;    
+    font-style: normal;
+}
+
+.owl-carousel .owl-item .race-image img {
+    /*width: 355px;*/
+    height: 236px;
+    object-fit: cover;
+}
+
+#header .header-inner #logo a > img, 
+#header #header-wrap #logo a > img,
+#header .header-inner #search-logo img {
+    height: 80px;
+    width: 195px;
+}
+
+/* Color fixes */
+
+.heading-text.heading-section > h2::before,
+#search .btn-search-close
+{
+    background-color: #26B8F3;
+}
+.btn:hover {
+    background-color: #F36126;
+    border-color: #F36126;
+}
+.tabs .nav-tabs .nav-link.active {
+    color:  #26B8F3;
+    border-bottom: 2px solid #26B8F3;
+}
+
+.call-to-action.call-to-action-dark {
+    background-color: #181818;
+}
+
+a:hover span {
+    color: #26B8F3;
+    text-decoration: underline;
+}
+
+#mainMenu nav > ul > li .dropdown-menu > li > a:hover span {
+    color: #fff;
+    text-decoration: none;
+    background-color: #26B8F3;
+}
+
+#header.dark #mainMenu nav > ul > li > a:hover {
+    color: #26B8F3
+}
+
+.p-dropdown .p-dropdown-content, 
+.p-dropdown ul.p-dropdown-content {
+    min-width: 220px;
+}
+
+#footer.inverted a:hover,
+.topbar-dropdown a:hover {
+    color: #26B8F3;
+    text-decoration: none;
+}
+
+
+/* PAGE TITLE */
+#page-title {
+    background-color:#232427;
+    background-size: cover; 
+    background-position: center center;
+}
+
+/* RACE LLISTING */
+.race {
+    margin-bottom: 100px;
+}
+.race-image {
+
+    border-radius: 4px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.race-image img {
+
+    border-radius: 4px;
+    width: 100%;
+    opacity: 1;
+    transition: all ease 0.3s;
+    cursor: pointer;
+}
+
+.race-image .race-title {
+    background: 
+        rgba(0, 0, 0, 0) linear-gradient(to bottom, transparent 0%,
+        rgba(0, 0, 0, 1) 100%) repeat scroll 0 0;
+    bottom: 0px;
+    color: #fff;
+    font-weight: 600;
+    padding: 20px 10px 10px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 18px;
+    border-radius: 0 0 4px 4px;
+    float: left;
+}
+
+.race-badge {
+    font-family: "Open Sans", Arial;
+    background: 
+        #e01a33 none repeat scroll 0 0;
+    border-radius: 50%;
+    color:
+        #fff;
+    font-size: 0.8333em;
+    font-weight: bold;
+    height: 52px;
+    line-height: 1.0833em;
+    margin: 0;
+    padding: 15px 0 0;
+    position: absolute;
+    right: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    top: 10px;
+    width: 52px;
+    z-index: 1;
+}
+
+.race-details > p {
+    border-bottom: 1px solid #f5f5f5;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+
+}
+
+
+
+@media (min-width: 991px) { 
+    .topbar-transparent .topbar-dropdown a.title,
+    .topbar-transparent .topbar-dropdown i {
+        color: #fff;
+    }
+    .topbar-transparent .topbar-dropdown a.title:hover {
+        color: #26B8F3;
+    }
+
+    .topbar-transparent dark a {
+        color: #000;
+        font-weight: 800;    
+    }
+}
+@media (max-width: 991px) { 
+    #search #search-logo {
+        max-width: none;
+    }
+    #search .btn-search-close {
+        margin-top: 6px;
+    }
 }
