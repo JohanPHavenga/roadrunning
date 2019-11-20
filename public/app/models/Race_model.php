@@ -89,31 +89,31 @@ class Race_model extends MY_model {
 
         switch (true) {
             case $distance <= 9:
-                $color = 'yellow';
+                $color = 'danger';
                 break;
 
             case $distance == 10:
-                $color = 'yellow-1';
+                $color = 'warning';
                 break;
 
-            case $distance < 21:
-                $color = 'green-2';
+            case $distance <= 21:
+                $color = 'secondary';
                 break;
 
-            case $distance == 21:
-                $color = 'blue';
+            case $distance == 21.1:
+                $color = 'primary';
                 break;
 
-            case $distance < 42:
-                $color = 'purple';
+            case $distance <= 42:
+                $color = 'info';
                 break;
 
-            case $distance == 42:
-                $color = 'red-2';
+            case $distance == 42.2:
+                $color = 'success';
                 break;
 
             default:
-                $color = 'red-3';
+                $color = 'dark';
                 break;
         }
 

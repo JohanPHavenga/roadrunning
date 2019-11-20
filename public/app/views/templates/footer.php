@@ -1,5 +1,4 @@
-</div>
-</section>
+
 
 <?php
 // check for home page, set a few variables for header changes
@@ -131,9 +130,11 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             echo "| <a href='" . base_url("login/destroy") . "'>Kill Session</a> ";
                         }
                         // IF LOGGED IN USER IS ADMIN
-                        if (in_array(1, $logged_in_user['role_list'])) {
-                            echo "| <a href='/mailer'>Mailer</a> ";
-                            echo "| <a href='" . base_url("login/admin") . "'>Admin Login</a> ";
+                        if ($logged_in_user) {
+                            if (in_array(1, $logged_in_user['role_list'])) {
+                                echo "| <a href='/mailer'>Mailer</a> ";
+                                echo "| <a href='" . base_url("login/admin") . "'>Admin Login</a> ";
+                            }
                         }
                         ?>
                     </div>
@@ -148,54 +149,15 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 <a id="scrollTop"><i class="icon-chevron-up1"></i><i class="icon-chevron-up1"></i></a>
 
-
-<script>
-//    var cb = function () {
-//        var l = document.createElement('link');
-//        l.rel = 'stylesheet';
-//        l.href = '<?=base_url('assets/css/combined_min.css');?>';
-//        var h = document.getElementsByTagName('head')[0];
-//        h.parentNode.insertBefore(l, h);
-//    };
-//    var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-//            webkitRequestAnimationFrame || msRequestAnimationFrame;
-//    if (raf)
-//        raf(cb);
-//    else
-//        window.addEventListener('load', cb);
-    </script>
 <script src="<?= base_url('assets/js/jquery.js'); ?>"></script>
 <script src="<?= base_url('assets/js/plugins.js'); ?>"></script>
 
 <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
 
+
 <?php
-if ($home) {
-    ?>
-
-    <link rel="stylesheet" href="<?= base_url('assets/js/plugins/components/daterangepicker/daterangepicker.css'); ?>" type="text/css" />
-    <script src="<?= base_url('assets/js/plugins/components/moment.min.js'); ?>"></script>
-    <script src="<?= base_url('assets/js/plugins/components/daterangepicker/daterangepicker.js'); ?>"></script>
-
-    <script>
-        $(function () {
-            $('input[name="fromDate"]').daterangepicker({
-                singleDatePicker: true,
-                /* showDropdowns: true,*/
-            });
-
-            $('input[name="toDate"]').daterangepicker({
-                singleDatePicker: true,
-                /* showDropdowns: true,*/
-            });
-
-        });
-    </script>
-    <?php
-}
-
-//if ($this->ini_array['enviroment']['server'] != "production") {
-    if (1==2) {
+if ($this->ini_array['enviroment']['server'] != "production") {
+//    if (1==2) {
 //    wts($static_pages);
     ?> 
     <h4 class="text-uppercase">Environment info</h4>

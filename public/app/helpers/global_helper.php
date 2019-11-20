@@ -58,3 +58,15 @@ function my_decrypt($decrypt) {
 function array_keys_exists(array $keys, array $arr) {
     return !array_diff_key(array_flip($keys), $arr);
 }
+
+function time_to_sec($time) {
+    if ($time) {
+        $sec = 0;
+        foreach (array_reverse(explode(':', $time)) as $k => $v) {
+            $sec += pow(60, $k) * $v;
+        }
+        return $sec;
+    } else {
+        return false;
+    }
+}

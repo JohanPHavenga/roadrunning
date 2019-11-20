@@ -6,6 +6,7 @@ class MY_Controller extends CI_Controller {
     public $header_url = "/templates/header";
     public $footer_url = "/templates/footer";
     public $logged_in_user = [];
+    public $crumb_arr = [];
 
     function __construct() {
         parent::__construct();
@@ -18,6 +19,7 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['static_pages'] = $this->get_static_pages();
         $this->data_to_views['province_pages'] = $this->check_province_session();
         $this->data_to_views['region_pages'] = $this->check_region_session();
+        $this->data_to_views['crumbs_arr'] = $this->set_crumbs();
     }
 
     public function show_my_404($msg, $status) {
@@ -403,6 +405,37 @@ class MY_Controller extends CI_Controller {
             $return_data[$year][$month][$day][$id] = $row;
         }
         return $return_data;
+    }
+    
+    public function set_crumbs() {
+        // setup auto crumbs from URI
+        $segs = $this->uri->segment_array();
+        $crumb_uri = substr(base_url(), 0, -1);
+        $total_segments = $this->uri->total_segments();
+        $crumbs['Home'] = base_url();
+        for ($x = 1; $x <= $total_segments; $x++) {
+
+            if (($x == $total_segments) || ($x == 3)) {
+                $crumb_uri = "";
+            } else {
+                $crumb_uri .= "/" . $segs[$x];
+            }
+
+            // make controller prural for event and overwrite URI
+            if (($x == 1) && ($segs[$x] == "event")) {
+                $segs[$x] = "race";
+                $crumb_uri = "/race/upcoming";
+            }
+
+            $segs[$x] = str_replace("_", " ", $segs[$x]);
+            $crumbs[ucwords($segs[$x])] = $crumb_uri;
+
+            if ($x == 3) {
+                break;
+            }
+        }
+
+        return $crumbs;
     }
 
 }

@@ -46,6 +46,16 @@ button, input, optgroup, select, textarea
     width: 195px;
 }
 
+.page-menu {
+    border-top: none;
+}
+
+span.post-meta {
+    margin-right: 14px;
+}
+address { display: inline; }
+
+
 /* Color fixes */
 
 .heading-text.heading-section > h2::before,
@@ -56,6 +66,12 @@ button, input, optgroup, select, textarea
 .btn:hover {
     background-color: #F36126;
     border-color: #F36126;
+}
+a.btn:not([href]):not([tabindex])::after, .btn::after,
+.post-meta-share a span,
+.post-meta-share a:hover span {
+    color: #fff;
+    text-decoration: none;
 }
 .tabs .nav-tabs .nav-link.active {
     color:  #26B8F3;
@@ -77,8 +93,10 @@ a:hover span {
     background-color: #26B8F3;
 }
 
-#header.dark #mainMenu nav > ul > li > a:hover {
-    color: #26B8F3
+#header.dark #mainMenu nav > ul > li > a:hover,
+.page-menu.inverted nav > ul > li .dropdown-menu a:hover
+{
+    color: #26B8F3;
 }
 
 .p-dropdown .p-dropdown-content, 
@@ -91,6 +109,13 @@ a:hover span {
     color: #26B8F3;
     text-decoration: none;
 }
+.post-meta-share {
+    margin-top: 10px;
+}
+
+.post-meta-share a.btn-slide {
+    margin-left: 40px;
+}
 
 
 /* PAGE TITLE */
@@ -98,6 +123,16 @@ a:hover span {
     background-color:#232427;
     background-size: cover; 
     background-position: center center;
+}
+#page-title.page-title-left .page-sub-title {
+    float: left;
+    clear: both;
+}
+#page-title.page-title-left .page-sub-title h4 {
+    color: #ddd !important;
+}
+#page-title.page-title-left .page-title h1 {
+    margin: 5px 0;
 }
 
 /* RACE LLISTING */
@@ -165,7 +200,7 @@ a:hover span {
 }
 
 
-
+/* net groot */
 @media (min-width: 991px) { 
     .topbar-transparent .topbar-dropdown a.title,
     .topbar-transparent .topbar-dropdown i {
@@ -179,12 +214,41 @@ a:hover span {
         color: #000;
         font-weight: 800;    
     }
+
+    #pageMenu-trigger {
+        float: none;
+    }
+    .product .product-image > a, 
+    .product .product-image img {
+        height: 100%;
+        width: 100%;
+    }
 }
+
+/* net klein */
 @media (max-width: 991px) { 
     #search #search-logo {
         max-width: none;
     }
     #search .btn-search-close {
         margin-top: 6px;
+    }
+    .post-meta-share {
+        display: none;
+    }
+    .product .product-image > a, 
+    .product .product-image img {
+        max-height: 300px;
+        width: auto;
+    }
+    
+}
+
+/* heel klein **/
+@media (max-width:481px) {
+    .product .product-image > a, 
+    .product .product-image img {
+        max-height: 100%;
+        width: 100%;
     }
 }

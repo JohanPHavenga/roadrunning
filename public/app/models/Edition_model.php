@@ -123,8 +123,6 @@ class Edition_model extends MY_model {
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 foreach ($field_arr as $field) {
-                    // remove any field with the word "race" in it to simplify the array
-//                    if (strpos($field,'race')!==FALSE) { continue; } 
                     // remove table from from field
                     if (strpos($field, '.') !== FALSE) {
                         $field = substr($field, strpos($field, '.') + 1, strlen($field));
@@ -156,7 +154,10 @@ class Edition_model extends MY_model {
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            return $query->row_array();
+            $return_arr=$query->row_array();
+            // add annual name
+            $return_arr['annual_name']=$return_arr['event_name']." ".date("Y",strtotime($return_arr['edition_date']));
+            return $return_arr;
         } else {
             return false;
         }

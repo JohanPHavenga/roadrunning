@@ -16,6 +16,7 @@ if (!function_exists('fyesNo')) {
             return "No";
         }
     }
+
 }
 // ================================================================
 // Formulate display of race distance
@@ -29,6 +30,7 @@ if (!function_exists('fraceDistance')) {
             return false;
         }
     }
+
 }
 // ================================================================
 // Formulate Currency
@@ -42,11 +44,13 @@ if (!function_exists('fdisplayCurrency')) {
             return false;
         }
     }
+
 }
 // ================================================================
 // Formulate Dates / TIME
 // ================================================================
 if (!function_exists('fdateDay')) {
+
     function fdateDay($date) {
         if ($date > 0) {
             return date("d", strtotime($date));
@@ -54,9 +58,11 @@ if (!function_exists('fdateDay')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('fdateShort')) {
+
     function fdateShort($date) {
         if ($date > 0) {
             return date("Y-m-d", strtotime($date));
@@ -64,9 +70,11 @@ if (!function_exists('fdateShort')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('fdateHuman')) {
+
     function fdateHuman($date) {
         if ($date > 0) {
             return date("D j M", strtotime($date));
@@ -74,9 +82,11 @@ if (!function_exists('fdateHuman')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('fdateHumanFull')) {
+
     function fdateHumanFull($date, $show_dotw = FALSE) {
         if ($date > 0) {
             if ($show_dotw) {
@@ -88,9 +98,11 @@ if (!function_exists('fdateHumanFull')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('fdateLong')) {
+
     function fdateLong($date, $show_sec = TRUE) {
         if ($date) {
             if ($show_sec) {
@@ -102,9 +114,11 @@ if (!function_exists('fdateLong')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('fdateYear')) {
+
     function fdateYear($date) {
         if ($date) {
             return date("Y", strtotime($date));
@@ -112,9 +126,11 @@ if (!function_exists('fdateYear')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('ftimeSort')) {
+
     function ftimeSort($time) {
         if ($time) {
             return date("H:i", strtotime($time));
@@ -122,9 +138,11 @@ if (!function_exists('ftimeSort')) {
             return 0;
         }
     }
+
 }
 
 if (!function_exists('fdateToCal')) {
+
     function fdateToCal($timestamp) {
         if ($timestamp) {
             return date('Ymd\THis', $timestamp);
@@ -132,9 +150,11 @@ if (!function_exists('fdateToCal')) {
             return false;
         }
     }
+
 }
 
 if (!function_exists('fdateStructured')) {
+
     function fdateStructured($timestamp) {
         if ($timestamp) {
             return date('Y-m-d\TH:i:s' . '+02:00', strtotime($timestamp));
@@ -142,4 +162,17 @@ if (!function_exists('fdateStructured')) {
             return false;
         }
     }
+
+}
+
+if (!function_exists('fdateTitle')) {
+
+    function fdateTitle($date) {
+        if ($date > 0) {
+            return date("D, d M", strtotime($date));
+        } else {
+            return false;
+        }
+    }
+
 }
