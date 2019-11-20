@@ -118,6 +118,14 @@ a:hover span {
 }
 
 
+#race-tab-content .table-bordered td:first-child {
+    font-weight: bold;
+} 
+
+.product .product-rate {
+    color: #FFC300;
+}
+
 /* PAGE TITLE */
 #page-title {
     background-color:#232427;
@@ -241,7 +249,7 @@ a:hover span {
         max-height: 300px;
         width: auto;
     }
-    
+
 }
 
 /* heel klein **/

@@ -13,7 +13,7 @@ class Race_model extends MY_model {
 
     public function get_race_list($edition_id = 0) {
 
-        $this->db->select("races.*, edition_name, edition_date, racetype_name, racetype_abbr");
+        $this->db->select("races.*, edition_name, edition_date, racetype_name, racetype_abbr, racetype_icon");
         $this->db->from("races");
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
         $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
@@ -28,6 +28,9 @@ class Race_model extends MY_model {
             foreach ($query->result_array() as $row) {
                 $data[$row['race_id']] = $row;
                 $data[$row['race_id']]['race_color'] = $this->get_race_color($row['race_distance']);
+                if (strtotime($row['race_date'])<0) {
+                    $data[$row['race_id']]['race_date']=$row['edition_date'];
+                }
             }
             return $data;
         }
@@ -118,6 +121,41 @@ class Race_model extends MY_model {
         }
 
         return $color;
+    }
+    
+    function get_race_icon($type) {
+
+        switch ($type) {
+            case $distance <= 9:
+                $color = 'danger';
+                break;
+
+            case $distance == 10:
+                $color = 'warning';
+                break;
+
+            case $distance <= 21:
+                $color = 'secondary';
+                break;
+
+            case $distance == 21.1:
+                $color = 'primary';
+                break;
+
+            case $distance <= 42:
+                $color = 'info';
+                break;
+
+            case $distance == 42.2:
+                $color = 'success';
+                break;
+
+            default:
+                $icon = 'running';
+                break;
+        }
+
+        return $icon;
     }
 
 

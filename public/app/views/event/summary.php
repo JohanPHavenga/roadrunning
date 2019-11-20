@@ -61,18 +61,18 @@
 
                         <div class="col-lg-7">
                             <?php
-                                echo $edition_data['edition_intro_detail'];
+                            echo $edition_data['edition_intro_detail'];
                             ?>
                             <div class="product-description">
-                                <div class="product-category"><?= $edition_data['annual_name'];?></div>
+                                <div class="product-category"><?= $edition_data['annual_name']; ?></div>
                                 <div class="product-title">
                                     <h3><a href="#">Summary</a></h3>
                                 </div>
                                 <?php
                                 if ($edition_data['annual_name']) {
-                                ?>
-                                <div class="product-price">from <ins>R<?= intval($edition_data['race_summary']['fees']['from']);?></ins></div>
-                                <?php
+                                    ?>
+                                    <div class="product-price">from <ins>R<?= intval($edition_data['race_summary']['fees']['from']); ?></ins></div>
+                                    <?php
                                 }
                                 ?>
                                 <div class="product-rate">
@@ -89,7 +89,7 @@
                                 <h3>
                                     <?php
                                     foreach ($edition_data['race_summary']['list'] as $race) {
-                                        echo '<span class="badge badge-'.$race['color'].'">'.floatval($race['distance']).'<small>km</small><br><small>'.$race['type'].'</small></span> ';
+                                        echo '<span class="badge badge-' . $race['color'] . '">' . floatval($race['distance']) . '<small>km</small><br><small>' . $race['type'] . '</small></span> ';
                                     }
                                     ?>
                                 </h3>
@@ -107,373 +107,230 @@
                         </div>
                     </div>
 
+                    <!-- add box -->
+                    <div class="row m-b-30" style='height: 90px; width: 100%; background: #ccc;'>
+                        Ad
+                    </div>
+
                     <!-- Product additional tabs -->
-                    <div class="tabs tabs-folder">
-                        <ul class="nav nav-tabs" id="myTab3" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home3" role="tab" aria-controls="home" aria-selected="false"><i class="fa fa-align-justify"></i>Description</a></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile" aria-selected="true"><i class="fa fa-info"></i>Additional Info</a></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact3" role="tab" aria-controls="contact" aria-selected="false"><i class="fa fa-star"></i>Reviews</a></a>
-                            </li>
-
+                    <div class="tabs tabs-folder m-b-30">
+                        <ul class="nav nav-tabs" id="race_tabs" role="tablist">
+                            <?php
+                            foreach ($race_list as $race_id => $race) {
+                                $active = '';
+                                if ($race_id === array_key_first($race_list)) {
+                                    $active = "active show";
+                                }
+                                ?>
+                                <li class="nav-item">
+                                    <a class="nav-link <?= $active; ?>" id="race-<?= $race_id; ?>-tab" data-toggle="tab" href="#race<?= $race_id; ?>" role="tab" aria-controls="<?= $race_id; ?>" aria-selected="false">
+                                        <i class="fa fa-<?= $race['racetype_icon']; ?>"></i><?= $race['race_name']; ?></a>
+                                </li>
+                                <?php
+                            }
+                            ?>
                         </ul>
-                        <div class="tab-content" id="myTabContent3">
-                            <div class="tab-pane fade" id="home3" role="tabpanel" aria-labelledby="home-tab">
-                                <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. </p>
-                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
-                            </div>
-                            <div class="tab-pane fade active show" id="profile3" role="tabpanel" aria-labelledby="profile-tab">
-                                <table class="table table-striped table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <td>Size</td>
-                                            <td>Small, Medium &amp; Large</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Color</td>
-                                            <td>Pink &amp; White</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Waist</td>
-                                            <td>26 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Length</td>
-                                            <td>40 cm</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chest</td>
-                                            <td>33 inches</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fabric</td>
-                                            <td>Cotton, Silk &amp; Synthetic</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Warranty</td>
-                                            <td>3 Months</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact-tab">
-                                <div class="comments" id="comments">
-                                    <div class="comment_number">
-                                        Reviews <span>(3)</span>
-                                    </div>
+                        <div class="tab-content" id="race-tab-content">
+                            <?php
+                            foreach ($race_list as $race_id => $race) {
+                                $active = '';
+                                if ($race_id === array_key_first($race_list)) {
+                                    $active = "active show";
+                                }
+                                ?>
+                                <div class="tab-pane fade <?= $active; ?>" id="race<?= $race_id; ?>" role="tabpanel" aria-labelledby="race-<?= $race_id; ?>-tab">
+                                    <table class="table table-striped table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td style='width: 50%;'>Date</td>
+                                                <td><?= fdateHuman($race['race_date']); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Start Time</td>
+                                                <td><?= ftimeSort($race['race_time_start']); ?></td>
+                                            </tr>
+                                            <?php
+                                            if ($race['race_time_end'] > 0) {
+                                                ?>
+                                                <tr>
+                                                    <td>Cut-off Time</td>
+                                                    <td><?= ftimeSort($race['race_time_end']); ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td>Distance</td>
+                                                <td><span class="badge badge-<?= $race['race_color']; ?>"><?= fraceDistance($race['race_distance']); ?></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Race Type</td>
+                                                <td><?= $race['racetype_name']; ?></td>
+                                            </tr>
+                                            <?php
+                                            if ($race['race_fee_flat'] > 0) {
+                                                ?>
+                                                <tr>
+                                                    <td>Race fee:</td>
+                                                    <td>R<?= floatval($race['race_fee_flat']); ?></td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                if ($race['race_fee_senior_licenced'] > 0) {
+                                                    ?>
+                                                    <tr>
+                                                        <td>Senior Licensed Runner:</td>
+                                                        <td>R<?= floatval($race['race_fee_senior_licenced']); ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                if ($race['race_fee_senior_unlicenced'] > 0) {
+                                                    ?>
+                                                    <tr>
+                                                        <td>Senior Unlicensed Runner:</td>
+                                                        <td>R<?= floatval($race['race_fee_senior_unlicenced']); ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                if ($race['race_fee_junior_licenced'] > 0) {
+                                                    ?>
+                                                    <tr>
+                                                        <td>Junior Licensed Runner:</td>
+                                                        <td>R<?= floatval($race['race_fee_junior_licenced']); ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                if ($race['race_fee_junior_unlicenced'] > 0) {
+                                                    ?>
+                                                    <tr>
+                                                        <td>Junior Unlicensed Runner:</td>
+                                                        <td>R<?= floatval($race['race_fee_junior_unlicenced']); ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                            if ($race['race_isover70free']) {
+                                                ?>
+                                                <tr>
+                                                    <td>Licensed Athlete 70+:</td>
+                                                    <td>Free</td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            if ($race['race_minimum_age'] > 0) {
+                                                ?>
+                                                <tr>
+                                                    <td>Minimum age:</td>
+                                                    <td><?= $race['race_minimum_age']; ?> years</td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
 
-                                    <div class="comment-list">
-                                        <!-- Comment -->
-                                        <div class="comment" id="comment-1">
-                                            <div class="image"><img alt="" src="images/blog/author.jpg" class="avatar"></div>
-                                            <div class="text">
-                                                <div class="product-rate">
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star-half-o"></i>
-                                                </div>
-                                                <h5 class="name">John Doe</h5>
-                                                <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                                <a class="comment-reply-link" href="#">Reply</a>
-                                                <div class="text_holder">
-                                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- end: Comment -->
-                                        <!-- Comment -->
-                                        <div class="comment" id="comment-1-1">
-                                            <div class="image"><img alt="" src="images/blog/author2.jpg" class="avatar"></div>
-                                            <div class="text">
-                                                <div class="product-rate">
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star-half-o"></i>
-                                                </div>
-                                                <h5 class="name">John Doe</h5>
-                                                <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                                <a class="comment-reply-link" href="#">Reply</a>
-                                                <div class="text_holder">
-                                                    <p>It is a long established fact that a reader will be distracted by the readable content.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- end: Comment -->
-                                        <!-- Comment -->
-                                        <div class="comment" id="comment-1-2">
-                                            <div class="image"><img alt="" src="images/blog/author3.jpg" class="avatar"></div>
-                                            <div class="text">
-                                                <div class="product-rate">
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star-half-o"></i>
-                                                </div>
-                                                <h5 class="name">John Doe</h5>
-                                                <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                                <a class="comment-reply-link" href="#">Reply</a>
-                                                <div class="text_holder">
-                                                    <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- end: Comment -->
 
+                    <div class="heading-text heading-line text-center">
+                        <h4>Event Reviews</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="comments" id="comments">
+                                <div class="comment-list">
+                                    <!-- Comment -->
+                                    <div class="comment" id="comment-1">
+                                        <div class="image"><img alt="" src="images/blog/author.jpg" class="avatar"></div>
+                                        <div class="text">
+                                            <div class="product-rate">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-half"></i>
+                                            </div>
+                                            <h5 class="name">John Doe</h5>
+                                            <span class="comment_date">Posted at 15:32, 06 December</span>
+                                            <a class="comment-reply-link" href="#">2019 edition</a>
+                                            <div class="text_holder">
+                                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!-- end: Comment -->
+                                    <!-- Comment -->
+                                    <div class="comment" id="comment-1-1">
+                                        <div class="image"><img alt="" src="images/blog/author2.jpg" class="avatar"></div>
+                                        <div class="text">
+                                            <div class="product-rate">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <h5 class="name">John Doe</h5>
+                                            <span class="comment_date">Posted at 15:32h, 06 December</span>
+                                            <a class="comment-reply-link" href="#">Reply</a>
+                                            <div class="text_holder">
+                                                <p>It is a long established fact that a reader will be distracted by the readable content.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end: Comment -->
+                                    <!-- Comment -->
+                                    <div class="comment" id="comment-1-2">
+                                        <div class="image"><img alt="" src="images/blog/author3.jpg" class="avatar"></div>
+                                        <div class="text">
+                                            <div class="product-rate">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-half"></i>
+                                            </div>
+                                            <h5 class="name">John Doe</h5>
+                                            <span class="comment_date">Posted at 15:32h, 06 December</span>
+                                            <a class="comment-reply-link" href="#">Reply</a>
+                                            <div class="text_holder">
+                                                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end: Comment -->
+
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     <!-- end: Product additional tabs -->
-                </div>
-
-
-                <div class="heading-text heading-line text-center">
-                    <h4>Related Products you may be interested!</h4>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-
-
-                        <div class="widget-shop">
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/10.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-                                <div class="product-description">
-                                    <div class="product-category">Women</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Bolt Sweatshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><del>$30.00</del><ins>$15.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/6.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Women</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Consume Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/7.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Man</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Logo Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-
-
-                        <div class="widget-shop">
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/11.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Man</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Logo Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/9.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Women</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Consume Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/3.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Man</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Logo Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-
-
-                        <div class="widget-shop">
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/1.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-                                <div class="product-description">
-                                    <div class="product-category">Women</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Bolt Sweatshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><del>$30.00</del><ins>$15.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/2.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Women</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Consume Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="product">
-                                <div class="product-image">
-                                    <a href="#"><img src="images/shop/products/5.jpg" alt="Shop product image!">
-                                    </a>
-                                </div>
-
-                                <div class="product-description">
-                                    <div class="product-category">Man</div>
-                                    <div class="product-title">
-                                        <h3><a href="#">Logo Tshirt</a></h3>
-                                    </div>
-                                    <div class="product-price"><ins>$39.00</ins>
-                                    </div>
-                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3">
+            <div class="sidebar col-lg-3">                
                 <!--widget newsletter-->
+                <div class="widget clearfix widget-newsletter">
+                    <form class="form-inline" method="get" action="#">
+                        <h4 class="widget-title">Receive race notification</h4>
+                        <small>Subscribe to the event by entering your email address. You will receive notification of when entries open and results are loaded</small>
+                        <div class="input-group m-t-20">
+
+                            <input type="email" placeholder="Enter your Email" class="form-control required email" name="widget-subscribe-form-email" aria-required="true">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn"><i class="fa fa-paper-plane"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+
+                <!--widget tags-->
                 <div class="widget clearfix widget-tags">
                     <h4 class="widget-title">Tags</h4>
                     <div class="tags">
@@ -489,6 +346,12 @@
                         <a href="#">jQuery</a>
                     </div>
                 </div>
+
+                <!-- add box -->
+                <div class="row m-b-30" style='height: 250px; width: 100%; background: #ccc;'>
+                    Ad
+                </div>
+
                 <div class="widget clearfix widget-archive">
                     <h4 class="widget-title">Product categories</h4>
                     <ul class="list list-lines">
@@ -579,20 +442,7 @@
 
                     </div>
                 </div>
-                
-                <div class="widget clearfix widget-newsletter">
-                    <form class="form-inline" method="get" action="#">
-                        <h4 class="widget-title">Subscribe for Latest Offers</h4>
-                        <small>Subscribe to our Newsletter to get Sales Offers &amp; Coupon Codes etc.</small>
-                        <div class="input-group">
 
-                            <input type="email" placeholder="Enter your Email" class="form-control required email" name="widget-subscribe-form-email" aria-required="true">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn"><i class="fa fa-paper-plane"></i></button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
 
 
             </div>
@@ -609,9 +459,10 @@ wts($edition_data);
 wts($race_list);
 wts($file_list);
 //wts($url_list);
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * To change this license header, choose License Headers in Project Properties.
+     * To change this template file, choose Tools | Templates
+     * and open the template in the editor.
+     */
 
+    

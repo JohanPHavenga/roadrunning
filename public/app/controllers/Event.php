@@ -83,11 +83,11 @@ class Event extends MY_Controller {
             ],
             "list" => [],
         ];
-
+        
         foreach ($race_list as $race) {
             // START TIME
             $start_datetime = strtotime($edition_date) + 86400;
-            if (strtotime($race['race_date']) > 0) {
+            if (strtotime($race['race_date']) != strtotime($edition_date)) {
                 continue;
             }
 
