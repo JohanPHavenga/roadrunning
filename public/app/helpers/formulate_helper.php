@@ -141,6 +141,18 @@ if (!function_exists('ftimeSort')) {
 
 }
 
+if (!function_exists('ftimeMil')) {
+
+    function ftimeMil($time) {
+        if ($time) {
+            return date("H\hi", strtotime($time));
+        } else {
+            return 0;
+        }
+    }
+
+}
+
 if (!function_exists('fdateToCal')) {
 
     function fdateToCal($timestamp) {

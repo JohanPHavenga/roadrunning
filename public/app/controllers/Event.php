@@ -34,26 +34,38 @@ class Event extends MY_Controller {
         $this->load->model('file_model');
         $this->load->model('url_model');
         $this->load->model('date_model');
+        $this->load->model('entrytype_model');
+        $this->load->model('regtype_model');
 
         // gebruik slug om ID te kry
         $edition_data = $this->edition_model->get_edition_id_from_slug($slug);
         $this->data_to_views['edition_data'] = $this->edition_model->get_edition_detail($edition_data['edition_id']);
         $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_data['edition_id']);
         $this->data_to_views['file_list'] = $this->file_model->get_file_list("edition", $edition_data['edition_id'], true);
-        $this->data_to_views['url_list'] = $this->url_model->get_url_list("edition", $edition_data['edition_id']);
+        $this->data_to_views['url_list'] = $this->url_model->get_url_list("edition", $edition_data['edition_id'], true);
         $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_data['edition_id'], false, true);
 
         $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'],$this->data_to_views['edition_data']['edition_date'],$this->data_to_views['edition_data']['edition_info_prizegizing']);
+        $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_data['edition_id']);
+        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_data['edition_id']);
+        
+        $this->data_to_views['address']=$this->data_to_views['edition_data']['edition_address_end'] . ", " . $this->data_to_views['edition_data']['town_name'];
+        $this->data_to_views['address_nospaces']= url_title($this->data_to_views['address'].", ZA");
         
 //        $this->data_to_views['event_times'] = $this->get_event_start_end_times($this->data_to_views['edition_data']['edition_date'], $this->data_to_views['edition_data']['edition_info_prizegizing'], $this->data_to_views['race_list']);
 //        $this->data_to_views['edition_data']['fee_from_to'] = $this->get_fee_from_to($this->data_to_views['race_list']);       
 
         $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($this->data_to_views['edition_data']['edition_date']);
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug);
+//        wts( $this->data_to_views['url_list']);
+//        wts($this->data_to_views['edition_data'],true);
 
         $this->load->view($this->header_url, $this->data_to_views);
 //        $this->load->view("event/header", $this->data_to_views);
         switch ($url_params[0]) {
+            case "entries":
+                $this->load->view('event/entries', $this->data_to_views);
+                break;
             case "results":
                 $this->load->view('event/results', $this->data_to_views);
                 break;
@@ -83,6 +95,8 @@ class Event extends MY_Controller {
             ],
             "list" => [],
         ];
+        
+//        wts($race_list,true);
         
         foreach ($race_list as $race) {
             // START TIME

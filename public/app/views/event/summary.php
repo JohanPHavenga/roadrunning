@@ -30,7 +30,7 @@
                     }
                     ?>
                 </span>
-                <span class="post-meta"><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>"><i class="fa fa-map-marker"></i> <address><?= $edition_data['edition_address'] . ", " . $edition_data['town_name']; ?></address></a></span>
+                <span class="post-meta"><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>"><i class="fa fa-map-marker"></i> <address><?= $address; ?></address></a></span>
 
             </div>
         </div>
@@ -69,21 +69,21 @@
                                     <h3><a href="#">Summary</a></h3>
                                 </div>
                                 <?php
-                                if ($edition_data['annual_name']) {
+                                if (($edition_data['race_summary']['fees']['from'] > 0) && ($edition_data['race_summary']['fees']['from'] < 10000)) {
                                     ?>
-                                    <div class="product-price">from <ins>R<?= intval($edition_data['race_summary']['fees']['from']); ?></ins></div>
+                                    <div class="product-price"><ins>R<?= intval($edition_data['race_summary']['fees']['from']); ?> - R<?= intval($edition_data['race_summary']['fees']['to']); ?></ins></div>
                                     <?php
                                 }
                                 ?>
-                                <div class="product-rate">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-half"></i>
-                                </div>
-                                <div class="product-reviews"><a href="#">3 customer reviews</a>
-                                </div>
+                                <!--                                <div class="product-rate">
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-half"></i>
+                                                                </div>
+                                                                <div class="product-reviews"><a href="#">3 customer reviews</a>
+                                                                </div>-->
 
                                 <div class="seperator m-b-10"></div>
                                 <h3>
@@ -108,12 +108,14 @@
                     </div>
 
                     <!-- add box -->
-                    <div class="row m-b-30" style='height: 90px; width: 100%; background: #ccc;'>
-                        Ad
+                    <div class="row m-b-30">
+                        <div class="col-lg-12">
+                            <div style='height: 90px; width: 100%; background: #ccc;'>Ad</div>
+                        </div>
                     </div>
 
                     <!-- Product additional tabs -->
-                    <div class="tabs tabs-folder m-b-30">
+                    <div class="tabs tabs-folder">
                         <ul class="nav nav-tabs" id="race_tabs" role="tablist">
                             <?php
                             foreach ($race_list as $race_id => $race) {
@@ -236,77 +238,77 @@
                     </div>
 
 
-                    <div class="heading-text heading-line text-center">
-                        <h4>Event Reviews</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="comments" id="comments">
-                                <div class="comment-list">
-                                    <!-- Comment -->
-                                    <div class="comment" id="comment-1">
-                                        <div class="image"><img alt="" src="images/blog/author.jpg" class="avatar"></div>
-                                        <div class="text">
-                                            <div class="product-rate">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-half"></i>
-                                            </div>
-                                            <h5 class="name">John Doe</h5>
-                                            <span class="comment_date">Posted at 15:32, 06 December</span>
-                                            <a class="comment-reply-link" href="#">2019 edition</a>
-                                            <div class="text_holder">
-                                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                                            </div>
+                    <!--                    <div class="heading-text heading-line text-center m-t-30">
+                                            <h4>Event Reviews</h4>
                                         </div>
-                                    </div>
-                                    <!-- end: Comment -->
-                                    <!-- Comment -->
-                                    <div class="comment" id="comment-1-1">
-                                        <div class="image"><img alt="" src="images/blog/author2.jpg" class="avatar"></div>
-                                        <div class="text">
-                                            <div class="product-rate">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="comments" id="comments">
+                                                    <div class="comment-list">
+                                                         Comment 
+                                                        <div class="comment" id="comment-1">
+                                                            <div class="image"><img alt="" src="images/blog/author.jpg" class="avatar"></div>
+                                                            <div class="text">
+                                                                <div class="product-rate">
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-half"></i>
+                                                                </div>
+                                                                <h5 class="name">John Doe</h5>
+                                                                <span class="comment_date">Posted at 15:32, 06 December</span>
+                                                                <a class="comment-reply-link" href="#">2019 edition</a>
+                                                                <div class="text_holder">
+                                                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                         end: Comment 
+                                                         Comment 
+                                                        <div class="comment" id="comment-1-1">
+                                                            <div class="image"><img alt="" src="images/blog/author2.jpg" class="avatar"></div>
+                                                            <div class="text">
+                                                                <div class="product-rate">
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                </div>
+                                                                <h5 class="name">John Doe</h5>
+                                                                <span class="comment_date">Posted at 15:32h, 06 December</span>
+                                                                <a class="comment-reply-link" href="#">Reply</a>
+                                                                <div class="text_holder">
+                                                                    <p>It is a long established fact that a reader will be distracted by the readable content.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                         end: Comment 
+                                                         Comment 
+                                                        <div class="comment" id="comment-1-2">
+                                                            <div class="image"><img alt="" src="images/blog/author3.jpg" class="avatar"></div>
+                                                            <div class="text">
+                                                                <div class="product-rate">
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star"></i>
+                                                                    <i class="fa fa-star-half"></i>
+                                                                </div>
+                                                                <h5 class="name">John Doe</h5>
+                                                                <span class="comment_date">Posted at 15:32h, 06 December</span>
+                                                                <a class="comment-reply-link" href="#">Reply</a>
+                                                                <div class="text_holder">
+                                                                    <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                         end: Comment 
+                    
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <h5 class="name">John Doe</h5>
-                                            <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                            <a class="comment-reply-link" href="#">Reply</a>
-                                            <div class="text_holder">
-                                                <p>It is a long established fact that a reader will be distracted by the readable content.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end: Comment -->
-                                    <!-- Comment -->
-                                    <div class="comment" id="comment-1-2">
-                                        <div class="image"><img alt="" src="images/blog/author3.jpg" class="avatar"></div>
-                                        <div class="text">
-                                            <div class="product-rate">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-half"></i>
-                                            </div>
-                                            <h5 class="name">John Doe</h5>
-                                            <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                            <a class="comment-reply-link" href="#">Reply</a>
-                                            <div class="text_holder">
-                                                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end: Comment -->
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
+                    
+                    
+                                        </div>-->
                     <!-- end: Product additional tabs -->
                 </div>
 
@@ -348,102 +350,23 @@
                 </div>
 
                 <!-- add box -->
-                <div class="row m-b-30" style='height: 250px; width: 100%; background: #ccc;'>
-                    Ad
-                </div>
-
-                <div class="widget clearfix widget-archive">
-                    <h4 class="widget-title">Product categories</h4>
-                    <ul class="list list-lines">
-                        <li><a href="#">Bags</a> <span class="count">(6)</span>
-                        </li>
-                        <li><a href="#">Jeans</a> <span class="count">(8)</span>
-                        </li>
-                        <li><a href="#">Shoes</a> <span class="count">(7)</span>
-                        </li>
-                        <li><a href="#">Sweaters</a> <span class="count">(7)</span>
-                        </li>
-                        <li><a href="#">T-Shirts</a> <span class="count">(9)</span>
-                        </li>
-                        <li><a href="#">Tops</a> <span class="count">(10)</span>
-                        </li>
-                        <li><a href="#">Women</a> <span class="count">(25)</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="widget clearfix widget-shop">
-                    <h4 class="widget-title">Latest Products</h4>
-                    <div class="product">
-                        <div class="product-image">
-                            <a href="#"><img src="images/shop/products/10.jpg" alt="Shop product image!">
-                            </a>
-                        </div>
-                        <div class="product-description">
-                            <div class="product-category">Women</div>
-                            <div class="product-title">
-                                <h3><a href="#">Bolt Sweatshirt</a></h3>
-                            </div>
-                            <div class="product-price"><del>$30.00</del><ins>$15.00</ins>
-                            </div>
-                            <div class="product-rate">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product">
-                        <div class="product-image">
-                            <a href="#"><img src="images/shop/products/6.jpg" alt="Shop product image!">
-                            </a>
-                        </div>
-
-                        <div class="product-description">
-                            <div class="product-category">Women</div>
-                            <div class="product-title">
-                                <h3><a href="#">Consume Tshirt</a></h3>
-                            </div>
-                            <div class="product-price"><ins>$39.00</ins>
-                            </div>
-                            <div class="product-rate">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="product">
-                        <div class="product-image">
-                            <a href="#"><img src="images/shop/products/7.jpg" alt="Shop product image!">
-                            </a>
-                        </div>
-
-                        <div class="product-description">
-                            <div class="product-category">Man</div>
-                            <div class="product-title">
-                                <h3><a href="#">Logo Tshirt</a></h3>
-                            </div>
-                            <div class="product-price"><ins>$39.00</ins>
-                            </div>
-                            <div class="product-rate">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                            </div>
-
-                        </div>
-
+                <div class="widget clearfix widget-sponsored">
+                    <h4 class="widget-title">Sponsored Content</h4>
+                    <div style='height: 250px; width: 100%; background: #ccc;'>
+                        Ad
                     </div>
                 </div>
 
-
+                <!--widget map-->
+                <div class="widget clearfix widget-map">
+                    <h4 class="widget-title">Map</h4>
+                    <iframe
+                        width="100%"
+                        height="250"
+                        frameborder="0" style="border:0"
+                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
+                    </iframe>
+                </div>
 
             </div>
             <!-- end: Sidebar-->
@@ -451,18 +374,3 @@
     </div>
 </section>
 <!-- end: Shop products -->
-<?php
-if (isset($file_list[1])) {
-    echo "<img src='" . base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'] . "' />";
-}
-wts($edition_data);
-wts($race_list);
-wts($file_list);
-//wts($url_list);
-    /*
-     * To change this license header, choose License Headers in Project Properties.
-     * To change this template file, choose Tools | Templates
-     * and open the template in the editor.
-     */
-
-    

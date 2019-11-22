@@ -126,6 +126,26 @@ a:hover span {
     color: #FFC300;
 }
 
+.sidebar .widget.widget-map {
+    height: 250px;
+}
+.sidebar .widget.widget-map iframe {
+    height: 250px;
+}
+
+.sidebar .widget:last-child {
+    margin-bottom: 20px;
+}
+
+h3 span.badge a { color: #fff; } 
+h3 span.badge a:hover { color: #ccc; }
+
+.single-post .post-item .post-item-description p,
+.single-post .post-item .post-item-description li
+{
+    font-size: 16px;
+}
+
 /* PAGE TITLE */
 #page-title {
     background-color:#232427;

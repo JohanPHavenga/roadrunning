@@ -4,10 +4,13 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-function wts($seq = '') {
+function wts($seq = '', $die = false) {
     echo "<pre>";
     print_r($seq);
     echo "</pre>";
+    if ($die) {
+        die();
+    }
 }
 
 function get_url_from_edition_name($encoded_edition_name) {
@@ -66,6 +69,15 @@ function time_to_sec($time) {
             $sec += pow(60, $k) * $v;
         }
         return $sec;
+    } else {
+        return false;
+    }
+}
+
+function time_is_midnight($date) {
+    $time = date("H:i", strtotime($date));
+    if ($time == "00:00") {
+        return true;
     } else {
         return false;
     }
