@@ -45,7 +45,7 @@
                                 <div class="carousel dots-inside dots-dark arrows-visible arrows-only arrows-dark" data-items="1" data-loop="true" data-autoplay="true" data-animate-in="fadeIn" data-animate-out="fadeOut" data-autoplay-timeout="2500" data-lightbox="gallery">
                                     <?php
                                     if (isset($file_list[1])) {
-                                        echo "<img src='" . base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'] . "' />";
+                                        echo "<img src='" . base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'] . "' title='" . $edition_data['edition_name'] . " Logo' />";
                                     }
                                     // potential to add photos here
                                     ?>
@@ -316,58 +316,21 @@
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3">                
-                <!--widget newsletter-->
-                <div class="widget clearfix widget-newsletter">
-                    <form class="form-inline" method="get" action="#">
-                        <h4 class="widget-title">Receive race notification</h4>
-                        <small>Subscribe to the event by entering your email address. You will receive notification of when entries open and results are loaded</small>
-                        <div class="input-group m-t-20">
+            <div class="sidebar col-lg-3">
+                <?php
+                // SUBSCRIBE WIDGET
+                $data_to_widget['title'] = "Receive race notification";
+                $this->load->view('widgets/subscribe', $data_to_widget);
 
-                            <input type="email" placeholder="Enter your Email" class="form-control required email" name="widget-subscribe-form-email" aria-required="true">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn"><i class="fa fa-paper-plane"></i></button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
+                // TAGS WIDGET
+                $this->load->view('widgets/tags');
 
-                <!--widget tags-->
-                <div class="widget clearfix widget-tags">
-                    <h4 class="widget-title">Tags</h4>
-                    <div class="tags">
-                        <a href="#">Design</a>
-                        <a href="#">Portfolio</a>
-                        <a href="#">Digital</a>
-                        <a href="#">Branding</a>
-                        <a href="#">HTML</a>
-                        <a href="#">Clean</a>
-                        <a href="#">Peace</a>
-                        <a href="#">Love</a>
-                        <a href="#">CSS3</a>
-                        <a href="#">jQuery</a>
-                    </div>
-                </div>
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
 
-                <!-- add box -->
-                <div class="widget clearfix widget-sponsored">
-                    <h4 class="widget-title">Sponsored Content</h4>
-                    <div style='height: 250px; width: 100%; background: #ccc;'>
-                        Ad
-                    </div>
-                </div>
-
-                <!--widget map-->
-                <div class="widget clearfix widget-map">
-                    <h4 class="widget-title">Map</h4>
-                    <iframe
-                        width="100%"
-                        height="250"
-                        frameborder="0" style="border:0"
-                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
-                    </iframe>
-                </div>
-
+                // MAP WIDGET
+                $this->load->view('widgets/map');
+                ?>
             </div>
             <!-- end: Sidebar-->
         </div>

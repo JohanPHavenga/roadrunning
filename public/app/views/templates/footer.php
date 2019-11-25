@@ -151,10 +151,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 <script src="<?= base_url('assets/js/jquery.js'); ?>"></script>
 <script src="<?= base_url('assets/js/plugins.js'); ?>"></script>
-
 <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
-<script src="https://kit.fontawesome.com/01d8a054dd.js" crossorigin="anonymous"></script>
-
+<script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous"></script>
 
 <?php
 if ($this->ini_array['enviroment']['server'] != "production") {

@@ -140,11 +140,30 @@ a:hover span {
 h3 span.badge a { color: #fff; } 
 h3 span.badge a:hover { color: #ccc; }
 
-.single-post .post-item .post-item-description p,
-.single-post .post-item .post-item-description li
+/* CONTENT STUFF */
+.content p,
+.content li
 {
     font-size: 16px;
 }
+.content ul {
+    margin-left: 24px;
+}
+.content ul li {
+    line-height: 1.8em;
+}
+.content ul li li {
+    line-height: 1.6em;
+}
+.content a {
+    /*border-bottom: 1px dotted #2250fc;*/
+}
+.content a:hover {
+    color: #26B8F3;
+    text-decoration: underline;
+    /*border-bottom: 1px solid #26B8F3;*/
+}
+
 
 /* PAGE TITLE */
 #page-title {
