@@ -60,25 +60,15 @@ class Event extends MY_Controller {
 //        wts( $this->data_to_views['url_list']);
 //        wts($this->data_to_views['edition_data'],true);
 
+        
         $this->load->view($this->header_url, $this->data_to_views);
-//        $this->load->view("event/header", $this->data_to_views);
-        switch ($url_params[0]) {
-            case "entries":
-                $this->load->view('event/entries', $this->data_to_views);
-                break;
-            case "results":
-                $this->load->view('event/results', $this->data_to_views);
-                break;
-            case "route-maps":
-                $this->load->view('event/route_maps', $this->data_to_views);
-                break;
-            case "races":
-                $this->load->view('event/races', $this->data_to_views);
-                break;
-            default:
-                $this->load->view('event/summary', $this->data_to_views);
-                break;
+        
+        if (file_exists(APPPATH."views/event/".$url_params[0] . ".php")) {
+            $this->load->view('event/'.$url_params[0], $this->data_to_views);
+        } else {
+            $this->load->view('event/summary', $this->data_to_views);
         }
+        
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
@@ -199,9 +189,9 @@ class Event extends MY_Controller {
                 "display" => "Race day info",
                 "loc" => base_url("event/" . $slug . "/race-day-information"),
             ],
-            "races" => [
+            "distances" => [
                 "display" => "Distances",
-                "loc" => base_url("event/" . $slug . "/races"),
+                "loc" => base_url("event/" . $slug . "/distances"),
             ],
             "route_maps" => [
                 "display" => "Route Maps",
@@ -245,6 +235,12 @@ class Event extends MY_Controller {
                 ],
             ],
         ];
+        
+        // check for route maps
+        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
+            unset($menu_arr['route_maps']);
+        } 
+        
         return $menu_arr;
     }
 

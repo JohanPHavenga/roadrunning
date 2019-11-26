@@ -36,13 +36,16 @@
                     <div class="col-lg-12">
                         <?php
                         if (in_array(5, $edition_data['entrytype_list'])) {
-                            echo "<p>No details regarding the entries for this race has been published yet.</p>";
+                            ?>
+                            <p class='text-info'><b>No details</b> regarding the entries for this race has been published yet.</p>
+                            <p>Want to get notified once entries open? Enter your email below or to the right.</p>
+                            <?php
                         } else {
                             if (isset($edition_data['entrytype_list'][4]) && $url_list[5]) {
                                 ?>
                                 <p>
                                     <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover">Enter online
-                                    <i class="fa fa-arrow-right"></i></a>
+                                        <i class="fa fa-arrow-right"></i></a>
                                 </p>
                                 <?php
                             }
@@ -168,7 +171,7 @@
             <div class="sidebar col-lg-3">  
                 <?php
                 // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Receive race notification";
+                $data_to_widget['title'] = "Get notified when entries open";
                 $this->load->view('widgets/subscribe', $data_to_widget);
 
                 // ADS WIDGET
