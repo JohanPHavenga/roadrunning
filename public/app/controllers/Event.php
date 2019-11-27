@@ -237,9 +237,9 @@ class Event extends MY_Controller {
         ];
         
         // check for route maps
-        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
+//        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
             unset($menu_arr['route_maps']);
-        } 
+//        } 
         
         return $menu_arr;
     }

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row m-b-5">
             <div class="col-lg-10">
-                <h2>Results</h2>
+                <h2>Receive race notifications</h2>
             </div>
         </div>
         <?php
@@ -21,24 +21,18 @@
 
                 <div class="row m-b-40">
                     <div class="col-lg-12">
-                        <?php
-                        // check for results
-                        if ((!isset($this->data_to_views['url_list'][4])) && (!isset($this->data_to_views['file_list'][4]))) {
-                            ?>
-                            <p class='text-danger'><b>No results</b> are available for this race yet.</p>
-                            <p>Want to get notified once results are loaded? Enter your email below or to the right.</p>
-                            <?php
-                        } else {
-                            ?>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <button type="button" class="btn btn-light"><i class="fa fa-file-excel"></i>
-                                        Download Race Results</button>
+                        <p>Would you like to receive a notification email when information is loaded for the race, or when online entries open? How about when results are loaded?
+                            Then you are in luck. Insert you email address below and subscribe to the notification service for this race.</p>
+                            <form class="form-inline" _lpchecked="1">
+                                <div class="mx-lg-3 m-t-20">
+                                    <h5>Enter your email:</h5>
                                 </div>
-                            </div>
-                            <?php
-                        }
-                        ?>
+                                <div class="form-group mx-sm-3 m-t-20">
+                                    <label for="email_sub" class="sr-only">Email</label>
+                                    <input class="form-control" id="email_sub" placeholder="info@example.com" type="email">
+                                </div>
+                                <button type="submit" class="btn m-t-20">Subscribe</button>
+                            </form>
 
                     </div>
 
@@ -52,7 +46,7 @@
             <div class="sidebar col-lg-3">  
                 <?php
                 // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Get notified when entries open";
+                $data_to_widget['title'] = "Receive race notification";
                 $this->load->view('widgets/subscribe', $data_to_widget);
 
                 // ADS WIDGET
