@@ -35,7 +35,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <!-- critical path css -->
         <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet" type="text/css">
         <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
-        
+
         <link rel="apple-touch-icon" sizes="57x57" href="<?= base_url('assets/favicon/apple-icon-57x57.png'); ?>">
         <link rel="apple-touch-icon" sizes="60x60" href="<?= base_url('assets/favicon/apple-icon-60x60.png'); ?>">
         <link rel="apple-touch-icon" sizes="72x72" href="<?= base_url('assets/favicon/apple-icon-72x72.png'); ?>">
@@ -240,27 +240,30 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 <!-- end: Slider -->
                 <?php
             } else {
-                // event page
-                if ($this->router->fetch_class()=="event") {
-                    $img_url="https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/".$edition_data['edition_gps']."/12?mapSize=900,300&format=png&g&pushpin=".$edition_data['edition_gps'].";65&key=An56kGemZ2QHt-SqwYx3fi9E89M_lMQDqODLp55fEnUejV10d2fH9jkrlUoC6xlS";                            
-                    $page_title=$edition_data['event_name'];
-                    $date= fdateHumanFull($edition_data['edition_date']);
+                // IS event page
+                if ($this->router->fetch_class() == "event") {
+                    $img_url = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/" . $edition_data['edition_gps'] . "/12?mapSize=900,300&format=png&g&pushpin=" . $edition_data['edition_gps'] . ";65&key=An56kGemZ2QHt-SqwYx3fi9E89M_lMQDqODLp55fEnUejV10d2fH9jkrlUoC6xlS";
+                    $page_title = $edition_data['event_name'];
+                    $date = fdateHumanFull($edition_data['edition_date']);
                 } else {
-                    $img_url=base_url('assets/img/slider/run_01.webp');
+                    // DEFAULT PAGE HEADER
+                    $img_url = base_url('assets/img/slider/run_01.webp');
                 }
                 ?>
                 <!-- Page title -->
-                <section id="page-title" class="text-light page-title-left" style="background-image:linear-gradient(rgba(0, 0, 0, 0.6),rgba(0, 0, 0, 0.6)),url(<?=$img_url;?>);">
+                <section id="page-title" class="text-light page-title-left <?= $page_title_small; ?>" style="background-image:linear-gradient(rgba(0, 0, 0, 0.6),rgba(0, 0, 0, 0.6)),url(<?= $img_url; ?>);">
 
                     <div class="container">
                         <div class="breadcrumb">
                             <ul>
                                 <?php
-                                    $cl='';
-                                    foreach ($crumbs_arr as $name=>$url) {
-                                        if ($name === array_key_last($crumbs_arr)) { $cl="active"; }
-                                        echo "<li class='$cl'><a href='$url'>$name</a> </li>";
+                                $cl = '';
+                                foreach ($crumbs_arr as $name => $url) {
+                                    if ($name === array_key_last($crumbs_arr)) {
+                                        $cl = "active";
                                     }
+                                    echo "<li class='$cl'><a href='$url'>$name</a> </li>";
+                                }
                                 ?>
                             </ul>
                         </div>
@@ -269,11 +272,11 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         </div>
                         <?php
                         if (isset($date)) {
-                            echo "<div class='page-sub-title'><h4>".$date."</h4></div>";                            
+                            echo "<div class='page-sub-title'><h4>" . $date . "</h4></div>";
                         }
                         ?>
                     </div>
-                </section>            
+                </section>
                 <!-- end: Page title -->
                 <?php
                 if (isset($page_menu)) {
@@ -287,7 +290,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                         if (isset($page['sub_menu'])) {
                                             echo "<li class='dropdown'><a href='#'>$page[display]</a>";
                                             echo "<ul class='dropdown-menu menu-last'>";
-                                            foreach ($page['sub_menu'] as $key=>$sub_page) {
+                                            foreach ($page['sub_menu'] as $key => $sub_page) {
                                                 echo "<li><a href='$sub_page[loc]'>$sub_page[display]</a></li>";
                                             }
                                             echo "</ul></li>";

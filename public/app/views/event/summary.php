@@ -2,7 +2,9 @@
     <div class="container">
         <div class="row m-b-5">
             <div class="col-lg-10">
-                <h2><?= $edition_data['edition_name']; ?></h2>
+                <h2><?= $edition_data['edition_name']; ?>
+                    <span class="fa fa-<?= $status_notice['icon']; ?> text-<?= $status_notice['state']; ?>" data-toggle="tooltip" data-placement="right" title="" data-original-title="<?= $status_notice['short_msg']; ?>"></span>
+                </h2>
             </div>
             <div class="col-lg-2 post-meta-share">
 <!--                <a class="btn btn-xs btn-slide btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?= current_url(); ?>">
@@ -47,10 +49,11 @@
                         </div>
 
 
-                        <div class="col-lg-7">
+                        <div class="col-lg-7">                            
                             <?php
                             echo $edition_data['edition_intro_detail'];
                             ?>
+
                             <div class="product-description">
                                 <div class="product-category"><?= $edition_data['annual_name']; ?></div>
                                 <div class="product-title">
@@ -86,8 +89,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <button type="button" class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover">Entry Details
-                                        <i class="fa fa-arrow-right"></i></button>
+                                    <?php
+                                    if (!in_array(5, $edition_data['entrytype_list'])) {
+                                        ?>
+                                        <a class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
+                                            <i class="fa fa-arrow-right"></i></a>
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
 
@@ -304,7 +313,9 @@
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3">
+            <div class="sidebar col-lg-3"> 
+                <div role="alert" class="alert alert-<?= $status_notice['state']; ?>">
+                    <strong><i class="fa fa-<?= $status_notice['icon']; ?>"></i> <?= $status_notice['msg']; ?> </div>
                 <?php
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Receive race notification";

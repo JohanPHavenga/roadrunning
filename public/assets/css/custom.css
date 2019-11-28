@@ -140,6 +140,11 @@ a:hover span {
 h3 span.badge a { color: #fff; } 
 h3 span.badge a:hover { color: #ccc; }
 
+.alert a {
+    color: #fff;
+    font-weight: bold;
+}
+
 /* CONTENT STUFF */
 .content p,
 .content li
@@ -180,6 +185,9 @@ h3 span.badge a:hover { color: #ccc; }
 }
 #page-title.page-title-left .page-title h1 {
     margin: 5px 0;
+}
+#page-title.less_padding {
+    padding: 30px 0 !important;
 }
 
 /* RACE LLISTING */

@@ -22,7 +22,7 @@
                 <div class="row m-b-40">
                     <div class="col-lg-12">
                         <?php
-                        if (in_array(5, $edition_data['entrytype_list'])) {
+                        if ((strlen($edition_data['edition_entry_detail']) < 10) && (in_array(5, $edition_data['entrytype_list']))) {
                             ?>
                             <p class='text-info'><b>No details</b> regarding the entries for this race has been published yet.</p>
                             <p>Want to get notified once entries open? Enter your email below or to the right.</p>
@@ -140,7 +140,7 @@
                             </ul>
                             <?php
                             // always show what is in the box
-                            if (strlen($edition_data['edition_entry_detail']) > 15) {
+                            if (strlen($edition_data['edition_entry_detail']) > 10) {
                                 echo $edition_data['edition_entry_detail'];
                             }
                         }
