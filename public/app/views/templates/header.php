@@ -248,6 +248,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 } else {
                     // DEFAULT PAGE HEADER
                     $img_url = base_url('assets/img/slider/run_01.webp');
+                    $page_title_small = "page-title";
                 }
                 ?>
                 <!-- Page title -->
@@ -310,13 +311,19 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     <?php
                 }
             }
-            ?>
-            <?php
+            
             if ($this->session->flashdata()) {
+                if ($this->session->flashdata('icon') !== null) {
+                    $icon = $this->session->flashdata('icon');
+                } else {
+                    $icon = "info-circle";
+                }
                 ?>
-                <div role="alert" class="alert alert-<?= $this->session->flashdata('status'); ?> alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span> </button>
-                    <strong><i class="fa fa-check-circle"></i> <?= ucfirst($this->session->flashdata('status')); ?>!</strong> <?= $this->session->flashdata('alert'); ?> 
+                <div class="alert alert-<?= $this->session->flashdata('status'); ?> alert-dismissible" role="alert">
+                    <div class="container">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span> </button>
+                        <strong><i class="fa fa-<?= $icon; ?>"></i> <?= ucfirst($this->session->flashdata('status')); ?>!</strong> <?= $this->session->flashdata('alert'); ?> 
+                    </div>
                 </div>
                 <?php
             }

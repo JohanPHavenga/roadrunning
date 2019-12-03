@@ -23,29 +23,65 @@
                     <div class="col-lg-12">
                         <h3 class="text-uppercase">Get In Touch</h3>
                         <p>Got a question regarding this race? Use the form below to contact the race organisers directly. You will receive a copy of the email in your inbox as well.</p>
+                        
                         <div class="m-t-30">
-                            <form class="widget-contact-form" action="include/contact-form.php" role="form" method="post" novalidate="novalidate">
+                            <form class="contact_form" action="<?= $contact_url; ?>" role="form" method="post">
                                 <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="name">Name</label>
-                                        <input type="text" aria-required="true" name="widget-contact-form-name" class="form-control required name" placeholder="Enter your Name" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+                                    <div class="form-group col-md-3">
+                                        <?php
+                                        echo form_label('Name *', 'user_name');
+                                        echo form_input([
+                                            'name' => 'user_name',
+                                            'id' => 'user_name',
+                                            'value' => set_value('user_name'),
+                                            'class' => 'form-control required',
+                                            'placeholder' => 'Enter your Name',
+//                                            'required' => '',
+                                        ]);
+                                        ?>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="email">Email</label>
-                                        <input type="email" aria-required="true" name="widget-contact-form-email" class="form-control required email" placeholder="Enter your Email">
+                                    <div class="form-group col-md-4">
+                                        <?php
+                                        echo form_label('Surname *', 'user_surname');
+                                        echo form_input([
+                                            'name' => 'user_surname',
+                                            'id' => 'user_surname',
+                                            'value' => set_value('user_surname'),
+                                            'class' => 'form-control required',
+                                            'placeholder' => 'Enter your Surname',
+                                            'required' => '',
+                                        ]);
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        <?php
+                                        echo form_label('Email', 'user_email');
+                                        echo form_input([
+                                            'name' => 'user_email',
+                                            'id' => 'user_email',
+                                            'type' => 'email',
+                                            'value' => set_value('user_email'),
+                                            'class' => 'form-control required',
+                                            'placeholder' => 'Enter your Email',
+                                            'required' => '',
+                                        ]);
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="message">Message</label>
-                                    <textarea type="text" name="widget-contact-form-message" rows="5" class="form-control required" placeholder="Enter your Message" aria-required="true"></textarea>
+                                    <?php
+                                    echo form_label('Query', 'user_message');
+                                    echo form_textarea([
+                                        'name' => 'user_message',
+                                        'id' => 'user_message',
+                                        'value' => set_value('user_message'),
+                                        'class' => 'form-control required',
+                                        'placeholder' => 'Enter your Message',
+                                        'required' => '',
+                                        'rows' => 5,
+                                    ]);
+                                    ?>
                                 </div>
-
-                                <div class="form-group">
-                                    <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/75nbHAdFrusJCwoMVGTXoHoM/recaptcha__en_gb.js"></script><script src="https://www.google.com/recaptcha/api.js"></script>
-                                    <div class="g-recaptcha" data-sitekey="6LddCxAUAAAAAKOg0-U6IprqOZ7vTfiMNSyQT2-M"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LddCxAUAAAAAKOg0-U6IprqOZ7vTfiMNSyQT2-M&amp;co=aHR0cDovL2xvY2FsaG9zdDo4MA..&amp;hl=en-GB&amp;v=75nbHAdFrusJCwoMVGTXoHoM&amp;size=normal&amp;cb=rb1pcq48dbxb" role="presentation" name="a-pd6b2bc2kn15" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" width="304" height="78" frameborder="0"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div></div>
-                                </div>
-
-
                                 <button class="btn" type="submit" id="form-submit"><i class="fa fa-paper-plane"></i>&nbsp;Send message</button>
                             </form>
 

@@ -25,9 +25,17 @@ class Event extends MY_Controller {
         // as daar nie 'n edition_slug deurgestuur word nie
         if ($slug == "index") {
             redirect("/race-calendar");
+        } else {
+            $this->load->helper('form');
+            $this->load->library('form_validation');
+            // set a few vars to use
+            $this->data_to_views['slug'] = $slug;
+            $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
         }
-        if (empty($url_params)) {
-            $url_params[] = "summary";
+
+        // check vir sub-page
+        if ((empty($url_params)) || (!file_exists(APPPATH . "views/event/" . $url_params[0] . ".php"))) {
+            $url_params[0] = "summary";
             $this->data_to_views['page_title_small'] = "";
         } else {
             $this->data_to_views['page_title_small'] = "less_padding";
@@ -58,18 +66,9 @@ class Event extends MY_Controller {
         $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($this->data_to_views['edition_data']['edition_date']);
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $this->data_to_views['edition_data']['event_id'], $edition_data['edition_id']);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice();
-//        wts( $this->data_to_views['url_list']);
-//        wts($this->data_to_views['edition_data'],true);
-
-
+            
         $this->load->view($this->header_url, $this->data_to_views);
-
-        if (file_exists(APPPATH . "views/event/" . $url_params[0] . ".php")) {
-            $this->load->view('event/' . $url_params[0], $this->data_to_views);
-        } else {
-            $this->load->view('event/summary', $this->data_to_views);
-        }
-
+        $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
@@ -303,7 +302,8 @@ class Event extends MY_Controller {
     }
 
     private function formulate_status_notice() {
-        $return = [];;
+        $return = [];
+        ;
 //        echo $event_detail['edition_status'];
 //        die();
         switch ($this->data_to_views['edition_data']['edition_status']) {
@@ -361,8 +361,8 @@ class Event extends MY_Controller {
                         $icon = "info-circle";
                         break;
                     case 11:
-                        $slug=$this->data_to_views['edition_data']['edition_slug'];
-                        $msg = "<b>RESULTS LOADED</b><br>Click to <a href='".base_url("event/$slug/results")."'>view results</a>";
+                        $slug = $this->data_to_views['edition_data']['edition_slug'];
+                        $msg = "<b>RESULTS LOADED</b><br>Click to <a href='" . base_url("event/$slug/results") . "'>view results</a>";
                         $short_msg = "Results loaded";
                         $state = "success";
                         $icon = "check-circle";
@@ -377,10 +377,10 @@ class Event extends MY_Controller {
                 break;
         }
 
-        $return['msg']=$msg;
-        $return['short_msg']=$short_msg;
-        $return['state']=$state;
-        $return['icon']=$icon;
+        $return['msg'] = $msg;
+        $return['short_msg'] = $short_msg;
+        $return['state'] = $state;
+        $return['icon'] = $icon;
         return $return;
     }
 

@@ -85,11 +85,11 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <p>Monthly newsletter informing you of the latest loaded results as well as the upcoming races
 
                         </p>
-                        <form class="widget-subscribe-form p-r-40" action="include/subscribe-form.php" role="form" method="post" novalidate="novalidate">
-
+                        <form class="widget-subscribe-form p-r-40" action="<?= base_url("contact/test");?>" role="form" method="post">
 
                             <div class="input-group">
-                                <input aria-required="true" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email" type="email">
+                                <!--<input aria-required="true" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email" type="email">-->
+                                <input name="widget-subscribe-form-email">
                                 <span class="input-group-btn">
                                     <button type="submit" id="widget-subscribe-submit-button" class="btn"><i class="fa fa-paper-plane"></i></button>
                                 </span> </div>

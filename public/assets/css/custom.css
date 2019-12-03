@@ -63,9 +63,11 @@ address { display: inline; }
 {
     background-color: #26B8F3;
 }
-.btn:hover {
+.content .btn:hover {
     background-color: #F36126;
     border-color: #F36126;
+    text-decoration: none;
+    color: #fff;
 }
 a.btn:not([href]):not([tabindex])::after, .btn::after,
 .post-meta-share a span,
@@ -167,6 +169,14 @@ h3 span.badge a:hover { color: #ccc; }
     color: #26B8F3;
     text-decoration: underline;
     /*border-bottom: 1px solid #26B8F3;*/
+}
+
+.content .alert p {
+    font-size:  1em;
+    color: #fff;
+    padding: 0;
+    font-family: "Nunito","Helvetica","Arial",sans-serif;
+    margin-bottom: 0;
 }
 
 

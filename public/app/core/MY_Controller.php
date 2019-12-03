@@ -149,7 +149,7 @@ class MY_Controller extends CI_Controller {
             $emailque_data = array(
                 'emailque_subject' => $data['subject'],
                 'emailque_to_address' => $data['to'],
-                'emailque_body' => $data['body'],
+                'emailque_body' => $this->set_email_body($data['body']),
                 'emailque_status' => 5,
                 'emailque_from_address' => $from,
                 'emailque_from_name' => $from_name,
@@ -163,10 +163,50 @@ class MY_Controller extends CI_Controller {
                 "data" => $emailque_data,
                 "id" => false,
             ];
+//            echo $emailque_data['emailque_body'];
+//            die();
             return $this->emailque_model->set_emailque($params);
         } else {
             die("Missing required fields to send email: MY_Controller->send_mail");
         }
+    }
+
+    private function set_email_body($body) {
+        $year=date("Y");
+        $html = <<<EOT
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv = "Content-Type" content = "text/html; charset=utf-8" />
+<meta name = "viewport" content = "width=device-width, initial-scale=1.0"/>
+<style>a, a[x-apple-data-detectors] { color:inherit!important;
+font-family:inherit!important;
+font-size:inherit!important;
+font-weight:inherit!important;
+line-height:inherit!important;
+text-decoration:none!important;
+}</style>
+</head>
+<body style = "background-color:#FFFFFF;margin:0;padding:0;">
+<table cellpadding = "0" cellspacing = "0" border = "0" width = "100%" bgcolor = "#FFFFFF" style = "margin:0;"><tbody><tr><td style = "padding:0;" align = "center">
+<table cellpadding = "0" cellspacing = "0" border = "0" align = "center" bgcolor = "#FFFFFF" style = "margin:0; max-width: 600px; width: 100%;"><tbody><tr><td style = "padding:0 20px;" align = "left">
+<div style = "margin:0 0 25px 0;"><img alt = "RoadRunningZA" width = "72" height = "72" src = "https://www.roadrunning.co.za/img/favicon/android-icon-72x72.png" /></div>
+
+<div style = "color:#000000;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:16px;line-height:25.6px;text-align:left;">
+$body
+</div>
+
+<div style = "border-top: 2px solid #E5E5E5;color:#111111;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:11px;line-height:14px;margin:30px 0;">
+<div style = "margin:20px 0;"><a href='https://www.roadrunning.co.za/' title='Go to RoadRunningZA'><img alt = "RoadRunningZA" width = "110" height = "22" src = "https://www.roadrunning.co.za/img/logo-vec-22.png" /></a></div>
+<div style = "margin:20px 0;" > Copyright &copy;
+$year RoadRunningZA. All rights reserved.</div>
+</div>
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+</body>
+</html>
+EOT;
+        return $html;
     }
 
     // ==============================================================================================
@@ -243,14 +283,14 @@ class MY_Controller extends CI_Controller {
                 "sub-menu" => [
                     "upcoming" => [
                         "display" => "Race Results",
-                        "loc" => base_url("races/race-results"), 
+                        "loc" => base_url("races/race-results"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
                     "my-results" => [
                         "display" => "My Results",
-                        "loc" => base_url("result/my-results"), 
+                        "loc" => base_url("result/my-results"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
@@ -295,7 +335,7 @@ class MY_Controller extends CI_Controller {
                 "sub-menu" => [
                     "upcoming" => [
                         "display" => "Cape Town",
-                        "loc" => base_url("region/capetown"), 
+                        "loc" => base_url("region/capetown"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 1,
                         "changefreq" => "weekly",
@@ -303,21 +343,21 @@ class MY_Controller extends CI_Controller {
                     ],
                     "gauteng" => [
                         "display" => "Gauteng",
-                        "loc" => base_url("region/gauteng"), 
+                        "loc" => base_url("region/gauteng"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
                     "kzn-coast" => [
                         "display" => "KZN Coast",
-                        "loc" => base_url("region/kzn-coast"), 
+                        "loc" => base_url("region/kzn-coast"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
                     "garden-route" => [
                         "display" => "Garden Route",
-                        "loc" => base_url("region/garnde-route"), 
+                        "loc" => base_url("region/garnde-route"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
@@ -406,7 +446,7 @@ class MY_Controller extends CI_Controller {
         }
         return $return_data;
     }
-    
+
     public function set_crumbs() {
         // setup auto crumbs from URI
         $segs = $this->uri->segment_array();

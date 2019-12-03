@@ -60,7 +60,12 @@
                                     <h3><a href="#">Summary</a></h3>
                                 </div>
                                 <?php
-                                if (($edition_data['race_summary']['fees']['from'] > 0) && ($edition_data['race_summary']['fees']['from'] < 10000)) {
+                                // FEE SUMMARY
+                                if ($edition_data['race_summary']['fees']['from'] == $edition_data['race_summary']['fees']['to']) {
+                                     ?>
+                                    <div class="product-price"><ins>R<?= intval($edition_data['race_summary']['fees']['from']); ?></ins></div>
+                                    <?php
+                                } elseif (($edition_data['race_summary']['fees']['from'] > 0) && ($edition_data['race_summary']['fees']['from'] < 10000)) {
                                     ?>
                                     <div class="product-price"><ins>R<?= intval($edition_data['race_summary']['fees']['from']); ?> - R<?= intval($edition_data['race_summary']['fees']['to']); ?></ins></div>
                                     <?php
@@ -316,20 +321,20 @@
             <div class="sidebar col-lg-3"> 
                 <div role="alert" class="alert alert-<?= $status_notice['state']; ?>">
                     <strong><i class="fa fa-<?= $status_notice['icon']; ?>"></i> <?= $status_notice['msg']; ?> </div>
-                <?php
-                // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Receive race notification";
-                $this->load->view('widgets/subscribe', $data_to_widget);
+                    <?php
+                    // SUBSCRIBE WIDGET
+                    $data_to_widget['title'] = "Receive race notification";
+                    $this->load->view('widgets/subscribe', $data_to_widget);
 
-                // TAGS WIDGET
-                $this->load->view('widgets/tags');
+                    // TAGS WIDGET
+                    $this->load->view('widgets/tags');
 
-                // ADS WIDGET
-                $this->load->view('widgets/side_ad');
+                    // ADS WIDGET
+                    $this->load->view('widgets/side_ad');
 
-                // MAP WIDGET
-                $this->load->view('widgets/map');
-                ?>
+                    // MAP WIDGET
+                    $this->load->view('widgets/map');
+                    ?>
             </div>
             <!-- end: Sidebar-->
         </div>
