@@ -35,6 +35,7 @@
                                     'value' => set_value('user_surname'),
                                     'class' => 'form-control required',
                                     'placeholder' => 'Enter your Surname',
+                                    'required' => '',
                                 ]);
                                 ?>
                             </div>
@@ -61,7 +62,7 @@
                                 'id' => 'user_message',
                                 'value' => set_value('user_message'),
                                 'class' => 'form-control required',
-                                'placeholder' => 'Enter your Message',
+                                'placeholder' => 'Enter your Query',
                                 'required' => '',
                                 'rows' => 5,
                             ]);
@@ -74,7 +75,7 @@
                             ?>
                         </div>
                         <button class="btn" type="submit" id="form-submit"><i class="fa fa-paper-plane"></i>&nbsp;Send message</button>
-                        <a href="<?= $cancel_url; ?>" class="btn"><i class="fa fa-minus-circle"></i>&nbspCancel</a>
+                        <a href="<?= $cancel_url; ?>" class="btn"><i class="fa fa-minus-circle"></i>&nbsp;Cancel</a>
                     </form>
                 </div>
             </div>

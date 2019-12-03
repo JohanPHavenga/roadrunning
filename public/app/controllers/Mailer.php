@@ -53,8 +53,9 @@ class Mailer extends MY_Controller {
         $config['smtp_crypto'] = $this->ini_array['email']['smtp_crypto'];
         $config['charset'] = $this->ini_array['email']['email_charset'];
         $config['useragent'] = $this->ini_array['email']['useragent'];
-        $this->email->initialize($config);
-
+        
+        $this->email->initialize($config);        
+        
         $this->email->from($data['emailque_from_address'], $data['emailque_from_name']);
         $this->email->to($data['emailque_to_address'], $data['emailque_to_name']);
         if ($data['emailque_cc_address']) {
@@ -65,6 +66,7 @@ class Mailer extends MY_Controller {
         }
         $this->email->subject($data['emailque_subject']);
         $this->email->message($data['emailque_body']);
+        
 
         $send = $this->email->send();
 

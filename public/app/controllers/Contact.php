@@ -9,7 +9,7 @@ class Contact extends MY_Controller {
     public function test() {
         $data = [
             "to" => "johan.havenga@gmail.com",
-            "subject" => "Contact Form TEST",
+            "subject" => "Contact Form TESTé",
             "body" => "<p>Hello,</p>"
             . "<p>Please see below for an enquiry send from the "
             . "<b><a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a></b> website "
@@ -17,11 +17,11 @@ class Contact extends MY_Controller {
             . "<p><b>Name:</b> Johan<br>"
             . "<b>Surname:</b> Havenga<br>"
             . "<b>Email:</b> johan.havenga@gmail.com<br>"
-            . "<b>Query:</b> This is a comment</p>"
+            . "<b>Query:</b> This is a comment ôéêº</p>"
             . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
             . "<p>Please reply to this email to answer the runner's query.",
             "from" => "johnahavenga@woolworths.co.za",
-            "from_name" => "Johan H",
+            "from_name" => "Johan Hé",
         ];
         echo $this->set_email($data);
     }
@@ -114,8 +114,7 @@ class Contact extends MY_Controller {
             foreach ($this->input->post() as $field => $value) {
                 $email_data[$field] = $value;
             }
-            $email_data['edition_name'] = $this->data_to_views['edition_data']['edition_name'];
-            $this->send_event_email($email_data, $this->data_to_views['edition_data']['user_email']);
+            $this->send_event_email($email_data, $this->data_to_views['edition_data']);
 
             $this->session->set_flashdata([
                 'alert' => "Your email has been send to the organisers",
@@ -131,17 +130,21 @@ class Contact extends MY_Controller {
     }
 
     // SEND EVENT EMAIL
-    private function send_event_email($email_data, $to) {
-        // test email
+    private function send_event_email($email_data, $edition_data) {
         $data = [
-            "to" => $to,
-            "body" => "<h2>Contact Email</h2><p>"
-            . "Name: " . $email_data['user_name'] . "<br>"
-            . "Surname: " . $email_data['user_surname'] . "<br>"
-            . "Email: " . $email_data['user_email'] . "<br>"
-            . "Race Name: " . $email_data['edition_name'] . "<br>"
-            . "Message: " . $email_data['user_message'] . "<br></p>",
-            "subject" => "Contact from RoadRunning.co.za regarding " . $email_data['edition_name'],
+            "to" => $edition_data['user_email'],
+            "subject" => $edition_data['annual_name']. " - Enquiry from RoadRunning.co.za #". uniqid(),
+            "body" => "<p>Hello,</p>"
+            . "<p>Please see below for an enquiry send from the "
+            . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a> website "
+            . "by a runner enquiring about the <b>".$edition_data['edition_name']."</b> race:"
+            . "<p><b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
+            . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
+            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Query:</b><br> " . nl2br($email_data['user_message']) . "</p>"
+            . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/event/".$edition_data['edition_slug']."' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
+            . "<br>Please reply to this email to answer the runner's query.</p>",
+            "from" => $email_data['user_email'],
+            "from_name" => $email_data['user_name']." ".$email_data['user_surname'],
         ];
         // send mail to organiser
 //        $this->set_email($data);

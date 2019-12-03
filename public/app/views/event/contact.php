@@ -36,7 +36,7 @@
                                             'value' => set_value('user_name'),
                                             'class' => 'form-control required',
                                             'placeholder' => 'Enter your Name',
-//                                            'required' => '',
+                                            'required' => '',
                                         ]);
                                         ?>
                                     </div>
@@ -76,7 +76,7 @@
                                         'id' => 'user_message',
                                         'value' => set_value('user_message'),
                                         'class' => 'form-control required',
-                                        'placeholder' => 'Enter your Message',
+                                        'placeholder' => 'Enter your Query',
                                         'required' => '',
                                         'rows' => 5,
                                     ]);

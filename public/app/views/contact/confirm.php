@@ -13,10 +13,6 @@
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">  
                 <?php
-                // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Receive race notification";
-                $this->load->view('widgets/subscribe', $data_to_widget);
-
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
                 ?>
