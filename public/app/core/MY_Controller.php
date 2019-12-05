@@ -4,6 +4,8 @@ class MY_Controller extends CI_Controller {
 
     public $data_to_views = [];
     public $header_url = "/templates/header";
+    public $banner_url = "/templates/banner";
+    public $notice_url = "/templates/notice";
     public $footer_url = "/templates/footer";
     public $logged_in_user = [];
     public $crumb_arr = [];
@@ -19,7 +21,9 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['static_pages'] = $this->get_static_pages();
         $this->data_to_views['province_pages'] = $this->check_province_session();
         $this->data_to_views['region_pages'] = $this->check_region_session();
-        $this->data_to_views['crumbs_arr'] = $this->set_crumbs();
+        $this->data_to_views['crumbs_arr'] = $this->set_crumbs();        
+        
+        $this->data_to_views['rr_cookie']['sub_email'] = get_cookie("sub_email");
     }
 
     public function show_my_404($msg, $status) {
@@ -172,7 +176,7 @@ class MY_Controller extends CI_Controller {
     }
 
     private function set_email_body($body) {
-        $year=date("Y");
+        $year = date("Y");
         $html = <<<EOT
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns = "http://www.w3.org/1999/xhtml">
@@ -476,6 +480,103 @@ EOT;
         }
 
         return $crumbs;
+    }
+
+    public function subscribe_user($user_data, $linked_to, $linked_id) {
+        // this function will add a user to a subscription        
+        $this->load->model('user_model');
+        $this->load->model('role_model');
+        $this->load->model('usersubscription_model');
+
+        // get user id
+        $user_id = $this->user_model->get_user_id($user_data['user_email']);
+        // new user
+        if (!$user_id) {
+            $params = [
+                "action" => "add",
+                "user_data" => $user_data,
+                "role_arr" => [2],
+            ];
+            $user_id = $this->user_model->set_user($params);
+//            $user_id = $this->user_model->set_user("add", 0, $user_data, true);
+        } else {
+            // check if role 2 exist
+            $role_list = $this->role_model->get_role_list_per_user($user_id);
+            if (!in_array(2, $role_list)) {
+                $this->role_model->set_user_role($user_id, 2);
+            }
+        }
+
+        // check if subscription exists
+        $sub_exists = $this->usersubscription_model->exists($user_id, $linked_to, $linked_id);
+        if ($sub_exists) {
+            $alert = "We found a subsciption already existed for the email address entered. If you believe this to be an error please <a href='mailto:info@roadrunning.co.za'>contact me</a>.";
+            $status = "warning";
+            $icon = "info-circle";
+        } else {
+            $usersubscription_data = array(
+                'user_id' => $user_id,
+                'linked_to' => $linked_to,
+                'linked_id' => $linked_id,
+            );
+
+            $add = $this->usersubscription_model->set_usersubscription("add", $usersubscription_data);
+            if ($add) {
+                $email = $this->set_subscribe_confirmation_email($usersubscription_data);
+                $alert = "Thank you. You have been added to the mailing list for this race";
+                $status = "success";
+                $icon = "check-circle";
+            } else {
+                $alert = "Failed to add subsciprtion. Please contact the site administrator";
+                $status = "danger";
+                $icon = "minus-circle";
+            }
+        }
+        // set session flash data
+        $this->session->set_flashdata([
+            'alert' => $alert,
+            'status' => $status,
+            'icon' => $icon,
+        ]);
+    }
+
+    private function set_subscribe_confirmation_email($usersub_data) {
+        $this->load->model('user_model');
+        $this->load->model('emailque_model');
+        $this->load->model('edition_model');
+        // get user data
+        $user_data = $this->user_model->get_user_detail($usersub_data['user_id']);
+        // get edition_data
+        if ($usersub_data['linked_to'] == "edition") {
+            $this->load->model('edition_model');
+            $edition_data = $this->edition_model->get_edition_sum($usersub_data['linked_id']);
+        }
+        // set body
+        switch ($usersub_data['linked_to']) {
+            case "newsletter":
+                $switch = " our <strong>monthly newletter</strong>.";
+                break;
+            case "edition":
+                $switch = " updates regarding the <strong>" . $edition_data['edition_name'] . "</strong> event.";
+                break;
+        }
+        $body_arr[] = "<p>Hi " . $user_data['user_name'] . ",</p>";
+        $body_arr[] = "<p>This is a courtesy email to confirm you have been subscribed to receive " . $switch."</p>";
+        $body_arr[] = "<p>If <u>this was not you</u> subscribing yourself to this awesome service, please reply to this email to be removed.</p>";
+        $body_arr[] = "<p>Kind Regards<br>";
+        $body_arr[] = "Johan from RoadRunning.co.za</p>";
+        $body = implode("<br>", $body_arr);
+
+        $data = [
+            "to" => $user_data['user_email'],
+            "subject" => ucfirst($usersub_data['linked_to']) . " subscription successful",
+            "body" => $body,
+            "from" => $this->ini_array['email']['from_address_server'],
+            "from_name" => $this->ini_array['email']['from_name_server'],
+        ];
+        
+        $this->set_email($data);
+        return $this->set_email($data);
     }
 
 }

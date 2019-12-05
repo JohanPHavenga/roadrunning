@@ -21,18 +21,30 @@
 
                 <div class="row m-b-40">
                     <div class="col-lg-12">
-                        <p>Would you like to receive a notification email when information is loaded for the race, or when online entries open? How about when results are loaded?
-                            Then you are in luck. Insert you email address below and subscribe to the notification service for this race.</p>
-                            <form class="form-inline" _lpchecked="1">
-                                <div class="mx-lg-3 m-t-20">
-                                    <h5>Enter your email:</h5>
-                                </div>
-                                <div class="form-group mx-sm-3 m-t-20">
-                                    <label for="email_sub" class="sr-only">Email</label>
-                                    <input class="form-control" id="email_sub" placeholder="info@example.com" type="email">
-                                </div>
-                                <button type="submit" class="btn m-t-20">Subscribe</button>
-                            </form>
+                        <p>Would you like to receive a notification email when information is loaded for the race, or when online <b>entries open</b>?
+                            How about when <b>results are loaded</b>?</p>
+                        <p>
+                            Then you are in luck. Insert you email address below to be added mailing list for this race.</p>
+                        <?php
+                        $attributes = array('class' => 'form-inline', 'role' => 'form');
+                        echo form_open($subscribe_url, $attributes);
+                        ?>
+                        <div class="mx-lg-3 m-t-20">
+                            <h5>Email:</h5>
+                        </div>
+                        <div class="form-group mx-sm-3 m-t-20">
+                            <label for="email_sub" class="sr-only">Email</label>
+                            <input class="form-control" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?=$rr_cookie['sub_email'];?>">
+                        </div>
+                        <?php
+                        $data = array(
+                            'type' => 'submit',
+                            'content' => 'Add to mailing list',
+                            'class' => 'btn m-t-20',
+                        );
+                        echo form_button($data);
+                        echo form_close();
+                        ?>
 
                     </div>
 
@@ -45,10 +57,6 @@
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">  
                 <?php
-                // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Receive race notification";
-                $this->load->view('widgets/subscribe', $data_to_widget);
-
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
                 ?>

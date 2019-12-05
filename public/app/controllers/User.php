@@ -6,8 +6,7 @@ class User extends MY_Controller {
         parent::__construct();
         $this->load->model('user_model');
     }
-    
-    
+
     // VIEW PROFILE
     public function profile() {
         // load helpers / libraries
@@ -16,13 +15,12 @@ class User extends MY_Controller {
         $this->data_to_view['title'] = "User Profile";
 
         // GET user subsciptions
-        $this->data_to_views['user_subs']=$this->usersubscription_model->get_usersubscription_detail($this->logged_in_user['user_id']);
+        $this->data_to_views['user_subs'] = $this->usersubscription_model->get_usersubscription_detail($this->logged_in_user['user_id']);
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('user/profile', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {
@@ -39,6 +37,78 @@ class User extends MY_Controller {
             }
         }
         return FALSE;
+    }
+
+    public function subscribe($type, $slug = false) {
+        $this->load->model('edition_model');
+        $this->load->helper('email');
+        $return_url = base_url();
+
+        
+        switch ($type) {
+            case "event":
+                // get basic edition_data
+                $edition_data = $this->edition_model->get_edition_id_from_slug($slug);
+                if (!$edition_data) {
+                    $this->session->set_flashdata([
+                        'alert' => "Subscription to mailing list was unsuccessful. Please try again",
+                        'status' => "warning",
+                        'icon' => "info-circle",
+                    ]);
+                    redirect($return_url);
+                } else {
+                    $return_url = base_url("event/" . $slug);
+                    $this->data_to_views['form_url']=base_url('user/subscribe/event/'.$slug);
+                    $this->data_to_views['cancel_url']=$return_url;
+                }
+                break;
+            case "newsletter":
+                break;
+            default:
+                break;
+        }
+
+//        wts($slug);
+//        wts($type);
+//        wts($_POST);
+//        wts($edition_data, true);
+        // check vir valid email
+        if (valid_email($this->input->post("user_email"))) {
+            set_cookie("sub_email", $this->input->post("user_email"), 7200);
+            $user_id = $this->user_model->get_user_id($this->input->post("user_email"));
+
+            if ($user_id) {
+                $user_info = $this->user_model->get_user_name($user_id);
+                $success = $this->subscribe_user($user_info, "edition", $edition_data['edition_id']);
+                redirect($return_url);
+            } else {
+                $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
+                $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
+                $this->form_validation->set_rules('user_email', 'Email', 'trim|required|valid_email');
+
+                // load correct view
+                if ($this->form_validation->run() === FALSE) {
+                    $this->load->view($this->header_url, $this->data_to_views);
+                    $this->load->view('user/subscribe', $this->data_to_views);
+                    $this->load->view($this->footer_url, $this->data_to_views);
+                } else {
+                     $user_data = [
+                        "user_name" => $this->input->post('user_name'),
+                        "user_surname" => $this->input->post('user_surname'),
+                        "user_email" => $this->input->post('user_email'),
+                    ];
+                    $success = $this->subscribe_user($user_data, "edition", $edition_data['edition_id']);
+                    redirect($return_url);
+                }
+            }
+        } else {
+            $this->session->set_flashdata([
+                'alert' => "You entered an invalid email address when attempting subscribing. Please try again",
+                'status' => "danger",
+                'icon' => "minus-circle",
+            ]);
+            redirect($return_url);
+        }
     }
 
     // REGISTER 
@@ -251,6 +321,5 @@ class User extends MY_Controller {
 
         return $this->set_email($data);
     }
-
 
 }

@@ -45,6 +45,21 @@ class Edition_model extends MY_model {
             return false;
         }
     }
+    
+     public function get_edition_sum($edition_id) {
+        // CHECK Editions table vir die naame
+        $this->db->select("edition_id, edition_name, edition_status, edition_slug");
+        $this->db->from("editions");
+        $this->db->where("edition_id", $edition_id);
+        $editions_query = $this->db->get();
+
+        if ($editions_query->num_rows() > 0) {
+            $result = $editions_query->result_array();
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
 
     public function get_edition_list($query_params = [], $field_arr = NULL) {
         if (is_null($field_arr)) {

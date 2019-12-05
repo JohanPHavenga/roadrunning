@@ -3,13 +3,15 @@
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
-                <h3 class="text-uppercase">Contact Us</h3>
-                <p>Complete the form below to send an email to us</p>
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <i class="fa fa-info-circle"></i> <b>Almost there!</b>  Seems you are new here. Please enter your name and surname below to be added to the mailing list.
+
+                </div>
                 <?php
                 if (validation_errors()) {
-                    echo "<div class='alert alert-danger' role='alert'><strong><i class='fa fa-exclamation-circle'></i> Validation Error</strong>";
-                    echo validation_errors();
-                    echo "</div>";
+//                    echo "<div class='alert alert-danger' role='alert'><strong><i class='fa fa-exclamation-circle'></i> Validation Error</strong>";
+//                    echo validation_errors();
+//                    echo "</div>";
                 }
                 ?>
                 <div class="m-t-30">
@@ -59,28 +61,16 @@
                             ?>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <?php
-                        echo form_label('Comment', 'user_message');
-                        echo form_textarea([
-                            'name' => 'user_message',
-                            'id' => 'user_message',
-                            'value' => set_value('user_message'),
-                            'class' => 'form-control required',
-                            'placeholder' => 'Enter your Comment',
-                            'required' => '',
-                            'rows' => 5,
-                        ]);
-                        ?>
-                    </div>
                     <?php
                     $data = array(
                         'id' => 'form-submit',
                         'type' => 'submit',
-                        'content' => '<i class="fa fa-paper-plane"></i>&nbsp;Send',
+                        'content' => '<i class="fa fa-paper-plane"></i>&nbsp;Add to mailing list',
                         'class' => 'btn',
                     );
+
                     echo form_button($data);
+                    echo "<a href='$cancel_url' class='btn btn-light'><i class='fa fa-minus-circle'></i>&nbsp;Cancel</a>";
                     $data = array(
                         'id' => 'form-clear',
                         'type' => 'reset',

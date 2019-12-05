@@ -66,13 +66,18 @@ class Contact extends MY_Controller {
         // test email
         $data = [
             "to" => $email_data['user_email'],
-            "body" => "<h2>Contact Email</h2><p>"
-            . "Name: " . $email_data['user_name'] . "<br>"
-            . "Surname: " . $email_data['user_surname'] . "<br>"
-            . "Email: " . $email_data['user_email'] . "<br>"
-            . "Comment: " . $email_data['user_comment'] . "<br></p>",
-            "subject" => "Contact Form",
+            "body" => "<h3>Main contact form</h3><p>"
+            . "<b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
+            . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
+            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . $email_data['user_message'] . "</p>",
+            "subject" => "Main contact form  - Enquiry from RoadRunning.co.za #". uniqid(),
         ];
+        
+        // send mail to user
+        $this->set_email($data);
+        // send mail to info@roadrunning
+        $data['to'] = $this->ini_array['email']['from_address'];
+        $this->set_email($data);
 
         return $this->set_email($data);
     }

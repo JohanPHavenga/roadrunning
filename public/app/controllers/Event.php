@@ -31,6 +31,7 @@ class Event extends MY_Controller {
             // set a few vars to use
             $this->data_to_views['slug'] = $slug;
             $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
+            $this->data_to_views['subscribe_url'] = base_url("user/subscribe/event/" . $slug);
         }
 
         // check vir sub-page
@@ -68,9 +69,13 @@ class Event extends MY_Controller {
         $this->data_to_views['status_notice'] = $this->formulate_status_notice();
             
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/banner_event', $this->data_to_views);
+        $this->load->view('templates/page_menu', $this->data_to_views);
         $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
+    
 
     private function get_set_race_suammry($race_list, $edition_date, $prize_giving_time) {
         if (!$race_list) {

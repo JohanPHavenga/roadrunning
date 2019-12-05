@@ -1,2 +1,22 @@
-<h2>ABOUT</h2>
-<p>This is the about page<p>
+<section id="page-content" class="sidebar-right">
+    <div class="container">
+        <div class="row">
+            <!-- Content-->
+            <div class="content col-lg-9">
+                <h3 class="text-uppercase"><?= $page_title; ?></h3>
+                <p>This is the about page<p>
+            </div>
+            <!-- end: Content-->
+
+            <!-- Sidebar-->
+            <div class="sidebar col-lg-3">  
+                <?php
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
+                ?>
+            </div>
+            <!-- end: Sidebar-->
+        </div>
+    </div>
+</section>
+<!-- end: About -->

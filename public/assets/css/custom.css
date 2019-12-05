@@ -45,6 +45,12 @@ button, input, optgroup, select, textarea
     height: 80px;
     width: 195px;
 }
+#header .header-inner {
+    border-bottom: 1px solid #eee;
+}
+#header.dark .header-inner {
+    border: none;
+}
 
 .page-menu {
     border-top: none;
@@ -142,9 +148,19 @@ a:hover span {
 h3 span.badge a { color: #fff; } 
 h3 span.badge a:hover { color: #ccc; }
 
+#footer a:hover span.badge { 
+    color: #fff; 
+    text-decoration: none;
+    /*background-color: #26B8F3;*/
+}
+
 .alert a {
     color: #fff;
     font-weight: bold;
+}
+.alert { 
+    margin:0;
+    border-radius: none;
 }
 
 /* CONTENT STUFF */

@@ -23,68 +23,85 @@
                     <div class="col-lg-12">
                         <h3 class="text-uppercase">Get In Touch</h3>
                         <p>Got a question regarding this race? Use the form below to contact the race organisers directly. You will receive a copy of the email in your inbox as well.</p>
-                        
+
                         <div class="m-t-30">
-                            <form class="contact_form" action="<?= $contact_url; ?>" role="form" method="post">
-                                <div class="row">
-                                    <div class="form-group col-md-3">
-                                        <?php
-                                        echo form_label('Name *', 'user_name');
-                                        echo form_input([
-                                            'name' => 'user_name',
-                                            'id' => 'user_name',
-                                            'value' => set_value('user_name'),
-                                            'class' => 'form-control required',
-                                            'placeholder' => 'Enter your Name',
-                                            'required' => '',
-                                        ]);
-                                        ?>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <?php
-                                        echo form_label('Surname *', 'user_surname');
-                                        echo form_input([
-                                            'name' => 'user_surname',
-                                            'id' => 'user_surname',
-                                            'value' => set_value('user_surname'),
-                                            'class' => 'form-control required',
-                                            'placeholder' => 'Enter your Surname',
-                                            'required' => '',
-                                        ]);
-                                        ?>
-                                    </div>
-                                    <div class="form-group col-md-5">
-                                        <?php
-                                        echo form_label('Email', 'user_email');
-                                        echo form_input([
-                                            'name' => 'user_email',
-                                            'id' => 'user_email',
-                                            'type' => 'email',
-                                            'value' => set_value('user_email'),
-                                            'class' => 'form-control required',
-                                            'placeholder' => 'Enter your Email',
-                                            'required' => '',
-                                        ]);
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
+                            <?php
+                            $attributes = array('class' => 'contact_form', 'role' => 'form');
+                            echo form_open($contact_url, $attributes);
+                            ?>
+                            <div class="row">
+                                <div class="form-group col-md-3">
                                     <?php
-                                    echo form_label('Query', 'user_message');
-                                    echo form_textarea([
-                                        'name' => 'user_message',
-                                        'id' => 'user_message',
-                                        'value' => set_value('user_message'),
+                                    echo form_label('Name *', 'user_name');
+                                    echo form_input([
+                                        'name' => 'user_name',
+                                        'id' => 'user_name',
+                                        'value' => set_value('user_name'),
                                         'class' => 'form-control required',
-                                        'placeholder' => 'Enter your Query',
+                                        'placeholder' => 'Enter your Name',
                                         'required' => '',
-                                        'rows' => 5,
                                     ]);
                                     ?>
                                 </div>
-                                <button class="btn" type="submit" id="form-submit"><i class="fa fa-paper-plane"></i>&nbsp;Send message</button>
-                            </form>
-
+                                <div class="form-group col-md-4">
+                                    <?php
+                                    echo form_label('Surname *', 'user_surname');
+                                    echo form_input([
+                                        'name' => 'user_surname',
+                                        'id' => 'user_surname',
+                                        'value' => set_value('user_surname'),
+                                        'class' => 'form-control required',
+                                        'placeholder' => 'Enter your Surname',
+                                        'required' => '',
+                                    ]);
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <?php
+                                    echo form_label('Email', 'user_email');
+                                    echo form_input([
+                                        'name' => 'user_email',
+                                        'id' => 'user_email',
+                                        'type' => 'email',
+                                        'value' => set_value('user_email'),
+                                        'class' => 'form-control required',
+                                        'placeholder' => 'Enter your Email',
+                                        'required' => '',
+                                    ]);
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <?php
+                                echo form_label('Query', 'user_message');
+                                echo form_textarea([
+                                    'name' => 'user_message',
+                                    'id' => 'user_message',
+                                    'value' => set_value('user_message'),
+                                    'class' => 'form-control required',
+                                    'placeholder' => 'Enter your Query',
+                                    'required' => '',
+                                    'rows' => 5,
+                                ]);
+                                ?>
+                            </div>
+                            <?php
+                            $data = array(
+                                'id' => 'form-submit',
+                                'type' => 'submit',
+                                'content' => '<i class="fa fa-paper-plane"></i>&nbsp;Send message',
+                                'class' => 'btn',
+                            );
+                            echo form_button($data);
+                            $data = array(
+                                'id' => 'form-clear',
+                                'type' => 'reset',
+                                'content' => '<i class="fa fa-eraser"></i>&nbsp;Clear',
+                                'class' => 'btn btn-light',
+                            );
+                            echo form_button($data);
+                            echo form_close();
+                            ?>
                         </div>
                     </div>
 

@@ -33,25 +33,32 @@ class Main extends MY_Controller {
             "order_by" => ["historysum_countmonth" => "DESC"],
             "limit" => "10",
         ];
-        $this->data_to_views['history_sum_month']=$this->history_model->get_history_summary($query_params);
-        
-        
+        $this->data_to_views['history_sum_month'] = $this->history_model->get_history_summary($query_params);
+
 
 //        $this->data_to_views['featured_events'] = $this->chronologise_data($edition_list, "edition_date");
 
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view('templates/banner_home', $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/home', $this->data_to_views);
         $this->load->view($this->footer_url);
     }
 
     public function custom_404() {
+        $this->data_to_views['page_title']="Page not found";
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/404', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
     public function about() {
+        $this->data_to_views['page_title']="About Me";
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/about', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
