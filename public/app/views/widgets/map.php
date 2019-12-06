@@ -1,4 +1,4 @@
-<!--widget map-->z
+<!--widget map-->
 <div class="widget clearfix widget-map" style="height: 350px;">
     <h4 class="widget-title">Map</h4>
     <iframe

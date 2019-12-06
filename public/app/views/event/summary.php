@@ -62,7 +62,7 @@
                                 <?php
                                 // FEE SUMMARY
                                 if ($edition_data['race_summary']['fees']['from'] == $edition_data['race_summary']['fees']['to']) {
-                                     ?>
+                                    ?>
                                     <div class="product-price"><ins>R<?= intval($edition_data['race_summary']['fees']['from']); ?></ins></div>
                                     <?php
                                 } elseif (($edition_data['race_summary']['fees']['from'] > 0) && ($edition_data['race_summary']['fees']['from'] < 10000)) {
@@ -82,14 +82,17 @@
                                                                 </div>-->
 
                                 <div class="seperator m-b-10"></div>
-                                <h3>
+
+                                <div id="race_badges">
                                     <?php
                                     foreach ($edition_data['race_summary']['list'] as $race) {
-                                        echo '<span class="badge badge-' . $race['color'] . '">' . floatval($race['distance']) . '<small>km</small><br><small>' . $race['type'] . '</small></span> ';
+                                        echo '<h3><a href="' . base_url('event/' . $slug . '/distances/' . url_title($race['name'])) . '"><span class="badge badge-' . $race['color'] . '">' . floatval($race['distance']) . '<small>km</small><br>'
+                                        . '<small>' . $race['type'] . '</small></span></a></h3>';
                                     }
                                     ?>
-                                </h3>
-                                <div class="seperator m-t-20 m-b-10"></div>
+                                </div>
+
+                                <div class="seperator m-t-10 m-b-10"></div>
 
                             </div>
                             <div class="row">
@@ -319,7 +322,7 @@
 
             <!-- Sidebar-->
             <div class="sidebar col-lg-3"> 
-                <div role="alert" class="alert alert-<?= $status_notice['state']; ?>">
+                <div role="alert" class="m-b-30 alert alert-<?= $status_notice['state']; ?>">
                     <strong><i class="fa fa-<?= $status_notice['icon']; ?>"></i> <?= $status_notice['msg']; ?> </div>
                     <?php
                     // SUBSCRIBE WIDGET

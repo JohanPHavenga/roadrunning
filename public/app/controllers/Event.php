@@ -41,6 +41,7 @@ class Event extends MY_Controller {
         } else {
             $this->data_to_views['page_title_small'] = "less_padding";
         }
+        $this->data_to_views['url_params']=$url_params;
 
         $this->load->model('race_model');
         $this->load->model('file_model');
@@ -130,6 +131,7 @@ class Event extends MY_Controller {
                 'type' => $race['racetype_name'],
                 'abbr' => $race['racetype_abbr'],
                 'color' => $race['race_color'],
+                'name' => $race['race_name'],
             ];
         }
         return $return_arr;

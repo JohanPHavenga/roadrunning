@@ -25,7 +25,12 @@
                             <?php
                             foreach ($race_list as $race_id => $race) {
                                 $active = '';
-                                if ($race_id === array_key_first($race_list)) {
+//                                if ($race_id === array_key_first($race_list)) {
+                                if (isset($url_params[1])) {
+                                    if (url_title($race['race_name']) == $url_params[1]) {
+                                        $active = "ac-active";
+                                    }
+                                } elseif ($race_id === array_key_first($race_list)) {                                    
                                     $active = "ac-active";
                                 }
                                 ?>

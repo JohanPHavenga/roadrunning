@@ -145,6 +145,16 @@ a:hover span {
     margin-bottom: 20px;
 }
 
+#race_badges h3 {
+    display: inline;
+    margin-right: 10px;
+}
+#race_badges h3 a:hover span {
+    color: #fff;
+    text-decoration: none;
+    background: #26B8F3
+}
+
 h3 span.badge a { color: #fff; } 
 h3 span.badge a:hover { color: #ccc; }
 
