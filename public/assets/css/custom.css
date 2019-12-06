@@ -168,6 +168,9 @@ h3 span.badge a:hover { color: #ccc; }
     color: #fff;
     font-weight: bold;
 }
+.alert a:hover {
+    color: #fff;
+}
 .alert { 
     margin:0;
     border-radius: none;
@@ -189,20 +192,27 @@ h3 span.badge a:hover { color: #ccc; }
     line-height: 1.6em;
 }
 .content a {
-    /*border-bottom: 1px dotted #2250fc;*/
+    color: #26B8F3;
+    text-decoration: underline;
 }
 .content a:hover {
-    color: #26B8F3;
+    color: #777;
     text-decoration: underline;
     /*border-bottom: 1px solid #26B8F3;*/
 }
-
 .content .alert p {
     font-size:  1em;
     color: #fff;
     padding: 0;
     font-family: "Nunito","Helvetica","Arial",sans-serif;
     margin-bottom: 0;
+}
+.content .alert a:hover {
+    color: #fff;
+}
+
+.content a.btn {
+    text-decoration: none;
 }
 
 

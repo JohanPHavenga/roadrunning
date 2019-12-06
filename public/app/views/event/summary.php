@@ -49,7 +49,7 @@
                         </div>
 
 
-                        <div class="col-lg-7">                            
+                        <div class="col-lg-7">
                             <?php
                             echo $edition_data['edition_intro_detail'];
                             ?>
@@ -57,7 +57,7 @@
                             <div class="product-description">
                                 <div class="product-category"><?= $edition_data['annual_name']; ?></div>
                                 <div class="product-title">
-                                    <h3><a href="#">Summary</a></h3>
+                                    <h3>Summary</h3>
                                 </div>
                                 <?php
                                 // FEE SUMMARY

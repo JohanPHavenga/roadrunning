@@ -41,7 +41,7 @@ class Event extends MY_Controller {
         } else {
             $this->data_to_views['page_title_small'] = "less_padding";
         }
-        $this->data_to_views['url_params']=$url_params;
+        $this->data_to_views['url_params'] = $url_params;
 
         $this->load->model('race_model');
         $this->load->model('file_model');
@@ -51,24 +51,32 @@ class Event extends MY_Controller {
         $this->load->model('regtype_model');
 
         // gebruik slug om ID te kry
-        $edition_data = $this->edition_model->get_edition_id_from_slug($slug);
-        $this->data_to_views['edition_data'] = $this->edition_model->get_edition_detail($edition_data['edition_id']);
-        $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_data['edition_id']);
-        $this->data_to_views['file_list'] = $this->file_model->get_file_list("edition", $edition_data['edition_id'], true);
-        $this->data_to_views['url_list'] = $this->url_model->get_url_list("edition", $edition_data['edition_id'], true);
-        $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_data['edition_id'], false, true);
+        $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
+        $edition_id = $edition_sum['edition_id'];
+        $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->get_edition_detail($edition_id);
 
-        $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $this->data_to_views['edition_data']['edition_date'], $this->data_to_views['edition_data']['edition_info_prizegizing']);
-        $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_data['edition_id']);
-        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_data['edition_id']);
+        $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_id);
+        $this->data_to_views['file_list'] = $file_list = $this->file_model->get_file_list("edition", $edition_id, true);
+        $this->data_to_views['url_list'] = $url_list = $this->url_model->get_url_list("edition", $edition_id, true);
+        $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_id, false, true);
 
-        $this->data_to_views['address'] = $this->data_to_views['edition_data']['edition_address_end'] . ", " . $this->data_to_views['edition_data']['town_name'];
+        $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
+        $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
+        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
+
+        $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
 
-        $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($this->data_to_views['edition_data']['edition_date']);
-        $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $this->data_to_views['edition_data']['event_id'], $edition_data['edition_id']);
-        $this->data_to_views['status_notice'] = $this->formulate_status_notice();
-            
+        $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
+        $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id);
+        $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
+        $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
+
+        // if results loaded, get URLS to use
+        if ($edition_data['edition_info_status'] == 11) {
+            $this->data_to_views['results'] = $this->get_result_arr($slug);
+        }
+
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
@@ -76,7 +84,35 @@ class Event extends MY_Controller {
         $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
+
+    private function get_result_arr($slug) {
+        if (isset($this->data_to_views['file_list'][4])) {
+            $results['edition']['url'] = base_url("file/edition/" . $slug . "/results/" . $this->data_to_views['file_list'][4][0]['file_name']);
+            $results['edition']['text'] = "Download results summary";
+            $results['edition']['icon'] = "file-excel";
+        } elseif (isset($this->data_to_views['url_list'][4])) {
+            $results['edition']['url'] = $this->data_to_views['file_list'][4][0]['url_name'];
+            $results['edition']['text'] = "View results";
+            $results['edition']['icon'] = "external-link-alt";
+        }
+
+        // get race file and url lists
+        foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+            $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
+            $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
+            if (isset($race_file_list[4])) {
+                $results['race'][$race_id]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
+                $results['race'][$race_id]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
+                $results['race'][$race_id]['icon'] = "file-excel";
+            } elseif (isset($race_url_list[4])) {
+                $results['race'][$race_id]['url'] = $race_url_list[4][0]['url_name'];
+                $results['race'][$race_id]['text'] = $race['race_name'] . " Results";
+                $results['race'][$race_id]['icon'] = "external-link-alt";
+            }
+        }
+
+        return $results;
+    }
 
     private function get_set_race_suammry($race_list, $edition_date, $prize_giving_time) {
         if (!$race_list) {
@@ -308,12 +344,12 @@ class Event extends MY_Controller {
         return $return;
     }
 
-    private function formulate_status_notice() {
+    private function formulate_status_notice($edition_data) {
         $return = [];
         ;
 //        echo $event_detail['edition_status'];
 //        die();
-        switch ($this->data_to_views['edition_data']['edition_status']) {
+        switch ($edition_data['edition_status']) {
             case 2:
                 $msg = "<b>This event is set to DRAFT mode.</b> All detail has not yet been confirmed";
                 $short_msg = "DRAFT";
@@ -321,14 +357,14 @@ class Event extends MY_Controller {
                 $icon = "minus-circle";
                 break;
             case 3:
-                $email = $this->data_to_views['edition_data']['user_email'];
+                $email = $edition_data['user_email'];
                 $msg = "<strong>This event has been CANCELLED.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a>";
                 $short_msg = "CANCELLED";
                 $state = "danger";
                 $icon = "times-circle";
                 break;
             case 9:
-                $email = $this->data_to_views['edition_data']['user_email'];
+                $email = $edition_data['user_email'];
                 $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a><br>"
                         . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
                 $short_msg = "POSTPONED";
@@ -336,7 +372,7 @@ class Event extends MY_Controller {
                 $icon = "minus-circle";
                 break;
             default:
-                switch ($this->data_to_views['edition_data']['edition_info_status']) {
+                switch ($edition_data['edition_info_status']) {
                     case 13:
                         $msg = "<strong>PLEASE NOTE</strong><br>Dates and race times has <u>not yet been confirmed</u> by the race organisers";
                         $short_msg = "Dates not confirmed yet";
@@ -368,7 +404,7 @@ class Event extends MY_Controller {
                         $icon = "info-circle";
                         break;
                     case 11:
-                        $slug = $this->data_to_views['edition_data']['edition_slug'];
+                        $slug = $edition_data['edition_slug'];
                         $msg = "<b>RESULTS LOADED</b><br>Click to <a href='" . base_url("event/$slug/results") . "'>view results</a>";
                         $short_msg = "Results loaded";
                         $state = "success";
