@@ -47,8 +47,8 @@ class File extends MY_Controller {
                 $file_id = null;
                 $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);
                 $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_info['edition_id']);
-                foreach ($this->data_to_views['race_list'] as $race_id=>$race) {
-                    if ($race_name==url_title($race['race_name'])) {
+                foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+                    if ($race_name == url_title($race['race_name'])) {
                         break;
                     }
                 }
@@ -66,22 +66,6 @@ class File extends MY_Controller {
                 $file_id = my_decrypt($file_id);
                 break;
         }
-//        if ($linked_to == "edition") {
-//            $file_id = null;
-//            $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);
-//            $file_list = $this->file_model->get_file_list("edition", $edition_info['edition_id'], true);
-//            $filetype_list = $this->file_model->get_filetype_list();
-//            $filetype_id = $filetype_list[$filetype_name];
-//            foreach ($file_list[$filetype_id] as $key => $file_detail) {
-//                if ($file_detail['file_name'] == $file_name) {
-//                    $file_id = $file_detail['file_id'];
-//                }
-//            }
-//        } else {
-//            // decrypt the file ID
-//            $file_id = my_decrypt($file_id);
-//        }
-        
 //        wts($params);
 //        wts($file_list);
 //        wts($filetype_list);
@@ -98,19 +82,22 @@ class File extends MY_Controller {
             $this->show_my_404("No file found with that file ID", "danger");
         }
         // get ID type
-//        if ($file_detail['edition_id']>0) { $id_type="edition"; $id=$file_detail['edition_id']; }
         $id_type = $file_detail['file_linked_to'];
         $id = $file_detail['linked_id'];
         // add race id section here
         // set path
         $path = "./uploads/" . $id_type . "/" . $id . "/" . $file_detail['file_name'];
 
-        switch ($file_detail['file_ext']) {
-            default:
-                $this->display($file_detail['file_type'], $path);
+        if (file_exists($path)) {
+            switch ($file_detail['file_ext']) {
+                default:
+                    $this->display($file_detail['file_type'], $path);
 //                header("X-Robots-Tag: noindex, nofollow", true);
 //                $this->download($path);
-                break;
+                    break;
+            }
+        } else {
+            $this->show_my_404("File could not be found", "danger");
         }
     }
 

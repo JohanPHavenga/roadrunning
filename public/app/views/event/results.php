@@ -120,7 +120,7 @@
             <div class="sidebar col-lg-3">  
                 <?php
                 // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Get notified when entries open";
+                $data_to_widget['title'] = "Get notified when results are loaded";
                 $this->load->view('widgets/subscribe', $data_to_widget);
 
                 // ADS WIDGET

@@ -207,12 +207,21 @@ h3 span.badge a:hover { color: #ccc; }
     font-family: "Nunito","Helvetica","Arial",sans-serif;
     margin-bottom: 0;
 }
+.content .alert a {
+    color: #fff;
+}
 .content .alert a:hover {
     color: #fff;
 }
 
 .content a.btn {
     text-decoration: none;
+}
+.content .accordion p {
+    font-size: 0.9em;
+}
+.content .accordion table {
+    margin-bottom: 1.5rem;
 }
 
 

@@ -46,7 +46,11 @@ class Main extends MY_Controller {
     }
 
     public function custom_404() {
-        $this->data_to_views['page_title']="Page not found";
+        if ($this->session->flashdata('alert')!==null) {
+            $this->data_to_views['page_title']=$this->session->flashdata('alert');
+        } else {
+            $this->data_to_views['page_title']="404 Error";
+        }
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

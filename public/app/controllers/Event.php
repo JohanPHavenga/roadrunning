@@ -91,11 +91,11 @@ class Event extends MY_Controller {
             $results['edition']['text'] = "Download results summary";
             $results['edition']['icon'] = "file-excel";
         } elseif (isset($this->data_to_views['url_list'][4])) {
-            $results['edition']['url'] = $this->data_to_views['file_list'][4][0]['url_name'];
+            $results['edition']['url'] = $this->data_to_views['url_list'][4][0]['url_name'];
             $results['edition']['text'] = "View results";
             $results['edition']['icon'] = "external-link-alt";
         }
-
+       
         // get race file and url lists
         foreach ($this->data_to_views['race_list'] as $race_id => $race) {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
