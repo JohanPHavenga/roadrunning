@@ -118,118 +118,159 @@
                             <div style='height: 90px; width: 100%; background: #ccc;'>Ad</div>
                         </div>
                     </div>
-                    
-                    <div class="accordion accordion-shadow">
-                            <?php
-                            foreach ($race_list as $race_id => $race) {
-                                $active = '';
-                                if ($race_id === array_key_first($race_list)) {                                                    
-                                    $active = "ac-active";
+
+                    <div class="row m-b-20">
+                        <div class="col-lg-12">
+                            <div class="accordion accordion-shadow">
+                                <?php
+                                foreach ($race_list as $race_id => $race) {
+                                    $active = '';
+                                    if ($race_id === array_key_first($race_list)) {
+                                        $active = "ac-active";
+                                    }
+                                    ?>
+                                    <div class="ac-item <?= $active; ?>">
+                                        <h5 class="ac-title"><i class="fa fa-<?= $race['racetype_icon']; ?>"></i><?= $race['race_name']; ?></h5>
+                                        <div class="ac-content">
+                                            <table class="table table-striped table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style='width: 50%;'>Date</td>
+                                                        <td><?= fdateHuman($race['race_date']); ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Start Time</td>
+                                                        <td><?= ftimeSort($race['race_time_start']); ?></td>
+                                                    </tr>
+                                                    <?php
+                                                    if ($race['race_time_end'] > 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td>Cut-off Time</td>
+                                                            <td><?= ftimeSort($race['race_time_end']); ?></td>
+                                                        </tr>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                    <tr>
+                                                        <td>Distance</td>
+                                                        <td><span class="badge badge-<?= $race['race_color']; ?>"><?= fraceDistance($race['race_distance']); ?></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Race Type</td>
+                                                        <td><?= $race['racetype_name']; ?></td>
+                                                    </tr>
+                                                    <?php
+                                                    if ($race['race_fee_flat'] > 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td>Race fee:</td>
+                                                            <td>R<?= floatval($race['race_fee_flat']); ?></td>
+                                                        </tr>
+                                                        <?php
+                                                    } else {
+                                                        if ($race['race_fee_senior_licenced'] > 0) {
+                                                            ?>
+                                                            <tr>
+                                                                <td>Senior Licensed Runner:</td>
+                                                                <td>R<?= floatval($race['race_fee_senior_licenced']); ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                        if ($race['race_fee_senior_unlicenced'] > 0) {
+                                                            ?>
+                                                            <tr>
+                                                                <td>Senior Unlicensed Runner:</td>
+                                                                <td>R<?= floatval($race['race_fee_senior_unlicenced']); ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                        if ($race['race_fee_junior_licenced'] > 0) {
+                                                            ?>
+                                                            <tr>
+                                                                <td>Junior Licensed Runner:</td>
+                                                                <td>R<?= floatval($race['race_fee_junior_licenced']); ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                        if ($race['race_fee_junior_unlicenced'] > 0) {
+                                                            ?>
+                                                            <tr>
+                                                                <td>Junior Unlicensed Runner:</td>
+                                                                <td>R<?= floatval($race['race_fee_junior_unlicenced']); ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    if ($race['race_isover70free']) {
+                                                        ?>
+                                                        <tr>
+                                                            <td>Licensed Athlete 70+:</td>
+                                                            <td>Free</td>
+                                                        </tr>
+                                                        <?php
+                                                    }
+                                                    if ($race['race_minimum_age'] > 0) {
+                                                        ?>
+                                                        <tr>
+                                                            <td>Minimum age:</td>
+                                                            <td><?= $race['race_minimum_age']; ?> years</td>
+                                                        </tr>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                            <p>
+                                                <?= $race['race_notes']; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <?php
                                 }
                                 ?>
-                                <div class="ac-item <?= $active; ?>">
-                                    <h5 class="ac-title"><i class="fa fa-<?= $race['racetype_icon']; ?>"></i><?= $race['race_name']; ?></h5>
-                                    <div class="ac-content">
-                                        <table class="table table-striped table-bordered">
-                                            <tbody>
-                                                <tr>
-                                                    <td style='width: 50%;'>Date</td>
-                                                    <td><?= fdateHuman($race['race_date']); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Start Time</td>
-                                                    <td><?= ftimeSort($race['race_time_start']); ?></td>
-                                                </tr>
-                                                <?php
-                                                if ($race['race_time_end'] > 0) {
-                                                    ?>
-                                                    <tr>
-                                                        <td>Cut-off Time</td>
-                                                        <td><?= ftimeSort($race['race_time_end']); ?></td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                ?>
-                                                <tr>
-                                                    <td>Distance</td>
-                                                    <td><span class="badge badge-<?= $race['race_color']; ?>"><?= fraceDistance($race['race_distance']); ?></span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Race Type</td>
-                                                    <td><?= $race['racetype_name']; ?></td>
-                                                </tr>
-                                                <?php
-                                                if ($race['race_fee_flat'] > 0) {
-                                                    ?>
-                                                    <tr>
-                                                        <td>Race fee:</td>
-                                                        <td>R<?= floatval($race['race_fee_flat']); ?></td>
-                                                    </tr>
-                                                    <?php
-                                                } else {
-                                                    if ($race['race_fee_senior_licenced'] > 0) {
-                                                        ?>
-                                                        <tr>
-                                                            <td>Senior Licensed Runner:</td>
-                                                            <td>R<?= floatval($race['race_fee_senior_licenced']); ?></td>
-                                                        </tr>
-                                                        <?php
-                                                    }
-                                                    if ($race['race_fee_senior_unlicenced'] > 0) {
-                                                        ?>
-                                                        <tr>
-                                                            <td>Senior Unlicensed Runner:</td>
-                                                            <td>R<?= floatval($race['race_fee_senior_unlicenced']); ?></td>
-                                                        </tr>
-                                                        <?php
-                                                    }
-                                                    if ($race['race_fee_junior_licenced'] > 0) {
-                                                        ?>
-                                                        <tr>
-                                                            <td>Junior Licensed Runner:</td>
-                                                            <td>R<?= floatval($race['race_fee_junior_licenced']); ?></td>
-                                                        </tr>
-                                                        <?php
-                                                    }
-                                                    if ($race['race_fee_junior_unlicenced'] > 0) {
-                                                        ?>
-                                                        <tr>
-                                                            <td>Junior Unlicensed Runner:</td>
-                                                            <td>R<?= floatval($race['race_fee_junior_unlicenced']); ?></td>
-                                                        </tr>
-                                                        <?php
-                                                    }
-                                                }
-                                                if ($race['race_isover70free']) {
-                                                    ?>
-                                                    <tr>
-                                                        <td>Licensed Athlete 70+:</td>
-                                                        <td>Free</td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                if ($race['race_minimum_age'] > 0) {
-                                                    ?>
-                                                    <tr>
-                                                        <td>Minimum age:</td>
-                                                        <td><?= $race['race_minimum_age']; ?> years</td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                        <p>
-                                            <?= $race['race_notes']; ?>
-                                        </p>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="heading-text heading-line text-center m-t-30">
+                        <h4>Race Organisers info</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <?php
+                            if ($edition_data['club_id'] != 8) {
+                                ?>
+                                <p>This event is organised by the 
+                                    <?php
+                                    if (isset($edition_data['club_url_list'][0])) {
+                                        echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
+                                    } else {
+                                        echo $edition_data['club_name'];
+                                    }
+                                    ?>
+                                </p>
                                 <?php
                             }
                             ?>
+                            <p class="contact_info">
+                                <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>"><?= $edition_data['user_email']; ?></a>
+                                <?php
+                                if ($edition_data['user_contact']) {
+                                ?>
+                                <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
+                                <?php
+                                }
+                                ?>
+                            </p>
                         </div>
-                    
-                    
+                        
+                        <div class="col-lg-6">
+                            <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/contact"); ?>" class="btn btn-light">
+                                <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
+                        </div>
+                    </div>
+
 
 
 

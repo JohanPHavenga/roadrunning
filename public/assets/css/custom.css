@@ -62,6 +62,7 @@ span.post-meta {
 address { display: inline; }
 
 
+
 /* Color fixes */
 
 .heading-text.heading-section > h2::before,
@@ -222,6 +223,14 @@ h3 span.badge a:hover { color: #ccc; }
 }
 .content .accordion table {
     margin-bottom: 1.5rem;
+}
+
+.content p.contact_info {
+    font-size: 1.15em;
+    line-height: 28px;
+}
+.content p.contact_info i {
+    margin-right: 6px;
 }
 
 

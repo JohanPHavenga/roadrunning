@@ -1,16 +1,16 @@
 <div class="widget clearfix widget-tags">
     <h4 class="widget-title">Tags</h4>
     <div class="tags">
-        <a href="#">Design</a>
-        <a href="#">Portfolio</a>
-        <a href="#">Digital</a>
-        <a href="#">Branding</a>
-        <a href="#">HTML</a>
-        <a href="#">Clean</a>
-        <a href="#">Peace</a>
-        <a href="#">Love</a>
-        <a href="#">CSS3</a>
-        <a href="#">jQuery</a>
+        <?php
+            foreach ($tag_list as $tag) {
+                ?>
+                <a href="<?=base_url("search/tag/".$tag['tag_name']);?>"><?=$tag['tag_name'];?></a>
+                <?php
+            }
+        ?>
     </div>
+    <?php
+//        wts($tag_list);
+    ?>
 </div>
 

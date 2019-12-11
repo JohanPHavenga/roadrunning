@@ -49,6 +49,7 @@ class Event extends MY_Controller {
         $this->load->model('date_model');
         $this->load->model('entrytype_model');
         $this->load->model('regtype_model');
+        $this->load->model('tag_model');
 
         // gebruik slug om ID te kry
         $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
@@ -59,10 +60,12 @@ class Event extends MY_Controller {
         $this->data_to_views['file_list'] = $file_list = $this->file_model->get_file_list("edition", $edition_id, true);
         $this->data_to_views['url_list'] = $url_list = $this->url_model->get_url_list("edition", $edition_id, true);
         $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_id, false, true);
+        $this->data_to_views['tag_list'] = $tag_list = $this->tag_model->get_edition_tag_list($edition_id);
 
         $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
         $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
-        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
+        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);        
+        $this->data_to_views['edition_data']['club_url_list'] = $this->url_model->get_url_list("club", $edition_data['club_id'], false);
 
         $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
@@ -71,11 +74,15 @@ class Event extends MY_Controller {
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
         $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
+        
+        $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
 
         // if results loaded, get URLS to use
         if ($edition_data['edition_info_status'] == 11) {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
+        
+//        wts($edition_data,true);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

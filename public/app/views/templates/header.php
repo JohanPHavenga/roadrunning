@@ -53,6 +53,12 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="<?= base_url('assets/favicon/ms-icon-144x144.png'); ?>">
         <meta name="theme-color" content="#ffffff">
+        
+        <?php
+        if (isset($structured_data)) :
+            echo $structured_data;
+        endif;
+        ?>
     </head>
     <body>
         <div class="body-inner">
