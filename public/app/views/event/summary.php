@@ -71,18 +71,18 @@
                                     <?php
                                 }
                                 ?>
-                                <!--                                <div class="product-rate">
-                                                                    <i class="fa fa-star"></i>
-                                                                    <i class="fa fa-star"></i>
-                                                                    <i class="fa fa-star"></i>
-                                                                    <i class="fa fa-star"></i>
-                                                                    <i class="fa fa-star-half"></i>
-                                                                </div>
-                                                                <div class="product-reviews"><a href="#">3 customer reviews</a>
-                                                                </div>-->
-
+                                <!--                                
+                                    <div class="product-rate">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-half"></i>
+                                    </div>
+                                    <div class="product-reviews"><a href="#">3 customer reviews</a>
+                                    </div>
+                                -->
                                 <div class="seperator m-b-10"></div>
-
                                 <div id="race_badges">
                                     <?php
                                     foreach ($edition_data['race_summary']['list'] as $race) {
@@ -91,24 +91,32 @@
                                     }
                                     ?>
                                 </div>
-
                                 <div class="seperator m-t-10 m-b-10"></div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12"> 
                                     <?php
-                                    if (!in_array(5, $edition_data['entrytype_list'])) {
-                                        ?>
-                                        <a class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
-                                            <i class="fa fa-arrow-right"></i></a>
-                                        <?php
+                                    // ASA MEMBERSHIP
+                                    if ($edition_data['asa_member_id'] > 0) {
+                                        echo "<p style='font-size: 0.9em;'>This event is held under the rules and regulations of "
+                                        . "<u><a href='https://www.athletics.org.za/' target='_blank' title='Athletics South Africa'>ASA</a></u> "
+                                        . "and <u><a href='" . $edition_data['asa_member_url'] . "' target='_blank' title='" . $edition_data['asa_member_abbr'] . "'>"
+                                        . "" . $edition_data['asa_member_name'] . "</a></u></p>";
                                     }
                                     ?>
                                 </div>
                             </div>
+                            <div class="row">
+                                <?php
+                                if (!in_array(5, $edition_data['entrytype_list'])) {
+                                    ?>
+                                    <div class="col-lg-12">
+                                        <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
+                                            <i class="fa fa-arrow-right"></i></a>
 
-
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
 
@@ -237,7 +245,11 @@
                         <h4>Race Organisers info</h4>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
+                            <p>
+                                <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/contact"); ?>" class="btn btn-light">
+                                <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
+                            </p>
                             <?php
                             if ($edition_data['club_id'] != 8) {
                                 ?>
@@ -257,17 +269,12 @@
                                 <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>"><?= $edition_data['user_email']; ?></a>
                                 <?php
                                 if ($edition_data['user_contact']) {
-                                ?>
-                                <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
-                                <?php
+                                    ?>
+                                    <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
+                                    <?php
                                 }
                                 ?>
                             </p>
-                        </div>
-                        
-                        <div class="col-lg-6">
-                            <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/contact"); ?>" class="btn btn-light">
-                                <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
                         </div>
                     </div>
 
@@ -359,6 +366,9 @@
                     // SUBSCRIBE WIDGET
                     $data_to_widget['title'] = "Receive race notification";
                     $this->load->view('widgets/subscribe', $data_to_widget);
+                    
+                    // ADD TO CALENDAR WIDGET
+                    $this->load->view('widgets/add_calendar');
 
                     // TAGS WIDGET
                     $this->load->view('widgets/tags');

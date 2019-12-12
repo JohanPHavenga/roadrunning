@@ -11,13 +11,22 @@ class Main extends MY_Controller {
     public function index() {
         $this->load->model('edition_model');
         $this->load->model('history_model');
+        $this->load->model('file_model');
+
         // featured events
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
+            "limit" => "6",
         ];
-        $this->data_to_views['featured_events_new'] = $this->edition_model->get_edition_list_incl_races($query_params);
-
+        $featured_events = $this->edition_model->get_edition_list_incl_races($query_params);
+        // add img url to featured events
+        foreach ($featured_events as $edition_id=>$edition) {
+            $edition['img_url']=$this->file_model->get_edition_img_url($edition_id, $edition['edition_slug']);
+            $this->data_to_views['featured_events'][$edition_id]=$edition;
+        }
+//        wts($this->data_to_views['featured_events'],true);
+        
         // last edited
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
@@ -36,6 +45,9 @@ class Main extends MY_Controller {
         $this->data_to_views['history_sum_month'] = $this->history_model->get_history_summary($query_params);
 
 
+        // QUOTES for banner
+        $this->data_to_views['quote_arr'] = $this->get_quote_data(3);
+
 //        $this->data_to_views['featured_events'] = $this->chronologise_data($edition_list, "edition_date");
 
         $this->load->view($this->header_url, $this->data_to_views);
@@ -46,10 +58,10 @@ class Main extends MY_Controller {
     }
 
     public function custom_404() {
-        if ($this->session->flashdata('alert')!==null) {
-            $this->data_to_views['page_title']=$this->session->flashdata('alert');
+        if ($this->session->flashdata('alert') !== null) {
+            $this->data_to_views['page_title'] = $this->session->flashdata('alert');
         } else {
-            $this->data_to_views['page_title']="404 Error";
+            $this->data_to_views['page_title'] = "404 Error";
         }
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -59,7 +71,7 @@ class Main extends MY_Controller {
     }
 
     public function about() {
-        $this->data_to_views['page_title']="About Me";
+        $this->data_to_views['page_title'] = "About Me";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -99,6 +111,33 @@ class Main extends MY_Controller {
             $this->load->view('main/site_version', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         }
+    }
+
+    private function get_quote_data($count) {
+        $this->load->model('quote_model');
+        $this->load->helper('file');
+        $img_base_url = "assets/img/slider/";
+
+        // get random quotes
+        $quote_arr = $this->quote_model->get_quote_list(true, $count);
+        // get random bg image
+        $img_arr = get_filenames($img_base_url);
+        $img_count = sizeof($img_arr);
+
+        // set return_arr
+        $rand_img_num_arr = [];
+        foreach ($quote_arr as $quote_id => $quote) {
+            do {
+                $rand_img_num = rand(1, $img_count);
+            } while (in_array($rand_img_num, $rand_img_num_arr));
+            $rand_img_num_arr[] = $rand_img_num;
+             
+            $num=sprintf("%02d", $rand_img_num);
+            $return_arr[$quote_id]['quote'] = $quote['quote_quote'];
+            $return_arr[$quote_id]['img_url'] = base_url($img_base_url."run_".$num.".webp");
+        }
+
+        return ($return_arr);
     }
 
 }

@@ -1,4 +1,4 @@
-<div class="row m-b-20">
+<div class="row m-b-10">
     <div class="col-lg-12">
         <span class="post-meta"><i class="fa fa-calendar"></i> <?= fdateHumanFull($edition_data['edition_date'], false); ?></span>
         <span class="post-meta"><i class="fa fa-clock"></i> 

@@ -64,7 +64,7 @@ class Event extends MY_Controller {
 
         $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
         $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
-        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);        
+        $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
         $this->data_to_views['edition_data']['club_url_list'] = $this->url_model->get_url_list("club", $edition_data['club_id'], false);
 
         $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
@@ -74,14 +74,15 @@ class Event extends MY_Controller {
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
         $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
-        
+
         $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
+        $this->data_to_views['google_cal_url'] = $this->formulate_google_cal($edition_data, $this->data_to_views['race_list']);
 
         // if results loaded, get URLS to use
         if ($edition_data['edition_info_status'] == 11) {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
-        
+
 //        wts($edition_data,true);
 
         $this->load->view($this->header_url, $this->data_to_views);
@@ -102,7 +103,7 @@ class Event extends MY_Controller {
             $results['edition']['text'] = "View results";
             $results['edition']['icon'] = "external-link-alt";
         }
-       
+
         // get race file and url lists
         foreach ($this->data_to_views['race_list'] as $race_id => $race) {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
@@ -432,6 +433,88 @@ class Event extends MY_Controller {
         $return['state'] = $state;
         $return['icon'] = $icon;
         return $return;
+    }
+
+    function ics($edition_slug) {
+
+        $this->load->model('edition_model');
+        $this->load->model('race_model');
+
+        $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);
+        $edition_id = $edition_info['edition_id'];
+        
+        $edition_data = $this->edition_model->get_edition_detail($edition_id);
+        $race_list = $this->race_model->get_race_list($edition_id);
+
+        $edition_url = base_url("event/" . $edition_data['edition_slug']);
+        $address = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
+
+
+        // dates
+        $date = $edition_data['edition_date'];
+        $time = "23:59:00";
+        foreach ($race_list as $race) {
+            $race_time = $race['race_time_start'];
+            if ($race_time < $time) {
+                $time = $race_time;
+            }
+        }
+        $sdate = strtotime(str_replace("00:00:00", $time, $date));
+        if ($edition_data['edition_info_prizegizing'] != "00:00:00") {
+            $edate = strtotime(str_replace("00:00:00", $edition_data['edition_info_prizegizing'], $date));
+        } else {
+            $edate = $sdate + (5 * 60 * 60);
+        }
+
+        $this->data_to_views['summary'] = $edition_data['edition_name'];
+        $this->data_to_views['datestart'] = $sdate;
+        $this->data_to_views['dateend'] = $edate;
+        $this->data_to_views['address'] = $address;
+        $this->data_to_views['uri'] = $edition_url;
+        $this->data_to_views['description'] = "website: " . $edition_url;
+        $this->data_to_views['filename'] = $edition_slug . ".ics";
+        $this->data_to_views['uid'] = $edition_id;
+
+        $this->load->view("/event/ics", $this->data_to_views);
+
+//        wts($this->data_to_views);
+//        wts($edition_info);
+//        die($edition_id);
+    }
+
+    function formulate_google_cal($edition_data, $race_list) {
+
+
+        $base_url = "http://www.google.com/calendar/event?action=TEMPLATE&trp=true";
+
+        $edition_url = base_url("event/" . $edition_data['edition_slug']);
+        $address = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
+        $text = $edition_data['edition_name'];
+
+        // dates
+        $date = $edition_data['edition_date'];
+        $time = "23:59:00";
+        foreach ($race_list as $race) {
+            $race_time = $race['race_time_start'];
+            if ($race_time < $time) {
+                $time = $race_time;
+            }
+        }
+        $sdate = strtotime(str_replace("00:00:00", $time, $date));
+        if ($edition_data['edition_info_prizegizing'] != "00:00:00") {
+            $edate = strtotime(str_replace("00:00:00", $edition_data['edition_info_prizegizing'], $date));
+        } else {
+            $edate = $sdate + (5 * 60 * 60);
+        }
+        $dates = fdateToCal($sdate) . "/" . fdateToCal($edate);
+//        echo $dates;
+//        wts($edition_data,true);
+
+        $sprop = "website:" . $edition_url;
+        $details = "website:" . $edition_url;
+        $location = urlencode($address);
+
+        return $base_url . "&text=" . $text . "&dates=" . $dates . "&details=" . $details . "&location=" . $location;
     }
 
 }

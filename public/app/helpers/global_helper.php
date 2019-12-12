@@ -13,10 +13,6 @@ function wts($seq = '', $die = false) {
     }
 }
 
-function get_url_from_edition_name($encoded_edition_name) {
-    return base_url("event/" . $encoded_edition_name);
-}
-
 function encode_edition_name($edition_name) {
     return urlencode(str_replace(" ", "-", (str_replace("-", "--", ($edition_name)))));
 }
