@@ -84,101 +84,31 @@
                         ?>
                         <div class="race">
                             <div class="race-image">
-                                <a href='<?= $edition['edition_url'];?>'>
-                                    <img src="<?=$edition['img_url'];?>" alt="<?=$edition['edition_name'];?>"></a>
-                                <div class="race-title"><?=$edition['edition_name'];?></div>
+                                <a href='<?= $edition['edition_url']; ?>'>
+                                    <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>"></a>
+                                <div class="race-title"><?= $edition['edition_name']; ?></div>
                                 <?php
                                 if (!array_key_exists(5, $edition['entrytype_list'])) {
-                                ?>
-                                <span class="race-badge">Entry <br>Open</span>
-                                <?php
+                                    ?>
+                                    <span class="race-badge">Entry <br>Open</span>
+                                    <?php
                                 }
                                 ?>
                             </div>
                             <div class="race-details">
                                 <p>
-                                    <b>WHEN</b>: <?= fdateHumanFull($edition['edition_date'],true);?> from <?= ftimeMil($edition['race_time_start']);?><br>
-                                    <b>WHERE</b>: <?=$edition['edition_address'].", ".$edition['town_name'];?><br>
-                                    <b>DISTANCES</b>: <?= implode(" | ", $edition['race_distance_arr']);?><br>
+                                    <b>WHEN</b>: <?= fdateHumanFull($edition['edition_date'], true); ?> from <?= ftimeMil($edition['race_time_start']); ?><br>
+                                    <b>WHERE</b>: <?= $edition['edition_address'] . ", " . $edition['town_name']; ?><br>
+                                    <b>DISTANCES</b>: <?= implode(" | ", $edition['race_distance_arr']); ?><br>
                                 </p>
                                 <div class="float-left">
-                                    <a href="<?= $edition['edition_url'];?>" class="btn btn-colored">View</a>
+                                    <a href="<?= $edition['edition_url']; ?>" class="btn btn-colored">View</a>
                                 </div>
                             </div>
                         </div>
                         <?php
-//                        echo date("D j M", strtotime($edition['edition_date'])) . " - <a href='" . base_url('event/' . $edition['edition_slug']) . "'>" . $edition['edition_name'] . "</a> ";
                     }
                     ?>
-
-                    <div class="race">
-                        <div class="race-image">
-                            <a href='#as'>
-                                <img src="images/races/Century_City_Express_2019.PNG" alt="#"></a>
-                            <div class="race-title">Century City Express</div>
-                            <span class="race-badge">Entry <br>Open</span>
-                        </div>
-                        <div class="race-details">
-                            <p>
-                                <b>WHEN</b>: 10 November 2019 from 06h00<br>
-                                <b>WHERE</b>: Century City, WC<br>
-                                <b>DISTANCES</b>: 5 / 10 / 21 / 42<br>
-                            </p>
-                            <div class="float-left">
-                                <a href="#" class="btn btn-colored">View</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="race">
-                        <div class="race-image">
-                            <img src="images/races/ceres.jpg" alt="#">
-                            <div class="race-title">Mitchel's Pass Half</div>
-                        </div>                                        
-                        <div class="race-details">
-                            <p>
-                                <b>WHEN</b>: 11 December 2019 from 07h00<br>
-                                <b>WHERE</b>: Ceres, WC<br>
-                                <b>DISTANCES</b>: 10 / 21<br>
-                            </p>
-                            <div class="float-left">
-                                <a href="#" class="btn btn-colored">View</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="race">
-                        <div class="race-image">
-                            <img src="images/races/lighthouse_ten.PNG" alt="#">
-                            <div class="race-title">Crazy Store 10km</div>
-                            <span class="race-badge">Entry <br>Open</span>
-                        </div>                                        
-                        <div class="race-details">
-                            <p>
-                                <b>WHEN</b>: 05 January 2020 from 07h00<br>
-                                <b>WHERE</b>: Brackenfell, WC<br>
-                                <b>DISTANCES</b>: 5 / 10<br>
-                            </p>
-                            <div class="float-left">
-                                <a href="#" class="btn btn-colored">View</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="race">
-                        <div class="race-image">
-                            <img src="images/races/Century_City_Express_2019.PNG" alt="#">
-                            <div class="race-title">Century City Express</div>
-                            <span class="race-badge">Entry <br>Open</span>
-                        </div>
-                        <div class="race-details">
-                            <p>
-                                <b>WHEN</b>: 10 November 2019 from 06h00<br>
-                                <b>WHERE</b>: Century City, WC<br>
-                                <b>DISTANCES</b>: 5 / 10 / 21 / 42<br>
-                            </p>
-                            <div class="float-left">
-                                <a href="#" class="btn btn-colored">View</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -243,91 +173,146 @@
                 </div>
                 <div class="tabs p-r-20">
                     <ul class="nav nav-tabs nav-justified text-left" id="myTab">
-                        <li class="nav-item"><a href="#day1" class="nav-link active" data-toggle="tab" aria-selected="true"><strong>Saturday</strong> <br>02.11.2019</a></li>
-                        <li class="nav-item"><a href="#day2" class="nav-link" data-toggle="tab"><strong>Sunday</strong> <br>03.11.2019</a></li>
-                        <li class="nav-item"><a href="#day3" class="nav-link" data-toggle="tab"><strong>Wednesday</strong> <br>06.11.2019</a></li>
-                        <li class="nav-item"><a href="#day4" class="nav-link" data-toggle="tab"><strong>Saturday</strong> <br>09.11.2019</a></li>
+                        <?php
+                        foreach ($upcoming_events as $year => $year_list) {
+                            foreach ($year_list as $month => $month_list) {
+                                foreach ($month_list as $day => $edition_list) {
+                                    $unix = strtotime($day . " " . $month . " " . $year);
+                                    $act = "";
+                                    if ($day === array_key_first($month_list)) {
+                                        $act = "active";
+                                    }
+                                    ?>
+                                    <li class="nav-item">
+                                        <a href="#day<?= $day; ?>" class="nav-link <?= $act; ?>" data-toggle="tab" aria-selected="true">
+                                            <strong><?= date("l", $unix); ?></strong> <br><?= date("Y.m.d", $unix); ?></a>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                        }
+                        ?>
+<!--                        <li class="nav-item"><a href="#day1" class="nav-link active" data-toggle="tab" aria-selected="true"><strong>Saturday</strong> <br>02.11.2019</a></li>
+<li class="nav-item"><a href="#day2" class="nav-link" data-toggle="tab"><strong>Sunday</strong> <br>03.11.2019</a></li>
+<li class="nav-item"><a href="#day3" class="nav-link" data-toggle="tab"><strong>Wednesday</strong> <br>06.11.2019</a></li>
+<li class="nav-item"><a href="#day4" class="nav-link" data-toggle="tab"><strong>Saturday</strong> <br>09.11.2019</a></li>-->
                     </ul>
                     <div class="tab-content">
-                        <div id="day1" class="tab-pane fade show active">
-                            <a href="">
-                                <div class="p-10 border-bottom">
-                                    <span><i class="far fa-clock"></i> 07:15 - 10:45</span>
-                                    <h5>Century City Express</h5>
-                                    <p class="m-b-0">Century City, WC<br>21 / 10 / 5 km</p>
-                                </div>
-                            </a>
-                            <a href="">
-                                <div class="p-10 border-bottom">
-                                    <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                    <h5>Alea Grande</h5>
-                                    <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                </div>
-                            </a>
-                            <a href="">
-                                <div class="p-10 border-bottom">
-                                    <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                    <h5>John Smith</h5>
-                                    <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div id="day2" class="tab-pane fade">
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                <h5>Alea Grande</h5>
-                                <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                <h5>John Smith</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
-                                <h5>Juna Doe</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                            </div>
-                        </div>
-                        <div id="day3" class="tab-pane fade">
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                <h5>John Smith</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                <h5>Alea Grande</h5>
-                                <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                <h5>John Smith</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
-                                <h5>Juna Doe</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                            </div>
-                        </div>
-                        <div id="day4" class="tab-pane fade">
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                <h5>Alea Grande</h5>
-                                <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                <h5>John Smith</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                            </div>
-                            <div class="p-10 border-bottom">
-                                <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
-                                <h5>Juna Doe</h5>
-                                <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                            </div>
-                        </div>
+                        <?php
+                        foreach ($upcoming_events as $year => $year_list) {
+                            foreach ($year_list as $month => $month_list) {
+                                foreach ($month_list as $day => $edition_list) {
+                                    $act = "";
+                                    if ($day === array_key_first($month_list)) {
+                                        $act = "active";
+                                    }
+                                    ?>
+                                    <div id="day<?= $day; ?>" class="tab-pane fade show <?= $act; ?>">
+                                        <?php
+                                        foreach ($edition_list as $edition_id => $edition) {
+                                            ?>
+                                            <a href="<?= $edition['edition_url']; ?>">
+                                                <div class="p-10 border-bottom">
+                                                    <span>
+                                                        <i class="far fa-clock"></i> <?= ftimeMil($edition['race_time_start']); ?>
+                                                        <?php
+                                                        if ($edition['edition_info_prizegizing'] != "00:00:00") {
+                                                            echo " - " . ftimeMil($edition['edition_info_prizegizing']);
+                                                        }
+                                                        ?>
+                                                    </span>
+                                                    <h5><?= $edition['edition_name']; ?></h5>
+                                                    <p class="m-b-0"><?= $edition['town_name']; ?><br><?= implode(" | ", $edition['race_distance_arr']); ?></p>
+                                                </div>
+                                            </a>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                        }
+                        ?>
+                        <!--                        <div id="day1" class="tab-pane fade show active">
+                                                    <a href="">
+                                                        <div class="p-10 border-bottom">
+                                                            <span><i class="far fa-clock"></i> 07:15 - 10:45</span>
+                                                            <h5>Century City Express</h5>
+                                                            <p class="m-b-0">Century City, WC<br>21 / 10 / 5 km</p>
+                                                        </div>
+                                                    </a>
+                                                    <a href="">
+                                                        <div class="p-10 border-bottom">
+                                                            <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
+                                                            <h5>Alea Grande</h5>
+                                                            <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                        </div>
+                                                    </a>
+                                                    <a href="">
+                                                        <div class="p-10 border-bottom">
+                                                            <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
+                                                            <h5>John Smith</h5>
+                                                            <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div id="day2" class="tab-pane fade">
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
+                                                        <h5>Alea Grande</h5>
+                                                        <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
+                                                        <h5>John Smith</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
+                                                        <h5>Juna Doe</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                                                    </div>
+                                                </div>
+                                                <div id="day3" class="tab-pane fade">
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
+                                                        <h5>John Smith</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
+                                                        <h5>Alea Grande</h5>
+                                                        <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
+                                                        <h5>John Smith</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
+                                                        <h5>Juna Doe</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                                                    </div>
+                                                </div>
+                                                <div id="day4" class="tab-pane fade">
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
+                                                        <h5>Alea Grande</h5>
+                                                        <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
+                                                        <h5>John Smith</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                                    </div>
+                                                    <div class="p-10 border-bottom">
+                                                        <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
+                                                        <h5>Juna Doe</h5>
+                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                                                    </div>
+                                                </div>-->
                     </div>
                 </div>
                 <div class="text-center  p-t-20 p-b-20">
@@ -339,27 +324,105 @@
                     <h2>Contact Us</h2>
                     <span class="lead">Get in touch.</span>
                 </div>
-                <form class="widget-contact-form" action="include/contact-form.php" role="form" method="post">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" aria-required="true" name="widget-contact-form-name" class="form-control required name" placeholder="Enter your Name">
+                <?php
+                $attributes = array('class' => 'contact-form', 'role' => 'form');
+                echo form_open(base_url("contact"), $attributes);
+                ?>
+                <div class="row">
+                    <div class="form-group col-md-5">
+                        <?php
+                        echo form_label('Name *', 'user_name');
+                        echo form_input([
+                            'name' => 'user_name',
+                            'id' => 'user_name',
+                            'value' => set_value('user_name'),
+                            'class' => 'form-control required',
+                            'placeholder' => 'Enter your Name',
+                            'required' => '',
+                        ]);
+                        ?>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" aria-required="true" name="widget-contact-form-email" class="form-control required email" placeholder="Enter your Email">
+                    <div class="form-group col-md-7">
+                        <?php
+                        echo form_label('Surname *', 'user_surname');
+                        echo form_input([
+                            'name' => 'user_surname',
+                            'id' => 'user_surname',
+                            'value' => set_value('user_surname'),
+                            'class' => 'form-control required',
+                            'placeholder' => 'Enter your Surname',
+                            'required' => '',
+                        ]);
+                        ?>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Phone Number</label>
-                        <input type="text" aria-required="true" name="widget-contact-form-phone" class="form-control required" placeholder="Enter your Phone number">
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <?php
+                        echo form_label('Email', 'user_email');
+                        echo form_input([
+                            'name' => 'user_email',
+                            'id' => 'user_email',
+                            'type' => 'email',
+                            'value' => set_value('user_email'),
+                            'class' => 'form-control required',
+                            'placeholder' => 'Enter your Email',
+                            'required' => '',
+                        ]);
+                        ?>
                     </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea name="widget-contact-form-message" rows="7" class="form-control required" placeholder="Enter your Message"></textarea>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <?php
+                        echo form_label('Message', 'user_message');
+                        echo form_textarea([
+                            'name' => 'user_message',
+                            'id' => 'user_message',
+                            'value' => set_value('user_message'),
+                            'class' => 'form-control required',
+                            'placeholder' => 'Enter your Comment',
+                            'required' => '',
+                            'rows' => 5,
+                        ]);
+                        ?>
                     </div>
-                    <div class="form-group text-center">
-                        <button class="btn button-light" type="submit" id="form-submit">Send message</button>
-                    </div>
-                </form>
+                </div>
+                <?php
+                $data = array(
+                    'id' => 'form-submit',
+                    'type' => 'submit',
+                    'content' => '<i class="fa fa-paper-plane"></i>&nbsp;Send',
+                    'class' => 'btn',
+                );
+                echo form_button($data);
+                $data = array(
+                    'id' => 'form-clear',
+                    'type' => 'reset',
+                    'content' => '<i class="fa fa-eraser"></i>&nbsp;Clear',
+                    'class' => 'btn btn-light',
+                );
+                echo form_button($data);
+                echo form_close();
+                ?>
+
+                <!--                <form class="widget-contact-form" action="include/contact-form.php" role="form" method="post">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" aria-required="true" name="widget-contact-form-name" class="form-control required name" placeholder="Enter your Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" aria-required="true" name="widget-contact-form-email" class="form-control required email" placeholder="Enter your Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message">Message</label>
+                                        <textarea name="widget-contact-form-message" rows="7" class="form-control required" placeholder="Enter your Message"></textarea>
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <button class="btn button-light" type="submit" id="form-submit">Send message</button>
+                                    </div>
+                                </form>-->
             </div>
         </div>
     </div>
@@ -378,13 +441,24 @@
                 </p>
             </div>
             <div class="col-lg-4">
-                <form class="form-inline">
-                    <div class="form-group mx-sm-3 m-t-20">
-                        <label for="inputPassword2" class="sr-only">Email</label>
-                        <input class="form-control" id="inputEmail" placeholder="Email" type="email" autocomplete="off">
-                    </div>
-                    <button type="submit" class="btn m-t-20">Subscribe</button>
-                </form>
+                <?php
+                $subscribe_url = base_url("user/subscribe/newsletter");
+                $attributes = array('class' => 'form-inline', 'role' => 'form');
+                echo form_open($subscribe_url, $attributes);
+                ?>
+                <div class="form-group mx-sm-3 m-t-20">
+                    <label for="email_sub" class="sr-only">Email</label>
+                    <input class="form-control" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?= $rr_cookie['sub_email']; ?>">
+                </div>
+                <?php
+                $data = array(
+                    'type' => 'submit',
+                    'content' => 'Subscribe',
+                    'class' => 'btn m-t-20',
+                );
+                echo form_button($data);
+                echo form_close();
+                ?>
             </div>
         </div>
     </div>

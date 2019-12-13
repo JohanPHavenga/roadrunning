@@ -10,6 +10,7 @@ class Main extends MY_Controller {
 
     public function index() {
         $this->load->model('edition_model');
+        $this->load->model('race_model');
         $this->load->model('history_model');
         $this->load->model('file_model');
         $this->load->model('entrytype_model');
@@ -20,14 +21,17 @@ class Main extends MY_Controller {
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
             "limit" => "40",
         ];
-        $featured_events = $this->edition_model->get_edition_list_incl_races($query_params);
-        // add img url to featured events
-        foreach ($featured_events as $edition_id=>$edition) {
-            $edition['img_url']=$this->file_model->get_edition_img_url($edition_id, $edition['edition_slug']);
-            $edition['entrytype_list']=$this->entrytype_model->get_edition_entrytype_list($edition_id);
-            $this->data_to_views['featured_events'][$edition_id]=$edition;
-        }
-//        wts($this->data_to_views['featured_events'],true);
+        $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+
+        // last edited
+        $query_params = [
+            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("1 week")), "edition_status" => 1],
+            "order_by" => ["editions.edition_date" => "ASC"],
+        ];
+        $upcoming_events = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        $this->data_to_views['upcoming_events'] = $this->chronologise_data($upcoming_events, "edition_date");
+//        wts($this->data_to_views['upcoming_events'],true);
         
         // last edited
         $query_params = [
@@ -50,11 +54,11 @@ class Main extends MY_Controller {
         // QUOTES for banner
         $this->data_to_views['quote_arr'] = $this->get_quote_data(3);
 
-//        $this->data_to_views['featured_events'] = $this->chronologise_data($edition_list, "edition_date");
+//        $this->data_to_views['featured_events'] = $this->chronologise_data($this->data_to_views['featured_events'], "edition_date");
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('templates/banner_home', $this->data_to_views);
-        $this->load->view($this->notice_url, $this->data_to_views);
+//        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/home', $this->data_to_views);
         $this->load->view($this->footer_url);
     }
@@ -78,6 +82,15 @@ class Main extends MY_Controller {
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/about', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+    
+    public function newsletter() {
+        $this->data_to_views['page_title'] = "Newsletter Subscription";
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('main/newsletter', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
@@ -133,10 +146,10 @@ class Main extends MY_Controller {
                 $rand_img_num = rand(1, $img_count);
             } while (in_array($rand_img_num, $rand_img_num_arr));
             $rand_img_num_arr[] = $rand_img_num;
-             
-            $num=sprintf("%02d", $rand_img_num);
+
+            $num = sprintf("%02d", $rand_img_num);
             $return_arr[$quote_id]['quote'] = $quote['quote_quote'];
-            $return_arr[$quote_id]['img_url'] = base_url($img_base_url."run_".$num.".webp");
+            $return_arr[$quote_id]['img_url'] = base_url($img_base_url . "run_" . $num . ".webp");
         }
 
         return ($return_arr);

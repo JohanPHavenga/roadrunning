@@ -6,7 +6,7 @@
                     <h3 class="text-uppercase">Contact Confirmation</h3>
                     <p><?=$this->session->flashdata('confirm_msg');?></p>
                     
-                    <a href="<?=$this->session->flashdata('confirm_btn_url');?>" class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp<?=$this->session->flashdata('confirm_btn_txt');?></a>
+                    <a href="<?=$this->session->flashdata('confirm_btn_url');?>" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> <?=$this->session->flashdata('confirm_btn_txt');?></a>
             </div>
             <!-- end: Content-->
 

@@ -1,31 +1,17 @@
 <section id="page-content" class="sidebar-right">
     <div class="container">
-        <div class="row m-b-5">
-            <div class="col-lg-10">
-                <h2>Receive race notifications</h2>
-            </div>
-        </div>
-        <?php
-        $this->load->view('widgets/race_meta');
-        ?>      
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
-
-                <!-- add box -->
-                <div class="row m-b-30">
-                    <div class="col-lg-12">
-                        <div style='height: 90px; width: 100%; background: #ccc;'>Ad</div>
-                    </div>
-                </div>
-
-                <div class="row m-b-40">
-                    <div class="col-lg-12">
-                        <p>Would you like to receive a notification email when information is loaded for the race, or when online <b>entries open</b>?
-                            How about when <b>results are loaded</b>?</p>
-                        <p>
-                            Then you are in luck. Insert you email address below to be added mailing list for this race.</p>
+                <h3 class="text-uppercase"><?= $page_title; ?></h3>
+                <?php
+                if ($this->session->flashdata('status')!='success') { 
+                ?>
+                <div class="row">
+                    <div class="m-b-40 col-lg-12">
+                        <p>Please enter your email address below to subscribe to our monthly newsletter</p>
                         <?php
+                        $subscribe_url = base_url("user/subscribe/newsletter");
                         $attributes = array('class' => 'form-inline', 'role' => 'form');
                         echo form_open($subscribe_url, $attributes);
                         ?>
@@ -34,7 +20,7 @@
                         </div>
                         <div class="form-group mx-sm-3 m-t-20">
                             <label for="email_sub" class="sr-only">Email</label>
-                            <input class="form-control" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?=$rr_cookie['sub_email'];?>">
+                            <input class="form-control" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?= $rr_cookie['sub_email']; ?>">
                         </div>
                         <?php
                         $data = array(
@@ -48,7 +34,21 @@
 
                     </div>
                 </div>
+                <?php
+                }
+                ?>
+                <div class="row">
+                    <div class="col-lg-12">
 
+                        <h4 class="text-uppercase">Why subscribe?</h4>
+                        <p>
+                            If you subscribe to our newsletter you will receive a <b>monthly</b> update of results loaded for the events that was, 
+                            plus a list of upcoming events over the next two months.</p>
+                        <p>
+                            It is still a <b>work in progress</b>, so please, if there is any suggestions out there to make it better, hit the 
+                            reply button and give me a piece of your mind. </p>
+                    </div>
+                </div>
             </div>
             <!-- end: Content-->
 
@@ -63,4 +63,4 @@
         </div>
     </div>
 </section>
-<!-- end: Shop products -->
+<!-- end: About -->

@@ -28,8 +28,8 @@ class Race_model extends MY_model {
             foreach ($query->result_array() as $row) {
                 $data[$row['race_id']] = $row;
                 $data[$row['race_id']]['race_color'] = $this->get_race_color($row['race_distance']);
-                if (strtotime($row['race_date'])<=0) {
-                    $data[$row['race_id']]['race_date']=$row['edition_date'];
+                if (strtotime($row['race_date']) <= 0) {
+                    $data[$row['race_id']]['race_date'] = $row['edition_date'];
                 }
             }
             return $data;
@@ -141,6 +141,31 @@ class Race_model extends MY_model {
                 return false;
             }
         }
+    }
+
+    public function add_race_info($edition_arr) {
+        // ADD RACE INFORMATION TO THE EDITION
+        $return_arr = [];
+        foreach ($edition_arr as $edition_id => $edition) {
+            $race_list = $this->get_race_list($edition_id);
+            $return_arr[$edition_id] = $edition;
+            $race_time_start="31 December 2999";
+           
+            foreach ($race_list as $race) {
+                if (strtotime($race['race_time_start']) < strtotime($race_time_start)) {
+                    $race_time_start = $race['race_time_start'];
+                }
+                if (($race['racetype_abbr']=="R") || ($race['racetype_abbr']=="R/W")) {
+                    $return_arr[$edition_id]['race_distance_arr'][]=fraceDistance($race['race_distance']);
+                } else {
+                    $return_arr[$edition_id]['race_distance_arr'][]=fraceDistance($race['race_distance'])." ".$race['racetype_name'];
+                }
+            }
+            
+            $return_arr[$edition_id]['race_time_start'] = $race_time_start;
+            $return_arr[$edition_id]['race_list'] = $race_list;
+        }
+        return $return_arr;
     }
 
 }

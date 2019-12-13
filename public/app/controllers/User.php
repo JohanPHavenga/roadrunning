@@ -60,9 +60,14 @@ class User extends MY_Controller {
                     $return_url = base_url("event/" . $slug);
                     $this->data_to_views['form_url']=base_url('user/subscribe/event/'.$slug);
                     $this->data_to_views['cancel_url']=$return_url;
+                    $linked_to_id=$edition_data['edition_id'];
                 }
                 break;
             case "newsletter":
+                $return_url = base_url("newsletter");
+                $this->data_to_views['form_url']=base_url('user/subscribe/newsletter');
+                $this->data_to_views['cancel_url']=$return_url;
+                $linked_to_id=0;
                 break;
             default:
                 break;
@@ -79,7 +84,7 @@ class User extends MY_Controller {
 
             if ($user_id) {
                 $user_info = $this->user_model->get_user_name($user_id);
-                $success = $this->subscribe_user($user_info, "edition", $edition_data['edition_id']);
+                $success = $this->subscribe_user($user_info, $type, $linked_to_id);
                 redirect($return_url);
             } else {
                 $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
@@ -97,7 +102,7 @@ class User extends MY_Controller {
                         "user_surname" => $this->input->post('user_surname'),
                         "user_email" => $this->input->post('user_email'),
                     ];
-                    $success = $this->subscribe_user($user_data, "edition", $edition_data['edition_id']);
+                    $success = $this->subscribe_user($user_data, "edition", $linked_to_id);
                     redirect($return_url);
                 }
             }

@@ -322,6 +322,23 @@ EOT;
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
                 "priority" => 0.8,
                 "changefreq" => "yearly",
+                "sub-menu" => [
+                    "contact-us" => [
+                        "display" => "Contact Me",
+                        "loc" => base_url("contact"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                        "priority" => 0.8,
+                        "changefreq" => "yearly",
+                    ],
+                    "newsletter" => [
+                        "display" => "Newsletter",
+                        "loc" => base_url("newsletter"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                        "priority" => 0.6,
+                        "changefreq" => "yearly",
+                        "badge" => "POPULAR",
+                    ],
+                ],
             ],
             "switch-region" => [
                 "display" => "Switch Region",
@@ -523,7 +540,17 @@ EOT;
             $add = $this->usersubscription_model->set_usersubscription("add", $usersubscription_data);
             if ($add) {
                 $email = $this->set_subscribe_confirmation_email($usersubscription_data);
-                $alert = "Thank you. You have been added to the mailing list for this race";
+                switch ($linked_to) {
+                    case "edition":
+                        $alert = "Thank you. You have been added to the mailing list for this race";
+                    break;
+                    case "newsletter":
+                        $alert = "Thank you. You have successfully been subscribed to the newsletter";
+                    break;
+                    default:
+                        $alert = "Thank you. You have successfully been subscribed";
+                        break;
+                }
                 $status = "success";
                 $icon = "check-circle";
             } else {
@@ -560,11 +587,11 @@ EOT;
                 $switch = " updates regarding the <strong>" . $edition_data['edition_name'] . "</strong> event.";
                 break;
         }
-        $body_arr[] = "<p>Hi " . $user_data['user_name'] . ",</p>";
-        $body_arr[] = "<p>This is a courtesy email to confirm you have been subscribed to receive " . $switch."</p>";
-        $body_arr[] = "<p>If <u>this was not you</u> subscribing yourself to this awesome service, please reply to this email to be removed.</p>";
-        $body_arr[] = "<p>Kind Regards<br>";
-        $body_arr[] = "Johan from RoadRunning.co.za</p>";
+        $body_arr[] = "Hi " . $user_data['user_name'] . ",<br>";
+        $body_arr[] = "This is a courtesy email to confirm you have been subscribed to receive " . $switch."<br>";
+        $body_arr[] = "If <u>this was not you</u> subscribing yourself to this awesome service, please reply to this email to be removed.<br>";
+        $body_arr[] = "Kind Regards";
+        $body_arr[] = "Johan from RoadRunning.co.za";
         $body = implode("<br>", $body_arr);
 
         $data = [

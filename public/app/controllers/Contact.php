@@ -30,7 +30,7 @@ class Contact extends MY_Controller {
         $this->data_to_views['page_title'] = "Contact Us";
         $this->data_to_views['form_url'] = '/contact';
         $this->data_to_views['error_url'] = '/contact';
-
+        
         // validation rules
         $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
@@ -47,17 +47,30 @@ class Contact extends MY_Controller {
                 $email_data[$field] = $value;
             }
             $mail_id = $this->send_contact_email($email_data);
-            $this->data_to_views['mail_id'] = $mail_id;
-            $this->data_to_views['email'] = $this->input->post('user_email');
-
+            
             $this->session->set_flashdata([
-                'alert' => "Email has been send",
+                'alert' => "Your contact email has been send",
                 'status' => "success",
+                'icon' => "check-circle",
+                'confirm_msg' => 'Thank you for contacting me. I will get back to you as soon as I can!',
+                'confirm_btn_txt' => 'Return',
+                'confirm_btn_url' => base_url(),
             ]);
 
-            $this->load->view($this->header_url, $this->data_to_views);
-            $this->load->view('contact/contact', $this->data_to_views);
-            $this->load->view($this->footer_url, $this->data_to_views);
+            redirect(base_url("contact/confirm"));
+            
+            
+//            $this->data_to_views['mail_id'] = $mail_id;
+//            $this->data_to_views['email'] = $this->input->post('user_email');
+//
+//            $this->session->set_flashdata([
+//                'alert' => "Email has been send",
+//                'status' => "success",
+//            ]);
+//
+//            $this->load->view($this->header_url, $this->data_to_views);
+//            $this->load->view('contact/contact_confirm', $this->data_to_views);
+//            $this->load->view($this->footer_url, $this->data_to_views);
         }
     }
 
@@ -66,11 +79,11 @@ class Contact extends MY_Controller {
         // test email
         $data = [
             "to" => $email_data['user_email'],
-            "body" => "<h3>Main contact form</h3><p>"
+            "body" => "<h3>Contact form</h3><p>"
             . "<b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
             . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
-            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . $email_data['user_message'] . "</p>",
-            "subject" => "Main contact form  - Enquiry from RoadRunning.co.za #". uniqid(),
+            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . nl2br($email_data['user_message']) . "</p>",
+            "subject" => "Enquiry from RoadRunning.co.za #". uniqid(),
         ];
         
         // send mail to user
@@ -79,7 +92,7 @@ class Contact extends MY_Controller {
         $data['to'] = $this->ini_array['email']['from_address'];
         $this->set_email($data);
 
-        return $this->set_email($data);
+        return true;
     }
 
     public function event($slug = "") {

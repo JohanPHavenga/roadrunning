@@ -11,16 +11,6 @@ class File_model extends MY_model {
         return $this->db->count_all("files");
     }
 
-    public function get_edition_img_url($edition_id, $slug) {
-        $file_id = $this->exists("edition", $edition_id, 1);
-        if ($file_id) {
-            $file_detail = $this->get_file_detail($file_id);
-            return base_url("file/edition/".$slug."/logo/".$file_detail['file_name']);
-        } else {
-            return false;
-        }
-    }
-
     public function exists($linked_to, $linked_id, $filetype_id) {
 
         $this->db->select("file_id");

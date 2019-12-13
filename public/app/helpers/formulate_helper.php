@@ -4,6 +4,14 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+function fyesNo($bool) {
+    if ($bool) {
+        return "Yes";
+    } else {
+        return "No";
+    }
+}
+
 function fraceDistance($distance) {
     return floatval($distance) . "km";
 }
@@ -20,8 +28,8 @@ function int_phone($phone) {
 }
 
 function fphone($phone) {
-    $phone=int_phone($phone);
-    
+    $phone = int_phone($phone);
+
     $int_code = substr($phone, 0, 3);
     $code = substr($phone, 3, 2);
     $first_3 = substr($phone, 5, 3);

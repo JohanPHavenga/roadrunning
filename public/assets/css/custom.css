@@ -192,11 +192,12 @@ h3 span.badge a:hover { color: #ccc; }
 .content ul li li {
     line-height: 1.6em;
 }
-.content a {
+.content a:not(.btn) {
     color: #26B8F3;
     text-decoration: underline;
 }
-.content a:hover {
+
+.content a:hover:not(.btn) {
     color: #777;
     text-decoration: underline;
     /*border-bottom: 1px solid #26B8F3;*/
@@ -217,6 +218,7 @@ h3 span.badge a:hover { color: #ccc; }
 
 .content a.btn {
     text-decoration: none;
+    /*color: #fff;*/
 }
 .content .accordion p {
     font-size: 0.9em;
