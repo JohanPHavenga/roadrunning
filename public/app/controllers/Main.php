@@ -12,17 +12,19 @@ class Main extends MY_Controller {
         $this->load->model('edition_model');
         $this->load->model('history_model');
         $this->load->model('file_model');
+        $this->load->model('entrytype_model');
 
         // featured events
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
-            "limit" => "6",
+            "limit" => "40",
         ];
         $featured_events = $this->edition_model->get_edition_list_incl_races($query_params);
         // add img url to featured events
         foreach ($featured_events as $edition_id=>$edition) {
             $edition['img_url']=$this->file_model->get_edition_img_url($edition_id, $edition['edition_slug']);
+            $edition['entrytype_list']=$this->entrytype_model->get_edition_entrytype_list($edition_id);
             $this->data_to_views['featured_events'][$edition_id]=$edition;
         }
 //        wts($this->data_to_views['featured_events'],true);

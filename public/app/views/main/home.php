@@ -71,7 +71,7 @@
     </div>
 </section>
 
-<section style="padding-top: 10px;">
+<section style="padding: 0;">
     <div class="container">
         <div class="heading-text heading-section text-center">
             <h2>FEATURED RACES</h2>
@@ -84,19 +84,25 @@
                         ?>
                         <div class="race">
                             <div class="race-image">
-                                <a href='#as'>
+                                <a href='<?= $edition['edition_url'];?>'>
                                     <img src="<?=$edition['img_url'];?>" alt="<?=$edition['edition_name'];?>"></a>
                                 <div class="race-title"><?=$edition['edition_name'];?></div>
+                                <?php
+                                if (!array_key_exists(5, $edition['entrytype_list'])) {
+                                ?>
                                 <span class="race-badge">Entry <br>Open</span>
+                                <?php
+                                }
+                                ?>
                             </div>
                             <div class="race-details">
                                 <p>
-                                    <b>WHEN</b>: 10 November 2019 from 06h00<br>
+                                    <b>WHEN</b>: <?= fdateHumanFull($edition['edition_date'],true);?> from <?= ftimeMil($edition['race_time_start']);?><br>
                                     <b>WHERE</b>: <?=$edition['edition_address'].", ".$edition['town_name'];?><br>
-                                    <b>DISTANCES</b>: 5 / 10 / 21 / 42<br>
+                                    <b>DISTANCES</b>: <?= implode(" | ", $edition['race_distance_arr']);?><br>
                                 </p>
                                 <div class="float-left">
-                                    <a href="#" class="btn btn-colored">View</a>
+                                    <a href="<?= $edition['edition_url'];?>" class="btn btn-colored">View</a>
                                 </div>
                             </div>
                         </div>

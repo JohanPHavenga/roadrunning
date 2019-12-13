@@ -103,7 +103,7 @@ class Edition_model extends MY_model {
     public function get_edition_list_incl_races($query_params = [], $field_arr = []) {
         if (!$field_arr) {
             $field_arr = [
-                "race_id", "race_distance", "race_time_start", "racetype_id", "race_date",
+                "race_id", "race_distance", "race_time_start", "race_date", "racetype_id", "racetype_name", "racetype_abbr", 
                 "editions.edition_id", "edition_name", "edition_date", "edition_slug", "edition_address","editions.created_date", "editions.updated_date",
                 "events.event_id", "event_name", "towns.town_name","regions.region_id", "provinces.province_id",
             ];
@@ -111,6 +111,7 @@ class Edition_model extends MY_model {
         $select = implode(",", $field_arr);
         $this->db->select($select);
         $this->db->from("races");
+        $this->db->join('racetypes', 'racetype_id');
         $this->db->join('editions', 'edition_id');
         $this->db->join('events', 'event_id');
         $this->db->join('towns', 'town_id');
@@ -127,9 +128,9 @@ class Edition_model extends MY_model {
         }
         if (!isset($query_params['order_by'])) {
             $this->db->order_by('edition_date', 'ASC');
-            $this->db->order_by('race_date', 'DESC');
-            $this->db->order_by('race_time_start', 'DESC');
-            $this->db->order_by('race_distance', 'ASC');
+//            $this->db->order_by('race_date', 'DESC');
+            $this->db->order_by('race_distance', 'DESC');
+            $this->db->order_by('race_time_start', 'ASC');
         }
 
 //        die($this->db->get_compiled_select());
@@ -146,6 +147,28 @@ class Edition_model extends MY_model {
                 }
                 // add races as an array
                 $data[$row['edition_id']]['races'][$row['race_id']] = $row;
+                if (($row['racetype_abbr']=="R") || ($row['racetype_abbr']=="R/W")) {
+                    $data[$row['edition_id']]['race_distance_arr'][]=fraceDistance($row['race_distance']);
+                } else {
+                    $data[$row['edition_id']]['race_distance_arr'][]=fraceDistance($row['race_distance'])." ".$row['racetype_name'];
+                }
+                
+                // add edition_url
+                $data[$row['edition_id']]['edition_url']=base_url("event/".$row['edition_slug']);
+            }
+            // set start time of event
+            foreach ($data as $edition_id=>$edition) {
+                foreach ($edition['races'] as $race) {
+                    if (strtotime($race['race_time_start']) < strtotime($edition['race_time_start'])) {
+                        $data[$edition_id]['race_time_start']=$race['race_time_start'];
+                    }
+                }
+                unset($data[$edition_id]['race_id']);
+                unset($data[$edition_id]['race_distance']);
+                unset($data[$edition_id]['race_date']);
+                unset($data[$edition_id]['racetype_id']);
+                unset($data[$edition_id]['racetype_name']);
+                unset($data[$edition_id]['racetype_abbr']);
             }
             return $data;
         }
