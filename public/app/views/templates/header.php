@@ -53,7 +53,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="<?= base_url('assets/favicon/ms-icon-144x144.png'); ?>">
         <meta name="theme-color" content="#ffffff">
-        
+
         <?php
         if (isset($structured_data)) :
             echo $structured_data;
@@ -113,28 +113,45 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <div id="search">
                             <div id="search-logo"><img src="<?= base_url('assets/img/roadrunning_logo_80.svg'); ?>" alt="RR Logo"></div>
                             <button id="btn-search-close" class="btn-search-close" aria-label="Close search form"><i class="icon-x"></i></button>
-                            <form class="search-form" action="search-results-page.html" method="get">
-                                <input class="form-control" name="q" type="search" placeholder="Search..." autocomplete="off" />
-                                <span class="text-muted">Start typing & press "Enter" or "ESC" to close</span>
-                            </form>
+                            <?php
+                            $attributes = array('class' => 'search-form', 'method' => 'post');
+                            echo form_open(base_url("search"), $attributes);
+                            echo form_input([
+                                'name' => 'query',
+                                'type' => 'search',
+                                'value' => set_value('query'),
+                                'class' => 'form-control',
+                                'placeholder' => 'Search...',
+                                'autocomplete' => 'off',
+                            ]);
+                            ?>
+                            <span class="text-muted">Start typing & press "Enter" or "ESC" to close</span>
+                            <?php
+                            echo form_close();
+                            ?>
                             <div class="search-suggestion-wrapper">
                                 <div class="search-suggestion">
-                                    <h3>News Articles</h3>
+                                    <h3>Popular searches</h3>
                                     <p><a href="#">Beautiful nature, and rare feathers!</a></p>
                                     <p><a href="#">New costs and rise of the economy!</a></p>
                                     <p><a href="#">A true story, that never been told!</a></p>
                                 </div>
                                 <div class="search-suggestion">
-                                    <h3>Looking for these?</h3>
-                                    <p><a href="#">New costs and rise of the economy!</a></p>
-                                    <p><a href="#">AI can be trusted to take answer calls </a></p>
-                                    <p><a href="#">Polo now lets you easily create any beautiful clean website</a></p>
+                                    <h3>Most viewed races</h3>
+
+                                    <?php
+                                    foreach ($this->session->most_viewed_pages as $key => $page) {
+                                        echo "<p><a href='$page[edition_url]'>" . substr($page['edition_name'], 0, -5) . "</a></p>";
+                                    }
+                                    ?>
                                 </div>
                                 <div class="search-suggestion">
-                                    <h3>Blog Posts</h3>
-                                    <p><a href="#">A true story, that never been told!</a></p>
-                                    <p><a href="#">Beautiful nature, and rare feathers!</a></p>
-                                    <p><a href="#">The most happiest time of the day!</a></p>
+                                    <h3>Featured regions</h3>
+                                    <?php
+                                    foreach ($this->session->static_pages['featured-regions']['sub-menu'] as $key => $page) {
+                                        echo "<p><a href='$page[loc]'>$page[display]</a></p>";
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +201,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                     <ul>
                                         <?php
                                         $white_list = ["home", "races", "results", "faq", "about", "contact"];
-                                        foreach ($static_pages as $key => $page) {
+                                        foreach ($this->session->static_pages as $key => $page) {
                                             if (!in_array($key, $white_list)) {
                                                 continue;
                                             }

@@ -17,12 +17,17 @@ class MY_Controller extends CI_Controller {
         // doen checks en set session vars
         $this->data_to_views['logged_in_user'] = $this->logged_in_user = $this->check_if_user_is_logged_in();
         $this->data_to_views['history'] = $this->check_history();
-        $this->check_value_refresh();
-        $this->data_to_views['static_pages'] = $this->get_static_pages();
-        $this->data_to_views['province_pages'] = $this->check_province_session();
-        $this->data_to_views['region_pages'] = $this->check_region_session();
-        $this->data_to_views['crumbs_arr'] = $this->set_crumbs();        
+        $this->data_to_views['crumbs_arr'] = $this->set_crumbs();
         
+        // check of weer moet laai
+        if ($this->check_value_refresh()) {
+            $this->session->set_userdata("static_pages", $this->get_static_pages());
+            $this->session->set_userdata("province_pages", $this->get_province_pages());
+            $this->session->set_userdata("region_pages", $this->get_region_pages());
+            $this->session->set_userdata("most_viewed_pages", $this->get_most_viewed_pages());
+        }
+        
+        // set email cookie
         $this->data_to_views['rr_cookie']['sub_email'] = get_cookie("sub_email");
     }
 
@@ -50,25 +55,11 @@ class MY_Controller extends CI_Controller {
     private function check_value_refresh() {
         // check if data was last retrieved a day ago or more, then unsets data to be retrieved again
         if ((!$this->session->has_userdata('session_value_refresh')) || ($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
-            $this->session->unset_userdata("static_pages");
-            $this->session->unset_userdata("province_pages");
-            $this->session->unset_userdata("region_pages");
             $this->session->set_userdata("session_value_refresh", time());
+            return true;
+        } else {
+            return false;
         }
-    }
-
-    private function check_province_session() {
-        if (!$this->session->has_userdata('province_pages')) {
-            $this->session->set_userdata("province_pages", $this->get_province_pages());
-        }
-        return $this->session->province_pages;
-    }
-
-    private function check_region_session() {
-        if (!$this->session->has_userdata('region_pages')) {
-            $this->session->set_userdata("region_pages", $this->get_region_pages());
-        }
-        return $this->session->region_pages;
     }
 
     // ==============================================================================================
@@ -129,6 +120,15 @@ class MY_Controller extends CI_Controller {
                 unset($_SESSION['history'][$timestamp]);
             }
         }
+    }
+    
+    private function get_most_viewed_pages() {
+        $this->load->model('history_model');
+        $query_params = [
+            "order_by" => ["historysum_countweek" => "DESC"],
+            "limit" => 5,
+        ];
+        return $this->history_model->get_history_summary($query_params);
     }
 
     // ==============================================================================================

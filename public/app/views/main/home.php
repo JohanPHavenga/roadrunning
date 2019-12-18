@@ -1,77 +1,8 @@
-<section class="reservation-form-over no-padding">
-    <div class="container">
-        <form action="#" method="post">
-            <div class="row reservation-form">
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label>Race name</label>
-                        <input type="text" placeholder="Not required" name="name" value="">
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label>Where</label>
-                        <select id="where" name="where">
-                            <option value="">Everywhere </option>
-                            <optgroup label="Provinces">
-                                <option value="">Western Cape</option>
-                                <option value="">Gauteng</option>
-                                <option value="">KwaZulu-Natal</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="form-group">
-                        <label>Distance</label>
-                        <select id="distance" name="distance">
-                            <option value="">All </option>
-                            <option value="">Fun Run</option>
-                            <option value="">10km</option>
-                            <option value="">15km</option>
-                            <option value="">Half-Marathon</option>
-                            <option value="">Marathon</option>
-                            <option value="">Ultra Marathon</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="form-group">
-                        <label>Time filter</label>
-                        <select id="time" name="time">
-                            <option value="">None</option>
-                            <option value="">This weekend</option>
-                            <option value="">Next 30days</option>
-                            <option value="">Next 3 months</option>
-                            <option value="">Next 6 months</option>
-                            <option value="">Past 6 months</option>
-                        </select>
-                    </div>
-                </div>
-                <!--                            <div class="col-lg-3">
-                                                <div class="form-group">
-                                                    <label>Round about</label>
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <input name="fromDate" class="form-control" type="text">
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-calendar"></i></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>-->
-                <div class="col-lg-1">
-                    <div class="form-group">
-                        <button class="btn m-t-25">Search</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</section>
+<?php
+    $this->load->view('templates/search_form');
+?>
 
-<section style="padding: 0;">
+<section style="padding-top: 30px;">
     <div class="container">
         <div class="heading-text heading-section text-center">
             <h2>FEATURED RACES</h2>

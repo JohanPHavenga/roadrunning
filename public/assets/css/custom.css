@@ -2,8 +2,15 @@
     CUSTOM CSS RULES
 */
 
+section {
+    padding: 60px 0;
+}
+
 div.reservation-form {
     border: none;
+    background-color: transparent;
+    padding: 20px;
+    min-height: 120px;
 }
 
 .text-medium {

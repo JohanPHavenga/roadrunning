@@ -19,14 +19,14 @@ class Main extends MY_Controller {
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
-            "limit" => "40",
+            "limit" => "5",
         ];
         $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
 
-        // last edited
+        // upcoming events
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
-            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("1 week")), "edition_status" => 1],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("13 days")), "edition_status" => 1],
             "order_by" => ["editions.edition_date" => "ASC"],
         ];
         $upcoming_events = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
@@ -75,8 +75,18 @@ class Main extends MY_Controller {
         $this->load->view('main/404', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
+    
+    public function search() {
+        $this->data_to_views['page_title'] = "Search";
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('main/search', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
 
     public function about() {
+        $this->data_to_views['banner_img'] = "run_02";
+        $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "About Me";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);

@@ -1,0 +1,80 @@
+<section class="search-form-over no-padding background-grey">
+    <div class="container">
+        <?php
+        $attributes = array('class' => 'search-form', 'method' => 'post');
+        echo form_open(base_url("search"), $attributes);
+        ?>
+        <div class="row reservation-form">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label>Query</label>
+                    <input type="text" placeholder="Not required" name="name" value="">
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <?php
+                    echo form_label('Where', 'where');
+                    $loc_options = array(
+                        'my' => 'My selected regions',
+                        'all' => 'Everywhere',
+                    );
+                    foreach ($this->session->province_pages as $province_id => $province) {
+                        $loc_options["Provinces"][$province_id] = $province['display'];
+                    }
+                    echo form_dropdown('where', $loc_options, set_value('where'));
+                    ?>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <?php
+                    echo form_label('Distance', 'distance');
+                    $dist_options = array(
+                        'all' => 'All',
+                        'fun' => 'Fun Run',
+                        '10' => '10km',
+                        '15' => '15km',
+                        '21' => 'Half-Marathon',
+                        '42' => 'Marathon',
+                        'ultra' => 'Ultra Marathon',
+                    );
+                    echo form_dropdown('distance', $dist_options, set_value('distance'));
+                    ?>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <?php
+                    echo form_label('When', 'when');
+                    $time_options = array(
+                        'any' => 'Anytime',
+                        'weekend' => 'This weekend',
+                        'plus_30d' => 'Next 30 days',
+                        'plus_3m' => 'Next 3 months',
+                        'plus_6m' => 'Next 6 months',
+                        'minus_6' => 'Past 6 months',
+                    );
+                    echo form_dropdown('when', $time_options, set_value('when', 'plus_6m'));
+                    ?>
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <div class="form-group">
+                    <?php
+                    $data = array(
+                        'id' => 'form-submit',
+                        'type' => 'submit',
+                        'content' => '<i class="fa fa-search"></i>&nbsp;Search',
+                        'class' => 'btn m-t-25',
+                    );
+                    echo form_button($data);
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php
+        echo form_close();
+        ?>
+    </div>
+</section>

@@ -1,8 +1,10 @@
 <?php
-$img_url = base_url('assets/img/slider/run_05.webp');
+if (!isset($banner_img)) { $banner_img="run_05"; }
+if (!isset($banner_pos)) { $banner_pos="center"; }
+$img_url = base_url('assets/img/banner/'.$banner_img.".webp");
 ?>
 <!-- Page title -->
-<section id="page-title" class="text-light page-title-left page-title" style="background-image:linear-gradient(rgba(0, 0, 0, 0.6),rgba(0, 0, 0, 0.6)),url(<?= $img_url; ?>);">
+<section id="page-title" class="text-light page-title-left page-title" style="background-image:linear-gradient(rgba(0, 0, 0, 0.6),rgba(0, 0, 0, 0.6)),url(<?= $img_url; ?>); background-position: center <?=$banner_pos;?>">
     <div class="container">
         <div class="breadcrumb">
             <ul>

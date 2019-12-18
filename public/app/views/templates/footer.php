@@ -23,7 +23,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <h4>RACES</h4>
                         <ul class="list">
                             <?php
-                            foreach ($static_pages['races']['sub-menu'] as $key => $page) {
+                            foreach ($this->session->static_pages['races']['sub-menu'] as $key => $page) {
                                 echo "<li><a href='$page[loc]'>$page[display]</a></li>";
                             }
                             ?>
@@ -37,7 +37,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <h4>RESULTS</h4>
                         <ul class="list"> 
                             <?php
-                            foreach ($static_pages['results']['sub-menu'] as $key => $page) {
+                            foreach ($this->session->static_pages['results']['sub-menu'] as $key => $page) {
                                 echo "<li><a href='$page[loc]'>$page[display]</a></li>";
                             }
                             ?>
@@ -51,11 +51,11 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     <div class="widget">
                         <h4>PAGES</h4>
                         <ul class="list">
-                            <li><a href='<?= $static_pages['faq']['loc']; ?>'><?= $static_pages['faq']['display']; ?></a></li>
-                            <li><a href='<?= $static_pages['about']['loc']; ?>'><?= $static_pages['about']['display']; ?></a></li>
-                            <li><a href='<?= $static_pages['contact']['loc']; ?>'><?= $static_pages['contact']['display']; ?></a></li>
-                            <li><a href='<?= $static_pages['races']['loc']; ?>'>All <?= $static_pages['races']['display']; ?></a></li>
-                            <li><a href='<?= $static_pages['sitemap']['loc']; ?>'><?= $static_pages['sitemap']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['faq']['loc']; ?>'><?= $this->session->static_pages['faq']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['about']['loc']; ?>'><?= $this->session->static_pages['about']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $this->session->static_pages['contact']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['races']['loc']; ?>'>All <?= $this->session->static_pages['races']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
                         </ul>
                     </div>
                     <!-- end: Footer widget area 4 --> 
@@ -67,7 +67,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <h4> REGIONS</h4>
                         <ul class="list">
                             <?php
-                            foreach ($static_pages['featured-regions']['sub-menu'] as $key => $page) {
+                            foreach ($this->session->static_pages['featured-regions']['sub-menu'] as $key => $page) {
                                 echo "<li><a href='$page[loc]'>$page[display]";
                                 if (isset($page['badge'])) {
                                     echo " <span class='badge badge-danger'>$page[badge]</span>";
@@ -75,7 +75,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                 echo "</a></li>";
                             }
                             ?>
-                            <li><a href='<?= $static_pages['featured-regions']['loc']; ?>'><?= $static_pages['featured-regions']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['featured-regions']['loc']; ?>'><?= $this->session->static_pages['featured-regions']['display']; ?></a></li>
                             <li><a href='<?= base_url('region/switch'); ?>'>Switch Regions</a></li>
                         </ul>
                     </div>
@@ -123,7 +123,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     <div class="copyright-text">&copy; 2019 RoadRunning.co.za. All Rights Reserved.
                         <?php
                         $white_list = ["terms", "sitemap", "disclaimer"];
-                        foreach ($static_pages as $key => $page) {
+                        foreach ($this->session->static_pages as $key => $page) {
                             if (!in_array($key, $white_list)) {
                                 continue;
                             }
@@ -161,7 +161,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 <?php
 if ($this->ini_array['enviroment']['server'] != "production") {
 //    if (1==2) {
-//    wts($static_pages);
+//    wts($this->session->most_viewed_pages);
     ?> 
     <h4 class="text-uppercase">Environment info</h4>
     <p>

@@ -61,6 +61,7 @@ $route['about'] = 'main/about';
 $route['newsletter'] = 'main/newsletter';
 $route['terms-conditions'] = 'main/terms_conditions';
 $route['version'] = 'main/site_version';
+$route['search'] = 'main/search';
 
 $route['race-calendar'] = 'calendar';
 
