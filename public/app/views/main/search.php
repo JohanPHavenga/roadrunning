@@ -8,6 +8,9 @@
             <div class="content col-lg-12">
                 <h2 class="text-uppercase">SEARCH RESULTS</h2>
                 <p>show results<p>
+                    <?php
+                    wts($_POST);
+                    ?>
             </div>
             <!-- end: Content-->
         </div>

@@ -7,8 +7,16 @@
         <div class="row reservation-form">
             <div class="col-lg-3">
                 <div class="form-group">
-                    <label>Query</label>
-                    <input type="text" placeholder="Not required" name="name" value="">
+                    <?php
+                    echo form_label('Query', 'query');
+                    echo form_input([
+                        'name' => 'query',
+                        'id' => 'query',
+                        'value' => set_value('query'),
+                        'class' => 'form-control',
+                        'placeholder' => 'Not required',
+                    ]);
+                    ?>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -20,9 +28,12 @@
                         'all' => 'Everywhere',
                     );
                     foreach ($this->session->province_pages as $province_id => $province) {
-                        $loc_options["Provinces"][$province_id] = $province['display'];
+                        $loc_options["Provinces"]["pro_".$province_id] = $province['display'];
                     }
-                    echo form_dropdown('where', $loc_options, set_value('where'));
+                    foreach ($this->session->region_pages as $region_id => $region) {
+                        $loc_options["Regions"]["reg_".$region_id] = $region['display'];
+                    }
+                    echo form_dropdown('where', $loc_options, set_value('where'), ["id"=>"where"]);
                     ?>
                 </div>
             </div>
@@ -39,7 +50,7 @@
                         '42' => 'Marathon',
                         'ultra' => 'Ultra Marathon',
                     );
-                    echo form_dropdown('distance', $dist_options, set_value('distance'));
+                    echo form_dropdown('distance', $dist_options, set_value('distance'), ["id"=>"distance"]);
                     ?>
                 </div>
             </div>
@@ -55,7 +66,7 @@
                         'plus_6m' => 'Next 6 months',
                         'minus_6' => 'Past 6 months',
                     );
-                    echo form_dropdown('when', $time_options, set_value('when', 'plus_6m'));
+                    echo form_dropdown('when', $time_options, set_value('when', 'plus_6m'), ["id"=>"when"]);
                     ?>
                 </div>
             </div>

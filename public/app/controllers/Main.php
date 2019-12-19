@@ -76,7 +76,28 @@ class Main extends MY_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
     
-    public function search() {
+    public function search() {        
+        wts($this->input->post());
+        $this->load->model('edition_model'); 
+        $this->load->model('race_model'); 
+        // Get correct search paramaters from post
+        // QUERY
+        if ($this->input->post("query")) {
+            $search_params['group_start']="";
+            $search_params['like']["edition_name"]=$this->input->post("query");
+            $search_params['or_like']["event_name"]=$this->input->post("query");
+            $search_params['group_end']="";
+        }
+        wts($search_params);
+//        $search_params = [
+//            "where_in" => ["region_id" => $this->session->region_selection,],
+//            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("13 days")), "edition_status" => 1],
+//        ];
+//        wts($search_params);
+        
+        $this->data_to_views['searh_result']=$this->race_model->add_race_info($this->edition_model->get_edition_list($search_params));
+        wts($this->data_to_views['searh_result'],true);
+        
         $this->data_to_views['page_title'] = "Search";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

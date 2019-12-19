@@ -45,8 +45,8 @@ class Edition_model extends MY_model {
             return false;
         }
     }
-    
-     public function get_edition_sum($edition_id) {
+
+    public function get_edition_sum($edition_id) {
         // CHECK Editions table vir die naame
         $this->db->select("edition_id, edition_name, edition_status, edition_slug");
         $this->db->from("editions");
@@ -64,8 +64,8 @@ class Edition_model extends MY_model {
     public function get_edition_list($query_params = [], $field_arr = NULL) {
         if (is_null($field_arr)) {
             $field_arr = [
-                "editions.edition_id", "edition_name", "edition_date", "edition_slug", "edition_address","edition_info_prizegizing",
-                "events.event_id", "event_name", "towns.town_name","regions.region_id", "provinces.province_id"
+                "editions.edition_id", "edition_name", "edition_date", "edition_slug", "edition_address", "edition_info_prizegizing",
+                "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id"
             ];
         }
         $select = implode(",", $field_arr);
@@ -87,30 +87,25 @@ class Edition_model extends MY_model {
         if (!isset($query_params['order_by'])) {
             $this->db->order_by('edition_date', 'ASC');
         }
-//        die($this->db->get_compiled_select());
+        die($this->db->get_compiled_select());
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $data[$row['edition_id']] = $row;
-                // add edition_url
-                $data[$row['edition_id']]['edition_url']=base_url("event/".$row['edition_slug']);
-                // add img url
-                $data[$row['edition_id']]['img_url']=$this->get_edition_img_url($row['edition_id'], $row['edition_slug']);
-                // add entrytype list
-                $data[$row['edition_id']]['entrytype_list']=$this->get_edition_entrytype_list($row['edition_id']);
+                $data[$row['edition_id']] = $this->add_more_edition_info($row);
             }
             return $data;
         }
         return false;
     }
 
+    // SHOULD NOT USE ANYMORE
     public function get_edition_list_incl_races($query_params = [], $field_arr = []) {
         if (!$field_arr) {
             $field_arr = [
-                "race_id", "race_distance", "race_time_start", "race_date", "racetype_id", "racetype_name", "racetype_abbr", 
-                "editions.edition_id", "edition_name", "edition_date", "edition_slug", "edition_address","editions.created_date", "editions.updated_date",
-                "events.event_id", "event_name", "towns.town_name","regions.region_id", "provinces.province_id",
+                "race_id", "race_distance", "race_time_start", "race_date", "racetype_id", "racetype_name", "racetype_abbr",
+                "editions.edition_id", "edition_name", "edition_date", "edition_slug", "edition_address", "editions.created_date", "editions.updated_date",
+                "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id",
             ];
         }
         $select = implode(",", $field_arr);
@@ -152,20 +147,20 @@ class Edition_model extends MY_model {
                 }
                 // add races as an array
                 $data[$row['edition_id']]['races'][$row['race_id']] = $row;
-                if (($row['racetype_abbr']=="R") || ($row['racetype_abbr']=="R/W")) {
-                    $data[$row['edition_id']]['race_distance_arr'][]=fraceDistance($row['race_distance']);
+                if (($row['racetype_abbr'] == "R") || ($row['racetype_abbr'] == "R/W")) {
+                    $data[$row['edition_id']]['race_distance_arr'][] = fraceDistance($row['race_distance']);
                 } else {
-                    $data[$row['edition_id']]['race_distance_arr'][]=fraceDistance($row['race_distance'])." ".$row['racetype_name'];
+                    $data[$row['edition_id']]['race_distance_arr'][] = fraceDistance($row['race_distance']) . " " . $row['racetype_name'];
                 }
-                
+
                 // add edition_url
-                $data[$row['edition_id']]['edition_url']=base_url("event/".$row['edition_slug']);
+                $data[$row['edition_id']]['edition_url'] = base_url("event/" . $row['edition_slug']);
             }
             // set start time of event
-            foreach ($data as $edition_id=>$edition) {
+            foreach ($data as $edition_id => $edition) {
                 foreach ($edition['races'] as $race) {
                     if (strtotime($race['race_time_start']) < strtotime($edition['race_time_start'])) {
-                        $data[$edition_id]['race_time_start']=$race['race_time_start'];
+                        $data[$edition_id]['race_time_start'] = $race['race_time_start'];
                     }
                 }
                 unset($data[$edition_id]['race_id']);
@@ -179,7 +174,6 @@ class Edition_model extends MY_model {
         }
         return false;
     }
-    
 
     public function get_edition_detail($id) {
         $this->db->select("editions.*,events.event_id, event_name, "
@@ -201,13 +195,25 @@ class Edition_model extends MY_model {
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            $return_arr=$query->row_array();
+            $return_arr = $query->row_array();
             // add annual name
-            $return_arr['annual_name']=$return_arr['event_name']." ".date("Y",strtotime($return_arr['edition_date']));
+            $return_arr['annual_name'] = $return_arr['event_name'] . " " . date("Y", strtotime($return_arr['edition_date']));
             return $return_arr;
         } else {
             return false;
         }
+    }
+
+    private function add_more_edition_info($edition) {
+        // ADD MORE INFO TO EDITION FOR LISTS
+        // FUNCTIONS moved to the core controller
+        $edition['edition_url'] = base_url("event/" . $edition['edition_slug']);
+        // add img url
+        $edition['img_url'] = $this->get_edition_img_url($edition['edition_id'], $edition['edition_slug']);
+        // add entrytype list
+        $edition['entrytype_list'] = $this->get_edition_entrytype_list($edition['edition_id']);
+        
+        return $edition;
     }
 
 }
