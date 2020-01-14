@@ -39,11 +39,29 @@ button, input, optgroup, select, textarea
     font-family: "Open Sans", Arial;    
     font-style: normal;
 }
+optgroup[label] {
+    background-color: #eee;
+    font-size: 1.1em;
+    margin: 6px 0 4px;
+}
+optgroup option {
+    background-color: #fff;
+    padding: 2px 0;
+    font-size: 0.9em;
+}
 
 .owl-carousel .owl-item .race-image img {
     /*width: 355px;*/
     height: 236px;
     object-fit: cover;
+}
+
+.portfolio-item .portfolio-image img {    
+    height: 156px;
+    object-fit: cover;
+}
+.portfolio-item.overlay-links .portfolio-description span {
+    font-size: 1.1em;
 }
 
 #header .header-inner #logo a > img, 
@@ -190,6 +208,9 @@ h3 span.badge a:hover { color: #ccc; }
 {
     font-size: 16px;
 }
+.content p.small {
+    font-size: 80%;
+}
 .content ul {
     margin-left: 24px;
 }
@@ -209,10 +230,12 @@ h3 span.badge a:hover { color: #ccc; }
     text-decoration: underline;
     /*border-bottom: 1px solid #26B8F3;*/
 }
-.content .alert p {
+
+.content .alert p,
+.alert p {
     font-size:  1em;
     color: #fff;
-    padding: 0;
+    padding: 5px 0 0;
     font-family: "Nunito","Helvetica","Arial",sans-serif;
     margin-bottom: 0;
 }

@@ -45,8 +45,9 @@ class File extends MY_Controller {
                 $file_name = $params[3];
 
                 $file_id = null;
-                $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);
-                $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_info['edition_id']);
+                $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);                
+                $this->data_to_views['race_list'] = $this->race_model->get_race_list(["where"=>["races.edition_id"=>$edition_info['edition_id']]]);
+                
                 foreach ($this->data_to_views['race_list'] as $race_id => $race) {
                     if ($race_name == url_title($race['race_name'])) {
                         break;

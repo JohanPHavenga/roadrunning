@@ -6,10 +6,10 @@ if ($this->session->flashdata()) {
         $icon = "info-circle";
     }
     ?>
-    <div class="alert alert-<?= $this->session->flashdata('status'); ?> alert-dismissible" role="alert">
+    <div class="alert alert-<?= $this->session->flashdata('status'); ?> alert-dismissible" role="alert" class="z-index:-1">
         <div class="container">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span> </button>
-            <strong><i class="fa fa-<?= $icon; ?>"></i> <?= ucfirst($this->session->flashdata('status')); ?>!</strong> <?= $this->session->flashdata('alert'); ?> 
+            <strong><i class="fa fa-<?= $icon; ?>"></i> <?= $this->session->flashdata('alert'); ?> 
         </div>
     </div>
     <?php

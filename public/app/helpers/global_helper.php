@@ -31,7 +31,11 @@ function encode_parkrun_name($parkrun_name) {
 
 function hash_pass($password) {
     if ($password) {
-        return sha1($password . "37");
+        $options = [
+            'cost' => 13,
+        ];
+        return password_hash($password, PASSWORD_BCRYPT, $options);
+//        return sha1($password . "37");
     } else {
         return NULL;
     }

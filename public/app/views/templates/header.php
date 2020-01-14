@@ -12,8 +12,10 @@ if (!isset($meta_robots)) {
 // check methods to do header changes
 if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() == "index")) {
     $is_home = true;
-    $topbar_class = 'topbar-transparent dark';
-    $header_vals = 'data-transparent="true" class="dark"';
+//    $topbar_class = 'topbar-transparent dark';
+//    $header_vals = 'data-transparent="true" class="dark"';
+    $topbar_class = '';
+    $header_vals = '';
 } else {
     $is_home = false;
     $topbar_class = '';
@@ -71,25 +73,24 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <div class="topbar-dropdown">
                                 <?php
                                 if ($this->session->user['logged_in']) {
-                                    echo "<a class='title' href='/user/profile'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a></div>";
-                                    echo "<div class='topbar-dropdown'><a class='title' href='/logout'>Log Out</a>";
+                                    echo "<a class='title' href='/user/profile'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
                                 } else {
-                                    echo "<a class='title' href='/login/'><i class='fa fa-user'></i> Log In</a>";
+                                    echo "<a class='title' href='/login/'><i class='fa fa-user'></i> Login</a>";
                                 }
                                 ?>
 
                                 <!--<a class="title" href="#" title="Log into your profile"><i class="fa fa-user"></i> Login</a>-->
                             </div>
                             <div class="topbar-dropdown">
-                                <a class="title" href="<?= base_url('region/switch'); ?>" title="Change region">Western Cape</a>
+                                <a class="title" href="<?= base_url('region/switch'); ?>" title="Change selected regions"><i class='fa fa-compass'></i> Change Region</a>
                             </div>
                         </div>
                         <div class="col-md-6 d-none d-sm-block">
                             <div class="social-icons social-icons-colored-hover">
                                 <ul>
-                                    <li class="social-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li class="social-twitter"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                    <li class="social-google"><a href="#"><i class="fab fa-instagram"></i></a></li>
+                                    <li class="social-facebook"><a href="https://www.facebook.com/roadrunningcoza"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li class="social-twitter"><a href="https://twitter.com/roadrunningcoza"><i class="fab fa-twitter"></i></a></li>
+                                    <!--<li class="social-google"><a href="#"><i class="fab fa-instagram"></i></a></li>-->
                                 </ul>
                             </div>
                         </div>
@@ -119,7 +120,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             echo form_input([
                                 'name' => 'query',
                                 'type' => 'search',
-                                'value' => set_value('query'),
+//                                'value' => set_value('query'),
                                 'class' => 'form-control',
                                 'placeholder' => 'Search...',
                                 'autocomplete' => 'off',
@@ -171,15 +172,34 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                         <a href="<?= base_url('user/profile'); ?>"><i class="icon-user11"></i></a>
                                         <div class="p-dropdown-content ">
                                             <div class="widget-profile">
-                                                <h4><?= $logged_in_user['user_name']; ?> <?= $logged_in_user['user_surname']; ?></h4>
-                                                <div class="cart-item">
-                                                    Stuff here
-                                                </div>
-                                                <hr>
-                                                <div class="cart-buttons text-right">
-                                                    <button class="btn btn-xs">Profile</button>
-                                                    <button class="btn btn-xs">Log Out</button>
-                                                </div>
+                                                <?php
+                                                if (!empty($logged_in_user)) {
+                                                    ?>
+                                                    <p class="small m-b-0">Logged in as</p>
+                                                    <h4><?= $logged_in_user['user_name']; ?> <?= $logged_in_user['user_surname']; ?></h4>
+                                                    <div class="cart-item">
+                                                        
+                                                    </div>
+                                                    <hr>
+                                                    <div class="cart-buttons">
+                                                        <a href="<?= base_url('user/profile'); ?>" class="btn btn-xs">Profile</a>
+                                                        <a href="<?= base_url('logout'); ?>" class="btn btn-xs btn-light">Logout</a>
+                                                        <!--<button class="btn btn-xs">Log Out</button>-->
+                                                    </div>
+                                                    <?php
+                                                } else {
+                                                    ?>
+                                                    <div class="cart-item">
+                                                        You are not currently logged in
+                                                    </div>
+                                                    <hr>
+                                                    <div class="cart-buttons text-right">
+                                                        <a href="<?= base_url('login'); ?>" class="btn btn-xs">Login</a>
+                                                        <a href="<?= base_url('register'); ?>" class="btn btn-xs btn-light">Register</a>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                ?>
                                             </div>
                                         </div>
 
@@ -221,9 +241,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                         }
                                         if ($this->session->user['logged_in']) {
                                             echo "<li><a href='" . base_url('user/profile') . "'>My Profile</a></li>";
-                                            echo "<li><a href='/logout'>Log Out</a></li>";
+                                            echo "<li><a href='/logout'>Logout</a></li>";
                                         } else {
-                                            echo "<li><a href='/login/'>Log In</a></li>";
+                                            echo "<li><a href='/login/'>Login</a></li>";
                                         }
                                         ?>
                                     </ul>

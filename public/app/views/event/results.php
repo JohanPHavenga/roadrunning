@@ -26,7 +26,7 @@
                                 . "please enter your email below or to the right to be added to the "
                                 . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a>.</p>";
                         // if date in future
-                        if (strtotime($edition_data['edition_date']) > time()) {
+                        if (!$in_past) {
                             $days_from_now = date("d", strtotime($edition_data['edition_date']) - time());
                             ?>
                             <p><b class='text-danger'>No results available yet.</b><br>

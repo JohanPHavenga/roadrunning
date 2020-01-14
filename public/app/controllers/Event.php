@@ -56,25 +56,38 @@ class Event extends MY_Controller {
         $edition_id = $edition_sum['edition_id'];
         $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->get_edition_detail($edition_id);
 
-        $this->data_to_views['race_list'] = $this->race_model->get_race_list($edition_id);
+        // lists
+        $this->data_to_views['race_list'] = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
         $this->data_to_views['file_list'] = $file_list = $this->file_model->get_file_list("edition", $edition_id, true);
         $this->data_to_views['url_list'] = $url_list = $this->url_model->get_url_list("edition", $edition_id, true);
         $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_id, false, true);
         $this->data_to_views['tag_list'] = $tag_list = $this->tag_model->get_edition_tag_list($edition_id);
 
+        // extended edition info
         $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
         $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
         $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
         $this->data_to_views['edition_data']['club_url_list'] = $this->url_model->get_url_list("club", $edition_data['club_id'], false);
 
+        // calc values
+        if (strtotime($edition_data['edition_date']) < time()) {
+            $this->data_to_views['in_past']=true;
+        } else {            
+            $this->data_to_views['in_past']=false;
+        }
         $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
-
         $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
         $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
 
+        $gps_parts = explode(",", $edition_data['edition_gps']);
+        $this->data_to_views['gps']['lat'] = $gps_parts[0];
+        $this->data_to_views['gps']['long'] = $gps_parts[1];
+        $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
+
+        // google data
         $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
         $this->data_to_views['google_cal_url'] = $this->formulate_google_cal($edition_data, $this->data_to_views['race_list']);
 
@@ -261,6 +274,10 @@ class Event extends MY_Controller {
             "more" => [
                 "display" => "More",
                 "sub_menu" => [
+                    "accom" => [
+                        "display" => "Accommodation",
+                        "loc" => base_url("event/" . $slug . "/accommodation"),
+                    ],
                     "subscribe" => [
                         "display" => "Get Notifications",
                         "loc" => base_url("event/" . $slug . "/subscribe"),
@@ -302,6 +319,11 @@ class Event extends MY_Controller {
             $menu_arr['more']['sub_menu']['next']['loc'] = base_url("event/" . $event_history['future']['edition_slug']);
         } else {
             unset($menu_arr['more']['sub_menu']['next']);
+        }
+
+        // check if in past else hide to hide accommodation link
+        if ($this->data_to_views['in_past']) {
+            unset($menu_arr['more']['sub_menu']['accom']);
         }
 
         // check for route maps
@@ -442,9 +464,9 @@ class Event extends MY_Controller {
 
         $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);
         $edition_id = $edition_info['edition_id'];
-        
+
         $edition_data = $this->edition_model->get_edition_detail($edition_id);
-        $race_list = $this->race_model->get_race_list($edition_id);
+        $race_list = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
 
         $edition_url = base_url("event/" . $edition_data['edition_slug']);
         $address = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];

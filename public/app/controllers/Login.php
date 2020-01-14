@@ -35,16 +35,31 @@ class Login extends MY_Controller {
         $this->data_to_views['error_url'] = '/login/userlogin';
         $this->data_to_views['success_url'] = '/';
 
+        if ($this->session->flashdata('email')!=null) {
+            $this->data_to_views['reset_password_url'] = base_url('forgot-password/?email=' . $this->session->flashdata('email'));
+            $this->data_to_views['register_url'] = base_url('register/?email=' . $this->session->flashdata('email'));
+        } else {
+            $this->data_to_views['reset_password_url'] = base_url('forgot-password');
+            $this->data_to_views['register_url'] = base_url('register');
+        }
+
         // validation rules
-        $this->form_validation->set_rules('user_email', 'Email', 'required', ["required" => "Enter your email address to log in"]);
+        $this->form_validation->set_rules('user_email', 'Email', 'required|valid_email',
+                [
+                    "required" => "Enter your email address to log in",
+                    "valid_email" => "Please enter a valid email address",
+                ]
+        );
         $this->form_validation->set_rules('user_password', 'Password', 'required', ["required" => "Please enter your password"]);
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('login/userlogin', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
+            $this->session->set_flashdata(['email' => $this->input->post('user_email'),]);
             // check die login credentials. If fail, give nice error message
             $check_login = $this->user_model->check_credentials($this->input->post('user_email'), $this->input->post('user_password'));
             if ($check_login) {
@@ -70,7 +85,7 @@ class Login extends MY_Controller {
                     redirect($this->data_to_views['success_url']);
                 } else {
                     $this->session->set_flashdata([
-                        'alert' => "Seems your email address has not been confirmed yet. Please click here to resend confirmation email",
+                        'alert' => "<b>Login failed.</b> Seems your email address has not been confirmed yet. Please <a href='" . base_url('forgot-password?email='.$this->input->post('user_email')) . "'>reset your password</a>.",
                         'status' => "warning",
                     ]);
 
@@ -78,8 +93,8 @@ class Login extends MY_Controller {
                 }
             } else {
                 $this->session->set_flashdata([
-                    'alert' => "Sorry, either your username or password was incorrect. Please try again",
-                    'status' => "warning",
+                    'alert' => "<b>Login failed.</b> Sorry, either your username or password was incorrect. Please try again.",
+                    'status' => "danger",
                 ]);
 
                 redirect($this->data_to_views['error_url']);

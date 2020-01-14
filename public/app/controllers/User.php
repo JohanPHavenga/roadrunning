@@ -24,10 +24,15 @@ class User extends MY_Controller {
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {
-        if (preg_match('#[0-9]#', $password) && preg_match('#[a-zA-Z]#', $password)) {
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number = preg_match('@[0-9]@', $password);
+
+        if (!$uppercase || !$lowercase || !$number || strlen($password) < 8  || strlen($password) > 32) {
+            return FALSE;
+        } else {
             return TRUE;
         }
-        return FALSE;
     }
 
     public function email_exists($email) {
@@ -44,7 +49,7 @@ class User extends MY_Controller {
         $this->load->helper('email');
         $return_url = base_url();
 
-        
+
         switch ($type) {
             case "event":
                 // get basic edition_data
@@ -58,16 +63,16 @@ class User extends MY_Controller {
                     redirect($return_url);
                 } else {
                     $return_url = base_url("event/" . $slug);
-                    $this->data_to_views['form_url']=base_url('user/subscribe/event/'.$slug);
-                    $this->data_to_views['cancel_url']=$return_url;
-                    $linked_to_id=$edition_data['edition_id'];
+                    $this->data_to_views['form_url'] = base_url('user/subscribe/event/' . $slug);
+                    $this->data_to_views['cancel_url'] = $return_url;
+                    $linked_to_id = $edition_data['edition_id'];
                 }
                 break;
             case "newsletter":
                 $return_url = base_url("newsletter");
-                $this->data_to_views['form_url']=base_url('user/subscribe/newsletter');
-                $this->data_to_views['cancel_url']=$return_url;
-                $linked_to_id=0;
+                $this->data_to_views['form_url'] = base_url('user/subscribe/newsletter');
+                $this->data_to_views['cancel_url'] = $return_url;
+                $linked_to_id = 0;
                 break;
             default:
                 break;
@@ -97,7 +102,7 @@ class User extends MY_Controller {
                     $this->load->view('user/subscribe', $this->data_to_views);
                     $this->load->view($this->footer_url, $this->data_to_views);
                 } else {
-                     $user_data = [
+                    $user_data = [
                         "user_name" => $this->input->post('user_name'),
                         "user_surname" => $this->input->post('user_surname'),
                         "user_email" => $this->input->post('user_email'),
@@ -130,12 +135,13 @@ class User extends MY_Controller {
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email|is_unique[users.user_email]',
                 array(
                     'required' => 'You have not provided an %s.',
-                    'is_unique' => 'This %s is already in use. Please use the <a href="/forgot-password">forgot password</a> workflow reset your password.'
+                    'is_unique' => 'This %s is already in use. Please <a href="'.base_url('login').'">login</a> or <a href="'.base_url('forgot-password').'">reset your password</a> if you have forgotten it.'
                 )
         );
+        $this->form_validation->set_rules('user_contact', 'Phone Number', 'trim|required|min_length[10]|alpha_numeric_spaces');
         $this->form_validation->set_rules('user_password', 'Password', 'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
                 array(
-                    "is_password_strong" => "Password should be at least 8 characters in length and should include at least one upper case letter and one number",
+                    "is_password_strong" => "Password should be between 8 & 32 characters in length and should include at least one upper case letter and one number",
                 )
         );
         $this->form_validation->set_rules('user_password_conf', 'Password Confirmation', 'trim|required|matches[user_password]');
@@ -148,7 +154,10 @@ class User extends MY_Controller {
         } else {
             // set user_data from post
             foreach ($this->input->post() as $field => $value) {
-                switch ($field) {
+                switch ($field) {                    
+                    case "user_contact":
+                        $value = $this->int_phone($value);
+                        break;    
                     case "user_password":
                         $value = hash_pass($value);
                         break;
@@ -214,6 +223,7 @@ class User extends MY_Controller {
                 $this->data_to_views['conf_type'] = "forgot_password";
                 $this->data_to_views['mail_id'] = $mail_id;
                 $this->data_to_views['email'] = $this->input->post('user_email');
+
                 $this->load->view($this->header_url, $this->data_to_views);
                 $this->load->view('user/confirmation', $this->data_to_views);
                 $this->load->view($this->footer_url, $this->data_to_views);
@@ -236,7 +246,7 @@ class User extends MY_Controller {
 
             $this->form_validation->set_rules('user_password', 'Password', 'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
                     array(
-                        "is_password_strong" => "Password should be at least 8 characters in length and should include at least one upper case letter and one number",
+                        "is_password_strong" => "Your password should be <u>between 8 & 32 characters</u> in length, contain <u>one upper case letter</u> and <u>one number</u>",
                     )
             );
             $this->form_validation->set_rules('user_password_conf', 'Password Confirmation', 'trim|required|matches[user_password]');
@@ -325,6 +335,13 @@ class User extends MY_Controller {
         }
 
         return $this->set_email($data);
+    }
+    
+    private function int_phone($phone) {
+        $phone = trim($phone);
+        $phone = str_replace(" ", "", $phone);
+        $phone = str_replace("-", "", $phone);
+        return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
     }
 
 }

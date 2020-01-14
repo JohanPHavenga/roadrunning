@@ -96,7 +96,7 @@ class User_model extends MY_model {
             return false;
         }
     }
-    
+
     public function set_user($params) {
         // $action, $user_data=[], $role_arr=[], $user_id=0, $debug=FALSE
 
@@ -178,17 +178,24 @@ class User_model extends MY_model {
     public function check_credentials($email, $password) {
         $user_data = array(
             'user_email' => $email,
-            'user_password' => hash_pass($password),
+//            'user_password' => hash_pass($password),
         );
 
-        $this->db->select('user_id,user_name,user_surname,user_email,user_contact');
+        $this->db->select('user_id,user_name,user_surname,user_email,user_password,user_contact');
         $this->db->from("users");
         $this->db->where($user_data);
         $query = $this->db->get();
 
         // mag net een user kry
         if ($query->num_rows() == 1) {
-            return $query->row_array();
+            foreach ($query->result_array() as $row) {
+                if (password_verify($password, $row['user_password'])) {
+                    unset($row['user_password']);
+                    return $row;
+                } else {
+                    return false;
+                }
+            }
         }
         return false;
     }
@@ -240,5 +247,7 @@ class User_model extends MY_model {
         $this->db->from('users');
         return $this->db->count_all_results();
     }
+    
+    
 
 }

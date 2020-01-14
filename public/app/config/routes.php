@@ -64,6 +64,7 @@ $route['version'] = 'main/site_version';
 $route['search'] = 'main/search';
 
 $route['race-calendar'] = 'calendar';
+$route['race/most-viewed'] = 'race/most_viewed';
 
 $route['login'] = 'login/userlogin';
 $route['logout'] = 'login/logout';

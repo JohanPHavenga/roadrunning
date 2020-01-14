@@ -75,8 +75,8 @@
                             echo $edition_data['edition_general_detail'];
                         } else {
                             ?>
-                            <p class='text-info'><b>No information</b> regarding this race has been released yet.</p>
-                            <p>Want to get notified once information is loaded? Enter your email below or to the right.</p>
+                            <p class='text-danger'><b>No information</b> regarding this race has been released yet.</p>
+                            <p>Do you want to get notified once information is released? Enter your email below or to the right to be added to the mailing list.</p>
                             <?php
                         }
                         ?>
@@ -89,7 +89,16 @@
                         </iframe>
                         <p>
                             <a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_address'] . "," . $edition_data['town_name']; ?>" class="btn btn-light">
-                                <i class="fa fa-map"></i> Get Directions</a></p>
+                                <i class="fa fa-map"></i> Get Directions</a>
+                            <?php
+                            // If not in the past
+                            if (!$in_past) {
+                                ?>
+                                <a href="<?= base_url("event/" . $slug . "/accommodation"); ?>" class="btn btn-light"><i class="fa fa-bed"></i> Find Accommodation</a>
+                                <?php
+                            }
+                            ?>
+                        </p>
                     </div>
 
                     <!-- end: Product additional tabs -->
@@ -100,14 +109,14 @@
 
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">  
-<?php
+                <?php
 // SUBSCRIBE WIDGET
-$data_to_widget['title'] = "Want to get notified when info is made available?";
-$this->load->view('widgets/subscribe', $data_to_widget);
+                $data_to_widget['title'] = "Want to get notified when info is made available?";
+                $this->load->view('widgets/subscribe', $data_to_widget);
 
 // ADS WIDGET
-$this->load->view('widgets/side_ad');
-?>
+                $this->load->view('widgets/side_ad');
+                ?>
             </div>
             <!-- end: Sidebar-->
         </div>

@@ -160,7 +160,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 <?php
 if ($this->ini_array['enviroment']['server'] != "production") {
-//    if (1==2) {
+//if (1==2) {
 //    wts($this->session->most_viewed_pages);
     ?> 
     <h4 class="text-uppercase">Environment info</h4>

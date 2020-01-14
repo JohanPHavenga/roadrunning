@@ -47,6 +47,7 @@
                         '10' => '10km',
                         '15' => '15km',
                         '21' => 'Half-Marathon',
+                        '30' => '30km',
                         '42' => 'Marathon',
                         'ultra' => 'Ultra Marathon',
                     );
@@ -64,7 +65,8 @@
                         'plus_30d' => 'Next 30 days',
                         'plus_3m' => 'Next 3 months',
                         'plus_6m' => 'Next 6 months',
-                        'minus_6' => 'Past 6 months',
+                        'plus_1y' => 'Next year',
+                        'minus_6m' => 'Past 6 months',
                     );
                     echo form_dropdown('when', $time_options, set_value('when', 'plus_6m'), ["id"=>"when"]);
                     ?>

@@ -105,17 +105,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <?php
-                                if (!in_array(5, $edition_data['entrytype_list'])) {
-                                    ?>
-                                    <div class="col-lg-12">
+                                <div class="col-lg-12">
+                                    <?php
+                                    if (!in_array(5, $edition_data['entrytype_list'])) {
+                                        ?>
                                         <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
                                             <i class="fa fa-arrow-right"></i></a>
 
-                                    </div>
-                                    <?php
-                                }
-                                ?>
+                                        <?php
+                                    }
+                                    ?>
+                                    <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
+                                        <i class="fa fa-arrow-right"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -246,9 +248,18 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
+
                             <p>
                                 <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/contact"); ?>" class="btn btn-light">
-                                <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
+                                    <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
+                                <?php
+                                if (!$in_past) {
+                                    ?>
+                                    <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/accommodation"); ?>" class="btn btn-light">
+                                        <i class="fa fa-bed"></i> Get Accommodation</a>
+                                    <?php
+                                }
+                                ?>
                             </p>
                             <?php
                             if ($edition_data['club_id'] != 8) {
@@ -366,7 +377,7 @@
                     // SUBSCRIBE WIDGET
                     $data_to_widget['title'] = "Receive race notification";
                     $this->load->view('widgets/subscribe', $data_to_widget);
-                    
+
                     // ADD TO CALENDAR WIDGET
                     $this->load->view('widgets/add_calendar');
 

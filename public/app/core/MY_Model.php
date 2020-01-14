@@ -28,7 +28,11 @@ class MY_model extends CI_Model {
         if ($file_detail) {
             return base_url("file/edition/" . $slug . "/logo/" . $file_detail['file_name']);
         } else {
-            return false;
+            $num=rand(1,21);
+            if ($num<10) {
+                $num = "0{$num}";
+            }
+            return base_url("assets/img/thumbs/$num.jpg");
         }
     }
 

@@ -27,6 +27,12 @@ class MY_Controller extends CI_Controller {
             $this->session->set_userdata("most_viewed_pages", $this->get_most_viewed_pages());
         }
         
+        if (count($this->session->get_userdata("region_selection"))>4) {
+             $this->session->set_userdata("selected_regions","Mulitple Regions");
+        } else {            
+             $this->session->set_userdata("selected_regions","less than 4 Regions");
+        }
+        
         // set email cookie
         $this->data_to_views['rr_cookie']['sub_email'] = get_cookie("sub_email");
     }
@@ -241,13 +247,13 @@ EOT;
                         "changefreq" => "daily",
                         "badge" => "POPULAR",
                     ],
-                    "per_region" => [
-                        "display" => "Per Region",
-                        "loc" => base_url("race/per-region"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
-                        "priority" => 1,
-                        "changefreq" => "daily",
-                    ],
+//                    "per_region" => [
+//                        "display" => "Per Region",
+//                        "loc" => base_url("race/per-region"),
+//                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+//                        "priority" => 1,
+//                        "changefreq" => "daily",
+//                    ],
                     "featured" => [
                         "display" => "Featured Races",
                         "loc" => base_url("race/featured"),
@@ -257,7 +263,7 @@ EOT;
                     ],
                     "top10" => [
                         "display" => "Top 10 most viewed",
-                        "loc" => base_url("race/top10-viewed"),
+                        "loc" => base_url("race/most-viewed"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
@@ -269,13 +275,13 @@ EOT;
                         "priority" => 0.8,
                         "changefreq" => "daily",
                     ],
-                    "add-listing" => [
-                        "display" => "Add Listing",
-                        "loc" => base_url("race/add"), //calendar/past
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
-                        "priority" => 0.8,
-                        "changefreq" => "daily",
-                    ],
+//                    "add-listing" => [
+//                        "display" => "Add Listing",
+//                        "loc" => base_url("race/add"), //calendar/past
+//                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+//                        "priority" => 0.8,
+//                        "changefreq" => "daily",
+//                    ],
                 ],
             ],
             "results" => [

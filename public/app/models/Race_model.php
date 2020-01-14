@@ -11,19 +11,36 @@ class Race_model extends MY_model {
         return $this->db->count_all("races");
     }
 
-    public function get_race_list($edition_id = 0) {
+    public function get_race_list($query_params = [], $field_arr = NULL, $show_query = false) {
 
-        $this->db->select("races.*, edition_name, edition_date, racetype_name, racetype_abbr, racetype_icon");
+        if (is_null($field_arr)) {
+            $field_arr = [
+                "races.*, edition_name, edition_date, racetype_name, racetype_abbr, racetype_icon"
+            ];
+        }
+        $select = implode(",", $field_arr);
         $this->db->from("races");
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
         $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
-        if ($edition_id > 0) {
-            $this->db->where('races.edition_id', $edition_id);
+        foreach ($query_params as $operator => $clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field => $value) {
+                    $this->db->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
         }
-        $this->db->order_by('races.race_distance', 'DESC');
-        $this->db->order_by('racetype_name', 'ASC');
+        if (!isset($query_params['order_by'])) {
+            $this->db->order_by('races.race_distance', 'DESC');
+            $this->db->order_by('racetype_name', 'ASC');
+        }
+        if ($show_query) {
+            die($this->db->get_compiled_select());
+        }
         $query = $this->db->get();
 
+        
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $data[$row['race_id']] = $row;
@@ -143,28 +160,31 @@ class Race_model extends MY_model {
         }
     }
 
-    public function add_race_info($edition_arr) {
+    public function add_race_info($edition_arr, $race_search_params=[]) {
         if ($edition_arr) {
             // ADD RACE INFORMATION TO THE EDITION
             $return_arr = [];
             foreach ($edition_arr as $edition_id => $edition) {
-                $race_list = $this->get_race_list($edition_id);
-                $return_arr[$edition_id] = $edition;
-                $race_time_start = "31 December 2999";
+                $race_search_params['where']['races.edition_id']=$edition_id;
+                $race_list = $this->get_race_list($race_search_params);
+                if ($race_list) {
+                    $return_arr[$edition_id] = $edition;
+                    $race_time_start = "31 December 2999";
 
-                foreach ($race_list as $race) {
-                    if (strtotime($race['race_time_start']) < strtotime($race_time_start)) {
-                        $race_time_start = $race['race_time_start'];
+                    foreach ($race_list as $race) {
+                        if (strtotime($race['race_time_start']) < strtotime($race_time_start)) {
+                            $race_time_start = $race['race_time_start'];
+                        }
+                        if (($race['racetype_abbr'] == "R") || ($race['racetype_abbr'] == "R/W")) {
+                            $return_arr[$edition_id]['race_distance_arr'][] = fraceDistance($race['race_distance']);
+                        } else {
+                            $return_arr[$edition_id]['race_distance_arr'][] = fraceDistance($race['race_distance']) . " " . $race['racetype_name'];
+                        }
                     }
-                    if (($race['racetype_abbr'] == "R") || ($race['racetype_abbr'] == "R/W")) {
-                        $return_arr[$edition_id]['race_distance_arr'][] = fraceDistance($race['race_distance']);
-                    } else {
-                        $return_arr[$edition_id]['race_distance_arr'][] = fraceDistance($race['race_distance']) . " " . $race['racetype_name'];
-                    }
+
+                    $return_arr[$edition_id]['race_time_start'] = $race_time_start;
+                    $return_arr[$edition_id]['race_list'] = $race_list;
                 }
-
-                $return_arr[$edition_id]['race_time_start'] = $race_time_start;
-                $return_arr[$edition_id]['race_list'] = $race_list;
             }
             return $return_arr;
         } else {

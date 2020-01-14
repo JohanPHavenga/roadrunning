@@ -27,18 +27,35 @@ class Region_model extends MY_model {
         }
         return false;
     }
+    
+    public function get_all_region_ids() {
+
+        $this->db->select("region_id");
+        $this->db->from("regions");
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[]=$row['region_id'];
+            }
+            return $data;
+        }
+        return false;
+    }
 
     public function get_region_dropdown() {
-        $this->db->select("region_id, region_name, provinces.province_name");
+        $this->db->select("region_id, region_name, provinces.province_id, provinces.province_name");
         $this->db->from("regions");
         $this->db->join('provinces', 'province_id');
         $this->db->order_by("province_name, region_name");
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            $data[] = "Please Select";
+            $data[0] = "Select All";
             foreach ($query->result_array() as $row) {
-                $data[$row['province_name']][$row['region_id']] = $row['region_name'];
+                if ($row['province_id'] != 12) {
+                    $data[$row['province_name']][$row['region_id']] = $row['region_name'];
+                }
             }
             return $data;
         }
@@ -68,7 +85,7 @@ class Region_model extends MY_model {
             'region_status' => $this->input->post('region_status'),
             'province_id' => $this->input->post('province_id'),
         );
-        
+
         switch ($action) {
             case "add":
                 return $this->db->insert('regions', $data);
@@ -105,7 +122,7 @@ class Region_model extends MY_model {
             return false;
         }
     }
-    
+
     public function get_region_id_from_slug($slug) {
         $this->db->select("region_id");
         $this->db->from("regions");
@@ -119,8 +136,7 @@ class Region_model extends MY_model {
             return false;
         }
     }
-    
-    
+
     // USER_REGION functions
     public function get_user_region($user_id) {
         $this->db->select("region_id");
@@ -136,10 +152,10 @@ class Region_model extends MY_model {
         }
         return false;
     }
-    
-    public function set_user_region($user_id,$region_arr) {
+
+    public function set_user_region($user_id, $region_arr) {
         $this->db->delete('user_region', array('user_id' => $user_id));
-        
+
         foreach ($region_arr as $region_id) {
             $data = array(
                 'user_id' => $user_id,
