@@ -25,12 +25,7 @@ class MY_Controller extends CI_Controller {
             $this->session->set_userdata("province_pages", $this->get_province_pages());
             $this->session->set_userdata("region_pages", $this->get_region_pages());
             $this->session->set_userdata("most_viewed_pages", $this->get_most_viewed_pages());
-        }
-        
-        if (count($this->session->get_userdata("region_selection"))>4) {
-             $this->session->set_userdata("selected_regions","Mulitple Regions");
-        } else {            
-             $this->session->set_userdata("selected_regions","less than 4 Regions");
+            $this->session->set_userdata("most_searched", $this->get_most_searched());
         }
         
         // set email cookie
@@ -136,6 +131,16 @@ class MY_Controller extends CI_Controller {
         ];
         return $this->history_model->get_history_summary($query_params);
     }
+    
+    private function get_most_searched() {
+        $this->load->model('history_model');
+        $query_params = [
+            "where" => ["updated_date >" => date('Y-m-d', strtotime("1 month ago"))],
+            "order_by" => ["search_count" => "DESC"],
+            "limit" => 5,
+        ];
+        return $this->history_model->get_most_searched($query_params);
+    }
 
     // ==============================================================================================
     // CENTRAL MAIL FUNCTIONS
@@ -240,7 +245,7 @@ EOT;
                 "changefreq" => "daily",
                 "sub-menu" => [
                     "upcoming" => [
-                        "display" => "Upcoming Races",
+                        "display" => "Upcoming",
                         "loc" => base_url("race/upcoming"), //calendar
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
                         "priority" => 1,
@@ -255,7 +260,7 @@ EOT;
 //                        "changefreq" => "daily",
 //                    ],
                     "featured" => [
-                        "display" => "Featured Races",
+                        "display" => "Featured",
                         "loc" => base_url("race/featured"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
                         "priority" => 1,
@@ -472,6 +477,89 @@ EOT;
             $return_data[$year][$month][$day][$id] = $row;
         }
         return $return_data;
+    }
+    
+    public function formulate_status_notice($edition_data) {
+        $return = [];
+        ;
+//        echo $event_detail['edition_status'];
+//        die();
+        switch ($edition_data['edition_status']) {
+            case 2:
+                $msg = "<b>This event is set to DRAFT mode.</b> All detail has not yet been confirmed";
+                $short_msg = "DRAFT";
+                $state = "danger";
+                $icon = "minus-circle";
+                break;
+            case 3:
+                $email = $edition_data['user_email'];
+                $msg = "<strong>This event has been CANCELLED.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a>";
+                $short_msg = "CANCELLED";
+                $state = "danger";
+                $icon = "times-circle";
+                break;
+            case 9:
+                $email = $edition_data['user_email'];
+                $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a><br>"
+                        . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
+                $short_msg = "POSTPONED";
+                $state = "warning";
+                $icon = "minus-circle";
+                break;
+            default:
+                switch ($edition_data['edition_info_status']) {
+                    case 13:
+                        $msg = "<strong>PLEASE NOTE</strong><br>Dates and race times has <u>not yet been confirmed</u> by the race organisers";
+                        $short_msg = "Dates not confirmed yet";
+                        $state = "danger";
+                        $icon = "minus-circle";
+                        break;
+                    case 14:
+                        $msg = "<b>INFO UNCONFIRMED</b><br>Waiting for race information from the organisers";
+                        $short_msg = "Dates not confirmed yet";
+                        $state = "warning";
+                        $icon = "info-circle";
+                        break;
+                    case 15:
+                        $msg = "<b>INFO INCOMPLETE</b><br>All information loaded has been confirmed as correct, but listing is not complete";
+                        $short_msg = "Outstanding information";
+                        $state = "info";
+                        $icon = "info-circle";
+                        break;
+                    case 16:
+                        $msg = "<b>LISTING VERIFIED</b><br>All information below has been confirmed";
+                        $short_msg = "Listing complete";
+                        $state = "success";
+                        $icon = "check-circle";
+                        break;
+                    case 10:
+                        $msg = "<b>RESULTS PENDING</b><br>Waiting for results to be released by organisers. Note this can take up to a week";
+                        $short_msg = "Waiting for results";
+                        $state = "info";
+                        $icon = "info-circle";
+                        break;
+                    case 11:
+                        $slug = $edition_data['edition_slug'];
+                        $msg = "<b>RESULTS LOADED</b><br>Click to <a href='" . base_url("event/$slug/results") . "'>view results</a>";
+                        $short_msg = "Results loaded";
+                        $state = "success";
+                        $icon = "check-circle";
+                        break;
+                    case 12:
+                        $msg = "<b>NO RESULTS EXPECTED</b><br>No official results will be released for this event";
+                        $short_msg = "No results expexted";
+                        $state = "warning";
+                        $icon = "minus-circle";
+                        break;
+                }
+                break;
+        }
+
+        $return['msg'] = $msg;
+        $return['short_msg'] = $short_msg;
+        $return['state'] = $state;
+        $return['icon'] = $icon;
+        return $return;
     }
 
     public function set_crumbs() {

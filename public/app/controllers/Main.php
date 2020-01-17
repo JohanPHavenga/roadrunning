@@ -90,6 +90,8 @@ class Main extends MY_Controller {
             $search_params['or_like']["event_name"] = $this->input->post("query");
             $search_params['or_like']["town_name"] = $this->input->post("query");
             $search_params['group_end'] = "";
+            
+            $this->edition_model->log_search($this->input->post("query"));
         }
         // WHERE
         switch ($this->input->post("where")) {
@@ -192,10 +194,15 @@ class Main extends MY_Controller {
         $search_params['where']["edition_date <= "] = $to_date;
                 
                 
-        $search_params['order_by']["edition_date"] = "DESC";
+        $search_params['order_by']["edition_date"] = "ASC";
 
         // DO TEH SEARCH
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params), $race_search_params);
+        if (!empty($this->data_to_views['edition_list'])) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id=>$edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info']=$this->formulate_status_notice($edition_data);
+            }
+        }
 
 //        wts($search_params);
 //        wts($this->data_to_views['search_result'], true);

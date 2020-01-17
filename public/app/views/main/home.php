@@ -247,7 +247,7 @@ $this->load->view('templates/search_form');
                     </div>
                 </div>
                 <div class="text-center  p-t-20 p-b-20">
-                    <a href="#" class="btn btn-colored">Show more</a>
+                    <a href="<?= base_url('race/upcoming');?>" class="btn btn-colored">Show more</a>
                 </div>
             </div>
             <div class="col-lg-5">

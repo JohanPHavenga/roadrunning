@@ -1,5 +1,5 @@
 <?php
-$img_url = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/" . $edition_data['edition_gps'] . "/12?mapSize=900,300&format=png&g&pushpin=" . $edition_data['edition_gps'] . ";65&key=An56kGemZ2QHt-SqwYx3fi9E89M_lMQDqODLp55fEnUejV10d2fH9jkrlUoC6xlS";
+$img_url = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/" . $edition_data['edition_gps'] . "/11?mapSize=1224,300&format=png&key=An56kGemZ2QHt-SqwYx3fi9E89M_lMQDqODLp55fEnUejV10d2fH9jkrlUoC6xlS";
 $page_title = $edition_data['event_name'];
 $page_sub_title = fdateHumanFull($edition_data['edition_date']);
 ?>

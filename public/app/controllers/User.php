@@ -28,7 +28,7 @@ class User extends MY_Controller {
         $lowercase = preg_match('@[a-z]@', $password);
         $number = preg_match('@[0-9]@', $password);
 
-        if (!$uppercase || !$lowercase || !$number || strlen($password) < 8  || strlen($password) > 32) {
+        if (!$uppercase || !$lowercase || !$number || strlen($password) < 8 || strlen($password) > 32) {
             return FALSE;
         } else {
             return TRUE;
@@ -135,10 +135,10 @@ class User extends MY_Controller {
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email|is_unique[users.user_email]',
                 array(
                     'required' => 'You have not provided an %s.',
-                    'is_unique' => 'This %s is already in use. Please <a href="'.base_url('login').'">login</a> or <a href="'.base_url('forgot-password').'">reset your password</a> if you have forgotten it.'
+                    'is_unique' => 'This %s is already in use. Please <a href="' . base_url('login') . '">login</a> or <a href="' . base_url('forgot-password') . '">reset your password</a> if you have forgotten it.'
                 )
         );
-        $this->form_validation->set_rules('user_contact', 'Phone Number', 'trim|required|min_length[10]|alpha_numeric_spaces');
+        $this->form_validation->set_rules('user_contact', 'Phone Number', 'trim|min_length[10]|alpha_numeric_spaces');
         $this->form_validation->set_rules('user_password', 'Password', 'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
                 array(
                     "is_password_strong" => "Password should be between 8 & 32 characters in length and should include at least one upper case letter and one number",
@@ -154,10 +154,10 @@ class User extends MY_Controller {
         } else {
             // set user_data from post
             foreach ($this->input->post() as $field => $value) {
-                switch ($field) {                    
+                switch ($field) {
                     case "user_contact":
                         $value = $this->int_phone($value);
-                        break;    
+                        break;
                     case "user_password":
                         $value = hash_pass($value);
                         break;
@@ -320,23 +320,39 @@ class User extends MY_Controller {
                 $url = base_url("user/confirm_email/" . $user_data['user_confirm_guid']);
                 $data = [
                     "to" => $user_data['user_email'],
-                    "body" => "<h2>Welcome</h2><p>Hi " . $user_data['user_name'] . "<br>Please click on the link below to confirm your email address.</p><p><a href='$url'>$url</a></p>",
-                    "subject" => "Registration Confirmation",
+//                    "body" => "<h2>Welcome</h2><p>Hi " . $user_data['user_name'] . "<br>Please click on the link below to confirm your email address.</p><p><a href='$url'>$url</a></p>",
+                    "subject" => "Registration on RoadRunning.co.za",
+                    "body" => "<h2>Welcome</h2>"
+                    . "<p>Hi " . $user_data['user_name']
+                    . "<p>Please click on the link below to confirm your email address to complete creating an account on "
+                    . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a>."
+                    . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
+                    . "<p>If this was not you, you can safely ignore this email.</p>",
+                    "from" => "no-reply@roadrunning.co.za",
+                    "from_name" => "No-Reply@RoadRunning.co.za",
                 ];
                 break;
             case "forgot_password":
                 $url = base_url("user/reset_password/" . $user_data['user_confirm_guid']);
                 $data = [
                     "to" => $user_data['user_email'],
-                    "body" => "<h2>Password Reset</h2><p>You have requested a password reset on your account.<br>Please click on the link below to set your new password.</p><p><a href='$url'>$url</a></p>",
-                    "subject" => "Password Reset",
+                    "subject" => "Password Reset for RoadRunning.co.za",
+                    "body" => "<h2>Password Reset</h2>"
+                    . "<p>We have received a password reset request on "
+                    . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a> for the email address "
+                    . "<b>" . $user_data['user_email'] . "</b>."
+                    . "<p>Please click on the link below to confirm this was you, and set a new password:</p>"
+                    . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
+                    . "<p>If this was not you, you can safely ignore this email.</p>",
+                    "from" => "no-reply@roadrunning.co.za",
+                    "from_name" => "No-Reply@RoadRunning.co.za",
                 ];
                 break;
         }
 
         return $this->set_email($data);
     }
-    
+
     private function int_phone($phone) {
         $phone = trim($phone);
         $phone = str_replace(" ", "", $phone);

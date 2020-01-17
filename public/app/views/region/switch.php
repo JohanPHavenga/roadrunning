@@ -32,13 +32,6 @@
                         'class' => 'btn',
                     );
                     echo form_button($data);
-                    $data = array(
-                        'id' => 'form-clear',
-                        'type' => 'reset',
-                        'content' => 'Clear',
-                        'class' => 'btn btn-light',
-                    );
-                    echo form_button($data);
                     ?>
                 </div>
 

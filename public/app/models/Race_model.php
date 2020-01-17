@@ -166,6 +166,7 @@ class Race_model extends MY_model {
             $return_arr = [];
             foreach ($edition_arr as $edition_id => $edition) {
                 $race_search_params['where']['races.edition_id']=$edition_id;
+                $race_search_params['where']['races.race_status']=1;
                 $race_list = $this->get_race_list($race_search_params);
                 if ($race_list) {
                     $return_arr[$edition_id] = $edition;

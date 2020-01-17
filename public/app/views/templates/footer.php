@@ -158,6 +158,19 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
 <script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous"></script>
 
+<script>
+    <?php
+    foreach ($this->session->most_searched as $search_id => $search) {
+    ?>
+    $('#search_<?=$search_id;?>').click(function () {
+        $('#main_search').val('<?=$search['search_term'];?>');
+        $("#main_search_form").submit();
+    });
+    <?php
+    }
+    ?>
+</script>
+
 <?php
 if ($this->ini_array['enviroment']['server'] != "production") {
 //if (1==2) {

@@ -104,7 +104,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 <div class="header-inner">
                     <div class="container"> <!--Logo-->
                         <div id="logo">
-                            <a href="/" class="logo" data-src-dark="<?= base_url('assets/img/roadrunning_logo_dark_80.svg'); ?>">
+                            <a href="<?=base_url();?>" class="logo" data-src-dark="<?= base_url('assets/img/roadrunning_logo_dark_80.svg'); ?>">
                                 <img src="<?= base_url('assets/img/roadrunning_logo_80.svg'); ?>" alt="RR Logo">
                             </a>
                         </div>
@@ -115,11 +115,12 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <div id="search-logo"><img src="<?= base_url('assets/img/roadrunning_logo_80.svg'); ?>" alt="RR Logo"></div>
                             <button id="btn-search-close" class="btn-search-close" aria-label="Close search form"><i class="icon-x"></i></button>
                             <?php
-                            $attributes = array('class' => 'search-form', 'method' => 'post');
+                            $attributes = array('class' => 'search-form', 'method' => 'post', 'id' => 'main_search_form');
                             echo form_open(base_url("search"), $attributes);
                             echo form_input([
                                 'name' => 'query',
                                 'type' => 'search',
+                                'id' => 'main_search',
 //                                'value' => set_value('query'),
                                 'class' => 'form-control',
                                 'placeholder' => 'Search...',
@@ -133,9 +134,11 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <div class="search-suggestion-wrapper">
                                 <div class="search-suggestion">
                                     <h3>Popular searches</h3>
-                                    <p><a href="#">Beautiful nature, and rare feathers!</a></p>
-                                    <p><a href="#">New costs and rise of the economy!</a></p>
-                                    <p><a href="#">A true story, that never been told!</a></p>
+                                    <?php
+                                    foreach ($this->session->most_searched as $search_id => $search) {
+                                        echo "<p><a href='#' id='search_".$search_id."'>" . $search['search_term'] . " </a></p>";
+                                    }
+                                    ?>
                                 </div>
                                 <div class="search-suggestion">
                                     <h3>Most viewed races</h3>
@@ -225,7 +228,12 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                             if (!in_array($key, $white_list)) {
                                                 continue;
                                             }
-                                            echo "<li><a href='$page[loc]'>$page[display]</a>";
+                                            if (isset($page['sub-menu'])) {
+                                                $d_cl="dropdown";
+                                            } else {
+                                                $d_cl = "";
+                                            }
+                                            echo "<li class='$d_cl'><a href='$page[loc]'>$page[display]</a>";
                                             if (isset($page['sub-menu'])) {
                                                 echo '<ul class="dropdown-menu">';
                                                 foreach ($page['sub-menu'] as $sub_page) {

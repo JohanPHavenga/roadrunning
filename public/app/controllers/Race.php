@@ -25,7 +25,10 @@ class Race extends MY_Controller {
         ];
 
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-//        $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
+        foreach ($this->data_to_views['edition_list'] as $edition_id=>$edition_data) {
+            $this->data_to_views['edition_list'][$edition_id]['status_info']=$this->formulate_status_notice($edition_data);
+        }
+//        wts($this->data_to_views['edition_list'],true);
 
         $this->data_to_views['banner_img'] = "run_02";
         $this->data_to_views['banner_pos'] = "40%";
@@ -33,6 +36,7 @@ class Race extends MY_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/search_form');
         $this->load->view('templates/race_list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
@@ -98,7 +102,7 @@ class Race extends MY_Controller {
             $edition_list = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
             $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
             $this->data_to_views['year'] = $year;
-            $view = 'templates/race_list_accordian';
+            $view = 'templates/race_accordian';
         } else {
             $view = 'race/history';
         }

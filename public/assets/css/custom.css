@@ -265,6 +265,25 @@ h3 span.badge a:hover { color: #ccc; }
     margin-right: 6px;
 }
 
+.accordion.accordion-simple h5.ac-title {
+    font-family: "Poppins","Helvetica","Arial",sans-serif;
+    font-size: 1em;
+}
+.accordion.accordion-simple .ac-item {
+    padding: 10px 0;
+}
+.accordion.accordion-simple span {
+    position: relative;
+    top: -1px;
+}
+
+.accordion .ac-item .ac-content > p {
+    color: #565656;
+    margin-left: 30px;
+}
+
+.accordion .ac-item .ac-content a:hover span.badge { color: #fff; text-decoration: none;}
+
 
 /* PAGE TITLE */
 #page-title {
@@ -350,6 +369,17 @@ h3 span.badge a:hover { color: #ccc; }
 
 }
 
+#main-search-form {
+    padding: 3px 0 12px;
+}
+#main-search-form label{
+    font-weight: bold;
+    margin-top: 5px;
+}
+form#main-search-form .btn {
+    margin-top: 12px;
+}
+
 
 /* net groot */
 @media (min-width: 991px) { 
@@ -393,6 +423,15 @@ h3 span.badge a:hover { color: #ccc; }
         width: auto;
     }
 
+    .accordion .ac-item .ac-title {
+        padding-right: 20px;
+    }
+
+    .accordion .ac-item .ac-content > p {
+        color: #565656;
+        margin-left: 0;
+    }
+
 }
 
 /* heel klein **/
@@ -401,5 +440,10 @@ h3 span.badge a:hover { color: #ccc; }
     .product .product-image img {
         max-height: 100%;
         width: 100%;
+    }
+
+    .accordion.accordion-simple h5.ac-title {
+        font-family: "Poppins","Helvetica","Arial",sans-serif;
+        font-size: 0.9em;
     }
 }

@@ -28,8 +28,8 @@ class MY_model extends CI_Model {
         if ($file_detail) {
             return base_url("file/edition/" . $slug . "/logo/" . $file_detail['file_name']);
         } else {
-            $num=rand(1,21);
-            if ($num<10) {
+            $num = rand(1, 21);
+            if ($num < 10) {
                 $num = "0{$num}";
             }
             return base_url("assets/img/thumbs/$num.jpg");
@@ -51,7 +51,7 @@ class MY_model extends CI_Model {
         }
         return false;
     }
-    
+
     public function get_edition_entrytype_list($edition_id = null) {
         if (!$edition_id) {
             return false;
@@ -65,6 +65,66 @@ class MY_model extends CI_Model {
             $data = [$this->no_info_id];
         }
         return $data;
+    }
+
+    public function log_search($search_query) {
+        $query = $this->db->get_where('searches', array('search_term' => $search_query));
+        if ($query->num_rows() > 0) {            
+            $result = $query->result_array();
+            $search_id = $result[0]['search_id'];
+            $search_data = [
+                "search_count" => $result[0]['search_count']+1,
+                "updated_date" => date("Y-m-d H:i:s"),
+            ];
+            
+            $this->db->trans_start();
+            $this->db->update('searches', $search_data, ['search_id' => $search_id]);
+            $this->db->trans_complete();
+            
+        } else {
+            $search_data = [
+                "search_term" => $search_query,
+                "search_count" => 1,
+                "updated_date" => date("Y-m-d H:i:s"),
+            ];
+            $this->db->trans_start();
+            $this->db->insert('searches', $search_data);
+            // get event ID from Insert
+            $search_id = $this->db->insert_id();
+            $this->db->trans_complete();
+        }
+
+        // return ID if transaction successfull
+        if ($this->db->trans_status()) {
+            return $search_id;
+        } else {
+            return false;
+        }
+    }
+    
+    public function get_most_searched($query_params=[]) {
+
+        $this->db->select("*");
+        $this->db->from("searches");
+        foreach ($query_params as $operator=>$clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field=>$value) {
+                    $this->db->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
+        }
+//        die($this->db->get_compiled_select());
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['search_id']] = $row;
+            }
+            return $data;
+        }
+        return false;
     }
 
 }
