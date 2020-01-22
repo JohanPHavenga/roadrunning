@@ -45,34 +45,30 @@
 
                     <div class="col-lg-3">
                         <h4 class="text-uppercase">Calendar</h4>
-                        <ul>
-                            <?php
-                            foreach ($this->session->calendar_date_list as $year => $month_list) {
-                                foreach ($month_list as $month_number => $month_name) {
-                                    echo "<li><a href='" . base_url() . "calendar/" . $year . "/" . $month_number . "'>" . $month_name . "</a></li>";
-                                }
+                        <?php
+                        foreach ($edition_arr as $year => $year_list) {
+                            echo "<ul>";
+                            echo "<li><a href='" . base_url() . "calendar/" . $year . "'>" . $year . "</a>";
+                            echo "<ul>";
+                            foreach ($year_list as $month => $month_list) {
+                                $month_num = date("m", strtotime("$month-$year"));
+                                echo "<li><a href='" . base_url() . "calendar/" . $year . "/" . $month_num . "'>" . $month . "</a>";
+//                                    echo "<ul>";
+//                                    foreach ($month_list as $day => $edition_list) {
+//                                        echo "<li><a href='" . base_url() . "calendar/" . $year . "/" . $month_num . "/" . $day . "'>" . $day . "</a></li>";
+//                                    }
+//                                    echo "</ul>";
+                                echo "</li>";
                             }
-                            ?>
-                        </ul>    
+                            echo "</ul>";
+                            echo "</li></ul>";
+                        }
+                        ?>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-4">
-                        <?php
-                        foreach ($edition_arr as $year => $year_list) {
-                            echo "<h3>$year</h3>";
-                            foreach ($year_list as $month => $month_list) {
-                                echo "<h3>$month</h3>";
-                                foreach ($month_list as $day => $edition_list) {
-                                    foreach ($edition_list as $edition_id => $edition) {
-                                        echo date("D j M", strtotime($edition['edition_date'])) . " - <a href='" . base_url('event/' . $edition['edition_slug']) . "'>" . $edition['edition_name'] . "</a> ";
-                                    }
-                                }
-                            }
-                        }
-                        ?>
-                    </div>
+
                 </div>
             </div>
             <!-- end: Content-->
@@ -85,6 +81,28 @@
                 ?>
             </div>
             <!-- end: Sidebar-->
+        </div>
+        <div class="row">
+            <div class="content col-lg-12">
+                <h4 class="text-uppercase">RACES</h4>
+                <?php
+                foreach ($edition_arr as $year => $year_list) {
+                    foreach ($year_list as $month => $month_list) {
+                        echo "<h5>$month $year</h5>";
+                        echo "<ul class='list inline'>";
+                        foreach ($month_list as $day => $edition_list) {
+                            foreach ($edition_list as $edition_id => $edition) {
+                                echo "<li>"
+                                . date("D j M", strtotime($edition['edition_date'])) . " - "
+                                . "<a href='" . base_url('event/' . $edition['edition_slug']) . "'>" . $edition['edition_name'] . "</a> ";
+                                echo "</li>";
+                            }
+                        }
+                        echo "</ul>";
+                    }
+                }
+                ?>
+            </div>
         </div>
     </div>
 </section>

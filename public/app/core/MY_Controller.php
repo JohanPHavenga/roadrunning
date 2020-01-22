@@ -465,8 +465,7 @@ EOT;
         return $r_arr;
     }
     
-    public function get_date_list($full=false) {
-//        if ($full)
+    public function get_date_list() {
         $dates_to_fetch = [
             "1 month ago",
             "today",

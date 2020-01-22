@@ -18,7 +18,7 @@ class Sitemap extends MY_Controller {
     }
 
     public function index() {
-
+//        wts($this->data_to_views['edition_arr'],true);
         $this->data_to_views['banner_img'] = "run_01";
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "Sitemap";

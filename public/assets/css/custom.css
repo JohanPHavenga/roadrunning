@@ -235,6 +235,13 @@ h3 span.badge a:hover { color: #ccc; }
 .content ul li li {
     line-height: 1.6em;
 }
+.content ul.inline  {
+    list-style-type: none;
+    overflow: hidden;
+}
+.content ul.inline li {
+    display: inline;
+}
 .content a:not(.btn) {
     color: #26B8F3;
     text-decoration: underline;
@@ -320,7 +327,7 @@ h3 span.badge a:hover { color: #ccc; }
     padding: 30px 0 !important;
 }
 
-/* RACE LLISTING */
+/* RACE LISTING */
 .race {
     margin-bottom: 100px;
 }
