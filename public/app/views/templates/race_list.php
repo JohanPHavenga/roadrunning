@@ -5,7 +5,14 @@
             <div class="content col-lg-9">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="accordion accordion-simple">
+                        <?php
+                        if (isset($tag)) {
+                            ?>
+                            <h3 class="uppercase m-t-20">Tag: <b><?= $tag; ?></b></h3>
+                            <?php
+                        }
+                        ?>
+                        <div class="accordion accordion-simple m-t-10">
                             <?php
                             if ($edition_list) {
                                 foreach ($edition_list as $edition_id => $edition) {
@@ -55,8 +62,8 @@
                                                 <?php
                                                 foreach ($race_summary['distance'] as $dist) {
 //                                                            echo fraceDistance($dist).", ";
-                                                    echo '<a href="'. base_url('event/' . $edition['edition_slug'] . '/distances/' . url_title($race_summary['name'][$dist])).'"><span title="' . $race_summary['name'][$dist] . '" class="badge badge-' . $race_summary['color'][$dist] . '">' . fraceDistance($dist) . '';
-                                                    echo ' <i class="fa fa-'.$race_summary['dist_icon'][$dist].'"></i></span></a> ';
+                                                    echo '<a href="' . base_url('event/' . $edition['edition_slug'] . '/distances/' . url_title($race_summary['name'][$dist])) . '"><span title="' . $race_summary['name'][$dist] . '" class="badge badge-' . $race_summary['color'][$dist] . '">' . fraceDistance($dist) . '';
+                                                    echo ' <i class="fa fa-' . $race_summary['dist_icon'][$dist] . '"></i></span></a> ';
                                                 }
                                                 ?><br>
                                                 <b>Time:</b> <?= ftimeMil($edition['race_time_start']); ?><br>
@@ -64,7 +71,7 @@
                                             </p>
 
                                             <p>
-                                                <a class="btn btn-light btn-sm" href="<?= base_url("event/".$edition['edition_slug']) ;?>">More Info</a>
+                                                <a class="btn btn-light btn-sm" href="<?= base_url("event/" . $edition['edition_slug']); ?>">More Info</a>
                                             </p>
                                             <?php
 //                                            wts($edition);

@@ -273,7 +273,7 @@ h3 span.badge a:hover { color: #ccc; }
     /*color: #fff;*/
 }
 .content .accordion p {
-    font-size: 0.9em;
+    font-size: 1em;
 }
 .content .accordion table {
     margin-bottom: 1.5rem;

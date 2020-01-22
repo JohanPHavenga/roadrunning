@@ -69,7 +69,7 @@ $route['calender'] = 'race/list';
 $route["calendar/(.*)"] = 'race/list/$1';
 $route['race'] = 'race/list';
 $route['race/upcoming'] = 'race/list';
-$route['race-calendar'] = 'race';
+$route['race-calendar'] = 'race/list';
 $route['race/most-viewed'] = 'race/most_viewed';
 
 $route['login'] = 'login/userlogin';

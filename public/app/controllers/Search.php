@@ -6,14 +6,14 @@ class Search extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('edition_model');
+        $this->load->model('race_model');
     }
 
     public function index() {
-        $this->load->model('edition_model');
-        $this->load->model('race_model');
 
         // SET BAIC STATUS CHECK 
-        $search_params['where']["edition_status !="] = 2;
+        $search_params['where_in']["edition_status"] = [1, 3, 4];
 
         // Get correct search paramaters from post
         // QUERY
@@ -120,30 +120,29 @@ class Search extends MY_Controller {
                 break;
             default:
                 $from_date = date("Y-m-d 00:00:00");
-                $to_date = date("Y-m-d 23:59:59", strtotime("6 months"));
+                $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
                 break;
-        }        
+        }
         $search_params['where']["edition_date >= "] = $from_date;
         $search_params['where']["edition_date <= "] = $to_date;
-        
-        
+
+
         // SHOW AS 
         set_cookie("listing_pref", $this->input->post("show"), 7200);
-        if ($this->input->post("show")=="grid") {
-            $view_to_load='race_grid';
+        if ($this->input->post("show") == "grid") {
+            $view_to_load = 'race_grid';
         } else {
-            $view_to_load='race_list';
+            $view_to_load = 'race_list';
         }
-        
+
         // SORT
-        $sort="ASC";
+        $sort = "ASC";
         if (strtotime($from_date) < strtotime("Y-m-d 00:00:00")) {
-            $sort="DESC";
+            $sort = "DESC";
         }
         $search_params['order_by']["edition_date"] = $sort;
-        
-//        wts($search_params,true);
 
+//        wts($search_params,true);
         // DO TEH SEARCH
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params), $race_search_params);
         if (!empty($this->data_to_views['edition_list'])) {
@@ -161,7 +160,82 @@ class Search extends MY_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/search_form');
-        $this->load->view('templates/'.$view_to_load, $this->data_to_views);
+        $this->load->view('templates/' . $view_to_load, $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
+    public function tag($tag_type, $query) {
+
+        $search_params['where']["edition_date >= "] = date("Y-m-d 00:00:00");
+        $search_params['where']["edition_date <= "] = date("Y-m-d 23:59:59", strtotime("1 year"));
+        $race_search_params=[];
+
+        $query=urldecode($query);
+        
+        switch ($tag_type) {
+            case "race_name":
+                $race_search_params['where']["race_name"] = $query;
+                break;
+            case "race_distance":
+                $race_search_params['where']["race_distance"] = floatval(str_replace("km","",$query));
+                break;
+            case "region_name":
+                $search_params['where']["region_name"] = $query;
+                break;
+            case "province_name":
+                $search_params['where']["province_name"] = $query;
+                break;
+            case "club_name":
+                $search_params['where']["club_name"] = $query;
+                break;
+            case "town_name":
+                $search_params['where']["town_name"] = $query;
+                break;
+            case "event_name":
+                $search_params['where']["edition_date >= "] = date("2016-01-01 00:00:00");
+                $search_params['where']["event_name"] = $query;
+                break;
+            case "edition_year":
+                redirect(base_url("calendar/".$query));
+                break;
+            case "edition_month":
+                $query_part= explode(" ", $query);
+                $month_num = date("m", strtotime("$query_part[0]-$query_part[1]"));
+                redirect(base_url("calendar/".$query_part[1]."/".$month_num));
+                break;
+            default:
+                redirect("404");
+                break;
+        }
+
+        // DO THE SEARCH
+        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params), $race_search_params);
+        if (!empty($this->data_to_views['edition_list'])) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            }
+        }
+
+//        echo $view_to_load;
+//        wts($this->input->post());
+//        wts($this->data_to_views['edition_list']);
+//        wts($race_search_params);
+//        wts($search_params, true);
+
+        // SHOW AS 
+        set_cookie("listing_pref", $this->input->post("show"), 7200);
+        if ($this->input->post("show") == "grid") {
+            $view_to_load = 'race_grid';
+        } else {
+            $view_to_load = 'race_list';
+        }
+        $this->data_to_views['page_title'] = "Search";
+        $this->data_to_views['tag'] = $query;
+        
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/search_form');
+        $this->load->view('templates/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 

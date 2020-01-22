@@ -30,28 +30,78 @@ class Sitemap extends MY_Controller {
     }
 
     function xml() {
+        // SET RACES & CALENDAR
         foreach ($this->data_to_views['edition_arr'] as $year => $year_list) {
-            foreach ($year_list as $month_list) {
+
+            if ($year == date("Y")) {
+                $lastmod = date("Y-m-d H:i:s", strtotime("-1 week"));
+                $priority = 0.5;
+                $changefreq = "weekly";
+            } else {
+                $lastmod = date("Y-m-d H:i:s", strtotime("-1 year"));
+                $priority = 0.2;
+                $changefreq = "yearly";
+            }
+            $this->data_to_views['calendar_xml'][$year]['loc'] = base_url() . "calendar/" . $year;
+            $this->data_to_views['calendar_xml'][$year]['lastmod'] = $lastmod;
+            $this->data_to_views['calendar_xml'][$year]['priority'] = $priority;
+            $this->data_to_views['calendar_xml'][$year]['changefreq'] = $changefreq;
+
+            foreach ($year_list as $month => $month_list) {
+
+                $month_num = date("m", strtotime("$month-$year"));
+
+                // in last 3 months + future
+                $todayDate = time();
+                $dateToCheck = strtotime("$month-$year");
+                if (($dateToCheck > $todayDate) || (($todayDate - $dateToCheck) < 7889238)) {
+                    $lastmod = date("Y-m-d H:i:s", strtotime("-1 week"));
+                    $priority = 0.5;
+                    $changefreq = "weekly";
+                    $this->data_to_views['calendar_xml'][$year]['lastmod'] = $lastmod;
+                    $this->data_to_views['calendar_xml'][$year]['priority'] = $priority;
+                    $this->data_to_views['calendar_xml'][$year]['changefreq'] = $changefreq;
+                } else {
+                    $lastmod = date("Y-m-d H:i:s", strtotime("-1 year"));
+                    $priority = 0.2;
+                    $changefreq = "yearly";
+                }
+                $this->data_to_views['calendar_xml']["$year-$month_num"]['loc'] = base_url() . "calendar/" . $year . "/" . $month_num;
+                $this->data_to_views['calendar_xml']["$year-$month_num"]['lastmod'] = $lastmod;
+                $this->data_to_views['calendar_xml']["$year-$month_num"]['priority'] = $priority;
+                $this->data_to_views['calendar_xml']["$year-$month_num"]['changefreq'] = $changefreq;
+
                 foreach ($month_list as $edition_list) {
                     foreach ($edition_list as $edition_id => $edition) {
                         // SET loc
-                        $loc=base_url("event/".$edition['edition_slug']);
+                        $loc = base_url("event/" . $edition['edition_slug']);
                         // SET lastmod
-                        if (!empty($edition['updated_date'])) { $lastmod = $edition['updated_date']; } else { $lastmod = $edition['created_date']; }
+                        if (!empty($edition['updated_date'])) {
+                            $lastmod = $edition['updated_date'];
+                        } else {
+                            $lastmod = $edition['created_date'];
+                        }
                         // SET priority and changefreq
-                        $priority=0.1;
-                        $changefreq="never";
+                        $priority = 0.1;
+                        $changefreq = "never";
                         // if race in next 12 months, or past 6 month
-                        if (($edition['edition_date'] < date("Y-m-d H:m:s",strtotime("1 year"))) && ($edition['edition_date'] > date("Y-m-d H:m:s",strtotime("-6 months")))) { 
+                        if (($edition['edition_date'] < date("Y-m-d H:m:s", strtotime("1 year"))) && ($edition['edition_date'] > date("Y-m-d H:m:s", strtotime("-6 months")))) {
                             $priority = 0.5;
                             $changefreq = "monthly";
                         }
-                        // if race in next 6 months, or past 2 month
-                        if (($edition['edition_date'] < date("Y-m-d H:m:s",strtotime("6 months"))) && ($edition['edition_date'] > date("Y-m-d H:m:s",strtotime("-2 months")))) { 
+                        // if race in next 3 months
+                        if (($edition['edition_date'] < date("Y-m-d H:m:s", strtotime("3 months"))) && ($edition['edition_date'] >= date("Y-m-d H:m:s", strtotime("today")))) {
+                            $priority = 0.9;
+                            $changefreq = "weekly";
+                        }
+                        // if race in past 1 month
+                        if (($edition['edition_date'] <= date("Y-m-d H:m:s", strtotime("today"))) && ($edition['edition_date'] > date("Y-m-d H:m:s", strtotime("-1 month")))) {
                             $priority = 0.8;
                             $changefreq = "weekly";
                         }
-                        if ($lastmod < "") {}
+                        if ($lastmod < "") {
+                            
+                        }
                         $this->data_to_views['edition_list_xml'][$edition_id]['loc'] = $loc;
                         $this->data_to_views['edition_list_xml'][$edition_id]['lastmod'] = $lastmod;
                         $this->data_to_views['edition_list_xml'][$edition_id]['priority'] = $priority;
@@ -60,6 +110,7 @@ class Sitemap extends MY_Controller {
                 }
             }
         }
+
         $this->load->view("sitemap/xml", $this->data_to_views);
     }
 

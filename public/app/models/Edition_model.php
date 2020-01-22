@@ -65,7 +65,8 @@ class Edition_model extends MY_model {
         if (is_null($field_arr)) {
             $field_arr = [
                 "editions.edition_id", "edition_name", "edition_status", "edition_isfeatured", "edition_info_status","edition_date", "edition_slug", "edition_address", "edition_info_prizegizing",
-                "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id", "province_abbr"
+                "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id", "province_abbr", "club_name",
+                "editions.created_date","editions.updated_date",
             ];
         }
         $select = implode(",", $field_arr);
@@ -74,6 +75,8 @@ class Edition_model extends MY_model {
         $this->db->join('events', 'event_id');
         $this->db->join('towns', 'town_id');
         $this->db->join('regions', 'region_id');
+        $this->db->join('organising_club', 'event_id');
+        $this->db->join('clubs', 'club_id');
         $this->db->join('provinces', 'regions.province_id=provinces.province_id');
         foreach ($query_params as $operator => $clause_arr) {
             if (is_array($clause_arr)) {

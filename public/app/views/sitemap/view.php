@@ -15,11 +15,22 @@
 
                 <div class="row">
                     <div class="col-lg-4">
+                        <?php
+//                        wts($this->session->static_pages);
+                        ?>
                         <h4 class="text-uppercase">Pages</h4>
                         <ul>
                             <?php
                             foreach ($this->session->static_pages as $page_detail) {
-                                echo "<li><a href='" . $page_detail['loc'] . "'>" . ucwords($page_detail['display']) . "</a></li>";
+                                echo "<li><a href='" . $page_detail['loc'] . "'>" . ucwords($page_detail['display']) . "</a>";
+                                if (isset($page_detail['sub-menu'])) {
+                                    echo "<ul>";
+                                    foreach ($page_detail['sub-menu'] as $sub_page) {
+                                        echo "<li><a href='" . $sub_page['loc'] . "'>" . ucwords($sub_page['display']) . "</a>";
+                                    }
+                                    echo "</ul>";
+                                }
+                                echo "</li>";
                             }
                             ?>
                         </ul>
@@ -46,23 +57,7 @@
                     <div class="col-lg-3">
                         <h4 class="text-uppercase">Calendar</h4>
                         <?php
-                        foreach ($edition_arr as $year => $year_list) {
-                            echo "<ul>";
-                            echo "<li><a href='" . base_url() . "calendar/" . $year . "'>" . $year . "</a>";
-                            echo "<ul>";
-                            foreach ($year_list as $month => $month_list) {
-                                $month_num = date("m", strtotime("$month-$year"));
-                                echo "<li><a href='" . base_url() . "calendar/" . $year . "/" . $month_num . "'>" . $month . "</a>";
-//                                    echo "<ul>";
-//                                    foreach ($month_list as $day => $edition_list) {
-//                                        echo "<li><a href='" . base_url() . "calendar/" . $year . "/" . $month_num . "/" . $day . "'>" . $day . "</a></li>";
-//                                    }
-//                                    echo "</ul>";
-                                echo "</li>";
-                            }
-                            echo "</ul>";
-                            echo "</li></ul>";
-                        }
+                        
                         ?>
                     </div>
                 </div>
