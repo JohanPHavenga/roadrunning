@@ -126,5 +126,9 @@ class MY_model extends CI_Model {
         }
         return false;
     }
+    
+    public function log_runtime($runtime_data) {
+        return $this->db->insert('runtimes', $runtime_data);
+    }
 
 }

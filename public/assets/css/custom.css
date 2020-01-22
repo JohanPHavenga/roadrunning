@@ -64,6 +64,14 @@ optgroup option {
     font-size: 1.1em;
 }
 
+.portfolio-item h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
 #header .header-inner #logo a > img, 
 #header #header-wrap #logo a > img,
 #header .header-inner #search-logo img {
@@ -84,11 +92,18 @@ optgroup option {
 span.post-meta {
     margin-right: 14px;
 }
+span.post-meta a:hover {
+    color: #26B8F3;
+}
 address { display: inline; }
 
 
 
 /* Color fixes */
+
+.form-control:focus, input:focus, select:focus {
+    border-color: #26B8F3;
+}
 
 .heading-text.heading-section > h2::before,
 #search .btn-search-close
@@ -403,6 +418,13 @@ form#main-search-form .btn {
     .product .product-image img {
         height: 100%;
         width: 100%;
+    }
+
+    footer .badge {
+        font-size: 0.7em;
+    }
+    .portfolio-item h3 {
+        height: 2.42em;
     }
 }
 

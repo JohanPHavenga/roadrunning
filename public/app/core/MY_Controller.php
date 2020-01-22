@@ -26,6 +26,7 @@ class MY_Controller extends CI_Controller {
             $this->session->set_userdata("region_pages", $this->get_region_pages());
             $this->session->set_userdata("most_viewed_pages", $this->get_most_viewed_pages());
             $this->session->set_userdata("most_searched", $this->get_most_searched());
+            $this->session->set_userdata("calendar_date_list", $this->get_date_list());
         }
         
         // set email cookie
@@ -291,25 +292,26 @@ EOT;
             ],
             "results" => [
                 "display" => "Results",
-                "loc" => base_url("result/race-results"),
+                "loc" => base_url("race/results"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                 "priority" => 0.8,
                 "changefreq" => "weekly",
                 "sub-menu" => [
                     "upcoming" => [
                         "display" => "Race Results",
-                        "loc" => base_url("races/race-results"),
+                        "loc" => base_url("race/results"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
                     "my-results" => [
                         "display" => "My Results",
-                        "loc" => base_url("result/my-results"),
+                        "loc" => "",
+//                        "loc" => base_url("result/my-results"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
-                        "badge" => "POPULAR",
+                        "badge" => "COMING SOON",
                     ],
                 ],
             ],
@@ -462,6 +464,23 @@ EOT;
         }
         return $r_arr;
     }
+    
+    public function get_date_list($full=false) {
+//        if ($full)
+        $dates_to_fetch = [
+            "1 month ago",
+            "today",
+            "+1 month",
+            "+2 month",
+            "+3 month",
+            "+4 month",
+//            "+5 month",
+        ];
+        foreach ($dates_to_fetch as $strtotime) {
+            $date_list[date("Y", strtotime($strtotime))][date("m", strtotime($strtotime))] = date("F Y", strtotime($strtotime));
+        }
+        return $date_list;
+    }
 
     // ==============================================================================================
     // CENTRAL FUNCTIONS
@@ -492,14 +511,22 @@ EOT;
                 $icon = "minus-circle";
                 break;
             case 3:
-                $email = $edition_data['user_email'];
+                if (isset($edition_data['user_email'])) {
+                    $email = $edition_data['user_email'];
+                } else {
+                    $email='';
+                }
                 $msg = "<strong>This event has been CANCELLED.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a>";
                 $short_msg = "CANCELLED";
                 $state = "danger";
                 $icon = "times-circle";
                 break;
             case 9:
-                $email = $edition_data['user_email'];
+                if (isset($edition_data['user_email'])) {
+                    $email = $edition_data['user_email'];
+                } else {
+                    $email='';
+                }               
                 $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a><br>"
                         . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
                 $short_msg = "POSTPONED";
@@ -579,10 +606,14 @@ EOT;
             // make controller prural for event and overwrite URI
             if (($x == 1) && ($segs[$x] == "event")) {
                 $segs[$x] = "race";
-                $crumb_uri = "/race/upcoming";
+            }
+            // make controller prural for display purposes
+            if (in_array($segs[$x],["race"])) {
+               $segs[$x] = $segs[$x]."s";
             }
 
             $segs[$x] = str_replace("_", " ", $segs[$x]);
+            $segs[$x] = str_replace("-", " ", $segs[$x]);
             $crumbs[ucwords($segs[$x])] = $crumb_uri;
 
             if ($x == 3) {

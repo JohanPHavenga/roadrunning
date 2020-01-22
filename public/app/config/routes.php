@@ -58,12 +58,18 @@ $route['seo'] = 'seo/sitemap';
 
 $route['404'] = 'main/custom_404';
 $route['about'] = 'main/about';
+$route['faq'] = 'main/faq';
 $route['newsletter'] = 'main/newsletter';
 $route['terms-conditions'] = 'main/terms_conditions';
 $route['version'] = 'main/site_version';
-$route['search'] = 'main/search';
+//$route['search'] = 'main/search';
 
-$route['race-calendar'] = 'calendar';
+$route['calendar'] = 'race/list';
+$route['calender'] = 'race/list';
+$route["calendar/(.*)"] = 'race/list/$1';
+$route['race'] = 'race/list';
+$route['race/upcoming'] = 'race/list';
+$route['race-calendar'] = 'race';
 $route['race/most-viewed'] = 'race/most_viewed';
 
 $route['login'] = 'login/userlogin';

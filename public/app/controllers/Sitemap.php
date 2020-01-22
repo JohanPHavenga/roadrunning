@@ -19,7 +19,12 @@ class Sitemap extends MY_Controller {
 
     public function index() {
 
+        $this->data_to_views['banner_img'] = "run_01";
+        $this->data_to_views['banner_pos'] = "40%";
+        $this->data_to_views['page_title'] = "Sitemap";
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('sitemap/view', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }

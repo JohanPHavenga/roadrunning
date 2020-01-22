@@ -215,5 +215,16 @@ class Edition_model extends MY_model {
         
         return $edition;
     }
+    
+     public function update_field($e_id, $field, $value) {
+        if (!($e_id)) {
+            return false;
+        } else {
+            $this->db->trans_start();
+            $this->db->update('editions', [$field => $value, "updated_date" => date("Y-m-d H:i:s")], array('edition_id' => $e_id));
+            $this->db->trans_complete();
+            return $this->db->trans_status();
+        }
+    }
 
 }

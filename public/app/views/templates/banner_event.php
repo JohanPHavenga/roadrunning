@@ -21,7 +21,7 @@ $page_sub_title = fdateHumanFull($edition_data['edition_date']);
             </ul>
         </div>
         <div class="page-title">
-            <h1><?= $page_title; ?></h1>
+            <h2><?= $page_title; ?></h2>
         </div>
         <?php
         if (isset($page_sub_title)) {

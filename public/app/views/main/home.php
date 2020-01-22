@@ -405,7 +405,7 @@ $this->load->view('templates/search_form');
             </span>
         </div>
         <div class="text-center p-b-20">
-            <a href="#" class="btn btn-lg btn-colored">Show me How</a>
+            <a href="<?= base_url("region/switch");?>" class="btn btn-lg btn-colored">Show me How</a>
         </div>
         <!--                    <div class="row">
                                 <div class="col-lg-4">

@@ -62,6 +62,15 @@ function array_keys_exists(array $keys, array $arr) {
     return !array_diff_key(array_flip($keys), $arr);
 }
 
+function replace_key($arr, $oldkey, $newkey) {
+    if (array_key_exists($oldkey, $arr)) {
+        $keys = array_keys($arr);
+        $keys[array_search($oldkey, $keys)] = $newkey;
+        return array_combine($keys, $arr);
+    }
+    return $arr;
+}
+
 function time_to_sec($time) {
     if ($time) {
         $sec = 0;

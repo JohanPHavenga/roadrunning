@@ -26,24 +26,17 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             foreach ($this->session->static_pages['races']['sub-menu'] as $key => $page) {
                                 echo "<li><a href='$page[loc]'>$page[display]</a></li>";
                             }
-                            ?>
-                        </ul>
-                    </div>
-                    <!-- end: Footer widget area 1 --> 
-                </div>
-                <div class="col-xl-2 col-lg-2 col-md-3"> 
-                    <!-- Footer widget area 2 -->
-                    <div class="widget">
-                        <h4>RESULTS</h4>
-                        <ul class="list"> 
-                            <?php
                             foreach ($this->session->static_pages['results']['sub-menu'] as $key => $page) {
-                                echo "<li><a href='$page[loc]'>$page[display]</a></li>";
+                                echo "<li><a href='$page[loc]'>$page[display]";
+                                if (isset($page['badge'])) {
+                                    echo " <span class='badge badge-danger'>$page[badge]</span>";
+                                }
+                                echo "</a></li>";
                             }
                             ?>
                         </ul>
                     </div>
-                    <!-- end: Footer widget area 2 --> 
+                    <!-- end: Footer RACES --> 
                 </div>
 
                 <div class="col-xl-2 col-lg-2 col-md-3"> 
@@ -58,13 +51,13 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
                         </ul>
                     </div>
-                    <!-- end: Footer widget area 4 --> 
+                    <!-- end: Footer PAGES --> 
                 </div>
 
                 <div class="col-xl-2 col-lg-2 col-md-3"> 
                     <!-- Footer widget area 3 -->
                     <div class="widget">
-                        <h4> REGIONS</h4>
+                        <h4>REGIONS</h4>
                         <ul class="list">
                             <?php
                             foreach ($this->session->static_pages['featured-regions']['sub-menu'] as $key => $page) {
@@ -79,7 +72,24 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <li><a href='<?= base_url('region/switch'); ?>'>Switch Regions</a></li>
                         </ul>
                     </div>
-                    <!-- end: Footer widget area 3 --> 
+                    <!-- end: Footer REGIONS --> 
+                </div>
+
+                <div class="col-xl-2 col-lg-2 col-md-3"> 
+                    <!-- Footer widget area 2 -->
+                    <div class="widget">
+                        <h4>CALENDAR</h4>
+                        <ul class="list"> 
+                            <?php
+                            foreach ($this->session->calendar_date_list as $year => $month_list) {
+                                foreach ($month_list as $month_number => $month_name) {
+                                    echo "<li><a href='" . base_url() . "calendar/" . $year . "/" . $month_number . "'>" . $month_name . "</a></li>";
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <!-- end: Footer CALENDAR --> 
                 </div>
 
                 <div class="col-xl-4 col-lg-4 col-md-12"> 
@@ -159,21 +169,21 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 <script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous"></script>
 
 <script>
-    <?php
-    foreach ($this->session->most_searched as $search_id => $search) {
+<?php
+foreach ($this->session->most_searched as $search_id => $search) {
     ?>
-    $('#search_<?=$search_id;?>').click(function () {
-        $('#main_search').val('<?=$search['search_term'];?>');
-        $("#main_search_form").submit();
-    });
+        $('#search_<?= $search_id; ?>').click(function () {
+            $('#main_search').val('<?= $search['search_term']; ?>');
+            $("#main_search_form").submit();
+        });
     <?php
-    }
-    ?>
+}
+?>
 </script>
 
 <?php
-if ($this->ini_array['enviroment']['server'] != "production") {
-//if (1==2) {
+//if ($this->ini_array['enviroment']['server'] != "production") {
+if (1 == 2) {
 //    wts($this->session->most_viewed_pages);
     ?> 
     <h4 class="text-uppercase">Environment info</h4>

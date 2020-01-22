@@ -19,22 +19,6 @@
                 ]);
                 ?>
             </div>
-            <div class="col-lg-3 col-6">
-                <?php
-                echo form_label('Where', 'where');
-                $loc_options = array(
-                    'my' => 'My selected regions',
-                    'all' => 'Everywhere',
-                );
-                foreach ($this->session->province_pages as $province_id => $province) {
-                    $loc_options["Provinces"]["pro_" . $province_id] = $province['display'];
-                }
-                foreach ($this->session->region_pages as $region_id => $region) {
-                    $loc_options["Regions"]["reg_" . $region_id] = $region['display'];
-                }
-                echo form_dropdown('where', $loc_options, set_value('where'), ["id" => "where"]);
-                ?>                
-            </div>
             <div class="col-lg-2 col-6">
                 <?php
                 echo form_label('Distance', 'distance');
@@ -51,7 +35,7 @@
                 echo form_dropdown('distance', $dist_options, set_value('distance'), ["id" => "distance"]);
                 ?>
             </div>
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-2 col-6">
                 <?php
                 echo form_label('When', 'when');
                 $time_options = array(
@@ -66,7 +50,39 @@
                 echo form_dropdown('when', $time_options, set_value('when', 'plus_6m'), ["id" => "when"]);
                 ?>
             </div>
-            <div class="col-lg-1">
+            
+            <div class="col-lg-3 col-6">
+                <?php
+                echo form_label('Where', 'where');
+                $loc_options = array(
+                    'my' => 'My selected regions',
+                    'all' => 'Everywhere',
+                );
+                foreach ($this->session->province_pages as $province_id => $province) {
+                    $loc_options["Provinces"]["pro_" . $province_id] = $province['display'];
+                }
+                foreach ($this->session->region_pages as $region_id => $region) {
+                    $loc_options["Regions"]["reg_" . $region_id] = $region['display'];
+                }
+                echo form_dropdown('where', $loc_options, set_value('where'), ["id" => "where"]);
+                ?>                
+            </div>
+            <div class="col-lg-1 col-6">
+                <?php
+                echo form_label('Show as', 'show');
+                $show_options = array(
+                    'list' => 'List',
+                    'grid' => 'Grid',
+                );
+                if (get_cookie("listing_pref")=="grid") {
+                    $init_value="grid";
+                } else {
+                    $init_value="list";
+                }
+                echo form_dropdown('show', $show_options, set_value('show', $init_value), ["id" => "show"]);
+                ?>
+            </div>
+            <div class="col-1">
                 <?php
                 echo form_label('', 'form-submit');
                 $data = array(

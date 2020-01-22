@@ -55,7 +55,7 @@
                                                 <?php
                                                 foreach ($race_summary['distance'] as $dist) {
 //                                                            echo fraceDistance($dist).", ";
-                                                    echo '<a href=""><span title="' . $race_summary['name'][$dist] . '" class="badge badge-' . $race_summary['color'][$dist] . '">' . fraceDistance($dist) . '';
+                                                    echo '<a href="'. base_url('event/' . $edition['edition_slug'] . '/distances/' . url_title($race_summary['name'][$dist])).'"><span title="' . $race_summary['name'][$dist] . '" class="badge badge-' . $race_summary['color'][$dist] . '">' . fraceDistance($dist) . '';
                                                     echo ' <i class="fa fa-'.$race_summary['dist_icon'][$dist].'"></i></span></a> ';
                                                 }
                                                 ?><br>
@@ -76,7 +76,7 @@
                                     unset($race_summary);
                                 }
                             } else {
-                                echo '<div class="alert alert-info m-t-15 m-b-10"><i class="fa fa-info-circle"></i> <b>Notice:</b> No results were found for that search. Please try different search paramaters in the form above.</div>';
+                                echo '<div class="alert alert-info m-t-15 m-b-10"><i class="fa fa-info-circle"></i> <b>Notice:</b> No races were found matching those paramaters. Please try a new search using the form above.</div>';
                             }
                             ?>
                         </div>

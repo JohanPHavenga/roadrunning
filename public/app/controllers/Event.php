@@ -41,6 +41,7 @@ class Event extends MY_Controller {
         } else {
             $this->data_to_views['page_title_small'] = "less_padding";
         }
+        $this->data_to_views['page_title_small'] = "less_padding"; // make all small banners for now
         $this->data_to_views['url_params'] = $url_params;
 
         $this->load->model('race_model');
@@ -50,6 +51,8 @@ class Event extends MY_Controller {
         $this->load->model('entrytype_model');
         $this->load->model('regtype_model');
         $this->load->model('tag_model');
+        
+//        wts($this->data_to_views['crumbs_arr'],true);
 
         // gebruik slug om ID te kry
         $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
@@ -96,7 +99,7 @@ class Event extends MY_Controller {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
 
-//        wts($edition_data,true);
+//        wts($this->data_to_views['tag_list'],true);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

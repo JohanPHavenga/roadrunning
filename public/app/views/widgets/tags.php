@@ -4,7 +4,7 @@
         <?php
             foreach ($tag_list as $tag) {
                 ?>
-                <a href="<?=base_url("search/tag/".$tag['tag_name']);?>"><?=$tag['tag_name'];?></a>
+                <a href="<?=base_url("search/tag/".$tag['tagtype_name']."/".$tag['tag_name']);?>"><?=$tag['tag_name'];?></a>
                 <?php
             }
         ?>

@@ -88,15 +88,17 @@ class History_model extends MY_model {
     }
 
     public function get_most_visited_url_list($from_date = NULL) {
+        // ONLY PULLS EDITIONS
         if (is_null($from_date)) {
             $from_date = date("Y-m-d H:i:s", strtotime("-1 month"));
         }
-        $this->db->select("count(history_url) AS url_count, history_url");
+        $this->db->select("count(history_url) AS url_count, history_url, MAX(history_datevisited) as lastvisited");
         $this->db->from("history");
         $this->db->like('history_url', '/event/');
         $this->db->where('history_datevisited > ', $from_date);
         $this->db->group_by("history_url");
         $this->db->order_by("url_count", "DESC");
+        $this->db->order_by("history_datevisited", "DESC");
 
 //        die($this->db->get_compiled_select());
         $query = $this->db->get();
