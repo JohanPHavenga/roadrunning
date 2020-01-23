@@ -23,7 +23,7 @@ class File extends MY_Controller {
             redirect("/race-calendar");
         }
         $edition_slug = $params[0];
-        $filetype_name = $params[1];
+        $filetype_name = str_replace(" ","_",urldecode($params[1]));
         $file_name = $params[2];
 
         switch ($linked_to) {

@@ -346,7 +346,7 @@ EOT;
                 "changefreq" => "yearly",
                 "sub-menu" => [
                     "contact-us" => [
-                        "display" => "Contact Me",
+                        "display" => "Contact Us",
                         "loc" => base_url("contact"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
                         "priority" => 0.8,

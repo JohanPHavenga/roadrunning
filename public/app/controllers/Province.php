@@ -18,13 +18,19 @@ class Province extends MY_Controller {
     }
     
     public function list() { 
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "20%";
+        $this->data_to_views['page_title'] = "Province List";
+
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view('province/list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
     public function calendar($slug) {   
         $this->load->model('edition_model');
+        $this->load->model('race_model');
         // as daar nie 'n province naam deurgestuur word nie
         if ($slug == "index") { redirect("/province/list"); }
         
@@ -32,18 +38,39 @@ class Province extends MY_Controller {
         $province_id = $this->province_model->get_province_id_from_slug($slug);
         // kry al die editions vir die provinsie 
         $query_params = [
-            "order_by" => ["edition_date" => "DESC"],
-            "where" => ["provinces.province_id" => $province_id],
+            "order_by" => ["edition_date" => "ASC"],
+            "where" => ["provinces.province_id" => $province_id, "edition_date >= " => date("Y-m-d H:i:s")],
         ];
-        $edition_list = $this->edition_model->get_edition_list($query_params);
-        $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
         
-        $this->data_to_views['province_id']=$province_id;
-        $this->data_to_views['province_name']=$slug;
+        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        if ($this->data_to_views['edition_list']) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            }
+        } 
         
+        $this->data_to_views['page_title'] = "Races in " . str_replace("-"," ",$slug) . " province";
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "45%";
+
         $this->load->view($this->header_url, $this->data_to_views);
-        $this->load->view('province/calendar', $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+//        $this->load->view('region/calendar', $this->data_to_views);
+        if (!$this->data_to_views['edition_list']) {
+            $this->load->view('templates/search_form');
+        }
+        $this->load->view('templates/race_list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
+//        
+//        $edition_list = $this->edition_model->get_edition_list($query_params);
+//        $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
+//        
+//        $this->data_to_views['province_id']=$province_id;
+//        $this->data_to_views['province_name']=$slug;
+//        
+//        $this->load->view($this->header_url, $this->data_to_views);
+//        $this->load->view('province/calendar', $this->data_to_views);
+//        $this->load->view($this->footer_url, $this->data_to_views);
     }
     
 

@@ -11,17 +11,24 @@ class Region_model extends MY_model {
         return $this->db->count_all("regions");
     }
 
-    public function get_region_list() {
+    public function get_region_list($by_province=false) {
 
         $this->db->select("regions.*,province_name");
         $this->db->join('provinces', 'province_id');
         $this->db->from("regions");
+        if ($by_province) {
+            $this->db->order_by('province_name');
+        }
         $this->db->order_by('region_name');
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $data[$row['region_id']] = $row;
+                if ($by_province) {
+                    $data[$row['province_name']][$row['region_name']] = $row;
+                } else {
+                    $data[$row['region_id']] = $row;
+                }
             }
             return $data;
         }

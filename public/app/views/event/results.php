@@ -24,7 +24,7 @@
                         <?php
                         $mailing_list_notice = "<p>If you would like to be notified once results are loaded, "
                                 . "please enter your email below or to the right to be added to the "
-                                . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a>.</p>";
+                                . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";
                         // if date in future
                         if (!$in_past) {
                             $days_from_now = date("d", strtotime($edition_data['edition_date']) - time());

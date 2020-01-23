@@ -18,33 +18,83 @@ class Region extends MY_Controller {
     }
 
     public function list() {
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "20%";
+        $this->data_to_views['page_title'] = "Region List";
+
+        $this->data_to_views['region_list'] = $this->region_model->get_region_list(true);
+        unset($this->data_to_views['region_list']["No Province"]);
+//        wts($this->data_to_views['region_list'],1);
+
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view('region/list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
     public function calendar($slug) {
         $this->load->model('edition_model');
+        $this->load->model('race_model');
         // as daar nie 'n region naam deurgestuur word nie
         if ($slug == "index") {
             redirect("/region/list");
         }
 
-        // kry eers die ID
-        $region_id = $this->region_model->get_region_id_from_slug($slug);
-        // kry al die editions vir die provinsie 
-        $query_params = [
-            "order_by" => ["edition_date" => "DESC"],
-            "where" => ["regions.region_id" => $region_id],
-        ];
-        $edition_list = $this->edition_model->get_edition_list($query_params);
-        $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
+        $query_params["where"] = ["edition_date >= " => date("Y-m-d H:i:s")];
+        $query_params["order_by"] = ["edition_date" => "ASC"];
 
-        $this->data_to_views['region_id'] = $region_id;
-        $this->data_to_views['region_name'] = $slug;
+        // setup array for special regions
+        $special_arr = ["capetown", "cape-town"];
+        if (in_array(strtolower($slug), $special_arr)) {
+            
+            switch ($slug) {
+                case "capetown":
+                case "cape-town":
+                    $region_id_arr = [2, 3, 4, 5, 6, 63];
+                    $region_name = "Cape Town";
+                    break;
+                case "gauteng":
+                    $region_id_arr = [26,27,28,29,30];
+                    $region_name = "Gauteng";
+                    break;
+            }
+        } else {
+            $region_id = $this->region_model->get_region_id_from_slug($slug);
+            $region_id_arr = [$region_id];
+            $region_pages = $this->session->region_pages;
+            $region_name = $region_pages[$region_id]['display'];
+        }
+        // kry al die editions vir die provinsie 
+        $query_params["where_in"] = ["regions.region_id" => $region_id_arr];
+
+        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        if ($this->data_to_views['edition_list']) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            }
+            $region_pages = $this->session->region_pages;
+            $this->data_to_views['page_title'] = "Races in " . $region_name . " region";
+        } else {
+            $this->data_to_views['page_title'] = "Races in " . str_replace("-", " ", $slug) . " region";
+        }
+
+        // check cookie vir listing preference.
+        if (get_cookie("listing_pref") == "grid") {
+            $view_to_load = 'race_grid';
+        } else {
+            $view_to_load = 'race_list';
+        }
+
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "45%";
 
         $this->load->view($this->header_url, $this->data_to_views);
-        $this->load->view('region/calendar', $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+//        $this->load->view('region/calendar', $this->data_to_views);
+        if (!$this->data_to_views['edition_list']) {
+            $this->load->view('templates/search_form');
+        }
+        $this->load->view('templates/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 

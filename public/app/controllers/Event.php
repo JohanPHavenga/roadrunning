@@ -97,8 +97,11 @@ class Event extends MY_Controller {
         if ($edition_data['edition_info_status'] == 11) {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
+        if ((isset($this->data_to_views['url_list'][8])) || (isset($this->data_to_views['file_list'][7]))) {
+            $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
+        }
 
-//        wts($this->data_to_views['tag_list'],true);
+//        wts($this->data_to_views['file_list'],true);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -109,6 +112,7 @@ class Event extends MY_Controller {
     }
 
     private function get_result_arr($slug) {
+        $results=[];
         if (isset($this->data_to_views['file_list'][4])) {
             $results['edition']['url'] = base_url("file/edition/" . $slug . "/results/" . $this->data_to_views['file_list'][4][0]['file_name']);
             $results['edition']['text'] = "Download results summary";
@@ -136,6 +140,36 @@ class Event extends MY_Controller {
 
         return $results;
     }
+    
+    private function get_routemap_arr($slug) {
+        $route_maps=[];
+        if (isset($this->data_to_views['file_list'][7])) {
+            $route_maps['edition']['url'] = base_url("file/edition/" . $slug . "/route map/" . $this->data_to_views['file_list'][7][0]['file_name']);
+            $route_maps['edition']['text'] = "Download route map";
+            $route_maps['edition']['icon'] = "file-image";
+        } elseif (isset($this->data_to_views['url_list'][8])) {
+            $route_maps['edition']['url'] = $this->data_to_views['url_list'][8][0]['url_name'];
+            $route_maps['edition']['text'] = "View Route Map";
+            $route_maps['edition']['icon'] = "external-link-alt";
+        }
+
+        // get race file and url lists
+        foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+            $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
+            $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
+            if (isset($race_file_list[7])) {
+                $route_maps['race'][$race_id]['url'] = base_url("file/race/" . $slug . "/route map/" . url_title($race['race_name']) . "/" . $race_file_list[7][0]['file_name']);
+                $route_maps['race'][$race_id]['text'] = $race['race_name'] . " " . $race_file_list[7][0]['filetype_buttontext'];
+                $route_maps['race'][$race_id]['icon'] = "file-image";
+            } elseif (isset($race_url_list[8])) {
+                $route_maps['race'][$race_id]['url'] = $race_url_list[8][0]['url_name'];
+                $route_maps['race'][$race_id]['text'] = $race['race_name'] . " Route Map";
+                $route_maps['race'][$race_id]['icon'] = "external-link-alt";
+            }
+        }
+
+        return $route_maps;
+    }
 
     private function get_set_race_suammry($race_list, $edition_date, $prize_giving_time) {
         if (!$race_list) {
@@ -159,7 +193,7 @@ class Event extends MY_Controller {
             // START TIME
             $start_datetime = strtotime($edition_date) + 86400;
             if (strtotime($race['race_date']) == strtotime($edition_date)) {
-                
+
 
                 if ((strtotime($edition_date) + time_to_sec($race['race_time_start'])) < $start_datetime) {
                     $start_datetime = strtotime($edition_date) + time_to_sec($race['race_time_start']);
@@ -330,8 +364,8 @@ class Event extends MY_Controller {
 
         // check for route maps
 //        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
-        unset($menu_arr['route_maps']);
-//        } 
+//            unset($menu_arr['route_maps']);
+//        }
         // to use later
         unset($menu_arr['more']['sub_menu']['sponsors']);
         unset($menu_arr['more']['sub_menu']['club']);
