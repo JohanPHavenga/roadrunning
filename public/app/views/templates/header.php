@@ -211,11 +211,11 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             </ul>
                         </div>
                         <!--end: Header Extras-->
-                        <!--Navigation Resposnive Trigger-->
+                        <!--Navigation Responsive Trigger-->
                         <div id="mainMenu-trigger">
                             <button class="lines-button x"> <span class="lines"></span> </button>
                         </div>
-                        <!--end: Navigation Resposnive Trigger-->
+                        <!--end: Navigation Responsive Trigger-->
 
                         <!--Navigation-->
                         <div id="mainMenu">

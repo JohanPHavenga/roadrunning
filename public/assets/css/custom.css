@@ -402,6 +402,22 @@ form#main-search-form .btn {
     margin-top: 12px;
 }
 
+table.race_table td:first-child {font-weight: bold; }
+table.race_table th {
+    font-weight: bold; 
+    border-bottom-width: 3px;
+    border-bottom-color: #ccc;
+}
+.content table.race_table th a {
+    color: #565656;
+    text-decoration: none;
+}
+.content table.race_table th a:hover {
+    color: #26B8F3;
+    text-decoration: none;
+    cursor: help;
+}
+
 
 /* net groot */
 @media (min-width: 991px) { 
@@ -461,6 +477,10 @@ form#main-search-form .btn {
         margin-left: 0;
     }
 
+    a.btn:not([href]):not([tabindex]) + .btn, .btn + .btn {
+        margin-left: 0;
+    }
+
 }
 
 /* heel klein **/
@@ -474,5 +494,9 @@ form#main-search-form .btn {
     .accordion.accordion-simple h5.ac-title {
         font-family: "Poppins","Helvetica","Arial",sans-serif;
         font-size: 0.9em;
+    }
+
+    .content table.race_table th a i {
+        display: none;
     }
 }

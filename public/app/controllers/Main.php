@@ -75,8 +75,6 @@ class Main extends MY_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    
-
     public function about() {
         $this->data_to_views['banner_img'] = "run_02";
         $this->data_to_views['banner_pos'] = "40%";
@@ -87,11 +85,12 @@ class Main extends MY_Controller {
         $this->load->view('main/about', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
-    public function faq() {
+
+    public function faq($open=null) {
         $this->data_to_views['banner_img'] = "run_03";
         $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['page_title'] = "Frequently Asked Questions";
+        $this->data_to_views['open'] = $open;
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -112,6 +111,41 @@ class Main extends MY_Controller {
         $this->data_to_views['companyName'] = "RoadRunningZA";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('main/terms_conditions', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
+    public function training_programs($race_name = null) {
+        $this->data_to_views['banner_img'] = "run_05";
+        $this->data_to_views['banner_pos'] = "40%";
+
+        switch (strtolower(urldecode($race_name))) {
+            case "marathon":
+                $t_prog_text = "Marathon Training Program";
+                $t_prog_link = "https://coachparry.com/marathon-training-roadmap/?ref=9";
+                break;
+            case "half-marathon":
+            case "half marathon":
+                $t_prog_text = "Half-Marathon Training Program";
+                $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?ref=9";
+                break;
+            case "10km-run":
+            case "10km run":
+                $t_prog_text = "10K Training Program";
+                $t_prog_link = "https://coachparry.com/10k-training-roadmap/?ref=9";
+                break;
+            default:
+                $t_prog_text = "Training Program";
+                $t_prog_link = "https://coachparry.com/join-coach-parry/?ref=9";
+                break;
+        }
+
+        $this->data_to_views['page_title'] = $t_prog_text;
+        $this->data_to_views['coach_parry_link'] = $t_prog_link;
+
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('main/training_programs', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 

@@ -51,9 +51,8 @@ class Event extends MY_Controller {
         $this->load->model('entrytype_model');
         $this->load->model('regtype_model');
         $this->load->model('tag_model');
-        
-//        wts($this->data_to_views['crumbs_arr'],true);
 
+//        wts($this->data_to_views['crumbs_arr'],true);
         // gebruik slug om ID te kry
         $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
         $edition_id = $edition_sum['edition_id'];
@@ -74,9 +73,9 @@ class Event extends MY_Controller {
 
         // calc values
         if (strtotime($edition_data['edition_date']) < time()) {
-            $this->data_to_views['in_past']=true;
-        } else {            
-            $this->data_to_views['in_past']=false;
+            $this->data_to_views['in_past'] = true;
+        } else {
+            $this->data_to_views['in_past'] = false;
         }
         $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
@@ -159,18 +158,18 @@ class Event extends MY_Controller {
         foreach ($race_list as $race) {
             // START TIME
             $start_datetime = strtotime($edition_date) + 86400;
-            if (strtotime($race['race_date']) != strtotime($edition_date)) {
-                continue;
-            }
+            if (strtotime($race['race_date']) == strtotime($edition_date)) {
+                
 
-            if ((strtotime($edition_date) + time_to_sec($race['race_time_start'])) < $start_datetime) {
-                $start_datetime = strtotime($edition_date) + time_to_sec($race['race_time_start']);
-            }
-            $return_arr['times']['start'] = date("Y-m-d H:i:s", $start_datetime);
+                if ((strtotime($edition_date) + time_to_sec($race['race_time_start'])) < $start_datetime) {
+                    $start_datetime = strtotime($edition_date) + time_to_sec($race['race_time_start']);
+                }
+                $return_arr['times']['start'] = date("Y-m-d H:i:s", $start_datetime);
 
-            // END TIME
-            if (time_to_sec($prize_giving_time) > 0) {
-                $return_arr['times']['end'] = date("Y-m-d H:i:s", strtotime($edition_date) + time_to_sec($prize_giving_time));
+                // END TIME
+                if (time_to_sec($prize_giving_time) > 0) {
+                    $return_arr['times']['end'] = date("Y-m-d H:i:s", strtotime($edition_date) + time_to_sec($prize_giving_time));
+                }
             }
 
             // FEES
@@ -376,8 +375,6 @@ class Event extends MY_Controller {
         }
         return $return;
     }
-
-    
 
     function ics($edition_slug) {
 

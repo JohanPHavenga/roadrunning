@@ -18,7 +18,7 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['logged_in_user'] = $this->logged_in_user = $this->check_if_user_is_logged_in();
         $this->data_to_views['history'] = $this->check_history();
         $this->data_to_views['crumbs_arr'] = $this->set_crumbs();
-        
+
         // check of weer moet laai
         if ($this->check_value_refresh()) {
             $this->session->set_userdata("static_pages", $this->get_static_pages());
@@ -28,7 +28,7 @@ class MY_Controller extends CI_Controller {
             $this->session->set_userdata("most_searched", $this->get_most_searched());
             $this->session->set_userdata("calendar_date_list", $this->get_date_list());
         }
-        
+
         // set email cookie
         $this->data_to_views['rr_cookie']['sub_email'] = get_cookie("sub_email");
     }
@@ -123,7 +123,7 @@ class MY_Controller extends CI_Controller {
             }
         }
     }
-    
+
     private function get_most_viewed_pages() {
         $this->load->model('history_model');
         $query_params = [
@@ -132,7 +132,7 @@ class MY_Controller extends CI_Controller {
         ];
         return $this->history_model->get_history_summary($query_params);
     }
-    
+
     private function get_most_searched() {
         $this->load->model('history_model');
         $query_params = [
@@ -289,6 +289,13 @@ EOT;
 //                        "priority" => 0.8,
 //                        "changefreq" => "daily",
 //                    ],
+                    "training" => [
+                        "display" => "Training Programs",
+                        "loc" => base_url("training-programs"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                        "priority" => 0.5,
+                        "changefreq" => "monthly",
+                    ],
                 ],
             ],
             "results" => [
@@ -466,7 +473,7 @@ EOT;
         }
         return $r_arr;
     }
-    
+
     public function get_date_list() {
         $dates_to_fetch = [
             "1 month ago",
@@ -498,7 +505,7 @@ EOT;
         }
         return $return_data;
     }
-    
+
     public function formulate_status_notice($edition_data) {
         $return = [];
         ;
@@ -515,7 +522,7 @@ EOT;
                 if (isset($edition_data['user_email'])) {
                     $email = $edition_data['user_email'];
                 } else {
-                    $email='';
+                    $email = '';
                 }
                 $msg = "<strong>This event has been CANCELLED.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a>";
                 $short_msg = "CANCELLED";
@@ -526,8 +533,8 @@ EOT;
                 if (isset($edition_data['user_email'])) {
                     $email = $edition_data['user_email'];
                 } else {
-                    $email='';
-                }               
+                    $email = '';
+                }
                 $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a><br>"
                         . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
                 $short_msg = "POSTPONED";
@@ -609,8 +616,8 @@ EOT;
                 $segs[$x] = "race";
             }
             // make controller prural for display purposes
-            if (in_array($segs[$x],["race"])) {
-               $segs[$x] = $segs[$x]."s";
+            if (in_array($segs[$x], ["race"])) {
+                $segs[$x] = $segs[$x] . "s";
             }
 
             $segs[$x] = str_replace("_", " ", $segs[$x]);
@@ -669,10 +676,10 @@ EOT;
                 switch ($linked_to) {
                     case "edition":
                         $alert = "Thank you. You have been added to the mailing list for this race";
-                    break;
+                        break;
                     case "newsletter":
                         $alert = "Thank you. You have successfully been subscribed to the newsletter";
-                    break;
+                        break;
                     default:
                         $alert = "Thank you. You have successfully been subscribed";
                         break;
@@ -714,7 +721,7 @@ EOT;
                 break;
         }
         $body_arr[] = "Hi " . $user_data['user_name'] . ",<br>";
-        $body_arr[] = "This is a courtesy email to confirm you have been subscribed to receive " . $switch."<br>";
+        $body_arr[] = "This is a courtesy email to confirm you have been subscribed to receive " . $switch . "<br>";
         $body_arr[] = "If <u>this was not you</u> subscribing yourself to this awesome service, please reply to this email to be removed.<br>";
         $body_arr[] = "Kind Regards";
         $body_arr[] = "Johan from RoadRunning.co.za";
@@ -727,7 +734,7 @@ EOT;
             "from" => $this->ini_array['email']['from_address_server'],
             "from_name" => $this->ini_array['email']['from_name_server'],
         ];
-        
+
         $this->set_email($data);
         return $this->set_email($data);
     }
