@@ -16,6 +16,7 @@ class Region_model extends MY_model {
         $this->db->select("regions.*,province_name");
         $this->db->join('provinces', 'province_id');
         $this->db->from("regions");
+        $this->db->where('province_id !=', 12);
         if ($by_province) {
             $this->db->order_by('province_name');
         }

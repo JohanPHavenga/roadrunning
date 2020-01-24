@@ -67,8 +67,7 @@ $route['training-programs'] = 'main/training_programs';
 $route["training-programs/(.*)"] = 'main/training_programs/$1';
 //$route['search'] = 'main/search';
 
-$route['calendar'] = 'race/list';
-$route['calender'] = 'race/list';
+$route['(?i)calendar'] = 'race/list';
 $route["calendar/(.*)"] = 'race/list/$1';
 $route['race'] = 'race/list';
 $route['race/upcoming'] = 'race/list';
@@ -81,3 +80,19 @@ $route['logout/confirm'] = 'login/logout/confirm';
 $route['register'] = 'user/register';
 $route['forgot-password'] = 'user/forgot_password';
 $route['reset-password'] = 'user/reset_password';
+
+// SPECIAL REGIONS
+$route['(?i)capetown'] = 'region/capetown';
+$route['(?i)cape-town'] = 'region/capetown';
+$route['(?i)capewinelands'] = 'region/winelands';
+$route['(?i)cape-winelands'] = 'region/winelands';
+$route['(?i)overberg'] = 'region/overberg';
+$route['(?i)westcoast'] = 'region/west-coast';
+$route['(?i)west-coast'] = 'region/west-coast';
+$route['(?i)kleinkaroo'] = 'region/klein-karoo-kannaland';
+$route['(?i)klein-karoo'] = 'region/klein-karoo-kannaland';
+$route['(?i)centralkaroo'] = 'region/Upper-Karoo';
+$route['(?i)central-karoo'] = 'region/Upper-Karoo';
+$route['(?i)northerncape'] = 'region/Diamond-Fields';
+$route['(?i)northern-cape'] = 'region/Diamond-Fields';
+

@@ -44,18 +44,30 @@ class Region extends MY_Controller {
         $query_params["order_by"] = ["edition_date" => "ASC"];
 
         // setup array for special regions
-        $special_arr = ["capetown", "cape-town"];
+        $special_arr = ["capetown", "cape-town", "gauteng", "kzn-coast", "kzncoast", "gardenroute", "garden-route"];
         if (in_array(strtolower($slug), $special_arr)) {
-            
+
             switch ($slug) {
                 case "capetown":
                 case "cape-town":
                     $region_id_arr = [2, 3, 4, 5, 6, 63];
                     $region_name = "Cape Town";
+                    $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
                     break;
                 case "gauteng":
-                    $region_id_arr = [26,27,28,29,30];
+                    $region_id_arr = [26, 27, 28, 29, 30];
                     $region_name = "Gauteng";
+                    break;
+                case "kzncoast":
+                case "kzn-coast":
+                    $region_id_arr = [35, 32];
+                    $region_name = "KwaZulu-Natal Coast";
+                    $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
+                    break;
+                case "garden-route":
+                case "gardenroute":
+                    $region_id_arr = [62];
+                    $region_name = "Garden Route";
                     break;
             }
         } else {
@@ -75,8 +87,14 @@ class Region extends MY_Controller {
             $region_pages = $this->session->region_pages;
             $this->data_to_views['page_title'] = "Races in " . $region_name . " region";
         } else {
-            $this->data_to_views['page_title'] = "Races in " . str_replace("-", " ", $slug) . " region";
+            if (!isset($region_name)) {
+                $region_name = ucwords(str_replace("-", " ", $slug));
+            }
+            $this->data_to_views['page_title'] = "Races in " . $region_name . " region";
         }
+
+        // GET REGION LIST FOR FOOTER        
+        $this->data_to_views['region_by_province_list'] = $this->region_model->get_region_list(true);
 
         // check cookie vir listing preference.
         if (get_cookie("listing_pref") == "grid") {
@@ -95,6 +113,7 @@ class Region extends MY_Controller {
             $this->load->view('templates/search_form');
         }
         $this->load->view('templates/' . $view_to_load, $this->data_to_views);
+        $this->load->view('templates/region_list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 

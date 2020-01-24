@@ -168,6 +168,19 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
 <script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous"></script>
 
+<?php
+if (isset($scripts_to_load)) :
+    foreach ($scripts_to_load as $row):
+        if (substr($row, 0, 4) == "http") {
+            $js_link = $row;
+        } else {
+            $js_link = base_url($row);
+        }
+        echo "<script src='$js_link' type='text/javascript' defer></script>";
+    endforeach;
+endif;
+?>
+
 <script>
 <?php
 foreach ($this->session->most_searched as $search_id => $search) {

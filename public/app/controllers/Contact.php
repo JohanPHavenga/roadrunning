@@ -31,10 +31,13 @@ class Contact extends MY_Controller {
         $this->data_to_views['form_url'] = '/contact';
         $this->data_to_views['error_url'] = '/contact';
         
+        $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
+        
         // validation rules
         $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
