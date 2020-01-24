@@ -22,8 +22,52 @@
                 <div class="row m-b-40">
                     <div class="col-lg-12">
                         <?php
+                        if (!in_array(3, $edition_data['regtype_list'])) {
+                            ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="text-uppercase">Number Collection</h3>
+                                    <ul>
+                                        <?php
+                                        // OTD Reg
+                                        if (isset($edition_data['regtype_list'][1])) {
+                                            echo "<li>Registration & number collection will take place <b>on the day</b> from <b>" .
+                                            ftimeMil($date_list[9][0]['date_start']);
+                                            if (!time_is_midnight($date_list[9][0]['date_end'])) {
+                                                echo " - " . ftimeMil($date_list[9][0]['date_end']);
+                                            }
+                                            echo "</b></li>";
+                                        } else {
+                                            echo "<li class='red em'>No number collection on race day</li>";
+                                        }
+
+                                        // PRE Reg
+                                        if (isset($edition_data['regtype_list'][2])) {
+                                            echo "<li><b>Registration / Number collection will take place on:</b><ul>";
+                                            foreach ($date_list[10] as $date) {
+                                                echo "<li>" . fdateHumanFull($date['date_start'], true, true) . "-" . ftimeMil($date['date_end']) . " @ " . $date['venue_name'] . "</li>";
+                                            }
+                                            echo "</ul></li>";
+                                        }
+                                        ?>
+                                    </ul>
+                                    <?php
+                                    // always show what is in the box
+                                    if (strlen($edition_data['edition_reg_detail']) > 15) {
+                                        echo $edition_data['edition_reg_detail'];
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
+
+
+                        <?php
                         if ((strlen($edition_data['edition_general_detail']) > 10) || ($edition_data['edition_info_medals'])) {
                             ?>
+                            <h3 class="text-uppercase">GENERAL INFORMATION</h3>
                             <ul>
                                 <?php
                                 // MEDALS
@@ -75,12 +119,12 @@
                             echo $edition_data['edition_general_detail'];
                         } else {
                             ?>
-                            <p class='text-danger'><b>No information</b> regarding this race has been released yet.</p>
+                            <p class='text-danger'><b>No more information</b> regarding this race has been released yet.</p>
                             <p>Do you want to get notified once information is released? Enter your email below or to the right to be added to the mailing list.</p>
                             <?php
                         }
                         ?>
-                        <h4 class="text-uppercase">Map</h4>
+                        <h3 class="text-uppercase">Map</h3>
                         <iframe
                             width="100%"
                             height="350"

@@ -262,8 +262,7 @@ EOT;
             ],
             "races" => [
                 "display" => "Races",
-//                "loc" => base_url("race/list"),
-                "loc" => "",
+                "loc" => base_url("calendar"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
@@ -322,8 +321,7 @@ EOT;
             ],
             "results" => [
                 "display" => "Results",
-//                "loc" => base_url("race/results"),
-                "loc" => "",
+                "loc" => base_url("results"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                 "priority" => 0.8,
                 "changefreq" => "weekly",
@@ -362,7 +360,7 @@ EOT;
             ],
             "contact" => [
                 "display" => "Contact",
-                "loc" => "",
+                "loc" => base_url("contact"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
                 "priority" => 0.8,
                 "changefreq" => "yearly",

@@ -9,7 +9,10 @@
             }
             ?>
         </span>
-        <span class="post-meta"><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>"><i class="fa fa-map-marker"></i> <address><?= $address; ?></address></a></span>
+        <span class="post-meta"><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>">
+                <i class="fa fa-map-marker"></i> <address><?= $address; ?></address></a></span>
+        <span class="post-meta"><a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_gps']; ?>">
+                <i class="fa fa-map-marked"></i> <?= $edition_data['edition_gps']; ?></a></span>
 
     </div>
 </div>

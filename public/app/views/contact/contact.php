@@ -46,7 +46,7 @@
                         </div>
                         <div class="form-group col-md-5">
                             <?php
-                            echo form_label('Email', 'user_email');
+                            echo form_label('Email *', 'user_email');
                             echo form_input([
                                 'name' => 'user_email',
                                 'id' => 'user_email',
@@ -61,7 +61,7 @@
                     </div>
                     <div class="form-group">
                         <?php
-                        echo form_label('Comment', 'user_message');
+                        echo form_label('Comment *', 'user_message');
                         echo form_textarea([
                             'name' => 'user_message',
                             'id' => 'user_message',

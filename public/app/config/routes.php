@@ -69,6 +69,8 @@ $route["training-programs/(.*)"] = 'main/training_programs/$1';
 
 $route['(?i)calendar'] = 'race/list';
 $route["calendar/(.*)"] = 'race/list/$1';
+$route['results'] = 'race/results';
+$route['calendar/results'] = 'race/results';
 $route['race'] = 'race/list';
 $route['race/upcoming'] = 'race/list';
 $route['race-calendar'] = 'race/list';

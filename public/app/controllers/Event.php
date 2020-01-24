@@ -112,7 +112,7 @@ class Event extends MY_Controller {
     }
 
     private function get_result_arr($slug) {
-        $results=[];
+        $results = [];
         if (isset($this->data_to_views['file_list'][4])) {
             $results['edition']['url'] = base_url("file/edition/" . $slug . "/results/" . $this->data_to_views['file_list'][4][0]['file_name']);
             $results['edition']['text'] = "Download results summary";
@@ -140,9 +140,9 @@ class Event extends MY_Controller {
 
         return $results;
     }
-    
+
     private function get_routemap_arr($slug) {
-        $route_maps=[];
+        $route_maps = [];
         if (isset($this->data_to_views['file_list'][7])) {
             $route_maps['edition']['url'] = base_url("file/edition/" . $slug . "/route map/" . $this->data_to_views['file_list'][7][0]['file_name']);
             $route_maps['edition']['text'] = "Download route map";
@@ -283,6 +283,10 @@ class Event extends MY_Controller {
                 "display" => "Summary",
                 "loc" => base_url("event/" . $slug),
             ],
+            "results" => [
+                "display" => "Results",
+                "loc" => base_url("event/" . $slug . "/results"),
+            ],
             "entries" => [
                 "display" => "How to enter",
                 "loc" => base_url("event/" . $slug . "/entries"),
@@ -291,28 +295,32 @@ class Event extends MY_Controller {
                 "display" => "Race day info",
                 "loc" => base_url("event/" . $slug . "/race-day-information"),
             ],
-            "distances" => [
-                "display" => "Distances",
-                "loc" => base_url("event/" . $slug . "/distances"),
-            ],
             "route_maps" => [
                 "display" => "Route Maps",
                 "loc" => base_url("event/" . $slug . "/route-maps"),
-            ],
-            "results" => [
-                "display" => "Results",
-                "loc" => base_url("event/" . $slug . "/results"),
             ],
             "contact" => [
                 "display" => "Race Contact",
                 "loc" => base_url("event/" . $slug . "/contact"),
             ],
+            "accom" => [
+                "display" => "Accommodation",
+                "loc" => base_url("event/" . $slug . "/accommodation"),
+            ],
             "more" => [
                 "display" => "More",
                 "sub_menu" => [
-                    "accom" => [
-                        "display" => "Accommodation",
-                        "loc" => base_url("event/" . $slug . "/accommodation"),
+                    "results" => [
+                        "display" => "Results",
+                        "loc" => base_url("event/" . $slug . "/results"),
+                    ],
+                    "distances" => [
+                        "display" => "Distances",
+                        "loc" => base_url("event/" . $slug . "/distances"),
+                    ],
+                    "entries" => [
+                        "display" => "How to enter",
+                        "loc" => base_url("event/" . $slug . "/entries"),
                     ],
                     "subscribe" => [
                         "display" => "Get Notifications",
@@ -359,7 +367,12 @@ class Event extends MY_Controller {
 
         // check if in past else hide to hide accommodation link
         if ($this->data_to_views['in_past']) {
-            unset($menu_arr['more']['sub_menu']['accom']);
+            unset($menu_arr['accom']);
+            unset($menu_arr['entries']);
+            unset($menu_arr['more']['sub_menu']['results']);
+        } else {
+            unset($menu_arr['results']);
+            unset($menu_arr['more']['sub_menu']['entries']);
         }
 
         // check for route maps
