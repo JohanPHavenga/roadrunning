@@ -202,5 +202,16 @@ class Race extends MY_Controller {
         $this->load->view('templates/race_list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
+    
+    public function parkrun() {
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "15%";
+        $this->data_to_views['page_title'] = "parkrun";
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('race/parkrun', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
 
 }

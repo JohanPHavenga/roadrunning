@@ -105,13 +105,15 @@ $this->load->view('templates/search_form');
                 <div class="tabs p-r-20">
                     <ul class="nav nav-tabs nav-justified text-left" id="myTab">
                         <?php
+                        $lock=false;
                         foreach ($upcoming_events as $year => $year_list) {
                             foreach ($year_list as $month => $month_list) {
                                 foreach ($month_list as $day => $edition_list) {
                                     $unix = strtotime($day . " " . $month . " " . $year);
                                     $act = "";
-                                    if ($day === array_key_first($month_list)) {
+                                    if (($day === array_key_first($month_list)) && (!$lock)) {
                                         $act = "active";
+                                        $lock=true;
                                     }
                                     ?>
                                     <li class="nav-item">
@@ -123,19 +125,17 @@ $this->load->view('templates/search_form');
                             }
                         }
                         ?>
-<!--                        <li class="nav-item"><a href="#day1" class="nav-link active" data-toggle="tab" aria-selected="true"><strong>Saturday</strong> <br>02.11.2019</a></li>
-<li class="nav-item"><a href="#day2" class="nav-link" data-toggle="tab"><strong>Sunday</strong> <br>03.11.2019</a></li>
-<li class="nav-item"><a href="#day3" class="nav-link" data-toggle="tab"><strong>Wednesday</strong> <br>06.11.2019</a></li>
-<li class="nav-item"><a href="#day4" class="nav-link" data-toggle="tab"><strong>Saturday</strong> <br>09.11.2019</a></li>-->
                     </ul>
                     <div class="tab-content">
                         <?php
+                        $lock=false;
                         foreach ($upcoming_events as $year => $year_list) {
                             foreach ($year_list as $month => $month_list) {
                                 foreach ($month_list as $day => $edition_list) {
                                     $act = "";
-                                    if ($day === array_key_first($month_list)) {
+                                    if (($day === array_key_first($month_list)) && (!$lock)) {
                                         $act = "active";
+                                        $lock=true;
                                     }
                                     ?>
                                     <div id="day<?= $day; ?>" class="tab-pane fade show <?= $act; ?>">
@@ -165,85 +165,6 @@ $this->load->view('templates/search_form');
                             }
                         }
                         ?>
-                        <!--                        <div id="day1" class="tab-pane fade show active">
-                                                    <a href="">
-                                                        <div class="p-10 border-bottom">
-                                                            <span><i class="far fa-clock"></i> 07:15 - 10:45</span>
-                                                            <h5>Century City Express</h5>
-                                                            <p class="m-b-0">Century City, WC<br>21 / 10 / 5 km</p>
-                                                        </div>
-                                                    </a>
-                                                    <a href="">
-                                                        <div class="p-10 border-bottom">
-                                                            <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                                            <h5>Alea Grande</h5>
-                                                            <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                        </div>
-                                                    </a>
-                                                    <a href="">
-                                                        <div class="p-10 border-bottom">
-                                                            <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                                            <h5>John Smith</h5>
-                                                            <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div id="day2" class="tab-pane fade">
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                                        <h5>Alea Grande</h5>
-                                                        <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                                        <h5>John Smith</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
-                                                        <h5>Juna Doe</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                                                    </div>
-                                                </div>
-                                                <div id="day3" class="tab-pane fade">
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                                        <h5>John Smith</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                                        <h5>Alea Grande</h5>
-                                                        <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                                        <h5>John Smith</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
-                                                        <h5>Juna Doe</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                                                    </div>
-                                                </div>
-                                                <div id="day4" class="tab-pane fade">
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 11:00 - 11:45</span>
-                                                        <h5>Alea Grande</h5>
-                                                        <p class="m-b-0">Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 08:00 - 08:45</span>
-                                                        <h5>John Smith</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                                                    </div>
-                                                    <div class="p-10 border-bottom">
-                                                        <span><i class="far fa-clock"></i> 09:00 - 10:45</span>
-                                                        <h5>Juna Doe</h5>
-                                                        <p class="m-b-0">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-                                                    </div>
-                                                </div>-->
                     </div>
                 </div>
                 <div class="text-center  p-t-20 p-b-20">

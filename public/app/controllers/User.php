@@ -12,15 +12,32 @@ class User extends MY_Controller {
         // load helpers / libraries
         $this->load->library('table');
         $this->load->model('usersubscription_model');
-        $this->data_to_view['title'] = "User Profile";
+        $this->data_to_views['page_title'] = "User Profile";
 
         // GET user subsciptions
-        $this->data_to_views['user_subs'] = $this->usersubscription_model->get_usersubscription_detail($this->logged_in_user['user_id']);
+        $this->data_to_views['subs'] = $this->usersubscription_model->get_usersubscription_detail($this->logged_in_user['user_id']);
+        $this->data_to_views['user']=$this->session->user;
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('user/profile', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
+    
+    // RESULTS
+    public function my_results() {
+        $this->data_to_views['banner_img'] = "run_03";
+        $this->data_to_views['banner_pos'] = "15%";
+        $this->data_to_views['page_title'] = "My Results";     
+        // load view
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('user/my_results', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+    
+    
+    
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {

@@ -317,6 +317,13 @@ EOT;
                         "priority" => 0.5,
                         "changefreq" => "monthly",
                     ],
+                    "parkrun" => [
+                        "display" => "parkrun",
+                        "loc" => base_url("race/parkrun"),
+                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                        "priority" => 0.3,
+                        "changefreq" => "yearly",
+                    ],
                 ],
             ],
             "results" => [
@@ -336,7 +343,7 @@ EOT;
                     "my-results" => [
                         "display" => "My Results",
                         "loc" => "",
-//                        "loc" => base_url("result/my-results"),
+                        "loc" => base_url("my-results"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",

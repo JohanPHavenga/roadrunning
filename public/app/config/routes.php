@@ -75,6 +75,9 @@ $route['race'] = 'race/list';
 $route['race/upcoming'] = 'race/list';
 $route['race-calendar'] = 'race/list';
 $route['race/most-viewed'] = 'race/most_viewed';
+$route['my-results'] = 'user/my_results';
+$route['parkrun'] = 'race/parkrun';
+$route['parkrun/calendar'] = 'race/parkrun';
 
 $route['login'] = 'login/userlogin';
 $route['logout'] = 'login/logout';
