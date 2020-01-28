@@ -100,8 +100,11 @@ class Event extends MY_Controller {
         if ((isset($this->data_to_views['url_list'][8])) || (isset($this->data_to_views['file_list'][7]))) {
             $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
         }
+        if ((isset($this->data_to_views['url_list'][2])) || (isset($this->data_to_views['file_list'][2]))) {
+            $this->data_to_views['flyer'] = $this->get_flyer_arr($slug);
+        }
 
-//        wts($this->data_to_views['file_list'],true);
+//        wts($this->data_to_views['url_list'],true);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -169,6 +172,21 @@ class Event extends MY_Controller {
         }
 
         return $route_maps;
+    }
+    
+    private function get_flyer_arr($slug) {
+        $flyer_list = [];
+        if (isset($this->data_to_views['file_list'][2])) {
+            $flyer_list['edition']['url'] = base_url("file/edition/" . $slug . "/flyer/" . $this->data_to_views['file_list'][2][0]['file_name']);
+            $flyer_list['edition']['text'] = "Download Race Flyer";
+            $flyer_list['edition']['icon'] = "file-pdf";
+        } elseif (isset($this->data_to_views['url_list'][2])) {
+            $flyer_list['edition']['url'] = $this->data_to_views['url_list'][2][0]['url_name'];
+            $flyer_list['edition']['text'] = "View Race Flyer";
+            $flyer_list['edition']['icon'] = "external-link-alt";
+        }
+
+        return $flyer_list;
     }
 
     private function get_set_race_suammry($race_list, $edition_date, $prize_giving_time) {

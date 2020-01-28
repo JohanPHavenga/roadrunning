@@ -18,6 +18,7 @@ class MY_Controller extends CI_Controller {
         $this->data_to_views['logged_in_user'] = $this->logged_in_user = $this->check_if_user_is_logged_in();
         $this->data_to_views['history'] = $this->check_history();
         $this->data_to_views['crumbs_arr'] = $this->set_crumbs();
+        $this->data_to_views['where'] = "my";
 
         // check of weer moet laai
         if ($this->check_value_refresh()) {
@@ -29,8 +30,20 @@ class MY_Controller extends CI_Controller {
             $this->session->set_userdata("calendar_date_list", $this->get_date_list());
         }
 
-        // set email cookie
+        // set cookies
         $this->data_to_views['rr_cookie']['sub_email'] = get_cookie("sub_email");
+        $this->data_to_views['rr_cookie']['feedback'] = get_cookie("feedback");
+        
+        // new history for transition 
+        $new_count = 0;
+        foreach ($this->data_to_views['history'] as $page) {
+            if (strpos($page, "/new/")===false) {
+                //do nothing
+            } else {
+                $new_count++;
+            }
+        }
+        $this->data_to_views['new_page_count'] = $new_count;
     }
 
     public function show_my_404($msg, $status) {
@@ -443,10 +456,17 @@ EOT;
             ],
             "add-listing" => [
                 "display" => "Add Race Listing",
-                "loc" => base_url("evemt/add"),
+                "loc" => base_url("event/add"),
                 "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
                 "priority" => 0.6,
                 "changefreq" => "yearly",
+            ],
+            "search" => [
+                "display" => "Search",
+                "loc" => base_url("search"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
+                "priority" => 0.8,
+                "changefreq" => "weekly",
             ],
             "sitemap" => [
                 "display" => "Sitemap",

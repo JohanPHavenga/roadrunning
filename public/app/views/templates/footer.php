@@ -1,6 +1,21 @@
-
-
 <?php
+if ((!$rr_cookie['feedback']) && ($new_page_count > 10)) {
+    set_cookie("feedback", true, 604800);
+    ?>
+    <div id="cookieNotify" class="modal-strip cookie-notify background-dark modal-active" data-delay="3000" data-expire="1" data-cookie-name="cookiebar2019_2" data-cookie-enabled="false">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 m-b-10 m-t-5"><b>Enjoying the new site? Notice something not working right? Is it awesome?</b></div>
+                <div class="col-lg-4 text-right sm-text-center sm-center">
+                    <a class="btn btn-rounded btn-light btn-outline btn-sm m-r-10" href="<?= base_url("contact"); ?>">Give Feedback</a>
+                    <button type="button" class="btn btn-rounded btn-light btn-sm modal-close">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
 // check for home page, set a few variables for header changes
 if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() == "index")) {
     $home = true;
@@ -12,7 +27,6 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     $header_vals = '';
 }
 ?>
-
 <footer id="footer" class="inverted">
     <div class="footer-content">
         <div class="container">
@@ -48,6 +62,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <li><a href='<?= $this->session->static_pages['about']['loc']; ?>'><?= $this->session->static_pages['about']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $this->session->static_pages['contact']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['add-listing']['loc']; ?>'><?= $this->session->static_pages['add-listing']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['search']['loc']; ?>'><?= $this->session->static_pages['search']['display']; ?></a></li>
                             <?php
                             if ($this->session->user['logged_in']) {
                                 ?>
@@ -60,6 +75,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             }
                             ?>
                             <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
+                            <li><a href='https://www.roadrunning.co.za'>Back to old site</a></li>
                         </ul>
                     </div>
                     <!-- end: Footer PAGES --> 
@@ -133,15 +149,15 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     <!-- Social icons -->
                     <div class="social-icons social-icons">
                         <ul>
-                            <li class="social-facebook"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li class="social-twitter"><a href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li class="social-facebook"><a href="https://www.facebook.com/roadrunningcoza"><i class="fab fa-facebook-f"></i></a></li>
+                            <li class="social-twitter"><a href="https://twitter.com/roadrunningcoza"><i class="fab fa-twitter"></i></a></li>
                         </ul>
                     </div>
                     <!-- end: Social icons --> 
                 </div>
 
                 <div class="col-lg-9 text-right">
-                    <div class="copyright-text">&copy; 2019 RoadRunning.co.za. All Rights Reserved.
+                    <div class="copyright-text">&copy; <?= date("Y"); ?> RoadRunning.co.za. All Rights Reserved.
                         <?php
                         $white_list = ["terms", "sitemap", "disclaimer"];
                         foreach ($this->session->static_pages as $key => $page) {
@@ -157,7 +173,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         // IF LOGGED IN USER IS ADMIN
                         if ($logged_in_user) {
                             if (in_array(1, $logged_in_user['role_list'])) {
-                                echo "| <a href='/mailer'>Mailer</a> ";
+                                echo "| <a href='" . base_url("mailer") . "'>Mailer</a> ";
                                 echo "| <a href='" . base_url("login/admin") . "'>Admin Login</a> ";
                             }
                         }
@@ -207,27 +223,34 @@ foreach ($this->session->most_searched as $search_id => $search) {
 
 <?php
 //if ($this->ini_array['enviroment']['server'] != "production") {
-if (1 == 2) {
+//if (1 == 2) {
+if ($logged_in_user) {
+    if (in_array(1, $logged_in_user['role_list'])) {
 //    wts($this->session->most_viewed_pages);
-    ?> 
-    <h4 class="text-uppercase">Environment info</h4>
-    <p>
+        ?> 
+        <h4 class="text-uppercase">Environment info</h4>
+        <p>
+            <?php
+            echo "Enviroment: " . $this->ini_array['enviroment']['server'] . "<br>";
+            echo "Controller: " . $this->router->fetch_class() . "<br>";
+            echo "Method: " . $this->router->fetch_method();
+            ?>
+        </p>
+        <h4 class="text-uppercase">New site</h4>
+        <?php wts($new_page_count); ?>
+        
+        <h4 class="text-uppercase">User info</h4>
+        <?php wts($logged_in_user); ?>
+
+        <h4 class="text-uppercase">SESSION</h4>
+        <?php wts($_SESSION); ?>
+
+        <h4 class="text-uppercase">COOKIE</h4>
         <?php
-        echo "Enviroment: " . $this->ini_array['enviroment']['server'] . "<br>";
-        echo "Controller: " . $this->router->fetch_class() . "<br>";
-        echo "Method: " . $this->router->fetch_method();
-        ?>
-    </p>
-    <h4 class="text-uppercase">User info</h4>
-    <?php wts($logged_in_user); ?>
-
-    <h4 class="text-uppercase">SESSION</h4>
-    <?php wts($_SESSION); ?>
-
-    <h4 class="text-uppercase">COOKIE</h4>
-    <?php
-    wts($_COOKIE);
-} // if to not show in PROD
+        wts($_COOKIE);
+        wts($rr_cookie);
+    } // if to not show in PROD
+}
 ?>
 </body>
 </html>

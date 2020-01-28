@@ -18,12 +18,73 @@ class User extends MY_Controller {
             redirect(base_url("login"));
         }
         // load helpers / libraries        
+        $this->load->library('table');
         $this->data_to_views['page_title'] = "User Profile";
 
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('user/profile', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
+    // EDIT PROFILE
+    public function edit() {
+        if (empty($this->logged_in_user)) {
+            $this->session->set_flashdata([
+                'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
+                'status' => "warning",
+                'icon' => "info-circle",
+            ]);
+            redirect(base_url("login"));
+        }
+        // load helpers / libraries        
+        $this->load->library('table');
+        $this->data_to_views['page_title'] = "Edit Profile";
+
+        $this->data_to_views['form_url'] = '/user/edit';
+        $this->data_to_views['error_url'] = '/user/edit';
+
+        $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+
+        // validation rules
+        $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
+        $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
+        $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email');
+        $this->form_validation->set_rules('user_contact', 'Phone Number', 'trim|min_length[10]|max_length[12]');
+//        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
+        // load correct view
+        if ($this->form_validation->run() === FALSE) {
+            $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
+            $this->load->view('user/edit', $this->data_to_views);
+            $this->load->view($this->footer_url, $this->data_to_views);
+        } else {
+            // set user_data from post
+            foreach ($this->input->post() as $field => $value) {
+                if ($field == "user_contact") {
+                    $value = $this->int_phone($value);
+                }
+                $user_data[$field] = $value;
+                $_SESSION['user'][$field] = $value;
+            }
+//            wts($this->logged_in_user,1);
+            $user_data['user_id']=$this->logged_in_user['user_id'];
+            $params = [
+                "action" => "edit",
+                "user_data" => $user_data,
+                "role_arr" => $this->logged_in_user['role_list'],
+                "user_id" => $this->logged_in_user['user_id']
+            ];
+            $user_id = $this->user_model->set_user($params);
+
+            $this->session->set_flashdata([
+                'alert' => "Your details has been updated",
+                'status' => "success",
+                'icon' => "check-circle",
+            ]);
+
+            redirect(base_url("user/profile"));
+        }
     }
 
     // RESULTS
@@ -70,7 +131,6 @@ class User extends MY_Controller {
             }
         }
 //        wts($this->data_to_views['edition_subs'], 1);
-
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

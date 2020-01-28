@@ -14,7 +14,7 @@
                     'value' => set_value('query'),
                     'class' => 'form-control',
                     'placeholder' => 'Not required',
-                    'autofocus'=>'',
+                    'autofocus' => '',
                     "onclick" => "this.select()",
                 ]);
                 ?>
@@ -50,7 +50,7 @@
                 echo form_dropdown('when', $time_options, set_value('when', 'plus_1y'), ["id" => "when"]);
                 ?>
             </div>
-            
+
             <div class="col-lg-3 col-6">
                 <?php
                 echo form_label('Where', 'where');
@@ -64,8 +64,8 @@
                 foreach ($this->session->region_pages as $region_id => $region) {
                     $loc_options["Regions"]["reg_" . $region_id] = $region['display'];
                 }
-                echo form_dropdown('where', $loc_options, set_value('where'), ["id" => "where"]);
-                ?>                
+                echo form_dropdown('where', $loc_options, set_value('where',$where), ["id" => "where"]);
+                ?>
             </div>
             <div class="col-lg-1 col-6">
                 <?php
@@ -74,10 +74,10 @@
                     'list' => 'List',
                     'grid' => 'Grid',
                 );
-                if (get_cookie("listing_pref")=="grid") {
-                    $init_value="grid";
+                if (get_cookie("listing_pref") == "grid") {
+                    $init_value = "grid";
                 } else {
-                    $init_value="list";
+                    $init_value = "list";
                 }
                 echo form_dropdown('show', $show_options, set_value('show', $init_value), ["id" => "show"]);
                 ?>

@@ -1,7 +1,9 @@
 /*
     CUSTOM CSS RULES
 */
-
+#cookieNotify {
+    font-size: 1.1em;
+}
 section {
     padding: 60px 0;
 }
@@ -215,6 +217,7 @@ h3 span.badge a:hover { color: #ccc; }
 .alert { 
     margin:0;
     border-radius: none;
+    z-index: 1;
 }
 
 /* CONTENT STUFF */
@@ -226,13 +229,18 @@ h3 span.badge a:hover { color: #ccc; }
 .content p.small {
     font-size: 80%;
 }
-.content ul {
+.content ul, 
+.content ol
+{
     margin-left: 24px;
 }
-.content ul li {
+.content ul li,
+.content ol li 
+{
     line-height: 1.8em;
 }
-.content ul li li {
+.content ul li li, 
+.content ol li li {
     line-height: 1.6em;
 }
 .content ul.inline  {
@@ -402,6 +410,22 @@ form#main-search-form .btn {
     margin-top: 12px;
 }
 
+table td:first-child {font-weight: bold; }
+table th {
+    font-weight: bold; 
+    border-bottom-width: 3px;
+    border-bottom-color: #ccc;
+}
+.content table th a {
+    color: #565656;
+    text-decoration: none;
+}
+.content table th a:hover {
+    color: #26B8F3;
+    text-decoration: none;
+    cursor: help;
+}
+/*
 table.race_table td:first-child {font-weight: bold; }
 table.race_table th {
     font-weight: bold; 
@@ -416,7 +440,7 @@ table.race_table th {
     color: #26B8F3;
     text-decoration: none;
     cursor: help;
-}
+}*/
 
 
 /* net groot */
@@ -493,7 +517,7 @@ table.race_table th {
 
     .accordion.accordion-simple h5.ac-title {
         font-family: "Poppins","Helvetica","Arial",sans-serif;
-        font-size: 0.9em;
+        /*font-size: 0.9em;*/
     }
 
     .content table.race_table th a i {

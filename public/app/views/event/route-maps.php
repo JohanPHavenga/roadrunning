@@ -28,9 +28,9 @@
                                     . "please enter your email below or to the right to be added to the "
                                     . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";
                             if (!$in_past) {
-                                $msg = "No Route Maps has been made avialble for this race yet";
+                                $msg = "No Route Maps has been made available for this race yet";
                             } else {
-                                $msg = "No Route Maps were made avialble for this race";
+                                $msg = "No Route Maps were made available for this race";
                             }
                             ?>
                             <div role="alert" class="m-b-30 alert alert-warning">

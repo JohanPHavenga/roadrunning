@@ -56,8 +56,8 @@ class Main extends MY_Controller {
 //        $this->data_to_views['featured_events'] = $this->chronologise_data($this->data_to_views['featured_events'], "edition_date");
 
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_home', $this->data_to_views);
-//        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/home', $this->data_to_views);
         $this->load->view($this->footer_url);
     }
@@ -108,8 +108,13 @@ class Main extends MY_Controller {
     }
 
     public function terms_conditions() {
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['companyName'] = "RoadRunningZA";
+        $this->data_to_views['page_title'] = "Terms & Conditions";
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/terms_conditions', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }

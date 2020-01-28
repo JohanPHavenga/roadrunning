@@ -28,7 +28,7 @@
                             <p>Want to get notified once entries open? Enter your email below or to the right.</p>
                             <?php
                         } else {
-                            if (isset($edition_data['entrytype_list'][4]) && $url_list[5]) {
+                            if (isset($edition_data['entrytype_list'][4]) && isset($url_list[5])) {
                                 ?>
                                 <p>
                                     <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover">Enter online
@@ -41,7 +41,7 @@
                                 <?php
                                 // Online entries
                                 if (isset($edition_data['entrytype_list'][4])) {
-                                    if ($url_list[5]) {
+                                    if (isset($url_list[5])) {
                                         echo "<li>Online entries close on <b>" . fdateHumanFull($date_list[3][0]['date_end'], true) . "</b></li>";
                                     } else {
                                         echo "<li>Online entries to <b>open soon</b></li>";
@@ -158,7 +158,7 @@
             <div class="sidebar col-lg-3">  
                 <?php
                 // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Get notified when entries open";
+                $data_to_widget['title'] = "Add yourself to the race mailing list";
                 $this->load->view('widgets/subscribe', $data_to_widget);
 
                 // ADS WIDGET

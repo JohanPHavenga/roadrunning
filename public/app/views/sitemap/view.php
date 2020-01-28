@@ -56,9 +56,13 @@
 
                     <div class="col-lg-3">
                         <h4 class="text-uppercase">Calendar</h4>
-                        <?php
-                        
-                        ?>
+                        <ul>
+                            <?php
+                            foreach ($calendar as $entry) {
+                                echo "<li><a href='" . $entry['loc'] . "'>" . ucwords($entry['display']) . "</a></li>";
+                            }
+                            ?>
+                        </ul>   
                     </div>
                 </div>
 

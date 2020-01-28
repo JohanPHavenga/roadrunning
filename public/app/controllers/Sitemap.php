@@ -22,6 +22,21 @@ class Sitemap extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_01";
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "Sitemap";
+
+        foreach ($this->data_to_views['edition_arr'] as $year => $year_list) {
+
+            $this->data_to_views['calendar'][$year]['loc'] = base_url() . "calendar/" . $year;
+            $this->data_to_views['calendar'][$year]['display'] = $year;
+
+            foreach ($year_list as $month => $month_list) {
+                $month_num = date("m", strtotime("$month-$year"));
+                $this->data_to_views['calendar']["$year-$month_num"]['loc'] = base_url() . "calendar/" . $year . "/" . $month_num;
+                $this->data_to_views['calendar']["$year-$month_num"]['display'] = $month . " " . $year;
+            }
+        }
+
+//        wts($this->data_to_views['calendar'], 1);
+
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -110,6 +125,7 @@ class Sitemap extends MY_Controller {
                 }
             }
         }
+//                wts($this->data_to_views['calendar_xml'],1);
 
         $this->load->view("sitemap/xml", $this->data_to_views);
     }

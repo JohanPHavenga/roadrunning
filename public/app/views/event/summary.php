@@ -24,11 +24,11 @@
         <?php
         $this->load->view('widgets/race_meta');
         ?>        
-        <div class="row">
+        <div class="row m-t-40">
             <!-- Content-->
             <div class="content col-lg-9">
                 <div class="product">
-                    <div class="row m-b-40">
+                    <div class="row m-b-10">
                         <div class="col-lg-5">
                             <div class="product-image">
                                 <!-- Carousel slider -->
@@ -107,11 +107,11 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <?php
+                                    // BUTTONS
                                     if (!in_array(5, $edition_data['entrytype_list'])) {
                                         ?>
                                         <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
                                             <i class="fa fa-arrow-right"></i></a>
-
                                         <?php
                                     }
                                     ?>
@@ -119,8 +119,29 @@
                                         <i class="fa fa-arrow-right"></i></a>
                                 </div>
                             </div>
+                            <div class="row m-b-30">
+                                <div class="col-lg-12">
+                                    <?php
+                                    if (isset($flyer['edition'])) {
+                                        ?>
+                                        <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                                            <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+                                        <?php
+                                    }
+                                    if (isset($url_list[1])) {
+                                        ?>
+                                        <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                                            <i class="fa fa-link"></i> Race Website</a>
+
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
 
                     <!-- add box -->
                     <div class="row m-b-30">
@@ -134,7 +155,7 @@
                             <div class="accordion accordion-shadow">
                                 <?php
                                 foreach ($race_list as $race_id => $race) {
-                                    $ac_data['race']=$race;
+                                    $ac_data['race'] = $race;
                                     $ac_data['active'] = '';
                                     if ($race_id === array_key_first($race_list)) {
                                         $ac_data['active'] = "ac-active";
@@ -147,7 +168,7 @@
                         </div>
                     </div>
 
-                    <div class="heading-text heading-line text-center m-t-30">
+                    <div class="heading-text heading-line m-t-50">
                         <h4>Race Organisers info</h4>
                     </div>
                     <div class="row">
@@ -276,26 +297,73 @@
             <!-- Sidebar-->
             <div class="sidebar col-lg-3"> 
                 <div role="alert" class="m-b-30 alert alert-<?= $status_notice['state']; ?>">
-                    <strong><i class="fa fa-<?= $status_notice['icon']; ?>"></i> <?= $status_notice['msg']; ?> </div>
-                    <?php
-                    // SUBSCRIBE WIDGET
-                    $data_to_widget['title'] = "Receive race notification";
-                    $this->load->view('widgets/subscribe', $data_to_widget);
+                    <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <?= $status_notice['msg']; ?> </div>
+                <?php
+                // SUBSCRIBE WIDGET
+                $data_to_widget['title'] = "Receive race notification";
+                $this->load->view('widgets/subscribe', $data_to_widget);
 
-                    // ADD TO CALENDAR WIDGET
-                    $this->load->view('widgets/add_calendar');
+                // ADD TO CALENDAR WIDGET
+                $this->load->view('widgets/add_calendar');
 
-                    // TAGS WIDGET
-                    $this->load->view('widgets/tags');
+                // TAGS WIDGET
+                $this->load->view('widgets/tags');
 
-                    // ADS WIDGET
-                    $this->load->view('widgets/side_ad');
-
-                    // MAP WIDGET
-                    $this->load->view('widgets/map');
-                    ?>
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
+                ?>
             </div>
             <!-- end: Sidebar-->
+        </div>
+
+        <div class="row">
+            <div class="content col-lg-9">
+                <div class="heading-text heading-line m-t-30">
+                    <h4>More race information</h4>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?php
+                        // BUTTONS
+                        if (!in_array(5, $edition_data['entrytype_list'])) {
+                            ?>
+                            <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
+                                <i class="fa fa-arrow-right"></i></a>
+                            <?php
+                        }
+                        ?>
+                        <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
+                            <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="row m-b-30">
+                    <div class="col-lg-12">
+                        <?php
+                        if (isset($flyer['edition'])) {
+                            ?>
+                            <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                                <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+                            <?php
+                        }
+                        if (isset($url_list[1])) {
+                            ?>
+                            <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                                <i class="fa fa-link"></i> Race Website</a>
+
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar col-lg-3">
+                <?php
+                // MAP WIDGET
+                $this->load->view('widgets/map');
+                ?>
+            </div>
         </div>
     </div>
 </section>

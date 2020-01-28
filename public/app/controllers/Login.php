@@ -36,9 +36,9 @@ class Login extends MY_Controller {
         $this->load->model('history_model');
         $this->load->model('region_model');
         $this->data_to_views['page_title'] = "User Login";
-        $this->data_to_views['form_url'] = '/login/userlogin/submit';
-        $this->data_to_views['error_url'] = '/login/userlogin';
-        $this->data_to_views['success_url'] = '/';
+        $this->data_to_views['form_url'] = base_url('login/userlogin/submit');
+        $this->data_to_views['error_url'] = base_url('login/userlogin');
+        $this->data_to_views['success_url'] = base_url();
 
         if ($this->session->flashdata('email') != null) {
             $this->data_to_views['reset_password_url'] = base_url('forgot-password/?email=' . $this->session->flashdata('email'));

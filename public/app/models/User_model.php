@@ -99,7 +99,7 @@ class User_model extends MY_model {
 
     public function set_user($params) {
         // $action, $user_data=[], $role_arr=[], $user_id=0, $debug=FALSE
-
+        
         $user_data = $params['user_data'];
         $user_data['updated_date'] = date("Y-m-d H:i:s");
         switch ($params['action']) {

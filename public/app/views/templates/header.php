@@ -1,6 +1,6 @@
 <?php
 if (!isset($page_title)) {
-    $page_title = "Coyote 2.0";
+    $page_title = "RoadRunningZA 2.0";
 }
 if (!isset($meta_description)) {
     $meta_description = "Run without being chased.";
@@ -73,9 +73,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <div class="topbar-dropdown">
                                 <?php
                                 if ($this->session->user['logged_in']) {
-                                    echo "<a class='title' href='/user/profile'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
+                                    echo "<a class='title' href='".base_url("user/profile")."'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
                                 } else {
-                                    echo "<a class='title' href='/login/'><i class='fa fa-user'></i> Login</a>";
+                                    echo "<a class='title' href='".base_url('login')."><i class='fa fa-user'></i> Login</a>";
                                 }
                                 ?>
 
@@ -249,9 +249,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                         }
                                         if ($this->session->user['logged_in']) {
                                             echo "<li><a href='" . base_url('user/profile') . "'>My Profile</a></li>";
-                                            echo "<li><a href='/logout'>Logout</a></li>";
+                                            echo "<li><a href='" . base_url('logout') . "'>Logout</a></li>";
                                         } else {
-                                            echo "<li><a href='/login/'>Login</a></li>";
+                                            echo "<li><a href='" . base_url('login') . "'>Login</a></li>";
                                         }
                                         ?>
                                     </ul>

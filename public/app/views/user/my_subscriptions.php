@@ -45,7 +45,7 @@ if (!empty($edition_subs)) {
                 if (!empty($newsletter_subs)) {
                     ?>
                     <h4 class="text-uppercase">Newsletter Subscriptions</h4>
-                    <table class="table table-striped table-bordered race_table">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -97,7 +97,7 @@ if (!empty($edition_subs)) {
                 if (!empty($edition_subs)) {
                     ?>
                     <h4 class="text-uppercase">Race Subscriptions</h4>
-                    <table class="table table-striped table-bordered race_table">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>Name</th>

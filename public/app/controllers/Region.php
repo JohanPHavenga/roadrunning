@@ -38,7 +38,7 @@ class Region extends MY_Controller {
         // as daar nie 'n region naam deurgestuur word nie
         if ($slug == "index") {
             redirect("/region/list");
-        }
+        } 
 
         $query_params["where"] = ["edition_date >= " => date("Y-m-d H:i:s")];
         $query_params["order_by"] = ["edition_date" => "ASC"];
@@ -75,6 +75,8 @@ class Region extends MY_Controller {
             $region_id_arr = [$region_id];
             $region_pages = $this->session->region_pages;
             $region_name = $region_pages[$region_id]['display'];
+            // set search form
+            $this->data_to_views['where']="reg_".$region_id;
         }
         // kry al die editions vir die provinsie 
         $query_params["where_in"] = ["regions.region_id" => $region_id_arr];
