@@ -441,6 +441,13 @@ EOT;
                 "priority" => 1,
                 "changefreq" => "yearly",
             ],
+            "add-listing" => [
+                "display" => "Add Race Listing",
+                "loc" => base_url("evemt/add"),
+                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "priority" => 0.6,
+                "changefreq" => "yearly",
+            ],
             "sitemap" => [
                 "display" => "Sitemap",
                 "loc" => base_url("sitemap"),

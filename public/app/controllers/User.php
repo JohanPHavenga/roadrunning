@@ -9,25 +9,29 @@ class User extends MY_Controller {
 
     // VIEW PROFILE
     public function profile() {
-        // load helpers / libraries
-        $this->load->library('table');
-        $this->load->model('usersubscription_model');
+        if (empty($this->logged_in_user)) {
+            $this->session->set_flashdata([
+                'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
+                'status' => "warning",
+                'icon' => "info-circle",
+            ]);
+            redirect(base_url("login"));
+        }
+        // load helpers / libraries        
         $this->data_to_views['page_title'] = "User Profile";
 
-        // GET user subsciptions
-        $this->data_to_views['subs'] = $this->usersubscription_model->get_usersubscription_detail($this->logged_in_user['user_id']);
-        $this->data_to_views['user']=$this->session->user;
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('user/profile', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
+
     // RESULTS
     public function my_results() {
         $this->data_to_views['banner_img'] = "run_03";
         $this->data_to_views['banner_pos'] = "15%";
-        $this->data_to_views['page_title'] = "My Results";     
+        $this->data_to_views['page_title'] = "My Results";
+
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -35,9 +39,51 @@ class User extends MY_Controller {
         $this->load->view('user/my_results', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
-    
-    
+
+    // SUBSCRIPTIONS
+    public function my_subscriptions() {
+        if (empty($this->logged_in_user)) {
+            $this->session->set_flashdata([
+                'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
+                'status' => "warning",
+                'icon' => "info-circle",
+            ]);
+            redirect(base_url("login"));
+        }
+        $this->load->model('usersubscription_model');
+        $this->data_to_views['page_title'] = "My Subscriptions";
+
+        // GET user subsciptions
+        $newsletter_subs = $this->usersubscription_model->get_usersubscription_list($this->logged_in_user['user_id'], "newsletter");
+        if ($newsletter_subs) {
+            foreach ($newsletter_subs as $sub) {
+                $sub['unsubscribe_url'] = $this->formulate_unsubscribe_url($this->logged_in_user['user_id'], "newsletter", $sub['linked_id']);
+                $this->data_to_views['newsletter_subs'][] = $sub;
+            }
+        }
+//        wts($this->data_to_views['newsletter_subs'], 1);
+        $edition_subs = $this->usersubscription_model->get_usersubscription_list($this->logged_in_user['user_id'], "edition");
+        if ($edition_subs) {
+            foreach ($edition_subs as $sub) {
+                $sub['unsubscribe_url'] = $this->formulate_unsubscribe_url($this->logged_in_user['user_id'], "edition", $sub['linked_id']);
+                $this->data_to_views['edition_subs'][] = $sub;
+            }
+        }
+//        wts($this->data_to_views['edition_subs'], 1);
+
+        // load view
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('user/my_subscriptions', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
+    // get unsubscribe URL
+    private function formulate_unsubscribe_url($user_id, $linked_to, $linked_id) {
+        $crypt = my_encrypt($user_id . "|" . $linked_to . "|" . $linked_id);
+        $url = base_url("user/unsubscribe/" . $crypt);
+        return $url;
+    }
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {
@@ -136,6 +182,36 @@ class User extends MY_Controller {
             ]);
             redirect($return_url);
         }
+    }
+
+    public function unsubscribe($crypt) {
+        // get data
+        $str = my_decrypt($crypt);
+        $data = explode("|", $str);
+        $user_id = $data[0];
+        $linked_to = $data[1];
+        $linked_id = $data[2];
+        // load moadels        
+        $this->load->model('usersubscription_model');
+        // set negative return msg
+        $this->session->set_flashdata([
+            'alert' => "Subscription not found. Please contact the site administrator.",
+            'status' => "danger",
+            'icon' => "minus-circle",
+        ]);
+        // check if the subscription exists
+        if ($this->usersubscription_model->exists($user_id, $linked_to, $linked_id)) {
+            $remove = $this->usersubscription_model->remove_usersubscription($user_id, $linked_to, $linked_id);
+            if ($remove) {
+                $this->session->set_flashdata([
+                    'alert' => "Subscription successfully removed.",
+                    'status' => "success",
+                    'icon' => "minus-circle",
+                ]);
+            }
+        }
+
+        redirect(base_url("user/my-subscriptions"));
     }
 
     // REGISTER 

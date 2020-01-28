@@ -11,7 +11,13 @@
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
-
+                <?php
+                if (validation_errors()) {
+                    echo "<div class='alert alert-danger' role='alert'><strong><i class='fa fa-exclamation-circle'></i> Validation Error</strong>";
+                    echo validation_errors();
+                    echo "</div>";
+                }
+                ?>
                 <!-- add box -->
                 <div class="row m-b-30">
                     <div class="col-lg-12">

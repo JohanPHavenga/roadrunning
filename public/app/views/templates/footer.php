@@ -47,7 +47,18 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <li><a href='<?= $this->session->static_pages['faq']['loc']; ?>'><?= $this->session->static_pages['faq']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['about']['loc']; ?>'><?= $this->session->static_pages['about']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $this->session->static_pages['contact']['display']; ?></a></li>
-                            <li><a href='<?= $this->session->static_pages['races']['loc']; ?>'>All <?= $this->session->static_pages['races']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['add-listing']['loc']; ?>'><?= $this->session->static_pages['add-listing']['display']; ?></a></li>
+                            <?php
+                            if ($this->session->user['logged_in']) {
+                                ?>
+                                <li><a href='<?= base_url("logout"); ?>'>Logout</a></li>
+                                <?php
+                            } else {
+                                ?>
+                                <li><a href='<?= $this->session->static_pages['login']['loc']; ?>'><?= $this->session->static_pages['login']['display']; ?></a></li>
+                                <?php
+                            }
+                            ?>
                             <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
                         </ul>
                     </div>

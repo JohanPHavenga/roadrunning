@@ -9,9 +9,14 @@ class Login extends MY_Controller {
     public function logout($confirm = false) {
         if ($confirm != "confirm") {
             $this->session->unset_userdata('user');
+            $this->session->set_flashdata([
+                'alert' => "Buckle your belt Dorothy, cause Kansas is going bye-bye. Also, you have been succesfully logged out of roadrunning.co.za",
+                'status' => "success"
+            ]);
             redirect("/logout/confirm");
         } else {
             $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('login/logout', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         }
@@ -35,7 +40,7 @@ class Login extends MY_Controller {
         $this->data_to_views['error_url'] = '/login/userlogin';
         $this->data_to_views['success_url'] = '/';
 
-        if ($this->session->flashdata('email')!=null) {
+        if ($this->session->flashdata('email') != null) {
             $this->data_to_views['reset_password_url'] = base_url('forgot-password/?email=' . $this->session->flashdata('email'));
             $this->data_to_views['register_url'] = base_url('register/?email=' . $this->session->flashdata('email'));
         } else {
@@ -85,7 +90,7 @@ class Login extends MY_Controller {
                     redirect($this->data_to_views['success_url']);
                 } else {
                     $this->session->set_flashdata([
-                        'alert' => "<b>Login failed.</b> Seems your email address has not been confirmed yet. Please <a href='" . base_url('forgot-password?email='.$this->input->post('user_email')) . "'>reset your password</a>.",
+                        'alert' => "<b>Login failed.</b> Seems your email address has not been confirmed yet. Please <a href='" . base_url('forgot-password?email=' . $this->input->post('user_email')) . "'>reset your password</a>.",
                         'status' => "warning",
                     ]);
 

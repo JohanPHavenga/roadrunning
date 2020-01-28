@@ -23,13 +23,24 @@ class Usersubscription_model extends MY_model {
         return false;
     }
 
-    public function get_usersubscription_list($linked_to = NULL, $linked_id = 0) {
+    public function get_usersubscription_list($id, $linked_to = NULL, $linked_id = 0) {
 
         $this->db->select("*");
         $this->db->from("usersubscriptions");
+        $this->db->where('user_id', $id);
 
         if ($linked_to) {
             $this->db->where('linked_to', $linked_to);
+            if ($linked_to == "edition") {
+                $this->db->reset_query();
+                $this->db->select("usersubscriptions.*, edition_name, edition_date");
+                $this->db->from("usersubscriptions");
+                $this->db->where('user_id', $id);
+                $this->db->join('editions', "editions.edition_id=usersubscriptions.linked_id");
+                $this->db->order_by('edition_date', "DESC");
+            }
+        }
+        if ($linked_id) {
             $this->db->where('linked_id', $linked_id);
         }
 //        echo $this->db->get_compiled_select();

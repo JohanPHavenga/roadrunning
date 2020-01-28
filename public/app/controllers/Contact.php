@@ -42,6 +42,7 @@ class Contact extends MY_Controller {
         // load correct view
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('contact/contact', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
@@ -128,6 +129,7 @@ class Contact extends MY_Controller {
         // load correct view
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('contact/event', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
@@ -180,6 +182,7 @@ class Contact extends MY_Controller {
     function confirm() {
         if ($this->session->flashdata('confirm_msg') !== null) {
             $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('contact/confirm', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {

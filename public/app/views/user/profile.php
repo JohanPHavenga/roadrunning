@@ -4,32 +4,17 @@
             <!-- Content-->
             <div class="content col-lg-9">
                 <h3 class="text-uppercase"><?= $page_title; ?></h3>
-                <p>This is the about page<p>
-                    <?php
-                    wts($subs);
-                    wts($user);
-                    ?>
+                <p>Welcome <?=$logged_in_user['user_name']." ".$logged_in_user['user_surname'];?>.<p>
+                <p>This will be your profile page on <b>roadrunning.co.za</B> where you will be able to claim results and see graphs on your race times over time.</p>
+                <p>It is a work in progress to please bare with me. Keep on watching this space.</p>
             </div>
             <!-- end: Content-->
 
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">  
-                <div class="widget widget-myaccount p-cb">
-                    <div class="avatar">
-                        <img src="<?= base_url("assets/img/Blank-Avatar.jpg");?>">
-                        <span><?=$user['user_name'];?> <?=$user['user_surname'];?></span>
-                        <p class="text-muted"><?=$user['user_email'];?></p>
-                    </div>
-                    <ul class="text-center">
-                        <li><a href="#"><i class="icon-user11"></i>My profile</a></li>
-                        <li><a href="#"><i class="icon-clock21"></i>Activity logs</a></li>
-                        <li><a href="#"><i class="icon-mail"></i>Messages</a></li>
-                        <li><a href="#"><i class="icon-settings1"></i>Settings</a></li>
-                        <li><a href="#"><i class="icon-log-out"></i>Sing Out</a>
-                        </li>
-                    </ul>
-                </div>
                 <?php
+                // PROFILE WIDGET
+                $this->load->view('widgets/profile');
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
                 ?>

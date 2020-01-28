@@ -505,4 +505,77 @@ class Event extends MY_Controller {
         return $base_url . "&text=" . $text . "&dates=" . $dates . "&details=" . $details . "&location=" . $location;
     }
 
+    public function add() {
+
+        // validation rules
+        $this->form_validation->set_rules('event_name', 'Event name', 'trim|required');
+        $this->form_validation->set_rules('event_date', 'Event date', 'trim|required');
+        $this->form_validation->set_rules('event_time', 'Event time', 'trim|required');
+        $this->form_validation->set_rules('event_address', 'Event address', 'trim|required');
+        $this->form_validation->set_rules('town_name', 'Town Name', 'trim|required');
+        $this->form_validation->set_rules('user_name', 'Contact name', 'trim|required');
+        $this->form_validation->set_rules('user_surname', 'Contact surname', 'trim|required');
+        $this->form_validation->set_rules('user_email', 'Contact email address', 'trim|required|valid_email');
+        $this->form_validation->set_rules('event_url', 'Entry URL needs to be valid', 'trim|valid_url');
+//        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+            $this->data_to_views['banner_img'] = "run_04";
+            $this->data_to_views['banner_pos'] = "40%";
+            $this->data_to_views['page_title'] = "Add race listing";
+            $this->load->view($this->header_url, $this->data_to_views);
+            $this->load->view($this->banner_url, $this->data_to_views);
+            $this->load->view($this->notice_url, $this->data_to_views);
+            $this->load->view('event/add-listing', $this->data_to_views);
+            $this->load->view($this->footer_url, $this->data_to_views);
+        } else {
+            // set user_data from post
+            foreach ($this->input->post() as $field => $value) {
+                $email_data[$field] = $value;
+            }
+            $mail_id = $this->send_event_add_email($email_data);
+
+            $this->session->set_flashdata([
+                'alert' => "Listing information send",
+                'status' => "success",
+                'icon' => "check-circle",
+                'confirm_msg' => 'Thank you sending through your event information. I will be in touch as soon as I can.',
+                'confirm_btn_txt' => 'Return',
+                'confirm_btn_url' => base_url(),
+            ]);
+
+            redirect(base_url("contact/confirm"));
+        }
+    }
+
+    // SEND EVENT EMAIL
+    private function send_event_add_email($email_data) {
+        $data = [
+            "to" => "info@roadrunning.co.za",
+            "subject" => "New listing from site: " . $email_data['event_name'],
+            "body" => "<p>Hello,</p>"
+            . "<p>Please see below information entered on the "
+            . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a> website "
+            . "by a user wanting to add an event called <b>" . $email_data['event_name'] . "</b> to the site with the following detail:"
+            . "<p><b>Event Name:</b> " . $email_data['event_name'] . "<br>"
+            . "<b>Event Date:</b> " . $email_data['event_date'] . "<br>"
+            . "<b>Start Time:</b> " . $email_data['event_time'] . "<br>"
+            . "<b>Address:</b> " . $email_data['event_address'] . "<br>"
+            . "<b>Town:</b> " . $email_data['town_name'] . "<br>"
+            . "<b>Contact:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
+            . "<b>Email:</b> " . $email_data['user_email'] . "<br>"
+            . "<b>Entry URL:</b> " . $email_data['event_url'] . "</p>"
+            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Comment:</b><br> " . nl2br(trim($email_data['user_comment'])) . "</p>",
+            "from" => $email_data['user_email'],
+            "from_name" => $email_data['user_name'] . " " . $email_data['user_surname'],
+        ];
+        // send mail to organiser
+//        wts($data, 1);
+        // send mail to user
+        $this->set_email($data);
+
+        return true;
+    }
+
 }

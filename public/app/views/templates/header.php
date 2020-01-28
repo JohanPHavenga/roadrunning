@@ -3,7 +3,7 @@ if (!isset($page_title)) {
     $page_title = "Coyote 2.0";
 }
 if (!isset($meta_description)) {
-    $meta_description = "Run without being chased. Again.";
+    $meta_description = "Run without being chased.";
 }
 if (!isset($meta_robots)) {
     $meta_robots = "index";
@@ -165,7 +165,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <div class="header-extras">
                             <ul>
                                 <li class="d-none d-xl-block d-lg-block">
-                                    <a href="" class="btn">Add listing</a>
+                                    <a href="<?= base_url("event/add"); ?>" class="btn">Add listing</a>
                                 </li>
                                 <li>
                                     <a id="btn-search" href="#"> <i class="icon-search1"></i></a>
