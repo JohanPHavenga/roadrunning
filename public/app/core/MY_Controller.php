@@ -33,11 +33,11 @@ class MY_Controller extends CI_Controller {
         // set cookies
         $this->data_to_views['rr_cookie']['sub_email'] = get_cookie("sub_email");
         $this->data_to_views['rr_cookie']['feedback'] = get_cookie("feedback");
-        
+
         // new history for transition 
         $new_count = 0;
         foreach ($this->data_to_views['history'] as $page) {
-            if (strpos($page, "/new/")===false) {
+            if (strpos($page, "/new/") === false) {
                 //do nothing
             } else {
                 $new_count++;
@@ -553,12 +553,14 @@ EOT;
 
     public function chronologise_data($data_arr, $date_field) {
         $return_data = [];
-        foreach ($data_arr as $id => $row) {
-            $year = date("Y", strtotime($row[$date_field]));
-            $month = date("F", strtotime($row[$date_field]));
-            $day = date("d", strtotime($row[$date_field]));
+        if ($data_arr) {
+            foreach ($data_arr as $id => $row) {
+                $year = date("Y", strtotime($row[$date_field]));
+                $month = date("F", strtotime($row[$date_field]));
+                $day = date("d", strtotime($row[$date_field]));
 
-            $return_data[$year][$month][$day][$id] = $row;
+                $return_data[$year][$month][$day][$id] = $row;
+            }
         }
         return $return_data;
     }
@@ -776,7 +778,7 @@ EOT;
                 break;
             case "edition":
                 $switch = " updates regarding the <strong>" . $edition_data['edition_name'] . "</strong> event.";
-                $subject = "Added to " . $edition_data['edition_name']. " mailing list";
+                $subject = "Added to " . $edition_data['edition_name'] . " mailing list";
                 break;
         }
         $body_arr[] = "Hi " . $user_data['user_name'] . ",<br>";

@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <?php
                     echo form_label('Select your Region(s)', 'site_version');
-                    echo form_multiselect('site_version[]', $region_dropdown, $this->session->region_selection, ["id" => "site_version", "class" => "form-control", "size" => 20]);
+                    echo form_multiselect('site_version[]', $region_dropdown, $this->session->region_selection, ["id" => "site_version", "class" => "form-control", "size" => 15]);
                     ?>
                 </div>
 

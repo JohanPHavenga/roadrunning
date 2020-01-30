@@ -97,8 +97,10 @@ class Race extends MY_Controller {
         ];
 
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
-            $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+        if ($this->data_to_views['edition_list']) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            }
         }
         // check cookie vir listing preference.
         if (get_cookie("listing_pref") == "grid") {
@@ -120,6 +122,7 @@ class Race extends MY_Controller {
 
     public function most_viewed() {
         $this->load->model('history_model');
+        $this->data_to_views['edition_list'] = [];
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection,],
             "order_by" => ["historysum_countmonth" => "DESC"],
@@ -127,14 +130,17 @@ class Race extends MY_Controller {
         ];
         $most_viewed = $this->history_model->get_history_summary($query_params);
 
-        $query_params = [
-            "where_in" => ["edition_id" => array_keys($most_viewed),],
-            "order_by" => ["edition_date" => "ASC"],
-        ];
-        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-
-        foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
-            $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+        if ($most_viewed) {
+            $query_params = [
+                "where_in" => ["edition_id" => array_keys($most_viewed),],
+                "order_by" => ["edition_date" => "ASC"],
+            ];
+            $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+            if ($this->data_to_views['edition_list']) {
+                foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                    $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+                }
+            }
         }
 
         $this->data_to_views['banner_img'] = "run_05";
@@ -187,8 +193,10 @@ class Race extends MY_Controller {
         ];
 
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
-            $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+        if ($this->data_to_views['edition_list']) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            }
         }
 //        wts($this->data_to_views['edition_list'],true);
 
@@ -202,7 +210,7 @@ class Race extends MY_Controller {
         $this->load->view('templates/race_list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
+
     public function parkrun() {
         $this->data_to_views['banner_img'] = "run_04";
         $this->data_to_views['banner_pos'] = "15%";

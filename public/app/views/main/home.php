@@ -7,40 +7,50 @@ $this->load->view('templates/search_form');
         <div class="heading-text heading-section text-center">
             <h2>FEATURED RACES</h2>
         </div>
-        <div class="row">
+        <div class="row body">
             <div class="col-lg-12">
-                <div class="races carousel" data-items="3" data-margin="20" data-dots="false">
-                    <?php
-                    foreach ($featured_events as $edition_id => $edition) {
-                        ?>
-                        <div class="race">
-                            <div class="race-image">
-                                <a href='<?= $edition['edition_url']; ?>'>
-                                    <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>"></a>
-                                <div class="race-title"><?= $edition['edition_name']; ?></div>
-                                <?php
-                                if (!array_key_exists(5, $edition['entrytype_list'])) {
-                                    ?>
-                                    <span class="race-badge">Entry <br>Open</span>
+                <?php
+                if ($featured_events) {
+                    ?>
+                    <div class="races carousel" data-items="3" data-margin="20" data-dots="false">
+                        <?php
+                        foreach ($featured_events as $edition_id => $edition) {
+                            ?>
+                            <div class="race">
+                                <div class="race-image">
+                                    <a href='<?= $edition['edition_url']; ?>'>
+                                        <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>"></a>
+                                    <div class="race-title"><?= $edition['edition_name']; ?></div>
                                     <?php
-                                }
-                                ?>
-                            </div>
-                            <div class="race-details">
-                                <p>
-                                    <b>WHEN</b>: <?= fdateHumanFull($edition['edition_date'], true); ?> from <?= ftimeMil($edition['race_time_start']); ?><br>
-                                    <b>WHERE</b>: <?= $edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr']; ?><br>
-                                    <b>DISTANCES</b>: <?= implode(" | ", $edition['race_distance_arr']); ?><br>
-                                </p>
-                                <div class="float-left">
-                                    <a href="<?= $edition['edition_url']; ?>" class="btn btn-colored">View</a>
+                                    if (!array_key_exists(5, $edition['entrytype_list'])) {
+                                        ?>
+                                        <span class="race-badge">Entry <br>Open</span>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <div class="race-details">
+                                    <p>
+                                        <b>WHEN</b>: <?= fdateHumanFull($edition['edition_date'], true); ?> from <?= ftimeMil($edition['race_time_start']); ?><br>
+                                        <b>WHERE</b>: <?= $edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr']; ?><br>
+                                        <b>DISTANCES</b>: <?= implode(" | ", $edition['race_distance_arr']); ?><br>
+                                    </p>
+                                    <div class="float-left">
+                                        <a href="<?= $edition['edition_url']; ?>" class="btn btn-colored">View</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <p>There are no featured races in the <a href="<?= base_url("region/switch"); ?>">regions you have selected</a>. We are in the process of loading more races across the country. Please check again later.
                         <?php
                     }
                     ?>
-                </div>
             </div>
         </div>
     </div>
@@ -53,7 +63,7 @@ $this->load->view('templates/search_form');
             <span class="lead">Our mission is to list running events in a standard way, on a modern multi-platform capable website. 
                 Giving the user an easy way to find and compare races and allow for easy entry via the various 3rd party entry portals.</span>
         </div>
-        <div class="row">
+        <div class="row body">
             <div class="col-lg-4">
                 <div>
                     <h4>Race listings</h4>
@@ -97,80 +107,86 @@ $this->load->view('templates/search_form');
 <section>
     <div class="container">
         <div class="row">
-            <div class="col-lg-7">
-                <div class="heading-text heading-section">
-                    <h2>Upcoming</h2>
-                    <span class="lead">Ready to run?</span>
-                </div>
-                <div class="tabs p-r-20">
-                    <ul class="nav nav-tabs nav-justified text-left" id="myTab">
-                        <?php
-                        $lock = false;
-                        foreach ($upcoming_events as $year => $year_list) {
-                            foreach ($year_list as $month => $month_list) {
-                                foreach ($month_list as $day => $edition_list) {
-                                    $unix = strtotime($day . " " . $month . " " . $year);
-                                    $act = "";
-                                    if (($day === array_key_first($month_list)) && (!$lock)) {
-                                        $act = "active";
-                                        $lock = true;
-                                    }
-                                    ?>
-                                    <li class="nav-item">
-                                        <a href="#day<?= $day; ?>" class="nav-link <?= $act; ?>" data-toggle="tab" aria-selected="true">
-                                            <strong><?= date("l", $unix); ?></strong> <br><?= date("Y.m.d", $unix); ?></a>
-                                    </li>
-                                    <?php
-                                }
-                            }
-                        }
-                        ?>
-                    </ul>
-                    <div class="tab-content">
-                        <?php
-                        $lock = false;
-                        foreach ($upcoming_events as $year => $year_list) {
-                            foreach ($year_list as $month => $month_list) {
-                                foreach ($month_list as $day => $edition_list) {
-                                    $act = "";
-                                    if (($day === array_key_first($month_list)) && (!$lock)) {
-                                        $act = "active";
-                                        $lock = true;
-                                    }
-                                    ?>
-                                    <div id="day<?= $day; ?>" class="tab-pane fade show <?= $act; ?>">
-                                        <?php
-                                        foreach ($edition_list as $edition_id => $edition) {
-                                            ?>
-                                            <a href="<?= $edition['edition_url']; ?>">
-                                                <div class="p-10 border-bottom">
-                                                    <span>
-                                                        <i class="far fa-clock"></i> <?= ftimeMil($edition['race_time_start']); ?>
-                                                        <?php
-                                                        if ($edition['edition_info_prizegizing'] != "00:00:00") {
-                                                            echo " - " . ftimeMil($edition['edition_info_prizegizing']);
-                                                        }
-                                                        ?>
-                                                    </span>
-                                                    <h5><?= $edition['edition_name']; ?></h5>
-                                                    <p class="m-b-0"><?= $edition['town_name'] . ", " . $edition['province_abbr']; ?><br><?= implode(" | ", $edition['race_distance_arr']); ?></p>
-                                                </div>
-                                            </a>
-                                            <?php
+            <?php
+            if ($upcoming_events) {
+                ?>
+                <div class="col-lg-7">
+                    <div class="heading-text heading-section">
+                        <h2>Upcoming</h2>
+                        <span class="lead">Ready to run?</span>
+                    </div>
+                    <div class="tabs p-r-20">
+                        <ul class="nav nav-tabs nav-justified text-left" id="myTab">
+                            <?php
+                            $lock = false;
+                            foreach ($upcoming_events as $year => $year_list) {
+                                foreach ($year_list as $month => $month_list) {
+                                    foreach ($month_list as $day => $edition_list) {
+                                        $unix = strtotime($day . " " . $month . " " . $year);
+                                        $act = "";
+                                        if (($day === array_key_first($month_list)) && (!$lock)) {
+                                            $act = "active";
+                                            $lock = true;
                                         }
                                         ?>
-                                    </div>
-                                    <?php
+                                        <li class="nav-item">
+                                            <a href="#day<?= $day; ?>" class="nav-link <?= $act; ?>" data-toggle="tab" aria-selected="true">
+                                                <strong><?= date("l", $unix); ?></strong> <br><?= date("Y.m.d", $unix); ?></a>
+                                        </li>
+                                        <?php
+                                    }
                                 }
                             }
-                        }
-                        ?>
+                            ?>
+                        </ul>
+                        <div class="tab-content">
+                            <?php
+                            $lock = false;
+                            foreach ($upcoming_events as $year => $year_list) {
+                                foreach ($year_list as $month => $month_list) {
+                                    foreach ($month_list as $day => $edition_list) {
+                                        $act = "";
+                                        if (($day === array_key_first($month_list)) && (!$lock)) {
+                                            $act = "active";
+                                            $lock = true;
+                                        }
+                                        ?>
+                                        <div id="day<?= $day; ?>" class="tab-pane fade show <?= $act; ?>">
+                                            <?php
+                                            foreach ($edition_list as $edition_id => $edition) {
+                                                ?>
+                                                <a href="<?= $edition['edition_url']; ?>">
+                                                    <div class="p-10 border-bottom">
+                                                        <span>
+                                                            <i class="far fa-clock"></i> <?= ftimeMil($edition['race_time_start']); ?>
+                                                            <?php
+                                                            if ($edition['edition_info_prizegizing'] != "00:00:00") {
+                                                                echo " - " . ftimeMil($edition['edition_info_prizegizing']);
+                                                            }
+                                                            ?>
+                                                        </span>
+                                                        <h5><?= $edition['edition_name']; ?></h5>
+                                                        <p class="m-b-0"><?= $edition['town_name'] . ", " . $edition['province_abbr']; ?><br><?= implode(" | ", $edition['race_distance_arr']); ?></p>
+                                                    </div>
+                                                </a>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="text-center  p-t-20 p-b-20">
+                        <a href="<?= base_url('race/upcoming'); ?>" class="btn btn-colored">Show more</a>
                     </div>
                 </div>
-                <div class="text-center  p-t-20 p-b-20">
-                    <a href="<?= base_url('race/upcoming'); ?>" class="btn btn-colored">Show more</a>
-                </div>
-            </div>
+                <?php
+            }
+            ?>
             <div class="col-lg-5">
                 <div class="heading-text heading-section">
                     <h2>Contact Us</h2>
@@ -285,7 +301,7 @@ $this->load->view('templates/search_form');
         <div class="row">
             <div class="col-lg-8">
                 <h3>
-                    Join by our growing <span>Newsletter</span> subscriber base
+                    Join our growing <span>Newsletter</span> subscriber base
                 </h3>
                 <p>
                     You will be kept up to date of any general news as well as receive a monthly update of results loaded, 
@@ -300,12 +316,12 @@ $this->load->view('templates/search_form');
                 ?>
                 <div class="form-group mx-sm-3 m-t-20">
                     <label for="email_sub" class="sr-only">Email</label>
-                    <input class="form-control" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?= $rr_cookie['sub_email']; ?>">
+                    <input class="form-control m-r-20 m-b-10" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?= $rr_cookie['sub_email']; ?>">
                     <?php
                     $data = array(
                         'type' => 'submit',
                         'content' => 'Subscribe',
-                        'class' => 'btn m-t-20',
+                        'class' => 'btn m-b-10',
                     );
                     echo form_button($data);
                     ?>

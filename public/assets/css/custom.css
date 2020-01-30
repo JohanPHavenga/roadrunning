@@ -250,12 +250,14 @@ h3 span.badge a:hover { color: #ccc; }
 .content ul.inline li {
     display: inline;
 }
-.content a:not(.btn) {
+.content a:not(.btn),
+.body a:not(.btn) {
     color: #26B8F3;
     text-decoration: underline;
 }
 
-.content a:hover:not(.btn) {
+.content a:hover:not(.btn),
+.body a:hover:not(.btn) {
     color: #777;
     text-decoration: underline;
     /*border-bottom: 1px solid #26B8F3;*/
