@@ -59,7 +59,7 @@ class Mailer extends MY_Controller {
         $this->email->from($data['emailque_from_address'], $data['emailque_from_name']);
         $this->email->to($data['emailque_to_address'], $data['emailque_to_name']);
         if ($data['emailque_cc_address']) {
-            $this->email->bcc($data['emailque_cc_address']);
+            $this->email->cc($data['emailque_cc_address']);
         }
         if ($data['emailque_bcc_address']) {
             $this->email->bcc($data['emailque_bcc_address']);
@@ -77,14 +77,16 @@ class Mailer extends MY_Controller {
         // test email
         $data = [
             "to" => "johan.havenga@gmail.com",
-            "body" => "test email",
+            "body" => "test êmail",
             "subject" => "test email from coyote",
             "from" => "tech@roadrunning.co.za",
-            "from_name" => "Coyote Test Mailer Bot",
+            "from_name" => "Coyote Test Mailer Bôt",
         ];
         $this->set_email($data);
 
         echo "mail sent";
+        
+        $this->process_que();
     }
 
 }

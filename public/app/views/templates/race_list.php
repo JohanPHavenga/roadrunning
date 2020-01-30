@@ -29,13 +29,13 @@
                                         $race_summary['abbr'][$race['racetype_abbr']] = $race['racetype_abbr'];
                                     }
 //                                    wts($race_summary);
-//                                    if ($edition_id === array_key_first($edition_list)) {
-//                                        $ac_cl="ac-active";
-//                                    } else {
-//                                        $ac_cl="";
-//                                    }
+                                    if ($edition_id === array_key_first($edition_list)) {
+                                        $ac_cl="ac-active";
+                                    } else {
+                                        $ac_cl="";
+                                    }
                                     ?>
-                                    <div class="ac-item">
+                                    <div class="ac-item <?=$ac_cl;?>">
                                         <h5 class="ac-title">   
                                             <i class="fa fa-<?= $edition['status_info']['icon']; ?> text-<?= $edition['status_info']['state']; ?>"></i>
                                             <?php
@@ -54,7 +54,7 @@
                                             ?>
 
                                         </h5>
-                                        <div class="ac-content" style="display: none;">
+                                        <div class="ac-content">
                                             <p>Annual <?= $edition['event_name']; ?> in <b><?= $edition['town_name'] . "</b>, " . $edition['province_abbr']; ?>.</p>
                                             <p>
                                                 <b>When:</b> <?= date("l, d F Y", strtotime($edition['edition_date'])); ?><br>

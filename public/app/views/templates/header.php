@@ -172,7 +172,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                 </li>
                                 <li>
                                     <div id="user-profile" class="p-dropdown">
-                                        <a href="<?= base_url('user/profile'); ?>"><i class="icon-user11"></i></a>
+                                        <a href="#"><i class="icon-user11"></i></a>
                                         <div class="p-dropdown-content ">
                                             <div class="widget-profile">
                                                 <?php
@@ -196,9 +196,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                                         You are not currently logged in
                                                     </div>
                                                     <hr>
-                                                    <div class="cart-buttons text-right">
-                                                        <a href="<?= base_url('login'); ?>" class="btn btn-xs">Login</a>
-                                                        <a href="<?= base_url('register'); ?>" class="btn btn-xs btn-light">Register</a>
+                                                    <div class="cart-buttons" style="padding-right: 0;">
+                                                        <a href="<?= base_url('login'); ?>" class="btn btn-xs m-l-0">Login</a>
+                                                        <a href="<?= base_url('region/switch'); ?>" class="btn btn-xs btn-light m-l-0 m-r-0">Region Select</a>
                                                     </div>
                                                     <?php
                                                 }

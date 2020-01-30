@@ -105,7 +105,7 @@ $this->load->view('templates/search_form');
                 <div class="tabs p-r-20">
                     <ul class="nav nav-tabs nav-justified text-left" id="myTab">
                         <?php
-                        $lock=false;
+                        $lock = false;
                         foreach ($upcoming_events as $year => $year_list) {
                             foreach ($year_list as $month => $month_list) {
                                 foreach ($month_list as $day => $edition_list) {
@@ -113,7 +113,7 @@ $this->load->view('templates/search_form');
                                     $act = "";
                                     if (($day === array_key_first($month_list)) && (!$lock)) {
                                         $act = "active";
-                                        $lock=true;
+                                        $lock = true;
                                     }
                                     ?>
                                     <li class="nav-item">
@@ -128,14 +128,14 @@ $this->load->view('templates/search_form');
                     </ul>
                     <div class="tab-content">
                         <?php
-                        $lock=false;
+                        $lock = false;
                         foreach ($upcoming_events as $year => $year_list) {
                             foreach ($year_list as $month => $month_list) {
                                 foreach ($month_list as $day => $edition_list) {
                                     $act = "";
                                     if (($day === array_key_first($month_list)) && (!$lock)) {
                                         $act = "active";
-                                        $lock=true;
+                                        $lock = true;
                                     }
                                     ?>
                                     <div id="day<?= $day; ?>" class="tab-pane fade show <?= $act; ?>">
@@ -168,7 +168,7 @@ $this->load->view('templates/search_form');
                     </div>
                 </div>
                 <div class="text-center  p-t-20 p-b-20">
-                    <a href="<?= base_url('race/upcoming');?>" class="btn btn-colored">Show more</a>
+                    <a href="<?= base_url('race/upcoming'); ?>" class="btn btn-colored">Show more</a>
                 </div>
             </div>
             <div class="col-lg-5">
@@ -301,14 +301,17 @@ $this->load->view('templates/search_form');
                 <div class="form-group mx-sm-3 m-t-20">
                     <label for="email_sub" class="sr-only">Email</label>
                     <input class="form-control" id="email_sub" name="user_email" placeholder="info@example.com" type="email" required="" value="<?= $rr_cookie['sub_email']; ?>">
+                    <?php
+                    $data = array(
+                        'type' => 'submit',
+                        'content' => 'Subscribe',
+                        'class' => 'btn m-t-20',
+                    );
+                    echo form_button($data);
+                    ?>
+
                 </div>
                 <?php
-                $data = array(
-                    'type' => 'submit',
-                    'content' => 'Subscribe',
-                    'class' => 'btn m-t-20',
-                );
-                echo form_button($data);
                 echo form_close();
                 ?>
             </div>
@@ -326,7 +329,7 @@ $this->load->view('templates/search_form');
             </span>
         </div>
         <div class="text-center p-b-20">
-            <a href="<?= base_url("region/switch");?>" class="btn btn-lg btn-colored">Show me How</a>
+            <a href="<?= base_url("region/switch"); ?>" class="btn btn-lg btn-colored">Show me How</a>
         </div>
         <!--                    <div class="row">
                                 <div class="col-lg-4">

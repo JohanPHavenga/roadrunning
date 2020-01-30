@@ -44,6 +44,10 @@
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">  
                 <?php
+                if (!empty($logged_in_user)) {
+                    // PROFILE WIDGET
+                    $this->load->view('widgets/profile');
+                }
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
                 ?>

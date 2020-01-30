@@ -80,20 +80,21 @@ class Contact extends MY_Controller {
 
     // SEND CONFIRMATION EMAIL
     private function send_contact_email($email_data) {
-        // test email
+        // send to info@roadrunning
         $data = [
-            "to" => $email_data['user_email'],
+            "to" => $this->ini_array['email']['from_address_server'],
             "body" => "<h3>Contact form</h3><p>"
             . "<b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
             . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
             . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . nl2br($email_data['user_message']) . "</p>",
             "subject" => "Enquiry from RoadRunning.co.za #". uniqid(),
-        ];
+            "from" => $email_data['user_email'],
+            "from_name" => $email_data['user_name']." ".$email_data['user_surname'],
+        ];        
+        $this->set_email($data);
         
         // send mail to user
-        $this->set_email($data);
-        // send mail to info@roadrunning
-        $data['to'] = $this->ini_array['email']['from_address'];
+        $data['to'] = $email_data['user_email'];
         $this->set_email($data);
 
         return true;
@@ -155,7 +156,8 @@ class Contact extends MY_Controller {
     // SEND EVENT EMAIL
     private function send_event_email($email_data, $edition_data) {
         $data = [
-            "to" => $edition_data['user_email'],
+            "to" => $edition_data['user_email'].",".$this->ini_array['email']['from_address_server'],
+//            "cc" => $this->ini_array['email']['from_address_server'],
             "subject" => $edition_data['annual_name']. " - Enquiry from RoadRunning.co.za #". uniqid(),
             "body" => "<p>Hello,</p>"
             . "<p>Please see below for an enquiry send from the "
@@ -170,11 +172,7 @@ class Contact extends MY_Controller {
             "from_name" => $email_data['user_name']." ".$email_data['user_surname'],
         ];
         // send mail to organiser
-//        $this->set_email($data);
-        // send mail to user
-        $data['to'] = $email_data['user_email'];
         $this->set_email($data);
-
         return true;
     }
 

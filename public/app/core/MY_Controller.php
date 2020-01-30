@@ -187,6 +187,9 @@ class MY_Controller extends CI_Controller {
             if (isset($data['to_name'])) {
                 $emailque_data['emailque_to_name'] = $data['to_name'];
             }
+            if (isset($data['cc'])) {
+                $emailque_data['emailque_cc_address'] = $data['cc'];
+            }
             $params = [
                 "action" => "add",
                 "data" => $emailque_data,
@@ -769,9 +772,11 @@ EOT;
         switch ($usersub_data['linked_to']) {
             case "newsletter":
                 $switch = " our <strong>monthly newletter</strong>.";
+                $subject = "Newsletter subscription successful";
                 break;
             case "edition":
                 $switch = " updates regarding the <strong>" . $edition_data['edition_name'] . "</strong> event.";
+                $subject = "Added to " . $edition_data['edition_name']. " mailing list";
                 break;
         }
         $body_arr[] = "Hi " . $user_data['user_name'] . ",<br>";
@@ -783,7 +788,7 @@ EOT;
 
         $data = [
             "to" => $user_data['user_email'],
-            "subject" => ucfirst($usersub_data['linked_to']) . " subscription successful",
+            "subject" => $subject,
             "body" => $body,
             "from" => $this->ini_array['email']['from_address_server'],
             "from_name" => $this->ini_array['email']['from_name_server'],
