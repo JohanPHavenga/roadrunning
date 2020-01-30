@@ -23,7 +23,7 @@
                     <div class="col-lg-12">
 
                         <?php
-                        if (!isset($route_maps)) {
+                        if (empty($route_maps)) {
                             $mailing_list_notice = "<p>If you would like to be notified once route maps are loaded, "
                                     . "please enter your email below or to the right to be added to the "
                                     . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";
@@ -56,7 +56,7 @@
                         } else {
                             ?>
                             <div role="alert" class="m-b-30 alert alert-success">
-                                <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>Route maps has been loaded! Click below to view</b></div>
+                                <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>Route Maps has been loaded! Click below to view</b></div>
                             <?php
                             if (isset($route_maps['edition'])) {
                                 ?>

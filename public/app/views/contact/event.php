@@ -77,6 +77,7 @@
                         ]);
                         ?>
                     </div>
+                    <div class="form-group g-recaptcha" data-sitekey="6LcxdoYUAAAAAADszn1zvLq3C9UFfwnafqzMWYoV"></div>
                     <?php
                     $data = array(
                         'id' => 'form-submit',
@@ -104,8 +105,8 @@
             <div class="sidebar col-lg-3">  
                 <?php
                 // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Receive race notification";
-                $this->load->view('widgets/subscribe', $data_to_widget);
+//                $data_to_widget['title'] = "Receive race notification";
+//                $this->load->view('widgets/subscribe', $data_to_widget);
 
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');

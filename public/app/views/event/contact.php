@@ -89,8 +89,15 @@
                                     'required' => '',
                                     'rows' => 5,
                                 ]);
+                                // hidden field for the slug
+                                echo form_input([
+                                    'name' => 'edition_name',
+                                    'type' => 'hidden',
+                                    'value' => $edition_data['edition_name'],
+                                ]);
                                 ?>
                             </div>
+                            <div class="form-group g-recaptcha" data-sitekey="6LcxdoYUAAAAAADszn1zvLq3C9UFfwnafqzMWYoV"></div>
                             <?php
                             $data = array(
                                 'id' => 'form-submit',

@@ -32,6 +32,7 @@ class Event extends MY_Controller {
             $this->data_to_views['slug'] = $slug;
             $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
             $this->data_to_views['subscribe_url'] = base_url("user/subscribe/event/" . $slug);
+            $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
         }
 
         // check vir sub-page
@@ -97,14 +98,13 @@ class Event extends MY_Controller {
         if ($edition_data['edition_info_status'] == 11) {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
-        if ((isset($this->data_to_views['url_list'][8])) || (isset($this->data_to_views['file_list'][7]))) {
-            $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
-        }
+        $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
+        
         if ((isset($this->data_to_views['url_list'][2])) || (isset($this->data_to_views['file_list'][2]))) {
             $this->data_to_views['flyer'] = $this->get_flyer_arr($slug);
         }
 
-//        wts($this->data_to_views['url_list'],true);
+//        wts($this->data_to_views['route_maps'],true);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

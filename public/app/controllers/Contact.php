@@ -110,6 +110,7 @@ class Contact extends MY_Controller {
             $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
             $this->data_to_views['cancel_url'] = base_url("event/" . $slug);
         }
+        $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
 
         $this->data_to_views['edition_data'] = $this->edition_model->get_edition_detail($edition_sum['edition_id']);
 
@@ -126,6 +127,7 @@ class Contact extends MY_Controller {
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email');
         $this->form_validation->set_rules('user_message', 'Message', 'trim|required');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {

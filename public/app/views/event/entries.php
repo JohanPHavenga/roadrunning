@@ -28,7 +28,13 @@
                             <p>Want to get notified once entries open? Enter your email below or to the right.</p>
                             <?php
                         } else {
-                            if (isset($edition_data['entrytype_list'][4]) && isset($url_list[5])) {
+                            if (
+                                    isset($edition_data['entrytype_list'][4]) &&
+                                    isset($url_list[5]) &&
+                                    isset($date_list[3][0]['date_start']) &&
+                                    (strtotime($date_list[3][0]['date_start']) < time()) &&
+                                    (strtotime($date_list[3][0]['date_end']) > time())
+                            ) {
                                 ?>
                                 <p>
                                     <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover">Enter online
@@ -41,10 +47,18 @@
                                 <?php
                                 // Online entries
                                 if (isset($edition_data['entrytype_list'][4])) {
+                                    if (isset($date_list[3][0]['date_start']) && strtotime($date_list[3][0]['date_start']) > time()) {
+                                        echo "<li>Online entries will open on <b style='color: red;'>" . fdateHumanFull($date_list[3][0]['date_start'], true) . " </b>";
+                                    }
+                                    if (!isset($date_list[3][0]['date_start']) && strtotime($date_list[3][0]['date_end']) < time()) {
+                                        echo "<li>Online entries will <b>open soon</b>";
+                                    }
                                     if (isset($url_list[5])) {
-                                        echo "<li>Online entries close on <b>" . fdateHumanFull($date_list[3][0]['date_end'], true) . "</b></li>";
-                                    } else {
-                                        echo "<li>Online entries to <b>open soon</b></li>";
+                                        $d='';
+                                        if (strtotime($date_list[3][0]['date_end']) < time()) {
+                                            $d = "d";
+                                        }
+                                        echo "<li>Online entries close$d on <b>" . fdateHumanFull($date_list[3][0]['date_end'], true) . "</b></li>";
                                     }
                                 } else {
                                     echo "<li class='text-danger'>No online entries available</li>";

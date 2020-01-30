@@ -137,6 +137,14 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         </form>
                     </div>
                     <!-- end: Footer widget area 5 --> 
+                    
+                    <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
+                    <div class="m-b-10 m-r-20" style="padding: 10px; background-color: #fff; float: left;">
+                        <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
+                            <img src='<?=base_url("assets/img/snapscan_LAzMFdGZ.png");?>' /> 
+                        </a>
+                    </div>
+                        <p style=''>Consider supporting the wesbite via SnapScan</p>
                 </div>
             </div>
         </div>
