@@ -734,6 +734,7 @@ EOT;
                 $email = $this->set_subscribe_confirmation_email($usersubscription_data);
                 switch ($linked_to) {
                     case "edition":
+                    case "event":
                         $alert = "Thank you. You have been added to the mailing list for this race";
                         break;
                     case "newsletter":
@@ -759,14 +760,14 @@ EOT;
         ]);
     }
 
-    private function set_subscribe_confirmation_email($usersub_data) {
+    private function set_subscribe_confirmation_email($usersub_data) {        
         $this->load->model('user_model');
         $this->load->model('emailque_model');
         $this->load->model('edition_model');
         // get user data
         $user_data = $this->user_model->get_user_detail($usersub_data['user_id']);
         // get edition_data
-        if ($usersub_data['linked_to'] == "edition") {
+        if (($usersub_data['linked_to'] == "edition")||($usersub_data['linked_to'] == "event") ) {
             $this->load->model('edition_model');
             $edition_data = $this->edition_model->get_edition_sum($usersub_data['linked_id']);
         }
@@ -777,6 +778,7 @@ EOT;
                 $subject = "Newsletter subscription successful";
                 break;
             case "edition":
+            case "event":
                 $switch = " updates regarding the <strong>" . $edition_data['edition_name'] . "</strong> event.";
                 $subject = "Added to " . $edition_data['edition_name'] . " mailing list";
                 break;
@@ -796,7 +798,7 @@ EOT;
             "from_name" => $this->ini_array['email']['from_name_server'],
         ];
 
-        $this->set_email($data);
+//        $this->set_email($data);
         return $this->set_email($data);
     }
 
