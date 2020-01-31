@@ -22,6 +22,7 @@ class Sitemap extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_01";
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "Sitemap";
+        $this->data_to_views['meta_description'] = "Sitemap linking to all the pages on the website";
 
         foreach ($this->data_to_views['edition_arr'] as $year => $year_list) {
 

@@ -389,7 +389,7 @@ EOT;
                 "changefreq" => "yearly",
                 "sub-menu" => [
                     "contact-us" => [
-                        "display" => "Contact Us",
+                        "display" => "Contact Me",
                         "loc" => base_url("contact"),
                         "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
                         "priority" => 0.8,
@@ -485,13 +485,13 @@ EOT;
                 "priority" => 0.2,
                 "changefreq" => "yearly",
             ],
-            "disclaimer" => [
-                "display" => "Disclaimer",
-                "loc" => base_url("disclaimer"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
-                "priority" => 0.2,
-                "changefreq" => "yearly",
-            ],
+//            "disclaimer" => [
+//                "display" => "Disclaimer",
+//                "loc" => base_url("disclaimer"),
+//                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+//                "priority" => 0.2,
+//                "changefreq" => "yearly",
+//            ],
         ];
 
         $this->session->set_userdata("static_pages", $static_pages);
@@ -798,8 +798,8 @@ EOT;
             "from_name" => $this->ini_array['email']['from_name_server'],
         ];
 
-//        $this->set_email($data);
-        return $this->set_email($data);
+        $mail_id=$this->set_email($data);
+        return $mail_id;
     }
 
 }

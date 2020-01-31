@@ -15,6 +15,8 @@ class Login extends MY_Controller {
             ]);
             redirect("/logout/confirm");
         } else {
+            $this->data_to_views['page_title'] = "Logout";
+            $this->data_to_views['meta_description'] = "Logged out of RoadRunning.co.za";
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('login/logout', $this->data_to_views);
@@ -35,7 +37,8 @@ class Login extends MY_Controller {
         $this->load->model('role_model');
         $this->load->model('history_model');
         $this->load->model('region_model');
-        $this->data_to_views['page_title'] = "User Login";
+        $this->data_to_views['page_title'] = "Login";
+        $this->data_to_views['meta_description'] = "Log into RoadRunning.co.za";
         $this->data_to_views['form_url'] = base_url('login/userlogin/submit');
         $this->data_to_views['error_url'] = base_url('login/userlogin');
         $this->data_to_views['success_url'] = base_url();

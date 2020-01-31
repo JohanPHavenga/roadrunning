@@ -32,7 +32,8 @@ class Event extends MY_Controller {
             $this->data_to_views['slug'] = $slug;
             $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
             $this->data_to_views['subscribe_url'] = base_url("user/subscribe/event/" . $slug);
-            $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
+            $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+            $this->data_to_views['is_event_page'] = 1;
         }
 
         // check vir sub-page
@@ -99,19 +100,32 @@ class Event extends MY_Controller {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
         $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
-        
+
         if ((isset($this->data_to_views['url_list'][2])) || (isset($this->data_to_views['file_list'][2]))) {
             $this->data_to_views['flyer'] = $this->get_flyer_arr($slug);
         }
 
 //        wts($this->data_to_views['route_maps'],true);
 
+        $this->data_to_views['meta_description']=$this->formulate_meta_description($this->data_to_views['edition_data']);
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
         $this->load->view('templates/page_menu', $this->data_to_views);
         $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
+    }
+    
+    function formulate_meta_description($edition_data) {
+//        wts($edition_data['race_summary']);
+//        wts($edition_data,1);
+        $return = "Listing for the annual " .
+                $edition_data['event_name'] . " in " .
+                $edition_data['town_name'] . ", " .
+                $edition_data['province_name'] . " on "  .
+                fdateHumanFull($edition_data['edition_date']). " starting from " .
+                ftimeSort($edition_data['race_summary']['times']['start']);
+        return $return;
     }
 
     private function get_result_arr($slug) {
@@ -173,7 +187,7 @@ class Event extends MY_Controller {
 
         return $route_maps;
     }
-    
+
     private function get_flyer_arr($slug) {
         $flyer_list = [];
         if (isset($this->data_to_views['file_list'][2])) {
@@ -542,6 +556,7 @@ class Event extends MY_Controller {
             $this->data_to_views['banner_img'] = "run_04";
             $this->data_to_views['banner_pos'] = "40%";
             $this->data_to_views['page_title'] = "Add race listing";
+            $this->data_to_views['meta_description'] = "Are you a race organiser? Please send us the details of your event and we will get it listed on the site";
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->banner_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);

@@ -17,7 +17,7 @@ class Main extends MY_Controller {
 
         // featured events
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where_in" => ["region_id" => $this->session->region_selection,"edition_status" => [1,3,4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
             "limit" => "5",
         ];
@@ -25,7 +25,7 @@ class Main extends MY_Controller {
 
         // upcoming events
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where_in" => ["region_id" => $this->session->region_selection,"edition_status" => [1,3,4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("9 days")), "edition_status" => 1],
             "order_by" => ["editions.edition_date" => "ASC"],
         ];
@@ -34,7 +34,7 @@ class Main extends MY_Controller {
 //        wts($this->data_to_views['upcoming_events'],true);
         // last edited
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where_in" => ["region_id" => $this->session->region_selection,"edition_status" => [1,3,4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "editions.updated_date > " => date("Y-m-d H:i:s", strtotime("-1 year"))],
             "order_by" => ["editions.updated_date" => "DESC"],
             "limit" => 10,
@@ -67,6 +67,7 @@ class Main extends MY_Controller {
             $this->data_to_views['page_title'] = $this->session->flashdata('alert');
         } else {
             $this->data_to_views['page_title'] = "404 Error";
+        $this->data_to_views['meta_description'] = "There has been an error";
         }
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -79,6 +80,7 @@ class Main extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_02";
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "About Me";
+        $this->data_to_views['meta_description'] = "A little bit more about the creator of the site";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -90,6 +92,7 @@ class Main extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_03";
         $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['page_title'] = "Frequently Asked Questions";
+        $this->data_to_views['meta_description'] = "A few frequently asked questions answered";
         $this->data_to_views['open'] = $open;
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -100,6 +103,7 @@ class Main extends MY_Controller {
 
     public function newsletter() {
         $this->data_to_views['page_title'] = "Newsletter Subscription";
+        $this->data_to_views['meta_description'] = "Subscribe to your monthly newsletter";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -112,6 +116,7 @@ class Main extends MY_Controller {
         $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['companyName'] = "RoadRunningZA";
         $this->data_to_views['page_title'] = "Terms & Conditions";
+        $this->data_to_views['meta_description'] = "Site use Terms & Conditions";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -148,6 +153,7 @@ class Main extends MY_Controller {
         }
 
         $this->data_to_views['page_title'] = $t_prog_text;
+        $this->data_to_views['meta_description'] = "Link through to ".$t_prog_text."s from Coach Parry";
         $this->data_to_views['coach_parry_link'] = $t_prog_link;
 
         $this->load->view($this->header_url, $this->data_to_views);
@@ -155,33 +161,6 @@ class Main extends MY_Controller {
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/training_programs', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
-    }
-
-    public function site_version() {
-        $this->load->model('region_model');
-        $this->data_to_views['region_dropdown'] = $this->region_model->get_region_dropdown();
-        $this->data_to_views['form_url'] = base_url("main/site_version");
-
-        $this->form_validation->set_rules('site_version[]', 'Region', 'required|greater_than[0]');
-
-        // load correct view
-        if ($this->form_validation->run() === FALSE) {
-            $this->load->view($this->header_url, $this->data_to_views);
-            $this->load->view('main/site_version', $this->data_to_views);
-            $this->load->view($this->footer_url, $this->data_to_views);
-        } else {
-            $this->session->set_flashdata([
-                'alert' => "Site version updated",
-                'status' => "success",
-            ]);
-            if ($this->session->user['logged_in'] == true) {
-                $this->region_model->set_user_region($this->session->user['user_id'], $this->input->post("site_version"));
-            }
-            $this->session->set_userdata("region_selection", $this->input->post("site_version"));
-            $this->load->view($this->header_url, $this->data_to_views);
-            $this->load->view('main/site_version', $this->data_to_views);
-            $this->load->view($this->footer_url, $this->data_to_views);
-        }
     }
 
     private function get_quote_data($count) {

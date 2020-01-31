@@ -21,6 +21,7 @@ class Region extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_04";
         $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['page_title'] = "Region List";
+        $this->data_to_views['meta_description'] = "List of all available regions and running races in them";
 
         $this->data_to_views['region_list'] = $this->region_model->get_region_list(true);
         unset($this->data_to_views['region_list']["No Province"]);
@@ -87,13 +88,14 @@ class Region extends MY_Controller {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
             }
             $region_pages = $this->session->region_pages;
-            $this->data_to_views['page_title'] = "Races in " . $region_name . " region";
+            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region";
         } else {
             if (!isset($region_name)) {
                 $region_name = ucwords(str_replace("-", " ", $slug));
             }
-            $this->data_to_views['page_title'] = "Races in " . $region_name . " region";
+            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region";
         }
+        $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region";
 
         // GET REGION LIST FOR FOOTER        
         $this->data_to_views['region_by_province_list'] = $this->region_model->get_region_list(true);
@@ -121,6 +123,7 @@ class Region extends MY_Controller {
 
     public function switch() {
         $this->data_to_views['page_title'] = "Region Selection";
+        $this->data_to_views['meta_description'] = "Select the regions for which you would like to limit your view to";
         $this->load->model('region_model');
         $this->data_to_views['region_dropdown'] = $this->region_model->get_region_dropdown();
         $this->data_to_views['form_url'] = base_url("region/switch");

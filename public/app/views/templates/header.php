@@ -1,9 +1,11 @@
 <?php
 if (!isset($page_title)) {
-    $page_title = "RoadRunningZA 2.0";
+    $page_title = "RoadRunning.co.za - Running without being chased";
+} else {
+//    $page_title=$page_title." - RoadRunning.co.za";
 }
 if (!isset($meta_description)) {
-    $meta_description = "Run without being chased.";
+    $meta_description = "A source of Road Running event information in South Africa. Presented in a uniform, easy to read and consume format.";
 }
 if (!isset($meta_robots)) {
     $meta_robots = "index";
@@ -21,18 +23,23 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     $topbar_class = '';
     $header_vals = '';
 }
+
+wts($page_title);
+wts($meta_description);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title><?= $page_title; ?></title>
+
+        <meta charset="utf-8" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="author" content="Johan Havenga" />
         <meta name="description" content="<?= $meta_description; ?>">
         <meta name="robots" content="<?= $meta_robots; ?>" />
-
-        <title><?= $page_title; ?></title>
 
         <!-- critical path css -->
         <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet" type="text/css">
@@ -55,7 +62,15 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="<?= base_url('assets/favicon/ms-icon-144x144.png'); ?>">
         <meta name="theme-color" content="#ffffff">
-
+        <!-- auto ads -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-8912238222537097",
+                enable_page_level_ads: true
+            });
+        </script>
+        <!-- auto ads end -->
         <?php
         if (isset($structured_data)) :
             echo $structured_data;
@@ -73,9 +88,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <div class="topbar-dropdown">
                                 <?php
                                 if ($this->session->user['logged_in']) {
-                                    echo "<a class='title' href='".base_url("user/profile")."'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
+                                    echo "<a class='title' href='" . base_url("user/profile") . "'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
                                 } else {
-                                    echo "<a class='title' href='".base_url('login')."><i class='fa fa-user'></i> Login</a>";
+                                    echo "<a class='title' href='" . base_url('login') . "><i class='fa fa-user'></i> Login</a>";
                                 }
                                 ?>
 
@@ -104,7 +119,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 <div class="header-inner">
                     <div class="container"> <!--Logo-->
                         <div id="logo">
-                            <a href="<?=base_url();?>" class="logo" data-src-dark="<?= base_url('assets/img/roadrunning_logo_dark_80.svg'); ?>">
+                            <a href="<?= base_url(); ?>" class="logo" data-src-dark="<?= base_url('assets/img/roadrunning_logo_dark_80.svg'); ?>">
                                 <img src="<?= base_url('assets/img/roadrunning_logo_80.svg'); ?>" alt="RR Logo">
                             </a>
                         </div>
@@ -136,7 +151,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                     <h3>Popular searches</h3>
                                     <?php
                                     foreach ($this->session->most_searched as $search_id => $search) {
-                                        echo "<p><a href='#' id='search_".$search_id."'>" . $search['search_term'] . " </a></p>";
+                                        echo "<p><a href='#' id='search_" . $search_id . "'>" . $search['search_term'] . " </a></p>";
                                     }
                                     ?>
                                 </div>
@@ -181,7 +196,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                                     <p class="small m-b-0">Logged in as</p>
                                                     <h4><?= $logged_in_user['user_name']; ?> <?= $logged_in_user['user_surname']; ?></h4>
                                                     <div class="cart-item">
-                                                        
+
                                                     </div>
                                                     <hr>
                                                     <div class="cart-buttons">
@@ -229,7 +244,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                                 continue;
                                             }
                                             if (isset($page['sub-menu'])) {
-                                                $d_cl="dropdown";
+                                                $d_cl = "dropdown";
                                             } else {
                                                 $d_cl = "";
                                             }
@@ -237,6 +252,13 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                             if (isset($page['sub-menu'])) {
                                                 echo '<ul class="dropdown-menu">';
                                                 foreach ($page['sub-menu'] as $sub_page) {
+                                                    // exception for race contact
+                                                    $url_bits = explode("/", uri_string());
+                                                    if (($url_bits[0] == "event") && ($sub_page['display'] == "Contact Me")) {
+                                                        echo "<li><a href='" . base_url("event/" . $slug . "/contact") . "'>Contact Organisers</a></li>";
+                                                        $sub_page['display'] = "Contact Web Admin";
+                                                    }
+
                                                     echo "<li><a href='$sub_page[loc]'>$sub_page[display]";
                                                     if (isset($sub_page['badge'])) {
                                                         echo "<span class='badge badge-danger'>$sub_page[badge]</span>";
@@ -262,3 +284,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     </div>
                 </div>
             </header>
+
+            <?php
+//                wts(current_url());
+//                wts(uri_string());
+            ?>

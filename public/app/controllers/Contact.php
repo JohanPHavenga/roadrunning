@@ -28,6 +28,7 @@ class Contact extends MY_Controller {
 
     public function index() {
         $this->data_to_views['page_title'] = "Contact Us";
+        $this->data_to_views['meta_description'] = "Use the form on this page to send us an email";
         $this->data_to_views['form_url'] = '/contact';
         $this->data_to_views['error_url'] = '/contact';
         

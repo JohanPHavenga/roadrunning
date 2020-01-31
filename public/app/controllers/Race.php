@@ -19,7 +19,7 @@ class Race extends MY_Controller {
 
     public function list($year = null, $month = null, $day = null) {
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months")),],
             "order_by" => ["edition_date" => "ASC"],
         ];
@@ -30,6 +30,7 @@ class Race extends MY_Controller {
         if ($year !== null) {
             if (is_numeric($year)) {
                 $this->data_to_views['page_title'] = "Running Races in " . $year;
+                $this->data_to_views['meta_description'] = "List of upcoming running races in " . $year;
                 $query_params = [
                     "where" => ["edition_date >= " => "$year-1-1 00:00:00", "edition_date <= " => "$year-12-31 23:59:59",],
                 ];
@@ -38,6 +39,7 @@ class Race extends MY_Controller {
                     if (is_numeric($month)) {
                         $month_name = date('F', mktime(0, 0, 0, $month, 1));
                         $this->data_to_views['page_title'] = "Running Races in " . $month_name . " " . date($year);
+                        $this->data_to_views['meta_description'] = "List of upcoming running races in " . $month_name . " " . date($year);
                         $query_params = [
                             "where" => ["edition_date >= " => "$year-$month-1 00:00:00", "edition_date <= " => date("$year-$month-t 23:59:59")],
                         ];
@@ -46,6 +48,7 @@ class Race extends MY_Controller {
                         if ($day !== null) {
                             if (is_numeric($day)) {
                                 $this->data_to_views['page_title'] = "Running Races on " . $day . " " . $month_name . " " . date($year);
+                                $this->data_to_views['meta_description'] = "List of running races on " . $day . " " . $month_name . " " . date($year);
                                 $query_params = [
                                     "where" => ["edition_date >= " => "$year-$month-$day 00:00:00", "edition_date <= " => "$year-$month-$day 23:59:59"],
                                 ];
@@ -62,6 +65,7 @@ class Race extends MY_Controller {
             }
         } else {
             $this->data_to_views['page_title'] = "Upcoming Race Calendar";
+            $this->data_to_views['meta_description'] = "List of upcoming running races in your selected regions";
         }
 
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
@@ -91,7 +95,7 @@ class Race extends MY_Controller {
 
     public function featured() {
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1,],
             "order_by" => ["edition_date" => "ASC"],
         ];
@@ -112,6 +116,7 @@ class Race extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_01";
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "Featured Races";
+        $this->data_to_views['meta_description'] = "List of featured running races in your selected regions";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -146,6 +151,7 @@ class Race extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_05";
         $this->data_to_views['banner_pos'] = "50%";
         $this->data_to_views['page_title'] = "Top 10 most views races";
+        $this->data_to_views['meta_description'] = "List of the Top 10 most viewed running races in your selected regions";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -158,7 +164,7 @@ class Race extends MY_Controller {
         if ($year) {
             $query_params = [
 //            "where" => ["edition_date >= " => date("Y-m-d H:i:s"),"edition_date < " => date("Y-m-d H:i:s", strtotime($time_span)),],
-                "where_in" => ["region_id" => $this->session->region_selection,],
+                "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
                 "order_by" => ["edition_date" => "DESC"],
             ];
             if ($year == date("Y")) {
@@ -170,8 +176,10 @@ class Race extends MY_Controller {
             $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
             $this->data_to_views['year'] = $year;
             $view = 'templates/race_accordian';
+            $this->data_to_views['meta_description'] = "List of running races that ran in $year";
         } else {
             $view = 'race/history';
+            $this->data_to_views['meta_description'] = "List of running races stretching back to when the website began in 2016";
         }
 
 
@@ -187,8 +195,8 @@ class Race extends MY_Controller {
 
     public function results() {
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
-            "where" => ["edition_date >= " => date("Y-m-d H:i:s", strtotime("-1 months")), "edition_date <= " => date("Y-m-d H:i:s"),],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1]],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s", strtotime("-2 months")), "edition_date <= " => date("Y-m-d H:i:s"),],
             "order_by" => ["edition_date" => "DESC"],
         ];
 
@@ -203,6 +211,7 @@ class Race extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_02";
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "Race Results";
+        $this->data_to_views['meta_description'] = "List of results for running races over the past 2 months in your selected regions";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -215,6 +224,7 @@ class Race extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_04";
         $this->data_to_views['banner_pos'] = "15%";
         $this->data_to_views['page_title'] = "parkrun";
+        $this->data_to_views['meta_description'] = "Description of what parkrun is and a link through to the parkrun.co.za site";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);

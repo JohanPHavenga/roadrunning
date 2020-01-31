@@ -20,6 +20,7 @@ class User extends MY_Controller {
         // load helpers / libraries        
         $this->load->library('table');
         $this->data_to_views['page_title'] = "User Profile";
+        $this->data_to_views['meta_description'] = "Information regarding the logged in user";
 
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
@@ -40,6 +41,7 @@ class User extends MY_Controller {
         // load helpers / libraries        
         $this->load->library('table');
         $this->data_to_views['page_title'] = "Edit Profile";
+        $this->data_to_views['meta_description'] = "Editing information regarding the logged in user";
 
         $this->data_to_views['form_url'] = '/user/edit';
         $this->data_to_views['error_url'] = '/user/edit';
@@ -68,7 +70,7 @@ class User extends MY_Controller {
                 $_SESSION['user'][$field] = $value;
             }
 //            wts($this->logged_in_user,1);
-            $user_data['user_id']=$this->logged_in_user['user_id'];
+            $user_data['user_id'] = $this->logged_in_user['user_id'];
             $params = [
                 "action" => "edit",
                 "user_data" => $user_data,
@@ -92,6 +94,7 @@ class User extends MY_Controller {
         $this->data_to_views['banner_img'] = "run_03";
         $this->data_to_views['banner_pos'] = "15%";
         $this->data_to_views['page_title'] = "My Results";
+        $this->data_to_views['meta_description'] = "Dashboard showing a consolidated view of your own results";
 
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
@@ -113,6 +116,7 @@ class User extends MY_Controller {
         }
         $this->load->model('usersubscription_model');
         $this->data_to_views['page_title'] = "My Subscriptions";
+        $this->data_to_views['meta_description'] = "Listing the subscriptions the logged in user is part of";
 
         // GET user subsciptions
         $newsletter_subs = $this->usersubscription_model->get_usersubscription_list($this->logged_in_user['user_id'], "newsletter");
@@ -189,12 +193,16 @@ class User extends MY_Controller {
                     $this->data_to_views['form_url'] = base_url('user/subscribe/event/' . $slug);
                     $this->data_to_views['cancel_url'] = $return_url;
                     $linked_to_id = $edition_data['edition_id'];
+                    $this->data_to_views['page_title'] = "Mailing List Addition";
+                    $this->data_to_views['meta_description'] = "Adding user to the mailing list for the " . $edition_data['edition_name'] . " event";
                 }
                 break;
             case "newsletter":
                 $return_url = base_url("newsletter");
                 $this->data_to_views['form_url'] = base_url('user/subscribe/newsletter');
                 $this->data_to_views['cancel_url'] = $return_url;
+                $this->data_to_views['page_title'] = "Newsletter Subscriptions";
+                $this->data_to_views['meta_description'] = "User subscription to the monthly newsletter";
                 $linked_to_id = 0;
                 break;
             default:
@@ -279,6 +287,7 @@ class User extends MY_Controller {
         $this->load->model('user_model');
         $this->load->model('role_model');
         $this->data_to_views['page_title'] = "Register";
+        $this->data_to_views['meta_description'] = "Register as a new user for roadrunning.co.za";
         $this->data_to_views['form_url'] = '/register';
         $this->data_to_views['error_url'] = '/register';
 
@@ -345,7 +354,8 @@ class User extends MY_Controller {
 
     // PASSWORD RESET 
     public function forgot_password() {
-        $this->data_to_views['page_title'] = "Forgot Password";
+        $this->data_to_views['page_title'] = "Password Reset";
+        $this->data_to_views['meta_description'] = "Reset your password for roadrunning.co.za";
         $this->data_to_views['form_url'] = '/forgot-password';
         $this->data_to_views['error_url'] = '/forgot-password';
 
@@ -391,7 +401,8 @@ class User extends MY_Controller {
             redirect("/404");
             die();
         }
-        $this->data_to_views['page_title'] = "Reset Password";
+        $this->data_to_views['page_title'] = "Set New Password";
+        $this->data_to_views['meta_description'] = "Setting a new password for roadrunning.co.za";
         $this->data_to_views['form_url'] = '/user/reset_password/' . $guid;
         $this->data_to_views['error_url'] = '/user/reset_password/' . $guid;
         $user_id = $this->user_model->check_user_guid($guid);
@@ -460,6 +471,8 @@ class User extends MY_Controller {
             $this->data_to_views['conf_type'] = "guid_not_found";
         }
 
+        $this->data_to_views['page_title'] = "Email Confirm";
+        $this->data_to_views['meta_description'] = "Confirm your email address";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view('user/confirmation', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
