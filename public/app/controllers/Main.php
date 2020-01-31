@@ -133,6 +133,9 @@ class Main extends MY_Controller {
                 $t_prog_text = "Half-Marathon Training Program";
                 $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?ref=9";
                 break;
+            case "10km":
+            case "10km road":                
+            case "10km-road":
             case "10km-run":
             case "10km run":
                 $t_prog_text = "10K Training Program";
