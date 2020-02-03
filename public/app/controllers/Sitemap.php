@@ -1,7 +1,7 @@
 <?php
 
 // public mailer class to get list from mailques table and send it out
-class Sitemap extends MY_Controller {
+class Sitemap extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

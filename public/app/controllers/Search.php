@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Search extends MY_Controller {
+class Search extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

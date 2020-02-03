@@ -1,6 +1,6 @@
 <?php
 
-class File extends MY_Controller {
+class File extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

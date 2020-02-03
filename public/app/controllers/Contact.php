@@ -1,6 +1,6 @@
 <?php
 
-class Contact extends MY_Controller {
+class Contact extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

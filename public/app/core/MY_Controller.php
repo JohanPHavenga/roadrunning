@@ -1,6 +1,103 @@
 <?php
 
+//------------------------------------------------------------------------------
+// CENTRAL MY CONTROLLER w. Admin and Frontend sections
+//------------------------------------------------------------------------------
 class MY_Controller extends CI_Controller {
+
+    function __construct() {
+        parent::__construct();
+    }
+
+    public function set_email_body($body) {
+        $year = date("Y");
+        $html = <<<EOT
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns = "http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv = "Content-Type" content = "text/html; charset=utf-8" />
+<meta name = "viewport" content = "width=device-width, initial-scale=1.0"/>
+<style>a, a[x-apple-data-detectors] { color:inherit!important;
+font-family:inherit!important;
+font-size:inherit!important;
+font-weight:inherit!important;
+line-height:inherit!important;
+text-decoration:none!important;
+}</style>
+</head>
+<body style = "background-color:#FFFFFF;margin:0;padding:0;">
+<table cellpadding = "0" cellspacing = "0" border = "0" width = "100%" bgcolor = "#FFFFFF" style = "margin:0;"><tbody><tr><td style = "padding:0;" align = "center">
+<table cellpadding = "0" cellspacing = "0" border = "0" align = "center" bgcolor = "#FFFFFF" style = "margin:0; max-width: 600px; width: 100%;"><tbody><tr><td style = "padding:0 20px;" align = "left">
+<div style = "margin:0 0 25px 0;"><img alt = "RoadRunningZA" width = "72" height = "72" src = "https://www.roadrunning.co.za/img/favicon/android-icon-72x72.png" /></div>
+
+<div style = "color:#000000;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:16px;line-height:25.6px;text-align:left;">
+$body
+</div>
+
+<div style = "border-top: 2px solid #E5E5E5;color:#111111;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:11px;line-height:14px;margin:30px 0;">
+<div style = "margin:20px 0;"><a href='https://www.roadrunning.co.za/' title='Go to RoadRunningZA'><img alt = "RoadRunningZA" width = "110" height = "22" src = "https://www.roadrunning.co.za/img/logo-vec-22.png" /></a></div>
+<div style = "margin:20px 0;" > Copyright &copy;
+$year RoadRunningZA. All rights reserved.</div>
+</div>
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+</body>
+</html>
+EOT;
+        return $html;
+    }
+
+    public function chronologise_data($data_arr, $date_field) {
+        $return_data = [];
+        if ($data_arr) {
+            foreach ($data_arr as $id => $row) {
+                $year = date("Y", strtotime($row[$date_field]));
+                $month = date("F", strtotime($row[$date_field]));
+                $day = date("d", strtotime($row[$date_field]));
+
+                $return_data[$year][$month][$day][$id] = $row;
+            }
+        }
+        return $return_data;
+    }
+
+    // ==============================================================================================
+    // SESSION CHECKS
+    // ==============================================================================================  
+    public function check_if_user_is_logged_in($type = "web") {
+        // check of user ingelog is. set view variable to user
+        if (isset($_SESSION['user']['logged_in'])) {
+            if ($type == "admin") {
+                // check for Admin is role list
+                if (in_array(1, $_SESSION['user']['role_list'])) {
+                    return $_SESSION['user'];
+                } else {
+                    return false;
+                }
+            } else {
+                return $_SESSION['user'];
+            }
+        } else {
+            return $user['user']['logged_in'] = false;
+        }
+    }
+
+    public function check_value_refresh() {
+        // check if data was last retrieved a day ago or more, then unsets data to be retrieved again
+        if ((!$this->session->has_userdata('session_value_refresh')) || ($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
+            $this->session->set_userdata("session_value_refresh", time());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+//------------------------------------------------------------------------------
+//  FRONT END CONTROLLER
+//------------------------------------------------------------------------------
+class Frontend_Controller extends MY_Controller {
 
     public $data_to_views = [];
     public $header_url = "/templates/header";
@@ -53,28 +150,6 @@ class MY_Controller extends CI_Controller {
             'status' => $status,
         ]);
         redirect('404');
-    }
-
-    // ==============================================================================================
-    // SESSION CHECKS
-    // ==============================================================================================  
-    private function check_if_user_is_logged_in() {
-        // check of user ingelog is. set view variable to user
-        if (isset($_SESSION['user']['logged_in'])) {
-            return $_SESSION['user'];
-        } else {
-            return $user['user']['logged_in'] = false;
-        }
-    }
-
-    private function check_value_refresh() {
-        // check if data was last retrieved a day ago or more, then unsets data to be retrieved again
-        if ((!$this->session->has_userdata('session_value_refresh')) || ($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
-            $this->session->set_userdata("session_value_refresh", time());
-            return true;
-        } else {
-            return false;
-        }
     }
 
     // ==============================================================================================
@@ -201,44 +276,6 @@ class MY_Controller extends CI_Controller {
         } else {
             die("Missing required fields to send email: MY_Controller->send_mail");
         }
-    }
-
-    private function set_email_body($body) {
-        $year = date("Y");
-        $html = <<<EOT
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns = "http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv = "Content-Type" content = "text/html; charset=utf-8" />
-<meta name = "viewport" content = "width=device-width, initial-scale=1.0"/>
-<style>a, a[x-apple-data-detectors] { color:inherit!important;
-font-family:inherit!important;
-font-size:inherit!important;
-font-weight:inherit!important;
-line-height:inherit!important;
-text-decoration:none!important;
-}</style>
-</head>
-<body style = "background-color:#FFFFFF;margin:0;padding:0;">
-<table cellpadding = "0" cellspacing = "0" border = "0" width = "100%" bgcolor = "#FFFFFF" style = "margin:0;"><tbody><tr><td style = "padding:0;" align = "center">
-<table cellpadding = "0" cellspacing = "0" border = "0" align = "center" bgcolor = "#FFFFFF" style = "margin:0; max-width: 600px; width: 100%;"><tbody><tr><td style = "padding:0 20px;" align = "left">
-<div style = "margin:0 0 25px 0;"><img alt = "RoadRunningZA" width = "72" height = "72" src = "https://www.roadrunning.co.za/img/favicon/android-icon-72x72.png" /></div>
-
-<div style = "color:#000000;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:16px;line-height:25.6px;text-align:left;">
-$body
-</div>
-
-<div style = "border-top: 2px solid #E5E5E5;color:#111111;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:11px;line-height:14px;margin:30px 0;">
-<div style = "margin:20px 0;"><a href='https://www.roadrunning.co.za/' title='Go to RoadRunningZA'><img alt = "RoadRunningZA" width = "110" height = "22" src = "https://www.roadrunning.co.za/img/logo-vec-22.png" /></a></div>
-<div style = "margin:20px 0;" > Copyright &copy;
-$year RoadRunningZA. All rights reserved.</div>
-</div>
-</td></tr></tbody></table>
-</td></tr></tbody></table>
-</body>
-</html>
-EOT;
-        return $html;
     }
 
     public function recaptcha($str = "") {
@@ -551,20 +588,6 @@ EOT;
     // CENTRAL FUNCTIONS
     // ==============================================================================================
 
-    public function chronologise_data($data_arr, $date_field) {
-        $return_data = [];
-        if ($data_arr) {
-            foreach ($data_arr as $id => $row) {
-                $year = date("Y", strtotime($row[$date_field]));
-                $month = date("F", strtotime($row[$date_field]));
-                $day = date("d", strtotime($row[$date_field]));
-
-                $return_data[$year][$month][$day][$id] = $row;
-            }
-        }
-        return $return_data;
-    }
-
     public function formulate_status_notice($edition_data) {
         $return = [];
         ;
@@ -760,14 +783,14 @@ EOT;
         ]);
     }
 
-    private function set_subscribe_confirmation_email($usersub_data) {        
+    private function set_subscribe_confirmation_email($usersub_data) {
         $this->load->model('user_model');
         $this->load->model('emailque_model');
         $this->load->model('edition_model');
         // get user data
         $user_data = $this->user_model->get_user_detail($usersub_data['user_id']);
         // get edition_data
-        if (($usersub_data['linked_to'] == "edition")||($usersub_data['linked_to'] == "event") ) {
+        if (($usersub_data['linked_to'] == "edition") || ($usersub_data['linked_to'] == "event")) {
             $this->load->model('edition_model');
             $edition_data = $this->edition_model->get_edition_sum($usersub_data['linked_id']);
         }
@@ -798,8 +821,496 @@ EOT;
             "from_name" => $this->ini_array['email']['from_name_server'],
         ];
 
-        $mail_id=$this->set_email($data);
+        $mail_id = $this->set_email($data);
         return $mail_id;
+    }
+
+}
+
+//------------------------------------------------------------------------------
+//  ADMIN CONTROLLER
+//------------------------------------------------------------------------------
+class Admin_Controller extends MY_Controller {
+
+    public $data_to_header = [];
+    public $data_to_view = [];
+    public $data_to_footer = [];
+    public $view_url = "/admin/list";
+    public $header_url = "/templates/admin/header";
+    public $footer_url = "/templates/admin/footer";
+    public $profile_url = "/admin/dashboard/profile";
+    public $logout_url = "/login/logout";
+    public $upload_path = "./uploads/admin/";
+
+    function __construct() {
+        parent::__construct();
+
+        // Check login, load back end dependencies
+        if (!$this->logged_in_user = $this->check_if_user_is_logged_in("admin")) {
+            $this->session->set_flashdata([
+                'alert' => "You are not logged in as an Admin. Please log in to continue.",
+                'status' => "danger",
+            ]);
+            redirect('/login', 'refresh');
+            exit();
+        }
+
+        // setup auto crumbs from URI
+        $segs = $this->uri->segment_array();
+        $crumb_uri = substr(base_url(), 0, -1);
+        $total_segments = $this->uri->total_segments();
+        for ($x = 1; $x <= $total_segments; $x++) {
+
+            if (($x == $total_segments) || ($x == 3)) {
+                $crumb_uri = "";
+            } else {
+                $crumb_uri .= "/" . $segs[$x];
+            }
+
+            if ($segs[$x] == "admin") {
+                $segs[$x] = "home";
+            }
+            if ($segs[$x] == "dashboard") {
+                continue;
+            }
+            if ($segs[$x] == "delete") {
+                $this->data_to_header['crumbs'] = [];
+                break;
+            }
+
+            $segs[$x] = str_replace("_", " ", $segs[$x]);
+            $this->data_to_header['crumbs'][ucwords($segs[$x])] = $crumb_uri;
+
+            if ($x == 3) {
+                break;
+            }
+        }
+
+        $this->data_to_header['menu_array'] = $this->set_admin_menu_array();
+    }
+
+    function url_disect() {
+        $url_info = [];
+        $url_info["base_url"] = base_url();
+        $url_info["url_string"] = uri_string();
+        $url_info["url_string_arr"] = explode("/", uri_string());
+
+        return $url_info;
+    }
+
+    function csv_handler($file_path) {
+        $csv = array_map('str_getcsv', file($file_path));
+        array_walk($csv, function(&$a) use ($csv) {
+            $a = array_combine($csv[0], $a);
+        });
+        array_shift($csv);
+        return $csv;
+    }
+
+    function csv_flat_table_import($file_data) {
+        foreach ($file_data as $entity) {
+            //reset($entity);
+
+            $id = array_shift($entity);
+            foreach ($entity as $key => $value) {
+                if (!empty($value)) {
+                    $user_data[$key] = $value;
+                }
+            }
+            // get ID - set action
+            if ($id > 0) {
+                $action = "edit";
+            } else {
+                $action = "add";
+                $id = 0;
+                if (isset($sum_data[$action])) {
+                    $id = max(array_keys($sum_data[$action])) + 1;
+                }
+            }
+
+            $sum_data[$action][$id] = $user_data;
+            unset($user_data);
+        }
+
+        return $sum_data;
+    }
+
+    //CHECK AND CREATE UPLOAD FOLDER
+    public function check_upload_folder($linked_to, $id) {
+        $upload_path = "./uploads/" . $linked_to . "/" . $id;
+        if (!file_exists($upload_path)) {
+            if (!mkdir($upload_path, 0777, true)) {
+                return false;
+            }
+        }
+        return $upload_path;
+    }
+
+    public function set_results_flag($linked_to, $id) {
+        $this->load->model('admin/url_model');
+        $this->load->model('admin/file_model');
+        $this->load->model('admin/race_model');
+
+        // chcek if there is a results URL
+        $has_results_url = $this->url_model->check_urltype_exists($linked_to, $id, 4);
+        $has_results_file = $this->file_model->check_filetype_exists($linked_to, $id, 4);
+
+        //this method is in MY_MODEL
+        if ($has_results_url || $has_results_file) {
+            $flag = true;
+        } else {
+            $flag = false;
+        }
+        // get edition info if the results is on race level
+        if ($linked_to == "race") {
+            $id = $this->race_model->get_edition_id($id);
+            $linked_to = "edition";
+        }
+        // set the flag
+        $set = $this->url_model->set_results_flag($linked_to, $id, $flag);
+    }
+
+    function set_admin_menu_array() {
+        return [
+            // Dashboard
+            [
+                "text" => "Dashboard",
+                "url" => 'admin',
+                "icon" => "home",
+                "seg0" => ['dashboard'],
+                "submenu" => [
+                    [
+                        "text" => "Dashboard",
+                        "url" => 'admin/dashboard',
+                        "icon" => "bar-chart",
+                    ],
+                    [
+                        "text" => "Audit",
+                        "url" => 'admin/dashboard/audit',
+                        "icon" => "bulb",
+                    ],
+                    [
+                        "text" => "Search",
+                        "url" => 'admin/dashboard/search',
+                        "icon" => "magnifier",
+                    ],
+                    [
+                        "text" => "Export Events",
+                        "url" => 'admin/event/export',
+                        "icon" => "arrow-down",
+                    ]
+                ],
+            ],
+            // Events
+            [
+                "text" => "Events Info",
+                "url" => 'admin/event',
+                "icon" => "calendar",
+                "seg0" => ['event', 'edition', 'race'],
+                "submenu" => [
+                    [
+                        "text" => "Events",
+                        "url" => 'admin/event',
+                        "icon" => "rocket",
+                    ],
+                    [
+                        "text" => "Editions",
+                        "url" => 'admin/edition',
+                        "icon" => "calendar",
+                    ],
+                    [
+                        "text" => "Races",
+                        "url" => 'admin/race',
+                        "icon" => "speedometer",
+                    ],
+                ],
+            ],
+            // Other info
+            [
+                "text" => "Other Info",
+                "url" => 'admin/town/search',
+                "icon" => "settings",
+                "seg0" => ['town', 'file', 'url', 'quote'],
+                "submenu" => [
+                    [
+                        "text" => "Towns",
+                        "url" => 'admin/town',
+                        "icon" => "home",
+                    ],
+                    [
+                        "text" => "Files",
+                        "url" => 'admin/file',
+                        "icon" => "folder-alt",
+                    ],
+                    [
+                        "text" => "URLs",
+                        "url" => 'admin/url',
+                        "icon" => "link",
+                    ],
+                    [
+                        "text" => "Venues",
+                        "url" => 'admin/venue',
+                        "icon" => "pin",
+                    ],
+                    [
+                        "text" => "Tags",
+                        "url" => 'admin/tag',
+                        "icon" => "tag",
+                    ],
+                    [
+                        "text" => "Dates",
+                        "url" => 'admin/date',
+                        "icon" => "calendar",
+                    ],
+                    [
+                        "text" => "Quotes",
+                        "url" => 'admin/quote',
+                        "icon" => "speech",
+                    ],
+                ],
+            ],
+            // Mail Queue
+            [
+                "text" => "Email Module",
+                "url" => 'admin/emailque/view/4',
+                "icon" => "envelope",
+                "seg0" => ['emailque', 'emailmerge', 'emailtemplate'],
+                "submenu" => [
+                    [
+                        "text" => "Email Merges",
+                        "url" => 'admin/emailmerge',
+                        "icon" => "envelope-open",
+                    ],
+                    [
+                        "text" => "Email Templates",
+                        "url" => 'admin/emailtemplate',
+                        "icon" => "envelope-letter",
+                    ],
+                    [
+                        "text" => "Drafts",
+                        "url" => 'admin/emailque/view/4',
+                        "icon" => "pencil",
+                    ],
+                    [
+                        "text" => "Pending",
+                        "url" => 'admin/emailque/view/5',
+                        "icon" => "login",
+                    ],
+                    [
+                        "text" => "Sent",
+                        "url" => 'admin/emailque/view/6',
+                        "icon" => "like",
+                    ],
+                    [
+                        "text" => "Failed",
+                        "url" => 'admin/emailque/view/7',
+                        "icon" => "dislike",
+                    ],
+                ],
+            ],
+            // STATIS INFO
+            [
+                "text" => "Static",
+                "url" => '',
+                "icon" => "puzzle",
+                "seg0" => ['asamember', 'role', 'racetype', 'filetype', 'urltype', 'area', 'province'],
+                "submenu" => [
+                    [
+                        "text" => "ASA Members",
+                        "url" => 'admin/asamember',
+                        "icon" => "umbrella",
+                    ],
+                    [
+                        "text" => "ASA Regulations",
+                        "url" => 'admin/asareg',
+                        "icon" => "notebook",
+                    ],
+                    [
+                        "text" => "ASA Licence Fees",
+                        "url" => 'admin/asafee',
+                        "icon" => "credit-card",
+                    ],
+                    [
+                        "text" => "Roles",
+                        "url" => 'admin/role',
+                        "icon" => "user",
+                    ],
+                    [
+                        "text" => "Entry Types",
+                        "url" => 'admin/entrytype',
+                        "icon" => "flag",
+                    ],
+                    [
+                        "text" => "Registration Types",
+                        "url" => 'admin/regtype',
+                        "icon" => "bell",
+                    ],
+                    [
+                        "text" => "Date Types",
+                        "url" => 'admin/datetype',
+                        "icon" => "calendar",
+                    ],
+                    [
+                        "text" => "Race Types",
+                        "url" => 'admin/racetype',
+                        "icon" => "compass",
+                    ],
+                    [
+                        "text" => "File Types",
+                        "url" => 'admin/filetype',
+                        "icon" => "folder",
+                    ],
+                    [
+                        "text" => "URL Types",
+                        "url" => 'admin/urltype',
+                        "icon" => "link",
+                    ],
+                    [
+                        "text" => "Tag Types",
+                        "url" => 'admin/tagtype',
+                        "icon" => "tag",
+                    ],
+                    [
+                        "text" => "Areas",
+                        "url" => 'admin/area',
+                        "icon" => "map",
+                    ],
+                    [
+                        "text" => "Regions",
+                        "url" => 'admin/region',
+                        "icon" => "map",
+                    ],
+                    [
+                        "text" => "Provinces",
+                        "url" => 'admin/province',
+                        "icon" => "globe-alt",
+                    ],
+                ],
+            ],
+            // Users
+            [
+                "text" => "Users",
+                "url" => 'admin/user',
+                "icon" => "users",
+                "seg0" => ['user', 'usersubscription'],
+                "submenu" => [
+                    [
+                        "text" => "List users",
+                        "url" => 'admin/user',
+                        "icon" => "users",
+                    ],
+                    [
+                        "text" => "User Subscriptions",
+                        "url" => 'admin/usersubscription',
+                        "icon" => "present",
+                    ],
+                ],
+            ],
+            // Results
+            [
+                "text" => "Results",
+                "url" => 'admin/result',
+                "icon" => "trophy",
+                "seg0" => ['result'],
+                "submenu" => [
+                    [
+                        "text" => "List Results",
+                        "url" => 'admin/result/view',
+                        "icon" => "list",
+                    ],
+                    [
+                        "text" => "Import Result Set",
+                        "url" => 'admin/result/import',
+                        "icon" => "login",
+                    ],
+                ],
+            ],
+            // Clubs
+            [
+                "text" => "Clubs",
+                "url" => 'admin/club',
+                "icon" => "badge",
+                "seg0" => ['club'],
+            ],
+            // Sponsors
+            [
+                "text" => "Sponsors",
+                "url" => 'admin/sponsor',
+                "icon" => "wallet",
+                "seg0" => ['sponsor'],
+            ],
+            // Parkruns
+            [
+                "text" => "Parkruns",
+                "url" => 'admin/parkrun',
+                "icon" => "direction",
+                "seg0" => ['parkrun'],
+            ],
+        ];
+    }
+
+    function get_event_field_list() {
+        return ['event_id', 'event_name', 'town_id'];
+    }
+
+    function get_edition_field_list() {
+        return ['edition_id', 'edition_name', 'edition_date', 'latitude_num', 'longitude_num', 'edition_url', 'edition_address'];
+    }
+
+    function get_race_field_list() {
+        return ['race_id', 'race_name', 'race_distance', 'race_time_start', 'racetype_id'];
+    }
+
+    function get_contact_field_list() {
+        return ['user_id', 'user_name', 'user_surname', 'user_email'];
+    }
+
+    function get_asa_member_field_list() {
+        return ['asa_member_id'];
+    }
+
+    public function race_fill_blanks($race_data, $edition_info) {
+        $this->load->model('admin/asareg_model');
+        $this->load->model('admin/asafee_model');
+        $this->load->model('admin/racetype_model');
+
+        // check for emtpy race_name 
+        if (empty($race_data['race_name'])) {
+            if (!isset($race_data['racetype_name'])) {
+                $racetype_data = $this->racetype_model->get_racetype_detail($race_data['racetype_id']);
+                $racetype_name = $racetype_data['racetype_name'];
+            } else {
+                $racetype_name = $race_data['racetype_name'];
+            }
+            $race_data['race_name'] = $this->get_race_name_from_status($race_data['race_name'], $race_data['race_distance'], $racetype_name, $race_data['race_status']);
+        }
+        // check for empty minimum age
+        if (empty($race_data['race_minimum_age'])) {
+            // get asa_reg_id
+            $asareg_id = $this->asareg_model->get_asareg_id_from_distance($race_data['race_distance']);
+            // get asa_reg list
+            $asareg_list = $this->asareg_model->get_asareg_list();
+            $race_data['race_minimum_age'] = $asareg_list[$asareg_id]['asa_reg_minimum_age'];
+        }
+
+        // check senior fees
+        if (($race_data['race_fee_senior_licenced'] > 0) && ($race_data['race_fee_senior_unlicenced'] == 0)) {
+
+            $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance']);
+            if ($licence_fee > 0) {
+                $race_data['race_fee_senior_unlicenced'] = $race_data['race_fee_senior_licenced'] + $licence_fee;
+            }
+        }
+
+        // check junior fees
+        if (($race_data['race_fee_junior_licenced'] > 0) && ($race_data['race_fee_junior_unlicenced'] == 0)) {
+            $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance'], "asa_fee_jnr");
+            if ($licence_fee > 0) {
+                $race_data['race_fee_junior_unlicenced'] = $race_data['race_fee_junior_licenced'] + $licence_fee;
+            }
+        }
+
+        return $race_data;
     }
 
 }

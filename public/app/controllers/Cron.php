@@ -5,7 +5,7 @@
  * Functions for intra_day, daily
  *
  */
-class Cron extends My_Controller {
+class Cron extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

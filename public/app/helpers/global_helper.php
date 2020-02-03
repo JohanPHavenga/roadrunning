@@ -91,3 +91,15 @@ function time_is_midnight($date) {
         return false;
     }
 }
+
+function move_to_top(&$array, $key) {
+    $temp = array($key => $array[$key]);
+    unset($array[$key]);
+    $array = $temp + $array;
+}
+
+function move_to_bottom(&$array, $key) {
+    $value = $array[$key];
+    unset($array[$key]);
+    $array[$key] = $value;
+}

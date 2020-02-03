@@ -1,6 +1,6 @@
 <?php
 
-class Role_model extends MY_model {
+class Role_model extends Frontend_model {
 
     public function __construct() {
         parent::__construct();

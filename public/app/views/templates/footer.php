@@ -182,7 +182,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         if ($logged_in_user) {
                             if (in_array(1, $logged_in_user['role_list'])) {
                                 echo "| <a href='" . base_url("mailer") . "'>Mailer</a> ";
-                                echo "| <a href='" . base_url("login/admin") . "'>Admin Login</a> ";
+                                echo "| <a href='" . base_url("admin") . "'>Admin Dashboard</a> ";
                             }
                         }
                         ?>

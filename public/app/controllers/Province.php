@@ -1,7 +1,7 @@
 <?php
 
 // public mailer class to get list from mailques table and send it out
-class Province extends MY_Controller {
+class Province extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

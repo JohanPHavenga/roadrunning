@@ -1,6 +1,6 @@
 <?php
 
-class Entrytype_model extends MY_model {
+class Entrytype_model extends Frontend_model {
 
     public $table = "entrytypes";
     public $no_info_id = 5;

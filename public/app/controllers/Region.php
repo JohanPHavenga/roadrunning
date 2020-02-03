@@ -1,7 +1,7 @@
 <?php
 
 // MAIN Region controller
-class Region extends MY_Controller {
+class Region extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

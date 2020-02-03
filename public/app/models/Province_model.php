@@ -1,6 +1,6 @@
 <?php
 
-class Province_model extends MY_model {
+class Province_model extends Frontend_model {
 
     public function __construct() {
         parent::__construct();

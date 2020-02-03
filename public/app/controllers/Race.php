@@ -1,7 +1,7 @@
 <?php
 
 // Race Calendar
-class Race extends MY_Controller {
+class Race extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

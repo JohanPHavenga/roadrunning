@@ -1,6 +1,6 @@
 <?php
 
-class History_model extends MY_model {
+class History_model extends Frontend_model {
 
     public function __construct() {
         parent::__construct();

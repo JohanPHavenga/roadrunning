@@ -5,7 +5,7 @@ if (!isset($page_title)) {
 //    $page_title=$page_title." - RoadRunning.co.za";
 }
 if (!isset($meta_description)) {
-    $meta_description = "A source of Road Running event information in South Africa. Presented in a uniform, easy to read and consume format.";
+    $meta_description = "Listing of Road Running race information in South Africa. Presented in a uniform, easy to read and consume format.";
 }
 if (!isset($meta_robots)) {
     $meta_robots = "index";
@@ -23,9 +23,6 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     $topbar_class = '';
     $header_vals = '';
 }
-
-wts($page_title);
-wts($meta_description);
 ?>
 
 

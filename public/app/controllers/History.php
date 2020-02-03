@@ -1,10 +1,10 @@
 <?php
 
-// NOTE: Main history checks is done in the MY_Controller
+// NOTE: Main history checks is done in the Frontend_Controller
 // This Controller is used to aggegate the data into the history summary page via a cronjob
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class History extends MY_Controller {
+class History extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();

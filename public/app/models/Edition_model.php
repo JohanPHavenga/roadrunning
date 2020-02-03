@@ -1,6 +1,6 @@
 <?php
 
-class Edition_model extends MY_model {
+class Edition_model extends Frontend_model {
 
     public function __construct() {
         parent::__construct();

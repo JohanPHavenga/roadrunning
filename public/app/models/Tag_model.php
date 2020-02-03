@@ -1,6 +1,6 @@
 <?php
 
-class Tag_model extends MY_model {
+class Tag_model extends Frontend_model {
 
     public $table = "tags";
 

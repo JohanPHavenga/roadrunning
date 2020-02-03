@@ -1,6 +1,6 @@
 <?php
 
-class Regtype_model extends MY_model {
+class Regtype_model extends Frontend_model {
 
     public $table = "regtypes";
     public $no_info_id = 3;

@@ -1,6 +1,6 @@
 <?php
 
-class User extends MY_Controller {
+class User extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();
