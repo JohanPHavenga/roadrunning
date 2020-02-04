@@ -511,7 +511,7 @@ class Frontend_Controller extends MY_Controller {
             "sitemap" => [
                 "display" => "Sitemap",
                 "loc" => base_url("sitemap"),
-                "lastmod" => date("Y-m-d H:i:s"),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week")),
                 "priority" => 0.5,
                 "changefreq" => "daily",
             ],

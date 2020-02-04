@@ -159,8 +159,9 @@ class Contact extends Frontend_Controller {
     // SEND EVENT EMAIL
     private function send_event_email($email_data, $edition_data) {
         $data = [
-            "to" => $edition_data['user_email'].",".$this->ini_array['email']['from_address_server'],
-//            "cc" => $this->ini_array['email']['from_address_server'],
+//            "to" => $edition_data['user_email'].",".$this->ini_array['email']['from_address_server'],
+            "to" => $edition_data['user_email'],
+            "cc" => $this->ini_array['email']['from_address_server'],
             "subject" => $edition_data['annual_name']. " - Enquiry from RoadRunning.co.za #". uniqid(),
             "body" => "<p>Hello,</p>"
             . "<p>Please see below for an enquiry send from the "

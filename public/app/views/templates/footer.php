@@ -228,9 +228,9 @@ foreach ($this->session->most_searched as $search_id => $search) {
 </div>
 <script src="/ads.js" type="text/javascript"></script>
 <script type="text/javascript">//
-//    if (!document.getElementById('advertensieblok')) {
-//        document.getElementById('ad-block-notification').style.display = 'block';
-//    }
+    if (!document.getElementById('advertensieblok')) {
+        document.getElementById('ad-block-notification').style.display = 'block';
+    }
 //</script>
 <!-- END: AD BLOCK CHECK -->
 
