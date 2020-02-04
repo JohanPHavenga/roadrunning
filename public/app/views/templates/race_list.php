@@ -30,12 +30,12 @@
                                     }
 //                                    wts($race_summary);
                                     if ($edition_id === array_key_first($edition_list)) {
-                                        $ac_cl="ac-active";
+                                        $ac_cl = "ac-active";
                                     } else {
-                                        $ac_cl="";
+                                        $ac_cl = "";
                                     }
                                     ?>
-                                    <div class="ac-item <?=$ac_cl;?>">
+                                    <div class="ac-item <?= $ac_cl; ?>">
                                         <h5 class="ac-title">   
                                             <i class="fa fa-<?= $edition['status_info']['icon']; ?> text-<?= $edition['status_info']['state']; ?>"></i>
                                             <?php
@@ -90,9 +90,12 @@
                     </div>
                 </div>                
                 <!-- add box -->
-                <div class="row m-b-30 m-t-10">
+                <div class="row m-b-10 m-t-10">
                     <div class="col-lg-12">
-                        <div style='height: 90px; width: 100%; background: #ccc;'>Ad</div>
+                        <?php
+                        // LANDSCAPE ADS WIDGET
+                        $this->load->view('widgets/horizontal_ad');
+                        ?>
                     </div>
                 </div>
             </div>

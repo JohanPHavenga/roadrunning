@@ -75,7 +75,10 @@
         <!-- add box -->
         <div class="row m-b-30 m-t-10">
             <div class="col-lg-12">
-                <div style='height: 90px; width: 100%; background: #ccc;'>Ad</div>
+                <?php
+                // LANDSCAPE ADS WIDGET
+                $this->load->view('widgets/horizontal_ad');
+                ?>
             </div>
         </div> 
     </div>

@@ -75,7 +75,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             }
                             ?>
                             <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
-                            <li><a href='https://www.roadrunning.co.za'>Back to old site</a></li>
+                            <li><a href='<?= base_url('old'); ?>'>Back to old site</a></li>
                         </ul>
                     </div>
                     <!-- end: Footer PAGES --> 

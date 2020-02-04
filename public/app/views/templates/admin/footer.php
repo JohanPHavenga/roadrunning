@@ -10,7 +10,7 @@
     <div class="page-footer-inner">
         2016-<?= date("Y"); ?> &copy; Project Codename
         <a target="_blank" href="http://www.johanhavenga.co.za" style="color: #999;">Coyote</a> | 
-        Codeigniter # <?= CI_VERSION; ?>
+        Codeigniter # <?= CI_VERSION; ?> | BASE URL: <?= base_url(); ?>
         <div class="scroll-to-top">
             <i class="icon-arrow-up"></i>
         </div>

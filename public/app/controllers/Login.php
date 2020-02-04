@@ -10,7 +10,7 @@ class Login extends Frontend_Controller {
         if ($confirm != "confirm") {
             $this->session->unset_userdata('user');
             $this->session->set_flashdata([
-                'alert' => "Buckle your belt Dorothy, cause Kansas is going bye-bye. Also, you have been succesfully logged out of roadrunning.co.za",
+                'alert' => "Buckle your seat belt Dorothy, cause Kansas is going bye-bye. Also, you have been succesfully logged out of roadrunning.co.za",
                 'status' => "success"
             ]);
             redirect("/logout/confirm");
