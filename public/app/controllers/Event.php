@@ -82,7 +82,7 @@ class Event extends Frontend_Controller {
         $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
         $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
-        $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id);
+        $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id, $this->data_to_views['in_past']);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
         $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
 
@@ -308,152 +308,7 @@ class Event extends Frontend_Controller {
         return $return_arr;
     }
 
-    private function get_event_menu($slug, $event_id, $edition_id) {
-
-        $menu_arr = [
-            "summary" => [
-                "display" => "Summary",
-                "loc" => base_url("event/" . $slug),
-            ],
-            "results" => [
-                "display" => "Results",
-                "loc" => base_url("event/" . $slug . "/results"),
-            ],
-            "entries" => [
-                "display" => "How to enter",
-                "loc" => base_url("event/" . $slug . "/entries"),
-            ],
-            "race_day" => [
-                "display" => "Race day info",
-                "loc" => base_url("event/" . $slug . "/race-day-information"),
-            ],
-            "route_maps" => [
-                "display" => "Route Maps",
-                "loc" => base_url("event/" . $slug . "/route-maps"),
-            ],
-            "contact" => [
-                "display" => "Race Contact",
-                "loc" => base_url("event/" . $slug . "/contact"),
-            ],
-            "accom" => [
-                "display" => "Accommodation",
-                "loc" => base_url("event/" . $slug . "/accommodation"),
-            ],
-            "more" => [
-                "display" => "More",
-                "sub_menu" => [
-                    "results" => [
-                        "display" => "Results",
-                        "loc" => base_url("event/" . $slug . "/results"),
-                    ],
-                    "distances" => [
-                        "display" => "Distances",
-                        "loc" => base_url("event/" . $slug . "/distances"),
-                    ],
-                    "entries" => [
-                        "display" => "How to enter",
-                        "loc" => base_url("event/" . $slug . "/entries"),
-                    ],
-                    "subscribe" => [
-                        "display" => "Get Notifications",
-                        "loc" => base_url("event/" . $slug . "/subscribe"),
-                    ],
-                    "sponsors" => [
-                        "display" => "Sponsors",
-                        "loc" => base_url("event/" . $slug . "/sponsors"),
-                    ],
-                    "club" => [
-                        "display" => "More events by this Club",
-                        "loc" => base_url("event/" . $slug . "/club-other-races"),
-                    ],
-                    "previous" => [
-                        "display" => "Previous year's edition",
-                        "loc" => base_url("event/" . $slug . "/"),
-                    ],
-                    "next" => [
-                        "display" => "Next year's edition",
-                        "loc" => base_url("event/" . $slug . "/"),
-                    ],
-                    "print" => [
-                        "display" => "Print",
-                        "loc" => base_url("event/" . $slug . "/print"),
-                    ],
-                ],
-            ],
-        ];
-
-        // get event history to know if links should be in menu
-        $event_history = $this->get_event_history($event_id, $edition_id);
-        // previous
-        if (isset($event_history['past'])) {
-            $menu_arr['more']['sub_menu']['previous']['loc'] = base_url("event/" . $event_history['past']['edition_slug']);
-        } else {
-            unset($menu_arr['more']['sub_menu']['previous']);
-        }
-        //next
-        if (isset($event_history['future'])) {
-            $menu_arr['more']['sub_menu']['next']['loc'] = base_url("event/" . $event_history['future']['edition_slug']);
-        } else {
-            unset($menu_arr['more']['sub_menu']['next']);
-        }
-
-        // check if in past else hide to hide accommodation link
-        if ($this->data_to_views['in_past']) {
-            unset($menu_arr['accom']);
-            unset($menu_arr['entries']);
-            unset($menu_arr['more']['sub_menu']['results']);
-        } else {
-            unset($menu_arr['results']);
-            unset($menu_arr['more']['sub_menu']['entries']);
-        }
-
-        // check for route maps
-//        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
-//            unset($menu_arr['route_maps']);
-//        }
-        // to use later
-        unset($menu_arr['more']['sub_menu']['sponsors']);
-        unset($menu_arr['more']['sub_menu']['club']);
-        unset($menu_arr['more']['sub_menu']['print']);
-        return $menu_arr;
-    }
-
-    public function get_event_history($event_id, $edition_id) {
-        $return = [];
-        // get list of editions linked to this event
-        $query_params = [
-            "where" => ["event_id" => $event_id],
-        ];
-        $edition_list = $this->edition_model->get_edition_list($query_params);
-
-        // remove the one you are looking at
-        $current_year = date("Y", strtotime($edition_list[$edition_id]['edition_date']));
-        unset($edition_list[$edition_id]);
-
-        if ($edition_list) {
-            foreach ($edition_list as $edition) {
-                $edition['edition_year'] = fdateYear($edition['edition_date']);
-                if ($edition['edition_year'] < $current_year) {
-                    if (isset($return['past'])) {
-                        if ($edition['edition_year'] > $return['past']['edition_year']) {
-                            $return['past'] = $edition;
-                        }
-                    } else {
-                        $return['past'] = $edition;
-                    }
-                } elseif ($edition['edition_year'] > $current_year) {
-                    if (isset($return['future'])) {
-                        if ($edition['edition_year'] < $return['future']['edition_year']) {
-                            $return['future'] = $edition;
-                        }
-                    } else {
-                        $return['future'] = $edition;
-                    }
-                }
-            }
-        }
-        return $return;
-    }
+    
 
     function ics($edition_slug) {
 
@@ -539,6 +394,8 @@ class Event extends Frontend_Controller {
 
     public function add() {
 
+        $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
+        
         // validation rules
         $this->form_validation->set_rules('event_name', 'Event name', 'trim|required');
         $this->form_validation->set_rules('event_date', 'Event date', 'trim|required');
@@ -549,7 +406,7 @@ class Event extends Frontend_Controller {
         $this->form_validation->set_rules('user_surname', 'Contact surname', 'trim|required');
         $this->form_validation->set_rules('user_email', 'Contact email address', 'trim|required|valid_email');
         $this->form_validation->set_rules('event_url', 'Entry URL needs to be valid', 'trim|valid_url');
-//        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
         if ($this->form_validation->run() === FALSE) {
             $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];

@@ -13,7 +13,7 @@
             <div class="content col-lg-9">
 
                 <!-- ad box -->
-                <div class="row m-b-30">
+                <div class="row m-b-10 m-t-10">
                     <div class="col-lg-12">
                         <?php
                         // LANDSCAPE ADS WIDGET

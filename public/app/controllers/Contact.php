@@ -6,25 +6,25 @@ class Contact extends Frontend_Controller {
         parent::__construct();
     }
 
-    public function test() {
-        $data = [
-            "to" => "johan.havenga@gmail.com",
-            "subject" => "Contact Form TESTé",
-            "body" => "<p>Hello,</p>"
-            . "<p>Please see below for an enquiry send from the "
-            . "<b><a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a></b> website "
-            . "by a runner enquiring about the <b>Growthpoint Sundowner 10km 2019</b> race:"
-            . "<p><b>Name:</b> Johan<br>"
-            . "<b>Surname:</b> Havenga<br>"
-            . "<b>Email:</b> johan.havenga@gmail.com<br>"
-            . "<b>Query:</b> This is a comment ôéêº</p>"
-            . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
-            . "<p>Please reply to this email to answer the runner's query.",
-            "from" => "johnahavenga@woolworths.co.za",
-            "from_name" => "Johan Hé",
-        ];
-        echo $this->set_email($data);
-    }
+//    public function test() {
+//        $data = [
+//            "to" => "johan.havenga@gmail.com",
+//            "subject" => "Contact Form TESTé",
+//            "body" => "<p>Hello,</p>"
+//            . "<p>Please see below for an enquiry send from the "
+//            . "<b><a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a></b> website "
+//            . "by a runner enquiring about the <b>Growthpoint Sundowner 10km 2019</b> race:"
+//            . "<p><b>Name:</b> Johan<br>"
+//            . "<b>Surname:</b> Havenga<br>"
+//            . "<b>Email:</b> johan.havenga@gmail.com<br>"
+//            . "<b>Query:</b> This is a comment ôéêº</p>"
+//            . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
+//            . "<p>Please reply to this email to answer the runner's query.",
+//            "from" => "johnahavenga@woolworths.co.za",
+//            "from_name" => "Johan Hé",
+//        ];
+//        echo $this->set_email($data);
+//    }
 
     public function index() {
         $this->data_to_views['page_title'] = "Contact Us";

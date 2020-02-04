@@ -46,15 +46,14 @@ class Sitemap extends Frontend_Controller {
     }
 
     function xml() {
-        // SET RACES & CALENDAR
         foreach ($this->data_to_views['edition_arr'] as $year => $year_list) {
 
             if ($year == date("Y")) {
-                $lastmod = date("Y-m-d H:i:s", strtotime("-1 week"));
+                $lastmod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week"));
                 $priority = 0.5;
                 $changefreq = "weekly";
             } else {
-                $lastmod = date("Y-m-d H:i:s", strtotime("-1 year"));
+                $lastmod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year"));
                 $priority = 0.2;
                 $changefreq = "yearly";
             }
@@ -71,14 +70,14 @@ class Sitemap extends Frontend_Controller {
                 $todayDate = time();
                 $dateToCheck = strtotime("$month-$year");
                 if (($dateToCheck > $todayDate) || (($todayDate - $dateToCheck) < 7889238)) {
-                    $lastmod = date("Y-m-d H:i:s", strtotime("-1 week"));
-                    $priority = 0.5;
+                    $lastmod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week"));
+                    $priority = 0.8;
                     $changefreq = "weekly";
                     $this->data_to_views['calendar_xml'][$year]['lastmod'] = $lastmod;
                     $this->data_to_views['calendar_xml'][$year]['priority'] = $priority;
                     $this->data_to_views['calendar_xml'][$year]['changefreq'] = $changefreq;
                 } else {
-                    $lastmod = date("Y-m-d H:i:s", strtotime("-1 year"));
+                    $lastmod = date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year"));
                     $priority = 0.2;
                     $changefreq = "yearly";
                 }
@@ -101,32 +100,66 @@ class Sitemap extends Frontend_Controller {
                         $priority = 0.1;
                         $changefreq = "never";
                         // if race in next 12 months, or past 6 month
-                        if (($edition['edition_date'] < date("Y-m-d H:m:s", strtotime("1 year"))) && ($edition['edition_date'] > date("Y-m-d H:m:s", strtotime("-6 months")))) {
+                        if (($edition['edition_date'] < date("Y-m-d H:i:s ", strtotime("1 year"))) && ($edition['edition_date'] > date("Y-m-d H:i:s ", strtotime("-6 months")))) {
                             $priority = 0.5;
                             $changefreq = "monthly";
                         }
                         // if race in next 3 months
-                        if (($edition['edition_date'] < date("Y-m-d H:m:s", strtotime("3 months"))) && ($edition['edition_date'] >= date("Y-m-d H:m:s", strtotime("today")))) {
-                            $priority = 0.9;
+                        if (($edition['edition_date'] < date("Y-m-d H:i:s ", strtotime("3 months"))) && ($edition['edition_date'] >= date("Y-m-d H:i:s ", strtotime("today")))) {
+                            $priority = 1;
                             $changefreq = "weekly";
                         }
                         // if race in past 1 month
-                        if (($edition['edition_date'] <= date("Y-m-d H:m:s", strtotime("today"))) && ($edition['edition_date'] > date("Y-m-d H:m:s", strtotime("-1 month")))) {
+                        if (($edition['edition_date'] <= date("Y-m-d H:i:s ", strtotime("today"))) && ($edition['edition_date'] > date("Y-m-d H:i:s ", strtotime("-1 month")))) {
                             $priority = 0.8;
                             $changefreq = "weekly";
                         }
                         if ($lastmod < "") {
                             
                         }
+                        $lastmod=date('Y-m-d\TH:i:s' . '+02:00', strtotime($lastmod));
                         $this->data_to_views['edition_list_xml'][$edition_id]['loc'] = $loc;
                         $this->data_to_views['edition_list_xml'][$edition_id]['lastmod'] = $lastmod;
                         $this->data_to_views['edition_list_xml'][$edition_id]['priority'] = $priority;
                         $this->data_to_views['edition_list_xml'][$edition_id]['changefreq'] = $changefreq;
+
+                        // SUB PAGES
+                        if (strtotime($edition['edition_date']) < time()) {
+                            $in_past = true;
+                        } else {
+                            $in_past = false;
+                        }
+                        $skip_pages = ["summary", "previous", "next"];
+                        $page_menu = $this->get_event_menu($edition['edition_slug'], $edition['event_id'], $edition_id, $in_past);
+                        foreach ($page_menu as $item_slug => $item) {
+                            if (in_array($item_slug, $skip_pages)) {
+                                continue;
+                            }
+                            if ($item_slug == "more") {
+                                foreach ($item['sub_menu'] as $sub_item_slug => $sub_item) {
+                                    if (in_array($sub_item_slug, $skip_pages)) {
+                                        continue;
+                                    }
+                                    $key = $edition_id . $sub_item_slug;
+                                    $this->data_to_views['edition_list_xml'][$key]['loc'] = $sub_item['loc'];
+                                    $this->data_to_views['edition_list_xml'][$key]['lastmod'] = $lastmod;
+                                    $this->data_to_views['edition_list_xml'][$key]['priority'] = $priority;
+                                    $this->data_to_views['edition_list_xml'][$key]['changefreq'] = $changefreq;
+                                }
+                            } else {
+                                $key = $edition_id . $item_slug;
+                                $this->data_to_views['edition_list_xml'][$key]['loc'] = $item['loc'];
+                                $this->data_to_views['edition_list_xml'][$key]['lastmod'] = $lastmod;
+                                $this->data_to_views['edition_list_xml'][$key]['priority'] = $priority;
+                                $this->data_to_views['edition_list_xml'][$key]['changefreq'] = $changefreq;
+                            }
+                        }
+//                        wts($page_menu);
                     }
                 }
             }
         }
-//                wts($this->data_to_views['calendar_xml'],1);
+//        wts($this->data_to_views['edition_list_xml'], 1);
 
         $this->load->view("sitemap/xml", $this->data_to_views);
     }

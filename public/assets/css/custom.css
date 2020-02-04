@@ -1,9 +1,14 @@
 /*
     CUSTOM CSS RULES
 */
-#cookieNotify {
-    font-size: 1.1em;
+.modal-strip {
+    background-color: #111;
+    font-size: 1.3em;
 }
+#ad-block-notification {
+    display: none;
+}
+
 section {
     padding: 60px 0;
 }

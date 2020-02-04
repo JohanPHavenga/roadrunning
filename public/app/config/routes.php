@@ -49,18 +49,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+// ADMIN
 $route['admin'] = 'admin/dashboard/view';
 
+// DEFAULT
 $route['default_controller'] = 'main';
 $route['404_override'] = 'main/custom_404';
 $route['translate_uri_dashes'] = FALSE;
 
+// SITEMAP
 $route['seo/sitemap\.xml'] = "sitemap/xml";
 $route['seo/sitemap'] = "sitemap/xml";
 $route['seo'] = 'sitemap/xml';
 $route['sitemap/xml\.xml'] = "sitemap/xml";
 $route['sitemap\.xml'] = "sitemap/xml";
 
+// STATIC PAGES
 $route['404'] = 'main/custom_404';
 $route['about'] = 'main/about';
 $route['faq'] = 'main/faq';
@@ -72,6 +76,7 @@ $route['training-programs'] = 'main/training_programs';
 $route["training-programs/(.*)"] = 'main/training_programs/$1';
 //$route['search'] = 'main/search';
 
+// RACE LISTS 
 $route['(?i)calendar'] = 'race/list';
 $route["calendar/(.*)"] = 'race/list/$1';
 $route['results'] = 'race/results';
@@ -86,6 +91,7 @@ $route['user/my-subscriptions'] = 'user/my_subscriptions';
 $route['parkrun'] = 'race/parkrun';
 $route['parkrun/calendar'] = 'race/parkrun';
 
+// LOGIN / REGISTER
 $route['login'] = 'login/userlogin';
 $route['logout'] = 'login/logout';
 $route['logout/confirm'] = 'login/logout/confirm';

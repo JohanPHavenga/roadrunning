@@ -1,21 +1,4 @@
 <?php
-if ((!$rr_cookie['feedback']) && ($new_page_count > 10)) {
-    set_cookie("feedback", true, 604800);
-    ?>
-    <div id="cookieNotify" class="modal-strip cookie-notify background-dark modal-active" data-delay="3000" data-expire="1" data-cookie-name="cookiebar2019_2" data-cookie-enabled="false">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 m-b-10 m-t-5"><b>Enjoying the new site? Notice something not working right? Is it awesome?</b></div>
-                <div class="col-lg-4 text-right sm-text-center sm-center">
-                    <a class="btn btn-rounded btn-light btn-outline btn-sm m-r-10" href="<?= base_url("contact"); ?>">Give Feedback</a>
-                    <button type="button" class="btn btn-rounded btn-light btn-sm modal-close">Dismiss</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
-}
-
 // check for home page, set a few variables for header changes
 if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() == "index")) {
     $home = true;
@@ -137,14 +120,14 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         </form>
                     </div>
                     <!-- end: Footer widget area 5 --> 
-                    
+
                     <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
                     <div class="m-b-10 m-r-20" style="padding: 10px; background-color: #fff; float: left;">
                         <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
-                            <img src='<?=base_url("assets/img/snapscan_LAzMFdGZ.png");?>' /> 
+                            <img src='<?= base_url("assets/img/snapscan_LAzMFdGZ.png"); ?>' /> 
                         </a>
                     </div>
-                        <p style=''>Consider supporting the wesbite via SnapScan</p>
+                    <p style=''>Consider supporting the wesbite via SnapScan</p>
                 </div>
             </div>
         </div>
@@ -228,6 +211,28 @@ foreach ($this->session->most_searched as $search_id => $search) {
 }
 ?>
 </script>
+
+<!-- START: AD BLOCK CHECK -->
+<div class="modal-strip cookie-notify background-dark fadeInUp" data-wow-delay="1s" id="ad-block-notification">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <b>We get it!</b> Ads are annoying. But they help keep this website up and running. <br>
+                Please help support this site by <u>disabling your ad block software</u>.
+            </div>
+            <div class="col-md-2 text-right">
+                <button type="button" class="btn btn-rounded btn-light modal-close">OK!</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/ads.js" type="text/javascript"></script>
+<script type="text/javascript">//
+//    if (!document.getElementById('advertensieblok')) {
+//        document.getElementById('ad-block-notification').style.display = 'block';
+//    }
+//</script>
+<!-- END: AD BLOCK CHECK -->
 
 <?php
 //if ($this->ini_array['enviroment']['server'] != "production") {

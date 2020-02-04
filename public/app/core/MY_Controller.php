@@ -304,26 +304,26 @@ class Frontend_Controller extends MY_Controller {
     // SITEMAP / MENU INFO
     // ==============================================================================================
 
-    public function get_static_pages() {
+    public function get_static_pages() {        
         $static_pages = [
             "home" => [
                 "display" => "Home",
                 "loc" => base_url(),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 day")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
             ],
             "races" => [
                 "display" => "Races",
                 "loc" => base_url("calendar"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
                 "sub-menu" => [
                     "upcoming" => [
                         "display" => "Upcoming",
                         "loc" => base_url("race/upcoming"), //calendar
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
                         "badge" => "POPULAR",
@@ -331,49 +331,49 @@ class Frontend_Controller extends MY_Controller {
 //                    "per_region" => [
 //                        "display" => "Per Region",
 //                        "loc" => base_url("race/per-region"),
-//                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+//                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
 //                        "priority" => 1,
 //                        "changefreq" => "daily",
 //                    ],
                     "featured" => [
                         "display" => "Featured",
                         "loc" => base_url("race/featured"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
                     ],
                     "top10" => [
                         "display" => "Top 10 most viewed",
                         "loc" => base_url("race/most-viewed"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
                     ],
                     "history" => [
                         "display" => "History",
                         "loc" => base_url("race/history"), //calendar/past
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-2 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 0.8,
                         "changefreq" => "daily",
                     ],
 //                    "add-listing" => [
 //                        "display" => "Add Listing",
 //                        "loc" => base_url("race/add"), //calendar/past
-//                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+//                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
 //                        "priority" => 0.8,
 //                        "changefreq" => "daily",
 //                    ],
                     "training" => [
                         "display" => "Training Programs",
                         "loc" => base_url("training-programs"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
                         "priority" => 0.5,
                         "changefreq" => "monthly",
                     ],
                     "parkrun" => [
                         "display" => "parkrun",
                         "loc" => base_url("race/parkrun"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                         "priority" => 0.3,
                         "changefreq" => "yearly",
                     ],
@@ -382,14 +382,14 @@ class Frontend_Controller extends MY_Controller {
             "results" => [
                 "display" => "Results",
                 "loc" => base_url("results"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                 "priority" => 0.8,
                 "changefreq" => "weekly",
                 "sub-menu" => [
                     "upcoming" => [
                         "display" => "Race Results",
                         "loc" => base_url("race/results"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
@@ -397,7 +397,7 @@ class Frontend_Controller extends MY_Controller {
                         "display" => "My Results",
                         "loc" => "",
                         "loc" => base_url("my-results"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                         "badge" => "COMING SOON",
@@ -407,35 +407,35 @@ class Frontend_Controller extends MY_Controller {
             "faq" => [
                 "display" => "FAQ",
                 "loc" => base_url("faq"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
                 "priority" => 0.5,
                 "changefreq" => "monthly",
             ],
             "about" => [
                 "display" => "About",
                 "loc" => base_url("about"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
                 "priority" => 0.5,
                 "changefreq" => "monthly",
             ],
             "contact" => [
                 "display" => "Contact",
                 "loc" => base_url("contact"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                 "priority" => 0.8,
                 "changefreq" => "yearly",
                 "sub-menu" => [
                     "contact-us" => [
                         "display" => "Contact Me",
                         "loc" => base_url("contact"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                         "priority" => 0.8,
                         "changefreq" => "yearly",
                     ],
                     "newsletter" => [
                         "display" => "Newsletter",
                         "loc" => base_url("newsletter"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                         "priority" => 0.6,
                         "changefreq" => "yearly",
                         "badge" => "POPULAR",
@@ -445,21 +445,21 @@ class Frontend_Controller extends MY_Controller {
             "switch-region" => [
                 "display" => "Switch Region",
                 "loc" => base_url("region/switch"), //version
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                 "priority" => 0.5,
                 "changefreq" => "yearly",
             ],
             "featured-regions" => [
                 "display" => "Show all regions",
                 "loc" => base_url("region"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 month")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
                 "priority" => 0.8,
                 "changefreq" => "monthly",
                 "sub-menu" => [
                     "upcoming" => [
                         "display" => "Cape Town",
                         "loc" => base_url("region/capetown"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 1,
                         "changefreq" => "weekly",
                         "badge" => "POPULAR",
@@ -467,21 +467,21 @@ class Frontend_Controller extends MY_Controller {
                     "gauteng" => [
                         "display" => "Gauteng",
                         "loc" => base_url("region/gauteng"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
                     "kzn-coast" => [
                         "display" => "KZN Coast",
                         "loc" => base_url("region/kzn-coast"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
                     "garden-route" => [
                         "display" => "Garden Route",
                         "loc" => base_url("region/garden-route"),
-                        "lastmod" => date("Y-m-d H:i:s", strtotime("-5 day")),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
                     ],
@@ -490,21 +490,21 @@ class Frontend_Controller extends MY_Controller {
             "login" => [
                 "display" => "Login",
                 "loc" => base_url("login"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                 "priority" => 1,
                 "changefreq" => "yearly",
             ],
             "add-listing" => [
                 "display" => "Add Race Listing",
                 "loc" => base_url("event/add"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                 "priority" => 0.6,
                 "changefreq" => "yearly",
             ],
             "search" => [
                 "display" => "Search",
                 "loc" => base_url("search"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week")),
                 "priority" => 0.8,
                 "changefreq" => "weekly",
             ],
@@ -518,14 +518,14 @@ class Frontend_Controller extends MY_Controller {
             "terms" => [
                 "display" => "Terms & Conditions",
                 "loc" => base_url("terms-conditions"),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                 "priority" => 0.2,
                 "changefreq" => "yearly",
             ],
 //            "disclaimer" => [
 //                "display" => "Disclaimer",
 //                "loc" => base_url("disclaimer"),
-//                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 year")),
+//                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
 //                "priority" => 0.2,
 //                "changefreq" => "yearly",
 //            ],
@@ -544,7 +544,7 @@ class Frontend_Controller extends MY_Controller {
             $p_arr[$province_id] = [
                 "display" => $province['province_name'],
                 "loc" => base_url("province/" . $province['province_slug']),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week")),
                 "priority" => 0.9,
                 "changefreq" => "daily",
             ];
@@ -560,7 +560,7 @@ class Frontend_Controller extends MY_Controller {
             $r_arr[$region_id] = [
                 "display" => $region['region_name'],
                 "loc" => base_url("region/" . $region['region_slug']),
-                "lastmod" => date("Y-m-d H:i:s", strtotime("-1 week")),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 week")),
                 "priority" => 0.9,
                 "changefreq" => "daily",
             ];
@@ -582,6 +582,157 @@ class Frontend_Controller extends MY_Controller {
             $date_list[date("Y", strtotime($strtotime))][date("m", strtotime($strtotime))] = date("F Y", strtotime($strtotime));
         }
         return $date_list;
+    }
+    
+    // ==============================================================================================
+    // EVENT PAGE MENU
+    // ==============================================================================================
+    public function get_event_menu($slug, $event_id, $edition_id, $in_past) {
+
+        $menu_arr = [
+            "summary" => [
+                "display" => "Summary",
+                "loc" => base_url("event/" . $slug),
+            ],
+            "results" => [
+                "display" => "Results",
+                "loc" => base_url("event/" . $slug . "/results"),
+            ],
+            "entries" => [
+                "display" => "How to enter",
+                "loc" => base_url("event/" . $slug . "/entries"),
+            ],
+            "race_day" => [
+                "display" => "Race day info",
+                "loc" => base_url("event/" . $slug . "/race-day-information"),
+            ],
+            "route_maps" => [
+                "display" => "Route Maps",
+                "loc" => base_url("event/" . $slug . "/route-maps"),
+            ],
+            "contact" => [
+                "display" => "Race Contact",
+                "loc" => base_url("event/" . $slug . "/contact"),
+            ],
+            "accom" => [
+                "display" => "Accommodation",
+                "loc" => base_url("event/" . $slug . "/accommodation"),
+            ],
+            "more" => [
+                "display" => "More",
+                "sub_menu" => [
+                    "results" => [
+                        "display" => "Results",
+                        "loc" => base_url("event/" . $slug . "/results"),
+                    ],
+                    "distances" => [
+                        "display" => "Distances",
+                        "loc" => base_url("event/" . $slug . "/distances"),
+                    ],
+                    "entries" => [
+                        "display" => "How to enter",
+                        "loc" => base_url("event/" . $slug . "/entries"),
+                    ],
+                    "subscribe" => [
+                        "display" => "Get Notifications",
+                        "loc" => base_url("event/" . $slug . "/subscribe"),
+                    ],
+                    "sponsors" => [
+                        "display" => "Sponsors",
+                        "loc" => base_url("event/" . $slug . "/sponsors"),
+                    ],
+                    "club" => [
+                        "display" => "More events by this Club",
+                        "loc" => base_url("event/" . $slug . "/club-other-races"),
+                    ],
+                    "previous" => [
+                        "display" => "Previous year's edition",
+                        "loc" => base_url("event/" . $slug . "/"),
+                    ],
+                    "next" => [
+                        "display" => "Next year's edition",
+                        "loc" => base_url("event/" . $slug . "/"),
+                    ],
+                    "print" => [
+                        "display" => "Print",
+                        "loc" => base_url("event/" . $slug . "/print"),
+                    ],
+                ],
+            ],
+        ];
+
+        // get event history to know if links should be in menu
+        $event_history = $this->get_event_history($event_id, $edition_id);
+        // previous
+        if (isset($event_history['past'])) {
+            $menu_arr['more']['sub_menu']['previous']['loc'] = base_url("event/" . $event_history['past']['edition_slug']);
+        } else {
+            unset($menu_arr['more']['sub_menu']['previous']);
+        }
+        //next
+        if (isset($event_history['future'])) {
+            $menu_arr['more']['sub_menu']['next']['loc'] = base_url("event/" . $event_history['future']['edition_slug']);
+        } else {
+            unset($menu_arr['more']['sub_menu']['next']);
+        }
+
+        // check if in past else hide to hide accommodation link
+        if ($in_past) {
+            unset($menu_arr['accom']);
+            unset($menu_arr['entries']);
+            unset($menu_arr['more']['sub_menu']['results']);
+        } else {
+            unset($menu_arr['results']);
+            unset($menu_arr['more']['sub_menu']['entries']);
+        }
+
+        // check for route maps
+//        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
+//            unset($menu_arr['route_maps']);
+//        }
+        // to use later
+        unset($menu_arr['more']['sub_menu']['sponsors']);
+        unset($menu_arr['more']['sub_menu']['club']);
+        unset($menu_arr['more']['sub_menu']['print']);
+        return $menu_arr;
+    }
+
+    public function get_event_history($event_id, $edition_id) {
+        $this->load->model('edition_model');
+        $return = [];
+        // get list of editions linked to this event
+        $query_params = [
+            "where" => ["event_id" => $event_id],
+        ];
+        $edition_list = $this->edition_model->get_edition_list($query_params);
+
+        // remove the one you are looking at
+        $current_year = date("Y", strtotime($edition_list[$edition_id]['edition_date']));
+        unset($edition_list[$edition_id]);
+
+        if ($edition_list) {
+            foreach ($edition_list as $edition) {
+                $edition['edition_year'] = fdateYear($edition['edition_date']);
+                if ($edition['edition_year'] < $current_year) {
+                    if (isset($return['past'])) {
+                        if ($edition['edition_year'] > $return['past']['edition_year']) {
+                            $return['past'] = $edition;
+                        }
+                    } else {
+                        $return['past'] = $edition;
+                    }
+                } elseif ($edition['edition_year'] > $current_year) {
+                    if (isset($return['future'])) {
+                        if ($edition['edition_year'] < $return['future']['edition_year']) {
+                            $return['future'] = $edition;
+                        }
+                    } else {
+                        $return['future'] = $edition;
+                    }
+                }
+            }
+        }
+        return $return;
     }
 
     // ==============================================================================================
