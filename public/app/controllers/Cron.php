@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Controller to run all cronjobs from
  * Functions for intra_day, daily

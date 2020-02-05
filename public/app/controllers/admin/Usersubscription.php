@@ -141,7 +141,7 @@ class Usersubscription extends Admin_Controller {
             $model = $linked_to_name . "_model";
             $method = "get_" . $linked_to_name . "_dropdown";
 
-            $this->load->model($model);
+            $this->load->model("admin/".$model);
             $this->data_to_view[$dropdown] = $this->$model->$method();
             $this->data_to_view[$dropdown][0] = "All";                    
         }

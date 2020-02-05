@@ -44,6 +44,14 @@ function fphone($phone) {
 // DATES
 // =================================
 
+function fdateMonth($date) {
+    if ($date) {
+        return date("F", strtotime($date));
+    } else {
+        return false;
+    }
+}
+
 function fdateDay($date) {
     return date("d", strtotime($date));
 }
