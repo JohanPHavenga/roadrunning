@@ -1,6 +1,8 @@
 <?php
 
-// public mailer class to get list from mailques table and send it out
+// THIS IS A MANUAL PROCESS OF THE MAIL QUE
+// THE ONE RUNNING EVERY 5 MIN IS IN CRON/INTRA_DAY
+
 class Mailer extends Frontend_Controller {
 
     public function __construct() {
@@ -42,54 +44,6 @@ class Mailer extends Frontend_Controller {
             $status_id = 7;
         }
         $this->emailque_model->set_emailque_status($id, $status_id);
-    }
-
-    private function send_mail($data = "") {
-        $this->load->library('email');
-
-        $config['mailtype'] = 'html';
-        $config['smtp_host'] = $this->ini_array['email']['smtp_server'];
-        $config['smtp_port'] = $this->ini_array['email']['smtp_port'];
-        $config['smtp_crypto'] = $this->ini_array['email']['smtp_crypto'];
-        $config['charset'] = $this->ini_array['email']['email_charset'];
-        $config['useragent'] = $this->ini_array['email']['useragent'];
-        $this->email->initialize($config);
-
-        $this->email->from($data['emailque_from_address'], $data['emailque_from_name']);
-        $this->email->to($data['emailque_to_address'], $data['emailque_to_name']);
-        if ($data['emailque_cc_address']) {
-            $this->email->cc($data['emailque_cc_address']);
-        }
-        if ($data['emailque_bcc_address']) {
-            $bcc_arr[$data['emailque_bcc_address']]=$data['emailque_bcc_address'];
-        }
-        $bcc_arr[$this->ini_array['email']['bcc_address']]=$this->ini_array['email']['bcc_address'];
-        $this->email->bcc($bcc_arr);
-        $this->email->subject($data['emailque_subject']);
-        $this->email->message($data['emailque_body']);
-        
-//        wts($data);
-//        wts($this->email,1);
-
-        $send = $this->email->send();
-
-        return $send;
-    }
-
-    public function test() {
-        // test email
-        $data = [
-            "to" => "johan.havenga@gmail.com",
-            "body" => "test êmail",
-            "subject" => "test email from coyote",
-            "from" => "tech@roadrunning.co.za",
-            "from_name" => "Coyote Test Mailer Bôt",
-        ];
-        $this->set_email($data);
-
-        echo "mail sent";
-
-        $this->process_que();
     }
 
 }
