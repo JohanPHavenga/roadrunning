@@ -38,8 +38,18 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <meta name="description" content="<?= $meta_description; ?>">
         <meta name="robots" content="<?= $meta_robots; ?>" />
 
+
+        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.eot'); ?>" as="font">
+        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.svg'); ?>" as="font">
+        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.ttf'); ?>" as="font">
+        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.woff'); ?>" as="font">
+
+        <link href="<?= base_url('assets/css/plugins.css'); ?>" rel="stylesheet" media="screen">
+        <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet" media="screen">
+        <link href="<?= base_url('assets/css/responsive.css'); ?>" rel="stylesheet" media="screen"> 
+
         <!-- critical path css -->
-        <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet" type="text/css">
+        <!--<link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet preload" type="text/css">-->
         <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
 
         <link rel="apple-touch-icon" sizes="57x57" href="<?= base_url('assets/favicon/apple-icon-57x57.png'); ?>">
@@ -75,6 +85,24 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         ?>
     </head>
     <body>
+        <!-- Analytics -->
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-85900175-2', 'auto');
+            ga('send', 'pageview');
+
+        </script>
         <div class="body-inner">
 
             <!-- Topbar -->

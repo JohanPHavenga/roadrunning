@@ -108,6 +108,11 @@ address { display: inline; }
 
 /* Color fixes */
 
+a.btn, button.btn {
+    background-color: #26B8F3;
+    border-color: #26B8F3;
+}
+
 .form-control:focus, input:focus, select:focus {
     border-color: #26B8F3;
 }
@@ -138,6 +143,10 @@ a.btn:not([href]):not([tabindex])::after, .btn::after,
     background-color: #181818;
 }
 
+a:hover {    
+    color: #26B8F3;
+}
+
 a:hover span {
     color: #26B8F3;
     text-decoration: underline;
@@ -149,6 +158,9 @@ a:hover span {
     background-color: #26B8F3;
 }
 
+#mainMenu nav > ul > li > a:hover,
+#mainMenu nav > ul > li .dropdown-menu li:hover a,
+#mainMenu nav > ul > li:hover > a,
 #header.dark #mainMenu nav > ul > li > a:hover,
 .page-menu.inverted nav > ul > li .dropdown-menu a:hover
 {
