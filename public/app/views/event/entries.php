@@ -40,7 +40,7 @@
                             ) {
                                 ?>
                                 <p>
-                                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-light btn-creative btn-icon-holder btn-shadow btn-light-hover">Enter online
+                                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-default btn-creative btn-icon-holder btn-shadow btn-light-hover">Enter online
                                         <i class="fa fa-arrow-right"></i></a>
                                 </p>
                                 <?php
@@ -49,19 +49,28 @@
                             <ul>
                                 <?php
                                 // Online entries
+                                // check vir online entries
                                 if (isset($edition_data['entrytype_list'][4])) {
-                                    if (isset($date_list[3][0]['date_start']) && strtotime($date_list[3][0]['date_start']) > time()) {
-                                        echo "<li>Online entries will open on <b style='color: red;'>" . fdateHumanFull($date_list[3][0]['date_start'], true) . " </b>";
+                                    // check if open date has past or not
+                                    if (strtotime($date_list[3][0]['date_start']) < time()) {
+                                        $text = "opened";
+                                    } else {
+                                        $text = "will open";
                                     }
-                                    if (!isset($date_list[3][0]['date_start']) && strtotime($date_list[3][0]['date_end']) < time()) {
+                                    // if open date is not equal to the race date
+                                    if (strtotime($date_list[3][0]['date_start']) != strtotime($edition_data['edition_date'])) {
+                                        echo "<li>Online entries $text on <b style='color: red;'>" . fdateEntries($date_list[3][0]['date_start'], true) . " </b>";
+                                    } else {
                                         echo "<li>Online entries will <b>open soon</b>";
                                     }
-                                    if (isset($url_list[5])) {
-                                        $d='';
+                                    // check vir closing date
+                                    if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
+                                        $d = '';
+                                        // check if already closed
                                         if (strtotime($date_list[3][0]['date_end']) < time()) {
                                             $d = "d";
                                         }
-                                        echo "<li>Online entries close$d on <b>" . fdateHumanFull($date_list[3][0]['date_end'], true) . "</b></li>";
+                                        echo "<li>Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></li>";
                                     }
                                 } else {
                                     echo "<li class='text-danger'>No online entries available</li>";
@@ -69,31 +78,45 @@
 
                                 // OTD entries
                                 if (isset($edition_data['entrytype_list'][1])) {
-                                    echo "<li>Entries will be taken <span class='text-danger'><b>on the day</b></span> from <b>" .
-                                    ftimeMil($date_list[6][0]['date_start']);
-                                    if (!time_is_midnight($date_list[6][0]['date_end'])) {
-                                        echo " - " . ftimeMil($date_list[6][0]['date_end']);
+                                    // check if time has been set
+                                    if (strtotime($date_list[6][0]['date_start']) != strtotime($edition_data['edition_date'])) {
+                                        echo "<li>Entries will be taken <span class='text-danger'><b>on the day</b></span> from <b>" .
+                                        ftimeMil($date_list[6][0]['date_start']);
+                                        if (!time_is_midnight($date_list[6][0]['date_end'])) {
+                                            echo " - " . ftimeMil($date_list[6][0]['date_end']);
+                                        }
+                                        echo "</b></li>";
                                     }
-                                    echo "</b></li>";
                                 } else {
                                     echo "<li class='text-danger'>No entrires avaialble on race day</li>";
                                 }
 
                                 // Manual entries
                                 if (isset($edition_data['entrytype_list'][2])) {
-                                    if (!empty($date_list[5][0]['venue_name'])) {
-                                        echo "<li>Pre-Entries can also be completed at " . $date_list[5][0]['venue_name'] . "</li>";
+                                    // check if values are set
+                                    if (strtotime($date_list[5][0]['date_start']) != strtotime($edition_data['edition_date'])) {
+                                        if (!empty($date_list[5][0]['venue_name'])) {
+                                            echo "<li>Pre-Entries can also be completed at " . $date_list[5][0]['venue_name'] . "</li>";
+                                        }
+                                        echo "<li>Closing date for manual pre-entries is <u>" . fdateEntries($date_list[5][0]['date_end'], true, true) . "</u></li>";
                                     }
-                                    echo "<li>Closing date for manual pre-entries is <u>" . fdateHumanFull($date_list[5][0]['date_end'], true, true) . "</u></li>";
                                 }
 
                                 // PRE entries
                                 if (isset($edition_data['entrytype_list'][3])) {
-                                    echo "<li><b>Entries will be taken on:</b><ul>";
-                                    foreach ($date_list[4] as $date) {
-                                        echo "<li>" . fdateHumanFull($date['date_start'], true, true) . "-" . ftimeMil($date['date_end']) . " @ " . $date['venue_name'] . "</li>";
+                                    // check if date is set, if closetime is not midnight and if venue is set
+                                    if
+                                    (
+                                            (strtotime($date_list[4][0]['date_start']) != strtotime($edition_data['edition_date'])) &&
+                                            (!time_is_midnight($date_list[4][0]['date_end'])) &&
+                                            (!empty($date_list[4][0]['venue_name']))
+                                    ) {
+                                        echo "<li><b>Entries will be taken on:</b><ul>";
+                                        foreach ($date_list[4] as $date) {
+                                            echo "<li>" . fdateEntries($date['date_start'], true, true) . "-" . ftimeMil($date['date_end']) . " @ " . $date['venue_name'] . "</li>";
+                                        }
+                                        echo "</ul></li>";
                                     }
-                                    echo "</ul></li>";
                                 }
 
 
@@ -132,7 +155,7 @@
                                 if ($edition_data['edition_entry_nosubstitution']) {
                                     echo "<li><strong>No substitutions</strong>";
                                     if (strtotime($date_list[7][0]['date_end']) < strtotime($edition_data['edition_date'])) {
-                                        echo " after " . fdateHumanFull($date_list[7][0]['date_end'], true, true);
+                                        echo " after " . fdateEntries($date_list[7][0]['date_end'], true, true);
                                     }
                                     echo "</li>";
                                 }
@@ -141,7 +164,7 @@
                                 if ($edition_data['edition_entry_nodowngrade']) {
                                     echo "<li><strong>No up- or downgrades will be entertained</strong>";
                                     if (strtotime($date_list[8][0]['date_end']) < strtotime($edition_data['edition_date'])) {
-                                        echo " after " . fdateHumanFull($date_list[8][0]['date_end'], true, true);
+                                        echo " after " . fdateEntries($date_list[8][0]['date_end'], true, true);
                                     }
                                     echo "</li>";
                                 }
@@ -150,7 +173,7 @@
                                 if ($edition_data['edition_tshirt_amount'] > 0) {
                                     echo "<li>An event <strong>T-Shirt</strong> is available for purchase as part of the entry process for <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong></li>";
                                     if (!empty($edition_data['edition_tshirt_text'])) {
-                                        echo "<li>" . $edition_data['edition_tshirt_text'] . "</li>";
+                                        echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
                                     }
                                 }
                                 ?>

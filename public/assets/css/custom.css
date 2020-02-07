@@ -108,9 +108,17 @@ address { display: inline; }
 
 /* Color fixes */
 
-a.btn, button.btn {
+a.btn, 
+button.btn {
     background-color: #26B8F3;
     border-color: #26B8F3;
+}
+a.btn:hover, 
+button.btn:hover {
+    background-color: #F36126;
+    border-color: #F36126;
+    text-decoration: none;
+    color: #fff;
 }
 
 .form-control:focus, input:focus, select:focus {
@@ -192,6 +200,9 @@ a:hover span {
 
 .product .product-rate {
     color: #FFC300;
+}
+.product .product-price {
+    width: auto;
 }
 
 .sidebar .widget.widget-map {

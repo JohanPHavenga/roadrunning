@@ -91,6 +91,15 @@ function time_is_midnight($date) {
         return false;
     }
 }
+    function time_is_almost_midnight($date) {
+    $time = date("H:i", strtotime($date));
+    if (($time == "23:55")||($time == "23:59")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 function move_to_top(&$array, $key) {
     $temp = array($key => $array[$key]);

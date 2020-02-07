@@ -13,6 +13,7 @@ class Main extends Frontend_Controller {
         $this->load->model('race_model');
         $this->load->model('history_model');
         $this->load->model('file_model');
+        $this->load->model('date_model');
         $this->load->model('entrytype_model');
 
         // featured events
@@ -22,6 +23,7 @@ class Main extends Frontend_Controller {
             "limit" => "5",
         ];
         $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        wts($this->data_to_views['featured_events'],1);
 
         // upcoming events
         $query_params = [

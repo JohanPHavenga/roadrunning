@@ -30,7 +30,7 @@
                 <div class="product">
                     <div class="row m-b-10">
                         <div class="col-lg-5">
-                            <div class="product-image">
+                            <div class="product-image m-b-20">
                                 <!-- Carousel slider -->
                                 <div class="carousel dots-inside dots-dark arrows-visible arrows-only arrows-dark" data-items="1" data-loop="true" data-autoplay="true" data-animate-in="fadeIn" data-animate-out="fadeOut" data-autoplay-timeout="2500" data-lightbox="gallery">
                                     <?php

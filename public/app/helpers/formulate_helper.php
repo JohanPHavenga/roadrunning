@@ -65,15 +65,31 @@ function fdateHuman($date) {
     return date("D j M", strtotime($date));
 }
 
-function fdateHumanFull($date, $show_dotw = FALSE) {
+function fdateHumanFull($date, $show_dotw = false, $show_time = false) {
+    $date_str = "j F Y";
     if ($show_dotw) {
-        return date("l, j F Y", strtotime($date));
-    } else {
-        return date("j F Y", strtotime($date));
+        $date_str = "l, " . $date_str;
     }
+    if ($show_time) {
+        if (!time_is_midnight($date)) {
+            $date_str .= " H:i";
+        }
+    }
+    return date($date_str, strtotime($date));
 }
 
-function fdateLong($date, $show_sec = TRUE) {
+function fdateEntries($date) {
+    $post_text = '';
+    $date_str = "l, j F";
+    if (time_is_almost_midnight($date)) {
+        $post_text = " @ midnight";
+    } elseif (!time_is_midnight($date)) {
+        $date_str .= " @ H\hi";
+    }
+    return date($date_str, strtotime($date)) . $post_text;
+}
+
+function fdateLong($date, $show_sec = true) {
     if ($show_sec) {
         return date("Y-m-d H:i:s", strtotime($date));
     } else {
