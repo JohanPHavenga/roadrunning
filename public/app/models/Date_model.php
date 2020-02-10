@@ -25,7 +25,7 @@ class Date_model extends Frontend_model {
         return false;
     }
 
-    public function get_date_list($linked_to = NULL, $linked_id = 0, $by_date_type_linked_id = false, $by_date__only = false) {
+    public function get_date_list($linked_to = NULL, $linked_id = 0, $by_date_type_linked_id = false, $by_date_only = false) {
         $this->db->select("dates.*, datetypes.*, venue_name");
         $this->db->join("datetypes", "datetype_id");
         $this->db->join("venues", "venue_id", "left");
@@ -43,7 +43,7 @@ class Date_model extends Frontend_model {
             foreach ($query->result_array() as $row) {
                 if ($by_date_type_linked_id) {
                     $date_list[$row['datetype_id']][$row["linked_id"]] = $row;
-                } elseif ($by_date__only) {
+                } elseif ($by_date_only) {
                     $date_list[$row['datetype_id']][] = $row;
                 } else {
                     $date_list[$row['date_id']] = $row;
@@ -83,5 +83,13 @@ class Date_model extends Frontend_model {
             return false;
         }
     }
+    
+    public function add_dates($edition_list) {
+        foreach ($edition_list as $edition_id => $edition) {
+            $edition_list[$edition_id]['date_list']=$this->get_date_list("edition",$edition_id, false, true);
+        }
+        return $edition_list;
+    }
+    
 
 }

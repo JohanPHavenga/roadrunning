@@ -38,7 +38,7 @@ class Contact extends Frontend_Controller {
         $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email');
-        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
+//        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
@@ -87,11 +87,13 @@ class Contact extends Frontend_Controller {
             "body" => "<h3>Contact form</h3><p>"
             . "<b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
             . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
-            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . nl2br($email_data['user_message']) . "</p>",
+            . "<p style='padding-left: 15px; padding-bottom:0; margin: 20px 0; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . nl2br($email_data['user_message']) . "</p>",
             "subject" => "Enquiry from RoadRunning.co.za #". uniqid(),
             "from" => $email_data['user_email'],
             "from_name" => $email_data['user_name']." ".$email_data['user_surname'],
         ];        
+//        echo $data['body'];
+//        wts($data,1);
         $this->set_email($data);
         
         // send mail to user
@@ -169,7 +171,7 @@ class Contact extends Frontend_Controller {
             . "by a runner enquiring about the <b>".$edition_data['edition_name']."</b> race:"
             . "<p><b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
             . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
-            . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Query:</b><br> " . nl2br($email_data['user_message']) . "</p>"
+            . "<p style='padding-left: 15px; padding-bottom: 0; margin: 20px 0; border-left: 4px solid #ccc;'><b>Query:</b><br> " . nl2br($email_data['user_message']) . "</p>"
             . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/event/".$edition_data['edition_slug']."' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
             . "<br>Please reply to this email to answer the runner's query.</p>",
             "from" => $email_data['user_email'],

@@ -41,7 +41,7 @@
                             <?php
                             echo $mailing_list_notice;
                         } else {
-                            $days_ago = date("d", time() - strtotime($edition_data['edition_date']));
+                            $days_ago = date("j", time() - strtotime($edition_data['edition_date']));
                             switch ($edition_data['edition_info_status']) {
                                 case 10:
                                     // pending

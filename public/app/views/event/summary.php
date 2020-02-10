@@ -104,41 +104,56 @@
                                     ?>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <?php
-                                    // BUTTONS
-                                    if (!in_array(5, $edition_data['entrytype_list'])) {
+                            <?php
+                            if (!$in_past) {
+                                ?>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <?php
+                                        // BUTTONS
+                                        if (!in_array(5, $edition_data['entrytype_list'])) {
+                                            ?>
+                                            <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
+                                                <i class="fa fa-arrow-right"></i></a>
+                                            <?php
+                                        }
                                         ?>
-                                        <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
+                                        <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
                                             <i class="fa fa-arrow-right"></i></a>
-                                        <?php
-                                    }
-                                    ?>
-                                    <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
-                                        <i class="fa fa-arrow-right"></i></a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row m-b-30">
-                                <div class="col-lg-12">
-                                    <?php
-                                    if (isset($flyer['edition'])) {
-                                        ?>
-                                        <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
-                                            <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
-
+                                <div class="row m-b-30">
+                                    <div class="col-lg-12">
                                         <?php
-                                    }
-                                    if (isset($url_list[1])) {
-                                        ?>
-                                        <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
-                                            <i class="fa fa-link"></i> Race Website</a>
+                                        if (isset($flyer['edition'])) {
+                                            ?>
+                                            <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                                                <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
 
-                                        <?php
-                                    }
-                                    ?>
+                                            <?php
+                                        }
+                                        if (isset($url_list[1])) {
+                                            ?>
+                                            <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                                                <i class="fa fa-link"></i> Race Website</a>
+
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
-                            </div>
+                                <?php
+                            } else {
+                                ?>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <a class="btn btn-default btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">View results
+                                            <i class="fa fa-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
                         </div>
                     </div>
 
@@ -147,9 +162,9 @@
                     <div class="row m-b-30">
                         <div class="col-lg-12">
                             <?php
-                        // LANDSCAPE ADS WIDGET
-                        $this->load->view('widgets/horizontal_ad');
-                        ?>
+                            // LANDSCAPE ADS WIDGET
+                            $this->load->view('widgets/horizontal_ad');
+                            ?>
                         </div>
                     </div>
 
@@ -330,17 +345,12 @@
                         // BUTTONS
                         if (!in_array(5, $edition_data['entrytype_list'])) {
                             ?>
-                            <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
-                                <i class="fa fa-arrow-right"></i></a>
+                            <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details</a>
                             <?php
                         }
                         ?>
-                        <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
-                            <i class="fa fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="row m-b-30">
-                    <div class="col-lg-12">
+                        <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info</a>
+                    
                         <?php
                         if (isset($flyer['edition'])) {
                             ?>

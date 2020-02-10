@@ -22,10 +22,17 @@ $this->load->view('templates/search_form');
                                         <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>"></a>
                                     <div class="race-title"><?= $edition['edition_name']; ?></div>
                                     <?php
-                                    if (!array_key_exists(5, $edition['entrytype_list'])) {
-                                        ?>
-                                        <span class="race-badge">Entry <br>Open</span>
-                                        <?php
+                                    // soek vir online entries
+                                    if ((array_key_exists(4, $edition['entrytype_list'])) && (array_key_exists(3, $edition['date_list']))) {
+                                        if (strtotime($edition['date_list'][3][0]['date_end']) > time()) {
+                                            ?>
+                                            <span class="race-badge">Entry <br>Open</span>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <span class="race-badge">Entry <br>Close</span>
+                                            <?php
+                                        }
                                     }
                                     ?>
                                 </div>

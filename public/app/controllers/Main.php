@@ -22,8 +22,8 @@ class Main extends Frontend_Controller {
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
             "limit" => "5",
         ];
-        $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        wts($this->data_to_views['featured_events'],1);
+        $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->date_model->add_dates($this->edition_model->get_edition_list($query_params)));
+//        wts($this->data_to_views['featured_events'],1);
 
         // upcoming events
         $query_params = [
@@ -65,14 +65,15 @@ class Main extends Frontend_Controller {
     }
 
     public function custom_404() {
+        
+        $this->output->set_status_header('404');
         if ($this->session->flashdata('alert') !== null) {
             $this->data_to_views['page_title'] = $this->session->flashdata('alert');
         } else {
-            $this->data_to_views['page_title'] = "404 Error";
-        $this->data_to_views['meta_description'] = "There has been an error";
+            $this->data_to_views['page_title'] = "Page not found - 404 Error";
+            $this->data_to_views['meta_description'] = "The page you are looking for could not be found";
         }
         $this->load->view($this->header_url, $this->data_to_views);
-        $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('main/404', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
