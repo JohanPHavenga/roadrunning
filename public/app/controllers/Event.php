@@ -123,8 +123,11 @@ class Event extends Frontend_Controller {
         $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
 
         // google data
-        $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
-        $this->data_to_views['google_cal_url'] = $this->formulate_google_cal($edition_data, $this->data_to_views['race_list']);
+        if ($url_params[0] == "summary") {
+            $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
+            $this->data_to_views['google_cal_url'] = $this->formulate_google_cal($edition_data, $this->data_to_views['race_list']);
+        }
+        
 
         // if results loaded, get URLS to use
         if ($edition_data['edition_info_status'] == 11) {
@@ -161,14 +164,18 @@ class Event extends Frontend_Controller {
 
     private function get_result_arr($slug) {
         $results = [];
+        $n = 0;
         if (isset($this->data_to_views['file_list'][4])) {
-            $results['edition']['url'] = base_url("file/edition/" . $slug . "/results/" . $this->data_to_views['file_list'][4][0]['file_name']);
-            $results['edition']['text'] = "Download results summary";
-            $results['edition']['icon'] = "file-excel";
-        } elseif (isset($this->data_to_views['url_list'][4])) {
-            $results['edition']['url'] = $this->data_to_views['url_list'][4][0]['url_name'];
-            $results['edition']['text'] = "View results";
-            $results['edition']['icon'] = "external-link-alt";
+            $results['edition'][$n]['url'] = base_url("file/edition/" . $slug . "/results/" . $this->data_to_views['file_list'][4][0]['file_name']);
+            $results['edition'][$n]['text'] = "Download results summary";
+            $results['edition'][$n]['icon'] = "file-excel";
+            $n++;
+        }
+        if (isset($this->data_to_views['url_list'][4])) {
+            $results['edition'][$n]['url'] = $this->data_to_views['url_list'][4][0]['url_name'];
+            $results['edition'][$n]['text'] = "View results";
+            $results['edition'][$n]['icon'] = "external-link-alt";
+            $n++;
         }
 
         // get race file and url lists
@@ -176,13 +183,16 @@ class Event extends Frontend_Controller {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
             $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
             if (isset($race_file_list[4])) {
-                $results['race'][$race_id]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
-                $results['race'][$race_id]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
-                $results['race'][$race_id]['icon'] = "file-excel";
-            } elseif (isset($race_url_list[4])) {
-                $results['race'][$race_id]['url'] = $race_url_list[4][0]['url_name'];
-                $results['race'][$race_id]['text'] = $race['race_name'] . " Results";
-                $results['race'][$race_id]['icon'] = "external-link-alt";
+                $results['race'][$race_id . $n]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
+                $results['race'][$race_id . $n]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
+                $results['race'][$race_id . $n]['icon'] = "file-excel";
+                $n++;
+            }
+            if (isset($race_url_list[4])) {
+                $results['race'][$race_id . $n]['url'] = $race_url_list[4][0]['url_name'];
+                $results['race'][$race_id . $n]['text'] = $race['race_name'] . " Results";
+                $results['race'][$race_id . $n]['icon'] = "external-link-alt";
+                $n++;
             }
         }
 

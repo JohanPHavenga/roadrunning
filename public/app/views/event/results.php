@@ -65,8 +65,14 @@
                                         ?>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="<?= $results['edition']['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $results['edition']['icon']; ?>"></i>
-                                                    <?= $results['edition']['text']; ?></a>
+                                                <?php
+                                                foreach ($results['edition'] as $edition_result) {
+                                                    ?>
+                                                    <a href="<?= $edition_result['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $edition_result['icon']; ?>"></i>
+                                                        <?= $edition_result['text']; ?></a>
+                                                    <?php
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                         <?php

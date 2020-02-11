@@ -53,7 +53,7 @@ if (isset($file_list[1])) {
         <?php } ?>
     },
     <?php } ?>
-    "description": "<?=$description;?>",    
+    "description": "<?= html_escape($description);?>",    
     "image": "<?=$img_url;?>",     
     "offers": [
             

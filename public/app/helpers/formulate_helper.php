@@ -118,7 +118,7 @@ function fdateStructured($timestamp) {
 }
 
 function fdateTitle($date) {
-    return date("D, d M", strtotime($date));
+    return date("D, d M Y", strtotime($date));
 }
 
 // =======================================
