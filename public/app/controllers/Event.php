@@ -116,11 +116,24 @@ class Event extends Frontend_Controller {
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id, $this->data_to_views['in_past']);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
         $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
+        // Online entries open?
+        $this->data_to_views['online_entry_status']="unknown";
+        if (isset($this->data_to_views['date_list'][3])) {
+            if ((strtotime($this->data_to_views['date_list'][3][0]['date_start']) < time()) && (strtotime($this->data_to_views['date_list'][3][0]['date_end']) > time())) {
+                $this->data_to_views['online_entry_status']="open";
+            }
+            if (strtotime($this->data_to_views['date_list'][3][0]['date_end']) < time()) {
+                $this->data_to_views['online_entry_status']="closed";
+            }
+        }
 
+        // GPS
         $gps_parts = explode(",", $edition_data['edition_gps']);
         $this->data_to_views['gps']['lat'] = $gps_parts[0];
         $this->data_to_views['gps']['long'] = $gps_parts[1];
         $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
+        
+        
 
         // google data
         if ($url_params[0] == "summary") {
@@ -137,6 +150,9 @@ class Event extends Frontend_Controller {
 
         if ((isset($this->data_to_views['url_list'][2])) || (isset($this->data_to_views['file_list'][2]))) {
             $this->data_to_views['flyer'] = $this->get_flyer_arr($slug);
+        }
+        if ((isset($this->data_to_views['url_list'][3])) || (isset($this->data_to_views['file_list'][3]))) {
+            $this->data_to_views['entry_form'] = $this->get_entry_form_arr($slug);
         }
 
 //        wts($this->data_to_views['route_maps'],true);
@@ -238,6 +254,21 @@ class Event extends Frontend_Controller {
         } elseif (isset($this->data_to_views['url_list'][2])) {
             $flyer_list['edition']['url'] = $this->data_to_views['url_list'][2][0]['url_name'];
             $flyer_list['edition']['text'] = "View Race Flyer";
+            $flyer_list['edition']['icon'] = "external-link-alt";
+        }
+
+        return $flyer_list;
+    }
+    
+    private function get_entry_form_arr($slug) {
+        $flyer_list = [];
+        if (isset($this->data_to_views['file_list'][3])) {
+            $flyer_list['edition']['url'] = base_url("file/edition/" . $slug . "/entry form/" . $this->data_to_views['file_list'][3][0]['file_name']);
+            $flyer_list['edition']['text'] = "Download Entry Form";
+            $flyer_list['edition']['icon'] = "file-pdf";
+        } elseif (isset($this->data_to_views['url_list'][3])) {
+            $flyer_list['edition']['url'] = $this->data_to_views['url_list'][3][0]['url_name'];
+            $flyer_list['edition']['text'] = "View Entry Form";
             $flyer_list['edition']['icon'] = "external-link-alt";
         }
 

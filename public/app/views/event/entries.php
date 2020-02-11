@@ -185,6 +185,26 @@
                             }
                         }
                         ?>
+                        <div class="row m-t-30">
+                            <div class="col-lg-12">
+                                <?php
+                                if (isset($flyer['edition'])) {
+                                    ?>
+                                    <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-default">
+                                        <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+                                    <?php
+                                }
+                                if (isset($entry_form['edition'])) {
+                                    ?>
+                                    <a href="<?= $entry_form['edition']['url']; ?>" class="btn btn-light">
+                                        <i class="fa fa-<?= $entry_form['edition']['icon']; ?>"></i> <?= $entry_form['edition']['text']; ?></a>
+
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
 
                     </div>
 

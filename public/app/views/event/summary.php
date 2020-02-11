@@ -112,8 +112,22 @@
                                         <?php
                                         // BUTTONS
                                         if (!in_array(5, $edition_data['entrytype_list'])) {
+                                            switch($online_entry_status) {
+                                                case "open":
+                                                    $btn_text="Entries Open!";
+                                                    $btn_type="success";
+                                                    break;
+                                                case "closed":
+                                                    $btn_text="Entries Closed";
+                                                    $btn_type="danger";
+                                                    break;
+                                                default:
+                                                    $btn_text="Entry Details";
+                                                    $btn_type="light";
+                                                    break;
+                                            }
                                             ?>
-                                            <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details
+                                            <a class="btn btn-<?=$btn_type;?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?=$btn_text;?>
                                                 <i class="fa fa-arrow-right"></i></a>
                                             <?php
                                         }
