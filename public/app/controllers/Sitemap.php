@@ -11,7 +11,7 @@ class Sitemap extends Frontend_Controller {
         // selle vir altwee functions
         $query_params = [
             "order_by" => ["edition_date" => "DESC"],
-//            "where" => ["edition_date > " => date("Y-m-d H:i:s")],
+            "where" => ["edition_status != " => 2],
         ];
         $edition_list = $this->edition_model->get_edition_list($query_params);
         $this->data_to_views['edition_arr'] = $this->chronologise_data($edition_list, "edition_date");
