@@ -61,12 +61,12 @@ class Edition_model extends Frontend_model {
         }
     }
 
-    public function get_edition_list($query_params = [], $field_arr = NULL, $show_query=false) {
+    public function get_edition_list($query_params = [], $field_arr = NULL, $show_query = false) {
         if (is_null($field_arr)) {
             $field_arr = [
-                "editions.edition_id", "edition_name", "edition_status", "edition_isfeatured", "edition_info_status","edition_date", "edition_slug", "edition_address", "edition_info_prizegizing",
+                "editions.edition_id", "edition_name", "edition_status", "edition_isfeatured", "edition_info_status", "edition_date", "edition_slug", "edition_address", "edition_info_prizegizing",
                 "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id", "province_abbr", "club_name",
-                "editions.created_date","editions.updated_date",
+                "editions.created_date", "editions.updated_date",
             ];
         }
         $select = implode(",", $field_arr);
@@ -90,7 +90,9 @@ class Edition_model extends Frontend_model {
         if (!isset($query_params['order_by'])) {
             $this->db->order_by('edition_date', 'ASC');
         }
-        if ($show_query) { die($this->db->get_compiled_select()); }
+        if ($show_query) {
+            die($this->db->get_compiled_select());
+        }
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -215,11 +217,11 @@ class Edition_model extends Frontend_model {
         $edition['img_url'] = $this->get_edition_img_url($edition['edition_id'], $edition['edition_slug']);
         // add entrytype list
         $edition['entrytype_list'] = $this->get_edition_entrytype_list($edition['edition_id']);
-        
+
         return $edition;
     }
-    
-     public function update_field($e_id, $field, $value) {
+
+    public function update_field($e_id, $field, $value) {
         if (!($e_id)) {
             return false;
         } else {
@@ -227,6 +229,54 @@ class Edition_model extends Frontend_model {
             $this->db->update('editions', [$field => $value, "updated_date" => date("Y-m-d H:i:s")], array('edition_id' => $e_id));
             $this->db->trans_complete();
             return $this->db->trans_status();
+        }
+    }
+
+    public function get_edition_id_from_name($edition_name) {
+        // CHECK Editions table vir die naame
+        $this->db->select("edition_id, edition_name, edition_status");
+        $this->db->from("editions");
+        $this->db->where("edition_name", $edition_name);
+//            $this->db->where("REPLACE(edition_name, '\'', '')='$edition_name'"); // fix vir as daar 'n ' in die naam is
+//            $this->db->or_where("REPLACE(edition_name, '/', ' ')=$edition_name`"); // fix vir as daar 'n / in die naam is
+//            echo $this->db->get_compiled_select(); exit();
+        $editions_query = $this->db->get();
+
+
+        // CHECK Editions_Past vir as die naam van die edition verander
+        $this->db->select("edition_id");
+        $this->db->from("editions_past");
+        $this->db->where("edition_name", $edition_name);
+//            $this->db->where("REPLACE(edition_name, '\'', '')=`$edition_name`"); // fix vir as daar 'n ' in die naam is
+//            $this->db->or_where("REPLACE(edition_name, '/', ' ')='$edition_name'"); // fix vir as daar 'n / in die naam is
+//            echo $this->db->get_compiled_select();   exit();
+
+        $editions_past_query = $this->db->get();
+
+
+        if ($editions_query->num_rows() > 0) {
+            $result = $editions_query->result_array();
+            return $result[0];
+        } elseif ($editions_past_query->num_rows() > 0) {
+            $result = $editions_past_query->result_array();
+            $result[0]['edition_name'] = $this->get_edition_name_from_id($result[0]['edition_id']);
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+
+    public function get_edition_name_from_id($edition_id) {
+        // CHECK Editions table vir die naame
+        $this->db->select("edition_name");
+        $this->db->from("editions");
+        $this->db->where("edition_id", $edition_id);
+        $editions_query = $this->db->get();
+        if ($editions_query->num_rows() > 0) {
+            $result = $editions_query->result_array();
+            return $result[0]['edition_name'];
+        } else {
+            return false;
         }
     }
 

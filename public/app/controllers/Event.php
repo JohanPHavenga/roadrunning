@@ -25,26 +25,53 @@ class Event extends Frontend_Controller {
         // as daar nie 'n edition_slug deurgestuur word nie
         if ($slug == "index") {
             redirect("/race-calendar");
-        } else {
-            $this->load->helper('form');
-            $this->load->library('form_validation');
-            // set a few vars to use
-            $this->data_to_views['slug'] = $slug;
-            $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
-            $this->data_to_views['subscribe_url'] = base_url("user/subscribe/event/" . $slug);
-            $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
-            $this->data_to_views['is_event_page'] = 1;
         }
 
-        // check vir sub-page
-        if ((empty($url_params)) || (!file_exists(APPPATH . "views/event/" . $url_params[0] . ".php"))) {
-            $url_params[0] = "summary";
-            $this->data_to_views['page_title_small'] = "";
+        // gebruik slug om ID te kry
+        $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
+        if ($edition_sum) {
+            // AS DIE NAAM WAT INKOM, NIE DIELFDE AS DIE OFFICIAL NAAM IS NIE, DAN DOEN HY 'N 301 REDIRECT.
+            if ($edition_sum['source'] == "past") {
+                $new_slug = $this->edition_model->get_edition_slug($edition_sum['edition_id']);
+                $url = base_url("event/" . $new_slug);
+                redirect($url, 'location', 301);
+            } else {
+                // if all is well
+                $edition_id = $edition_sum['edition_id'];
+                $edition_status = $edition_sum['edition_status'];
+                $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->get_edition_detail($edition_id);
+            }
         } else {
-            $this->data_to_views['page_title_small'] = "less_padding";
+            // old school
+            // decode die edition name uit die URL en kry ID
+            $edition_name = get_edition_name_from_url($slug);
+            $edition_data = $this->edition_model->get_edition_id_from_name($edition_name);
+
+            if ($edition_data) {
+                // AS DIE NAAM WAT INKOM, NIE DIELFDE AS DIE OFFICIAL NAAM IS NIE, DAN DOEN HY 'N 301 REDIRECT. (gebruik die nuwe slug)
+                if ($edition_data['edition_name'] != $edition_name) {
+//                $url = get_url_from_edition_name(encode_edition_name($edition_data['edition_name']));
+                    $new_slug = $this->edition_model->get_edition_slug($edition_data['edition_id']);
+                    $url = base_url("event/" . $new_slug);
+                    redirect($url, 'location', 301);
+                }
+            }
         }
-        $this->data_to_views['page_title_small'] = "less_padding"; // make all small banners for now
-        $this->data_to_views['url_params'] = $url_params;
+
+        // as die edition nie gevind is nie, of die status is Not Active
+        if (!isset($edition_id) || ($edition_status == 2)) {
+            // if name cannot be matched to an edition
+            $this->session->set_flashdata([
+                'alert' => " We had trouble finding the event. Please try selecting an event from the list below.",
+                'status' => "danger",
+            ]);
+            redirect(base_url("race/upcoming"), 'refresh', 404);
+            die();
+        }
+
+
+        $this->load->helper('form');
+        $this->load->library('form_validation');
 
         $this->load->model('race_model');
         $this->load->model('file_model');
@@ -53,20 +80,24 @@ class Event extends Frontend_Controller {
         $this->load->model('entrytype_model');
         $this->load->model('regtype_model');
         $this->load->model('tag_model');
-
-//        wts($this->data_to_views['crumbs_arr'],true);
-        // gebruik slug om ID te kry
-        $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
-        $edition_id = $edition_sum['edition_id'];
-        $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->get_edition_detail($edition_id);
-
+        // set a few vars to use
+        $this->data_to_views['slug'] = $slug;
+        $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
+        $this->data_to_views['subscribe_url'] = base_url("user/subscribe/event/" . $slug);
+        $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+        $this->data_to_views['is_event_page'] = 1;
+        // check vir sub-page
+        if ((empty($url_params)) || (!file_exists(APPPATH . "views/event/" . $url_params[0] . ".php"))) {
+            $url_params[0] = "summary";
+        }
+        $this->data_to_views['page_title_small'] = "less_padding"; // make all small banners for now
+        $this->data_to_views['url_params'] = $url_params;
         // lists
         $this->data_to_views['race_list'] = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
         $this->data_to_views['file_list'] = $file_list = $this->file_model->get_file_list("edition", $edition_id, true);
         $this->data_to_views['url_list'] = $url_list = $this->url_model->get_url_list("edition", $edition_id, true);
         $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_id, false, true);
         $this->data_to_views['tag_list'] = $tag_list = $this->tag_model->get_edition_tag_list($edition_id);
-
         // extended edition info
         $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
         $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
@@ -107,7 +138,7 @@ class Event extends Frontend_Controller {
 
 //        wts($this->data_to_views['route_maps'],true);
 
-        $this->data_to_views['meta_description']=$this->formulate_meta_description($this->data_to_views['edition_data']);
+        $this->data_to_views['meta_description'] = $this->formulate_meta_description($this->data_to_views['edition_data']);
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
@@ -115,15 +146,15 @@ class Event extends Frontend_Controller {
         $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
+
     function formulate_meta_description($edition_data) {
 //        wts($edition_data['race_summary']);
 //        wts($edition_data,1);
         $return = "Listing for the annual " .
                 $edition_data['event_name'] . " in " .
                 $edition_data['town_name'] . ", " .
-                $edition_data['province_name'] . " on "  .
-                fdateHumanFull($edition_data['edition_date']). " starting from " .
+                $edition_data['province_name'] . " on " .
+                fdateHumanFull($edition_data['edition_date']) . " starting from " .
                 ftimeSort($edition_data['race_summary']['times']['start']);
         return $return;
     }
@@ -308,8 +339,6 @@ class Event extends Frontend_Controller {
         return $return_arr;
     }
 
-    
-
     function ics($edition_slug) {
 
         $this->load->model('edition_model');
@@ -394,8 +423,8 @@ class Event extends Frontend_Controller {
 
     public function add() {
 
-        $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
-        
+        $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+
         // validation rules
         $this->form_validation->set_rules('event_name', 'Event name', 'trim|required');
         $this->form_validation->set_rules('event_date', 'Event date', 'trim|required');
