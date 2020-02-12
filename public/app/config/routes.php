@@ -74,6 +74,7 @@ $route['terms-conditions'] = 'main/terms_conditions';
 $route['version'] = 'main/site_version';
 $route['training-programs'] = 'main/training_programs';
 $route["training-programs/(.*)"] = 'main/training_programs/$1';
+$route['support'] = 'main/support';
 //$route['search'] = 'main/search';
 
 // RACE LISTS 
@@ -98,6 +99,7 @@ $route['logout/confirm'] = 'login/logout/confirm';
 $route['register'] = 'user/register';
 $route['forgot-password'] = 'user/forgot_password';
 $route['reset-password'] = 'user/reset_password';
+$route['subscription/unsubscribe/(.*)'] = 'user/unsubscribe/$1';
 
 // SPECIAL REGIONS
 $route['(?i)capetown'] = 'region/capetown';

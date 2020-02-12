@@ -118,6 +118,7 @@ class Tag_model extends Admin_model {
         if (!$edition_id) {
             return false;
         }
+        $data=[];
         $this->db->select("tag_id, tag_name, tagtype_name");
         $this->db->from("edition_tag");
         $this->db->join("tags", "tag_id");

@@ -9,7 +9,7 @@ class MY_Controller extends CI_Controller {
         parent::__construct();
     }
 
-    public function set_email_body($body, $post_text=null) {
+    public function set_email_body($body, $post_text = null) {
         $year = date("Y");
         $html = <<<EOT
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -39,7 +39,7 @@ $body
 <div style = "margin:20px 0;" > Copyright &copy;
 $year RoadRunningZA. All rights reserved.</div>
 $post_text
-<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/snapscan_LAzMFdGZ.png' style='margin-bottom: 10px;'></a><br>Consider supporting the wesbite via SnapScan</p>";
+<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/snapscan_LAzMFdGZ.png' style='margin-bottom: 10px;'></a><br>Consider supporting the wesbite via SnapScan</p>
 </div>
 </td></tr></tbody></table>
 </td></tr></tbody></table>
@@ -61,6 +61,13 @@ EOT;
             }
         }
         return $return_data;
+    }
+
+    // get unsubscribe URL
+    public function formulate_unsubscribe_url($user_id, $linked_to, $linked_id) {
+        $crypt = my_encrypt($user_id . "|" . $linked_to . "|" . $linked_id);
+        $url = base_url("user/unsubscribe/" . $crypt);
+        return $url;
     }
 
     // ==============================================================================================
@@ -236,7 +243,7 @@ class Frontend_Controller extends MY_Controller {
     // ==============================================================================================
     // CENTRAL MAIL FUNCTIONS
     // ==============================================================================================
-    public function set_email($data) {
+    public function set_email($data, $post_text=null) {
         // THIS FUNCTION ONLY TAKES EMAIL FIELDS AND ADD THEM TO THE EMAIL QUE TABLE
         // load emailque_model
         $this->load->model('emailque_model');
@@ -252,10 +259,11 @@ class Frontend_Controller extends MY_Controller {
             } else {
                 $from_name = $this->ini_array['email']['from_name'];
             }
+        
             $emailque_data = array(
                 'emailque_subject' => $data['subject'],
                 'emailque_to_address' => $data['to'],
-                'emailque_body' => $this->set_email_body($data['body']),
+                'emailque_body' => $this->set_email_body($data['body'], $post_text),
                 'emailque_status' => 5,
                 'emailque_from_address' => $from,
                 'emailque_from_name' => $from_name,
@@ -462,6 +470,13 @@ class Frontend_Controller extends MY_Controller {
                     "contact-us" => [
                         "display" => "Contact Me",
                         "loc" => base_url("contact"),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
+                        "priority" => 0.8,
+                        "changefreq" => "yearly",
+                    ],
+                    "support" => [
+                        "display" => "Support the site",
+                        "loc" => base_url("support"),
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                         "priority" => 0.8,
                         "changefreq" => "yearly",
@@ -1005,8 +1020,11 @@ class Frontend_Controller extends MY_Controller {
             "from" => $this->ini_array['email']['from_address_server'],
             "from_name" => $this->ini_array['email']['from_name_server'],
         ];
-
-        $mail_id = $this->set_email($data);
+        
+        
+        $unsubscribe_url = $this->formulate_unsubscribe_url($usersub_data['user_id'], $usersub_data['linked_to'], $usersub_data['linked_id']);
+        $post_text = "<p>This email was sent to " . $user_data['user_email']."<br><a href='$unsubscribe_url' style='text-decoration:underline'>Unsubscribe</a> from this list</p>";
+        $mail_id = $this->set_email($data,$post_text);
         return $mail_id;
     }
 
@@ -1452,6 +1470,44 @@ class Admin_Controller extends MY_Controller {
 
     function get_asa_member_field_list() {
         return ['asa_member_id'];
+    }
+
+    public function get_race_name_from_status($race_name, $race_distance, $racetype_name, $race_status) {
+        // set return as race_name
+        $return_name = $race_name;
+        // check for empty
+        if (empty($return_name)) {
+            switch (true) {
+                case $race_distance > 42.2:
+                    $return_name = "Ultra Marathon";
+                    break;
+                case $race_distance == 42.2:
+                    $return_name = "Marathon";
+                    break;
+                case $race_distance == 21.1:
+                    $return_name = "Half-Marathon";
+                    break;
+                case $race_distance < 10:
+                    if (strpos($racetype_name, 'Run') !== false) {
+                        $return_name = fraceDistance($race_distance) . " Fun Run";
+                    } else {
+                        $return_name = fraceDistance($race_distance) . " " . $racetype_name;
+                    }
+                    break;
+                default:
+                    $return_name = fraceDistance($race_distance) . " " . $racetype_name;
+                    break;
+            }
+        }
+        switch ($race_status) {
+            case 2:
+                $return_name = $return_name . " - DRAFT";
+                break;
+            case 3:
+                $return_name = $return_name . " - CANCELLED";
+                break;
+        }
+        return $return_name;
     }
 
     public function race_fill_blanks($race_data, $edition_info) {

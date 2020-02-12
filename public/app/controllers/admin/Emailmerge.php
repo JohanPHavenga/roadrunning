@@ -377,12 +377,6 @@ class Emailmerge extends Admin_Controller {
         return $this->table->generate();
     }
 
-    private function formulate_unsubscribe_url($user_id, $linked_to, $linked_id) {
-        $crypt = my_encrypt($user_id . "|" . $linked_to . "|" . $linked_id);
-        $url = base_url("subscription/unsubscribe/" . $crypt);
-        return $url;
-    }
-
     public function fill_variables($text, $data_arr) {
         // to replace %name% with name in data_arr etc.
         $newsletter_data = $this->fetch_newsletter_data();
@@ -410,7 +404,7 @@ class Emailmerge extends Admin_Controller {
         } else {
             $post_text .= "</p>";
         }        
-        $html_body = $this->set_email_body($text, $post_text, 1);
+        $html_body = $this->set_email_body($text, $post_text);
         return $html_body;
     }
 

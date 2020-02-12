@@ -303,7 +303,7 @@ class Edition extends Admin_Controller {
 //        echo $edition_id;
 //        wts($race_data);
 //        wts($edition_data, true);
-//        return($stats);
+        return($stats);
     }
 
     public function race_status_update($race_id_arr, $status_id) {

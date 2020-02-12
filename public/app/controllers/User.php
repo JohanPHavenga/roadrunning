@@ -142,12 +142,7 @@ class User extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    // get unsubscribe URL
-    private function formulate_unsubscribe_url($user_id, $linked_to, $linked_id) {
-        $crypt = my_encrypt($user_id . "|" . $linked_to . "|" . $linked_id);
-        $url = base_url("user/unsubscribe/" . $crypt);
-        return $url;
-    }
+    
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {
