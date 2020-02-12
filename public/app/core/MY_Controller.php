@@ -9,7 +9,7 @@ class MY_Controller extends CI_Controller {
         parent::__construct();
     }
 
-    public function set_email_body($body) {
+    public function set_email_body($body, $post_text=null) {
         $year = date("Y");
         $html = <<<EOT
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -38,6 +38,8 @@ $body
 <div style = "margin:20px 0;"><a href='https://www.roadrunning.co.za/' title='Go to RoadRunningZA'><img alt = "RoadRunningZA" width = "110" height = "22" src = "https://www.roadrunning.co.za/img/logo-vec-22.png" /></a></div>
 <div style = "margin:20px 0;" > Copyright &copy;
 $year RoadRunningZA. All rights reserved.</div>
+$post_text
+<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/snapscan_LAzMFdGZ.png' style='margin-bottom: 10px;'></a><br>Consider supporting the wesbite via SnapScan</p>";
 </div>
 </td></tr></tbody></table>
 </td></tr></tbody></table>

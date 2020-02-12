@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller to run all cronjobs from
  * Functions for intra_day, daily
@@ -9,6 +10,7 @@ class Cron extends Frontend_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('edition_model');
+        $this->load->model('emailque_model');
         $this->load->helper('date');
     }
 
@@ -17,8 +19,10 @@ class Cron extends Frontend_Controller {
     // ========================================================================
 
     public function intra_day() {
-        // set to run every 5 min
-        $this->process_mail_que();
+        // set to run every 5 min and continue until que empty
+        while ($this->have_mail_in_mailque()) {
+            $this->process_mail_que($quiet = true);
+        }
     }
 
     public function daily() {
@@ -48,19 +52,29 @@ class Cron extends Frontend_Controller {
     // THE ACTUAL JOBS TO RUN
     // ========================================================================  
 
-    private function process_mail_que() {
+    private function have_mail_in_mailque() {
+        // if anything is returned, return true
+        return $this->emailque_model->get_emailque_list(1, 5);
+    }
+
+    private function process_mail_que($quiet = false) {
         // process the mail que and sends out emails        
         $log_data['runtime_jobname'] = __FUNCTION__;
         $log_data['start'] = $this->get_date();
 
-        echo "<p><b>PROCESS EMAIL QUE</b></p>";
+        if (!$quiet) {
+            echo "<p><b>PROCESS EMAIL QUE</b></p>";
+        }
         $this->load->model('emailque_model');
 
         $mail_que = $this->emailque_model->get_emailque_list($this->ini_array['emailque']['que_size'], 5);
         if ($mail_que) {
             foreach ($mail_que as $mail_id => $mail_data) {
                 $mail_sent = $this->send_mail($mail_data);
-                echo $mail_data['emailque_to_address'] . ": " . fyesNo($mail_sent) . "<br>";
+//                $mail_sent=1;
+                if (!$quiet) {
+                    echo $mail_data['emailque_to_address'] . ": " . fyesNo($mail_sent) . "<br>";
+                }
                 if ($mail_sent) {
                     $status_id = 6;
                 } else {
@@ -68,9 +82,13 @@ class Cron extends Frontend_Controller {
                 }
                 $this->emailque_model->set_emailque_status($mail_id, $status_id);
             }
-            echo "<br>Mailqueue has processed <b>" . sizeof($mail_que) . "</b> mail(s): " . date("Y-m-d H:i:s");
+            if (!$quiet) {
+                echo "<br>Mailqueue has processed <b>" . sizeof($mail_que) . "</b> mail(s): " . date("Y-m-d H:i:s");
+            }
         } else {
-            echo "Nothing to process in mailqueue: " . date("Y-m-d H:i:s");
+            if (!$quiet) {
+                echo "Nothing to process in mailqueue: " . date("Y-m-d H:i:s");
+            }
         }
         // LOG RUNTIME DATA
         $log_data['end'] = $this->get_date();

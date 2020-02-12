@@ -54,8 +54,14 @@
                     <?php
                 }
 
-                // FEES
-                if (($race['race_fee_flat'] > 0) || ($race['race_fee_senior_licenced'] > 0)) {
+                if ($race['race_fee_flat'] > 0) {
+                    ?>
+                    <tr>
+                        <td>Race fee:</td>
+                        <td>R<?= floatval($race['race_fee_flat']); ?></td>
+                    </tr>
+                    <?php
+                } elseif ($race['race_fee_senior_licenced'] > 0) {
                     $info_text = "Races that are ran under the rules and regulations of the ASA (10km+) requires you to have a running license. You can either buy a temporarily license for the race you want to enter, or join a running club and purchase a permanent license number for the year. If you run more that 3x 10km+ races a year, it starts making financial sense to get a permanent number.";
                     ?>
                     <tr>
@@ -63,26 +69,12 @@
                         <th><a href="<?= base_url("faq/license#license"); ?>" title="<?= $info_text; ?>">Licensed <i class="fa fa-info-circle"></i></a></th>
                         <th><a href="<?= base_url("faq/license#license"); ?>" title="<?= $info_text; ?>">Unlicensed <i class="fa fa-info-circle"></i></a></th>
                     </tr>
-                    <?php
-                }
-                if ($race['race_fee_flat'] > 0) {
-                    ?>
                     <tr>
-                        <td>Race fee:</td>
-                        <td>R<?= floatval($race['race_fee_flat']); ?></td>
-                        <td>R<?= floatval($race['race_fee_flat']); ?></td>
+                        <td>Entry fees:</td>
+                        <td>R<?= floatval($race['race_fee_senior_licenced']); ?></td>
+                        <td>R<?= floatval($race['race_fee_senior_unlicenced']); ?></td>
                     </tr>
                     <?php
-                } else {
-                    if ($race['race_fee_senior_licenced'] > 0) {
-                        ?>
-                        <tr>
-                            <td>Entry fees:</td>
-                            <td>R<?= floatval($race['race_fee_senior_licenced']); ?></td>
-                            <td>R<?= floatval($race['race_fee_senior_unlicenced']); ?></td>
-                        </tr>
-                        <?php
-                    }
                     if ($race['race_fee_junior_licenced'] > 0) {
                         ?>
                         <tr>

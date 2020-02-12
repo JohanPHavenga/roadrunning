@@ -112,18 +112,17 @@ class Event extends Frontend_Controller {
         }
         $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
-        $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
         $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id, $this->data_to_views['in_past']);
         $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
         $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
         // Online entries open?
-        $this->data_to_views['online_entry_status']="unknown";
+        $this->data_to_views['online_entry_status'] = "unknown";
         if (isset($this->data_to_views['date_list'][3])) {
             if ((strtotime($this->data_to_views['date_list'][3][0]['date_start']) < time()) && (strtotime($this->data_to_views['date_list'][3][0]['date_end']) > time())) {
-                $this->data_to_views['online_entry_status']="open";
+                $this->data_to_views['online_entry_status'] = "open";
             }
             if (strtotime($this->data_to_views['date_list'][3][0]['date_end']) < time()) {
-                $this->data_to_views['online_entry_status']="closed";
+                $this->data_to_views['online_entry_status'] = "closed";
             }
         }
 
@@ -132,15 +131,37 @@ class Event extends Frontend_Controller {
         $this->data_to_views['gps']['lat'] = $gps_parts[0];
         $this->data_to_views['gps']['long'] = $gps_parts[1];
         $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
-        
-        
 
-        // google data
+        // SET PAGE TITLE AND META DESCRIPTIONS
         if ($url_params[0] == "summary") {
             $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
             $this->data_to_views['google_cal_url'] = $this->formulate_google_cal($edition_data, $this->data_to_views['race_list']);
+            $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
+            $this->data_to_views['meta_description'] = $this->formulate_meta_description($this->data_to_views['edition_data']);
+        } else {
+            $this->data_to_views['page_title'] = ucwords(str_replace("-", " ", $url_params[0]));
+            switch($url_params[0]) {
+                case "entries":
+                    $this->data_to_views['page_title']="How to enter";
+                    $page_title="Information on how to enter";
+                    break;
+                case "contact":
+                    $page_title="Organiser contact information";
+                    break;
+                case "accommodation":
+                    $page_title="Accommodation options";
+                    break;
+                case "subscribe":
+                    $this->data_to_views['page_title']="Mailing List";
+                    $page_title="Add yourself to the mailing list";
+                    break;
+                default:
+                    $page_title=$this->data_to_views['page_title'];
+                    break;
+            }
+            $this->data_to_views['meta_description'] = $page_title . " for the " . fDateYear($edition_data['edition_date']) . " edition of the " . substr($edition_data['edition_name'], 0, -5);
         }
-        
+
 
         // if results loaded, get URLS to use
         if ($edition_data['edition_info_status'] == 11) {
@@ -157,7 +178,6 @@ class Event extends Frontend_Controller {
 
 //        wts($this->data_to_views['route_maps'],true);
 
-        $this->data_to_views['meta_description'] = $this->formulate_meta_description($this->data_to_views['edition_data']);
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
@@ -259,7 +279,7 @@ class Event extends Frontend_Controller {
 
         return $flyer_list;
     }
-    
+
     private function get_entry_form_arr($slug) {
         $flyer_list = [];
         if (isset($this->data_to_views['file_list'][3])) {

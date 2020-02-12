@@ -7104,7 +7104,7 @@ body.breakpoint-sm .col-3 .flickr-widget img .widget-instagram img {
   opacity: 0.8; }
 
 .background-overlay:before {
-  background: url("../images/overlay-pattern/overlay-pattern-1.png");
+  background: url("../img/overlay-pattern/overlay-pattern-1.png");
   position: absolute;
   top: 0;
   right: 0;
@@ -7933,7 +7933,7 @@ Play Button
 .image-hover-zoom {
   position: relative;
   overflow: hidden;
-  cursor: url("../images/expand.png"), default;
+  cursor: url("../img/expand.png"), default;
   /*hover state*/ }
   .image-hover-zoom img {
     transition: all .4s ease;
@@ -11827,7 +11827,7 @@ body.breakpoint-xs hr.space-xxlg, body.breakpoint-sm hr.space-xxlg {
   top: -13px !important; }
 
 .triangle-divider-bottom {
-  background-image: url("../images/triangle-divider-down.png");
+  background-image: url("../img/triangle-divider-down.png");
   background-position: left center;
   background-repeat: repeat-x;
   bottom: 0;
@@ -11836,7 +11836,7 @@ body.breakpoint-xs hr.space-xxlg, body.breakpoint-sm hr.space-xxlg {
   width: 100%; }
 
 .triangle-divider-top {
-  background-image: url("../images/triangle-divider-top.png");
+  background-image: url("../img/triangle-divider-top.png");
   background-position: left center;
   background-repeat: repeat-x;
   top: 0;
@@ -12146,7 +12146,7 @@ select {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
-  background-image: url(../images/dropdown-arrow.png) !important;
+  background-image: url(../img/dropdown-arrow.png) !important;
   background-repeat: no-repeat !important;
   background-position: right center !important; }
 
@@ -13084,7 +13084,7 @@ img.mfp-img {
     height: auto !important;
     margin-top: 10px; }
   .popover-body iframe {
-    background: url(../images/loading.gif) center center no-repeat; }
+    background: url(../img/loading.gif) center center no-repeat; }
 
 .popover-header {
   padding: 18px 14px 0;

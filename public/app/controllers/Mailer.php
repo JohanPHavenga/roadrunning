@@ -28,8 +28,8 @@ class Mailer extends Frontend_Controller {
         } else {
             die("Nothing to process in mailqueue: " . date("Y-m-d H:i:s"));
         }
-        wts($mail_que);
-        die($msg);
+//        wts($mail_que);
+//        die($msg);
     }
 
     private function fetch_mail_que($top = 0) {

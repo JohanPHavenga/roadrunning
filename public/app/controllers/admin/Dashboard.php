@@ -107,18 +107,19 @@ class Dashboard extends Admin_Controller {
             $entry_data = [];
 //            wts($entry_date_close_data);
 //            wts($date_list);
-//            die();
             foreach ($entry_date_close_data as $year => $year_list) {
                 foreach ($year_list as $month => $month_list) {
                     foreach ($month_list as $day => $edition_list) {
                         foreach ($edition_list as $edition_id => $edition) {
                             $entry_data[$edition_id]['name'] = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
                             $entry_data[$edition_id]['merge_url'] = '<a href="/admin/emailmerge/wizard" class="btn btn-xs blue">Mail Merge</a>';
-                            $entry_data[$edition_id]['entry_close'] = strtotime($date_list[3][$edition_id]['date_end']);
+                            $entry_data[$edition_id]['entry_close'] = $date_list[3][$edition_id]['date_end'];
                         }
                     }
                 }
             }
+//            wts($entry_data,1);
+            
             // sort array
             uasort($entry_data, function ($item1, $item2) {
                 return $item1['entry_close'] <=> $item2['entry_close'];
