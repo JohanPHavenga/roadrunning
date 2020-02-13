@@ -19,7 +19,7 @@
                                 'id' => 'race_distance',
                                 'value' => set_value('race_distance', $race_detail['race_distance']),
                                 'class' => 'form-control input-small',
-//                                'required' => '',
+                                'required' => '',
                                 'type' => 'number',
                                 'step' => ".1",
                             ]);

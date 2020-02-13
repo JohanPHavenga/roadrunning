@@ -88,7 +88,11 @@
                                         echo "</b></li>";
                                     }
                                 } else {
-                                    echo "<li class='text-danger'>No entrires avaialble on race day</li>";
+                                    echo "<li class='text-danger'><b>No entrires avaialble on race day</b>";
+                                    if ($edition_data['edition_entry_funrun_otd']) {
+                                        echo " expect for the Fun Run";
+                                    }
+                                    echo "</li>";
                                 }
 
                                 // Manual entries
@@ -121,13 +125,13 @@
 
 
                                 // OTD entries for Fun Run
-                                if ($edition_data['edition_entry_funrun_otd']) {
-                                    foreach ($race_list as $race) {
-                                        if ($race['race_distance'] < 10) {
-                                            echo "<li>Entries for the " . $race['race_name'] . " will be taken on the day</li>";
-                                        }
-                                    }
-                                }
+//                                if ($edition_data['edition_entry_funrun_otd']) {
+//                                    foreach ($race_list as $race) {
+//                                        if ($race['race_distance'] < 10) {
+//                                            echo "<li>Entries for the " . $race['race_name'] . " will be taken on the day</li>";
+//                                        }
+//                                    }
+//                                }
 
                                 // ENTRY LIMIT
                                 if (!empty($edition_data['edition_entry_limit'])) {
@@ -175,6 +179,8 @@
                                     if (!empty($edition_data['edition_tshirt_text'])) {
                                         echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
                                     }
+                                } elseif (!empty($edition_data['edition_tshirt_text'])) {
+                                    echo "<li><b>T-Shirt</b>:  " . $edition_data['edition_tshirt_text'] . "</li>";
                                 }
                                 ?>
                             </ul>

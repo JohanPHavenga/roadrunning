@@ -110,7 +110,7 @@ class Race extends Admin_Controller {
         $this->data_to_view['status_dropdown'] = $this->race_model->get_status_dropdown();
         $this->data_to_view['racetype_dropdown'] = $this->racetype_model->get_racetype_dropdown();
 
-        $num_fields = ['race_fee_flat', 'race_fee_senior_licenced', 'race_fee_senior_unlicenced', 'race_fee_junior_licenced', 'race_fee_junior_unlicenced'];
+        $num_fields = ['race_fee_flat', 'race_fee_senior_licenced', 'race_fee_senior_unlicenced', 'race_fee_junior_licenced', 'race_fee_junior_unlicenced','race_time_end','race_time_start'];
         if ($action == "edit") {
             $this->data_to_view['race_detail'] = $this->race_model->get_race_detail($id);
             $this->data_to_view['edition_detail'] = $this->edition_model->get_edition_detail($this->data_to_view['race_detail']['edition_id']);
@@ -119,7 +119,8 @@ class Race extends Admin_Controller {
             $this->data_to_view['race_detail'] = $this->race_model->get_race_field_array();
             $this->data_to_view['race_detail']['race_status'] = 1;
             $this->data_to_view['race_detail']['racetype_id'] = 4;
-            $this->data_to_view['race_detail']["race_time_end"] = "";
+//            $this->data_to_view['race_detail']["race_time_start"] = "00:00:00";
+//            $this->data_to_view['race_detail']["race_time_end"] = "00:00:00";
             if ($id > 0) {
                 $this->data_to_view['edition_detail'] = $this->edition_model->get_edition_detail($id);
                 $this->data_to_view['race_detail']['edition_id'] = $id;
@@ -132,8 +133,16 @@ class Race extends Admin_Controller {
         // make all the numeric fields 0, not empty
         foreach ($num_fields as $field) {
             if (empty($this->data_to_view['race_detail'][$field])) {
-                $this->data_to_view['race_detail'][$field] = 0;
+                if (($field=="race_time_start")||($field=="race_time_end")) {
+                    $value="00:00:00";
+                } else {
+                    $value=0;
+                }
+                $this->data_to_view['race_detail'][$field] = $value;
             }
+        }
+        if (empty($this->data_to_view['race_detail']['race_date'])) {
+            $this->data_to_view['race_detail']['race_date'] = $this->data_to_view['edition_detail']['edition_date'];
         }
 
 //        if (!isset($race_detail['race_isover70free'])) { $race_detail['race_isover70free']=false; }

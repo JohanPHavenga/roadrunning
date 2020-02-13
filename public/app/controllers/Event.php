@@ -42,7 +42,7 @@ class Event extends Frontend_Controller {
                 $this->data_to_views['edition_data'] = $edition_data = $this->edition_model->get_edition_detail($edition_id);
             }
         } else {
-            // old school
+            // old school. This is backward compatibility for OLD cached urls
             // decode die edition name uit die URL en kry ID
             $edition_name = get_edition_name_from_url($slug);
             $edition_data = $this->edition_model->get_edition_id_from_name($edition_name);
@@ -133,33 +133,36 @@ class Event extends Frontend_Controller {
         $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
 
         // SET PAGE TITLE AND META DESCRIPTIONS
+        $this->data_to_views['page_title'] = $page_title = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
         if ($url_params[0] == "summary") {
             $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
             $this->data_to_views['google_cal_url'] = $this->formulate_google_cal($edition_data, $this->data_to_views['race_list']);
-            $this->data_to_views['page_title'] = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
             $this->data_to_views['meta_description'] = $this->formulate_meta_description($this->data_to_views['edition_data']);
         } else {
             $this->data_to_views['page_title'] = ucwords(str_replace("-", " ", $url_params[0]));
-            switch($url_params[0]) {
+            switch ($url_params[0]) {
                 case "entries":
-                    $this->data_to_views['page_title']="How to enter";
-                    $page_title="Information on how to enter";
+                    $this->data_to_views['page_title'] = "How to enter";
+                    $meta_title = "Information on how to enter the ";
                     break;
                 case "contact":
-                    $page_title="Organiser contact information";
+                    $this->data_to_views['page_title'] = "Contact Organisers";
+                    $meta_title = "Organiser contact information for the ";
                     break;
                 case "accommodation":
-                    $page_title="Accommodation options";
+                    $meta_title = "Accommodation options for the ";
                     break;
                 case "subscribe":
-                    $this->data_to_views['page_title']="Mailing List";
-                    $page_title="Add yourself to the mailing list";
+                    $this->data_to_views['page_title'] = "Mailing List";
+                    $meta_title = "Add yourself to the mailing list for the ";
                     break;
                 default:
-                    $page_title=$this->data_to_views['page_title'];
+                    $meta_title = $this->data_to_views['page_title']." for the ";
                     break;
             }
-            $this->data_to_views['meta_description'] = $page_title . " for the " . fDateYear($edition_data['edition_date']) . " edition of the " . substr($edition_data['edition_name'], 0, -5);
+            $this->data_to_views['page_title']=$this->data_to_views['page_title']." - ".$page_title;
+            $this->data_to_views['meta_description'] = $meta_title . fDateYear($edition_data['edition_date']) . " edition of the " . substr($edition_data['edition_name'], 0, -5);
+            $this->data_to_views['meta_description']= str_replace("the The", "The", $this->data_to_views['meta_description']);
         }
 
 

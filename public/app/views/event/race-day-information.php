@@ -68,7 +68,13 @@
 
 
                         <?php
-                        if ((strlen($edition_data['edition_general_detail']) > 10) || ($edition_data['edition_info_medals'])) {
+                        if (
+                                (strlen($edition_data['edition_general_detail']) > 10) ||
+                                ($edition_data['edition_info_medals']) ||
+                                ($edition_data['edition_info_togbag']) ||
+                                ($edition_data['edition_info_headphones']) ||
+                                ($edition_data['edition_info_prizegizing'] != "00:00:00")
+                        ) {
                             ?>
                             <h3 class="text-uppercase">GENERAL INFORMATION</h3>
                             <ul>
@@ -82,6 +88,8 @@
                                         echo "Medals will be awarded to all finishers within cut-off times";
                                     }
                                     echo "</li>";
+                                } elseif (!empty($edition_data['edition_info_medals_text'])) {
+                                    echo "<li><b>HANDOUTS:</b> ".$edition_data['edition_info_medals_text'];
                                 }
 
                                 // PRIZE-GIVING
