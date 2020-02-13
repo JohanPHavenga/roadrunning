@@ -117,8 +117,8 @@ class Main extends Frontend_Controller {
     public function support() {
         $this->data_to_views['banner_img'] = "run_01";
         $this->data_to_views['banner_pos'] = "40%";
-        $this->data_to_views['page_title'] = "Support this site";
-        $this->data_to_views['meta_description'] = "Show me a little appriciation by donating to the site via SnapScan";
+        $this->data_to_views['page_title'] = "Donations";
+        $this->data_to_views['meta_description'] = "Show your appriciation by donating to the site via SnapScan";
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
