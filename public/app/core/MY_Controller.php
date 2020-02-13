@@ -49,6 +49,70 @@ EOT;
         return $html;
     }
 
+    private function has_auto_mail_been_send($emailtemplate_id, $edition_id) {
+        $this->load->model('autoemail_model');
+        if ($this->autoemail_model->exists($emailtemplate_id, $edition_id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function auto_mailer($emailtemplate_id = 0, $edition_id = 0) {
+        $this->load->model('autoemail_model');
+        $this->load->model('edition_model');
+        $this->load->model('admin/emailtemplate_model');
+        $this->load->model('admin/emailmerge_model');
+        $this->load->model('admin/usersubscription_model');
+        // get edition detail
+        $edition_detail = $this->edition_model->get_edition_detail($edition_id);
+        // get email temaplte list
+        $emailtemplate_list = $this->emailtemplate_model->get_emailtemplate_list();
+
+        // security check
+        if ((!array_key_exists($emailtemplate_id, $emailtemplate_list)) || (!$edition_detail)) {
+            $this->session->set_flashdata([
+                'alert' => " Mmmmm, somthing is not right.",
+                'status' => "danger",
+            ]);
+            redirect(base_url("404"), 'refresh', 404);
+            die();
+        }
+        // check of mails mag gestuur word
+        if ($edition_detail['edition_no_auto_mail']) {
+            return false;
+        }
+        // doen check of mail alreeds gestuur is
+        if ($this->has_auto_mail_been_send($emailtemplate_id, $edition_id)) {
+            return false;
+        }
+        // main code
+        $user_arr = $this->usersubscription_model->get_usersubscription_list("edition", $edition_id);
+        if (!$user_arr) {
+            return false;
+        } else {
+            foreach ($user_arr as $user) {
+                $user_list[] = $user['user_id'];
+            }
+        }
+        $user_str = implode(",", $user_list);
+        $emailtemplate = $this->emailtemplate_model->get_emailtemplate_detail($emailtemplate_id);
+        
+        // create email merge
+        $merge_data = array(
+            "emailmerge_status" => 4,
+            "emailmerge_subject" => $emailtemplate['emailtemplate_name'] . " " . $edition_detail['edition_name'],
+            "emailmerge_body" => $emailtemplate['emailtemplate_body'],
+            "emailmerge_recipients" => $user_str,
+            "emailmerge_linked_to" => "edition",
+            "linked_id" => $edition_id,
+        );
+        $emailmerge_id = $this->emailmerge_model->set_emailmerge("add", 0, $merge_data);
+        $autoemail_id = $this->autoemail_model->set_autoemail($emailtemplate_id, $edition_id);
+        
+        return true;
+    }
+
     public function chronologise_data($data_arr, $date_field) {
         $return_data = [];
         if ($data_arr) {
@@ -243,7 +307,7 @@ class Frontend_Controller extends MY_Controller {
     // ==============================================================================================
     // CENTRAL MAIL FUNCTIONS
     // ==============================================================================================
-    public function set_email($data, $post_text=null) {
+    public function set_email($data, $post_text = null) {
         // THIS FUNCTION ONLY TAKES EMAIL FIELDS AND ADD THEM TO THE EMAIL QUE TABLE
         // load emailque_model
         $this->load->model('emailque_model');
@@ -259,7 +323,7 @@ class Frontend_Controller extends MY_Controller {
             } else {
                 $from_name = $this->ini_array['email']['from_name'];
             }
-        
+
             $emailque_data = array(
                 'emailque_subject' => $data['subject'],
                 'emailque_to_address' => $data['to'],
@@ -1020,11 +1084,11 @@ class Frontend_Controller extends MY_Controller {
             "from" => $this->ini_array['email']['from_address_server'],
             "from_name" => $this->ini_array['email']['from_name_server'],
         ];
-        
-        
+
+
         $unsubscribe_url = $this->formulate_unsubscribe_url($usersub_data['user_id'], $usersub_data['linked_to'], $usersub_data['linked_id']);
-        $post_text = "<p>This email was sent to " . $user_data['user_email']."<br><a href='$unsubscribe_url' style='text-decoration:underline'>Unsubscribe</a> from this list</p>";
-        $mail_id = $this->set_email($data,$post_text);
+        $post_text = "<p>This email was sent to " . $user_data['user_email'] . "<br><a href='$unsubscribe_url' style='text-decoration:underline'>Unsubscribe</a> from this list</p>";
+        $mail_id = $this->set_email($data, $post_text);
         return $mail_id;
     }
 
@@ -1171,6 +1235,10 @@ class Admin_Controller extends MY_Controller {
         }
         // set the flag
         $set = $this->url_model->set_results_flag($linked_to, $id, $flag);
+        if ($flag) {
+            $this->auto_mailer(2, $id);
+        }
+        
     }
 
     function set_admin_menu_array() {

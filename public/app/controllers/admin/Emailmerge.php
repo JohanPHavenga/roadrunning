@@ -388,6 +388,7 @@ class Emailmerge extends Admin_Controller {
             "%event_name_proper%" => @$data_arr['event_name'],
             "%event_url%" => @$data_arr['edition_url'],
             "%event_date%" => @$data_arr['edition_date'],
+            "%entries_close%" => @$data_arr['entries_close'],
             "%town_name%" => @$data_arr['town_name'],
             "%events_past%" => $this->formulate_newsletter_table($newsletter_data['past'], "past", true),
             "%events_future%" => $this->formulate_newsletter_table($newsletter_data['future'], "future", true),
@@ -428,13 +429,18 @@ class Emailmerge extends Admin_Controller {
                 break;
             case "edition":
                 $this->load->model('admin/edition_model');
+                $this->load->model('admin/date_model');
                 $edition_detail = $this->edition_model->get_edition_detail_lite($linked_id);
+                $date_list=$this->date_model->get_date_list($linked_to,$linked_id,false,true);
                 $merge_data['edition_name'] = $edition_detail['edition_name'];
                 $merge_data['event_name'] = $edition_detail['event_name'];
                 $merge_data['edition_date'] = fdateHumanFull($edition_detail['edition_date'], true);
                 $merge_data['town_name'] = $edition_detail['town_name'];
                 $url = $this->edition_model->get_edition_url_from_id($linked_id);
                 $merge_data['edition_url'] = $url['edition_url'];
+                if (isset($date_list[3])) {
+                    $merge_data['entries_close'] = fdateHumanFull($date_list[3][0]['date_start'],true, true);
+                }
                 break;
             default:
                 die("linked to not defined");

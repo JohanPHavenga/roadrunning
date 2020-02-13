@@ -173,7 +173,7 @@ class User extends Frontend_Controller {
 
 
         switch ($type) {
-            case "event":
+            case "edition":
                 // get basic edition_data
                 $edition_data = $this->edition_model->get_edition_id_from_slug($slug);
                 if (!$edition_data) {

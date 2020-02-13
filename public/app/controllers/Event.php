@@ -83,7 +83,7 @@ class Event extends Frontend_Controller {
         // set a few vars to use
         $this->data_to_views['slug'] = $slug;
         $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
-        $this->data_to_views['subscribe_url'] = base_url("user/subscribe/event/" . $slug);
+        $this->data_to_views['subscribe_url'] = base_url("user/subscribe/edition/" . $slug);
         $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
         $this->data_to_views['is_event_page'] = 1;
         // check vir sub-page

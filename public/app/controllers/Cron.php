@@ -29,6 +29,7 @@ class Cron extends Frontend_Controller {
         // set to run at midnight
         $this->history_summary();
         $this->update_event_info_status();
+        $this->autoemails_closing_date();
     }
 
     // ========================================================================
@@ -192,6 +193,29 @@ class Cron extends Frontend_Controller {
         // LOG RUNTIME DATA
         $log_data['end'] = $this->get_date();
         $this->log_runtime($log_data);
+    }
+
+    private function autoemails_closing_date() {
+        $this->load->model('admin/event_model');
+        $params = [
+            'date_from' => date("Y-m-d"),
+            'entry_date' => date("Y-m-d", strtotime("1 week")),
+            'only_active' => 1,
+        ];
+        $n = 0;
+        $entry_date_close_data = $this->event_model->get_event_list_summary("date_range", $params);
+        foreach ($entry_date_close_data as $year => $year_list) {
+            foreach ($year_list as $month => $month_list) {
+                foreach ($month_list as $day => $edition_list) {
+                    foreach ($edition_list as $edition_id => $edition) {
+                        if ($this->auto_mailer(4, $edition_id)) {
+                            $n++;
+                        }
+                    }
+                }
+            }
+        }
+        echo "$n Auto Emails Set: <b>" . date("Y-m-d H:i:s") . "</b>";
     }
 
 }

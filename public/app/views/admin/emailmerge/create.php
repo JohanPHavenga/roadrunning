@@ -54,6 +54,7 @@ echo form_open($form_url);
                             echo "<li>%event_name% - Adds name of event</li>";
                             echo "<li>%event_url% - URL to event page</li>";
                             echo "<li>%event_date% - Date of the event</li>";
+                            echo "<li>%entries_close% - URL to event page</li>";
                             echo "<li>%town_name% - Town where event takes place</li>";
                             echo "<li>%events_past% - Adds table of events of past month</li>";
                             echo "<li>%events_future% - Adds table of events for next 2 months</li>";

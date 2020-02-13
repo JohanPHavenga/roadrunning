@@ -11,7 +11,13 @@ class Emailmerge_model extends Admin_model {
         return $this->db->count_all("emailmerges");
     }
 
-    public function get_emailmerge_list($top=0) {
+    public function count_draft() {
+        $this->db->where('emailmerge_status', 4);
+        $this->db->from('emailmerges');
+        return $this->db->count_all_results(); 
+    }
+
+    public function get_emailmerge_list($top = 0) {
 
         $this->db->select("emailmerges.*");
         $this->db->from("emailmerges");
@@ -22,8 +28,8 @@ class Emailmerge_model extends Admin_model {
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $count_arr= explode(",",$row['emailmerge_recipients']);
-                $row['count']=count($count_arr);
+                $count_arr = explode(",", $row['emailmerge_recipients']);
+                $row['count'] = count($count_arr);
                 $data[$row['emailmerge_id']] = $row;
             }
             return $data;
@@ -43,8 +49,8 @@ class Emailmerge_model extends Admin_model {
         return false;
     }
 
-    public function set_emailmerge($action, $emailmerge_id, $data) {    
-        $data['updated_date'] = date("Y-m-d H:i:s"); 
+    public function set_emailmerge($action, $emailmerge_id, $data) {
+        $data['updated_date'] = date("Y-m-d H:i:s");
         switch ($action) {
             case "add":
                 $this->db->trans_start();
@@ -101,7 +107,7 @@ class Emailmerge_model extends Admin_model {
         $this->db->insert('emailmerges');
         $edition_id = $this->db->insert_id();
         $this->db->trans_complete();
-        
+
         if ($this->db->trans_status()) {
             return $edition_id;
         } else {

@@ -46,4 +46,8 @@ class Mailer extends Frontend_Controller {
         $this->emailque_model->set_emailque_status($id, $status_id);
     }
 
+    public function auto($emailtemplate_id = 0, $edition_id = 0) {
+        $this->auto_mailer($emailtemplate_id, $edition_id);
+    }
+
 }

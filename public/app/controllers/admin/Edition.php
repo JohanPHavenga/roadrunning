@@ -226,6 +226,10 @@ class Edition extends Admin_Controller {
                 $this->check_start_end_dates($id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
                 // CEHCK TAGS
                 $this->set_tags_on_post($id, $new_edition_detail, $race_data);
+                // AUTO MAILER for INFO VERIFIED
+                if ($new_edition_detail['edition_info_status'] == 16) {
+                    $this->auto_mailer(3, $id);
+                }
             } else {
                 $alert = "Error committing to the database";
                 $status = "danger";
@@ -276,12 +280,12 @@ class Edition extends Admin_Controller {
         }
 
         // CLEAR EDITION TAGS
-        $stats['new_tag']=0;
-        $stats['edition_tag_link']=0;
+        $stats['new_tag'] = 0;
+        $stats['edition_tag_link'] = 0;
         $this->tag_model->clear_edition_tags($edition_id);
         foreach ($tags as $tag => $tagtype_id) {
             // CHECK IF TAGS EXISTS, ELSE ADD
-            $tag=trim($tag);
+            $tag = trim($tag);
             if (!empty($tag)) {
                 $tag_id = $this->tag_model->exists($tag);
                 if (!$tag_id) {
@@ -289,13 +293,13 @@ class Edition extends Admin_Controller {
                         'tag_name' => $tag,
                         'tagtype_id' => $tagtype_id,
                         'tag_status' => 1,
-                    ];                    
+                    ];
                     $tag_id = $this->tag_model->set_tag("add", 0, $data);
-                    $stats['new_tag']++;
+                    $stats['new_tag'] ++;
                 }
                 // ADD TAG
                 $this->tag_model->set_edition_tag($edition_id, $tag_id);
-                $stats['edition_tag_link']++;
+                $stats['edition_tag_link'] ++;
             }
         }
 //        wts($tagtype_arr);
@@ -494,6 +498,7 @@ class Edition extends Admin_Controller {
         $edition_data['edition_isfeatured'] = $edition_detail['edition_isfeatured'];
         $edition_data['user_id'] = $edition_detail['user_id'];
         $edition_data['edition_asa_member'] = $edition_detail['edition_asa_member'];
+        $edition_data['edition_no_auto_mail'] = $edition_detail['edition_no_auto_mail'];
 
         $e_id = $this->edition_model->set_edition("add", NULL, $edition_data, false);
 
@@ -700,17 +705,17 @@ class Edition extends Admin_Controller {
         ];
         $edition_list = $this->edition_model->get_edition_list_new($query_params);
 
-        $acc_stats['new_tag']=0;
-        $acc_stats['edition_tag_link']=0;
+        $acc_stats['new_tag'] = 0;
+        $acc_stats['edition_tag_link'] = 0;
         foreach ($edition_list as $edition_id => $edition_data) {
             $race_list = $this->race_model->get_race_list($edition_id, 1);
-            $stats=$this->set_tags_on_post($edition_id, $edition_data, $race_list);
-            $acc_stats['new_tag']=$acc_stats['new_tag']+$stats['new_tag'];
-            $acc_stats['edition_tag_link']=$acc_stats['edition_tag_link']+$stats['edition_tag_link'];
+            $stats = $this->set_tags_on_post($edition_id, $edition_data, $race_list);
+            $acc_stats['new_tag'] = $acc_stats['new_tag'] + $stats['new_tag'];
+            $acc_stats['edition_tag_link'] = $acc_stats['edition_tag_link'] + $stats['edition_tag_link'];
         }
-        
-        echo "<p>".$acc_stats['new_tag']." new tags generated</p>";
-        echo "<p>".$acc_stats['edition_tag_link']." new tag links to editions</p>";
+
+        echo "<p>" . $acc_stats['new_tag'] . " new tags generated</p>";
+        echo "<p>" . $acc_stats['edition_tag_link'] . " new tag links to editions</p>";
     }
 
     // move edition dates to dates table

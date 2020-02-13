@@ -104,8 +104,8 @@
                                 "text" => "Is Featured",
                             ],
                             [
-                                "name" => "edition_usenew",
-                                "text" => "Use new date fields",
+                                "name" => "edition_no_auto_mail",
+                                "text" => "Block Auto Emails",
                             ],
                         ];
                         foreach ($checkbox_array as $checkbox) {

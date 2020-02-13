@@ -38,11 +38,13 @@ class Dashboard extends Admin_Controller {
             $this->load->model('admin/edition_model');
             $this->load->model('admin/race_model');
             $this->load->model('admin/date_model');
+            $this->load->model('admin/emailmerge_model');
 
             $history_count = $this->history_model->record_count();
             $event_count = $this->event_model->record_count();
             $edition_count = $this->edition_model->record_count();
-            $race_count = $this->race_model->record_count();
+//            $race_count = $this->race_model->record_count();
+            $merge_count = $this->emailmerge_model->count_draft();
 
             $this->data_to_view['dashboard_stats_list'] = [
                 [
@@ -51,6 +53,13 @@ class Dashboard extends Admin_Controller {
                     "font-color" => "yellow-gold",
                     "icon" => "icon-hourglass",
                     "uri" => "/admin/dashboard/history/summary",
+                ],
+                [
+                    "text" => "Draft Email Merges",
+                    "number" => $merge_count,
+                    "font-color" => "red-haze",
+                    "icon" => "icon-mail",
+                    "uri" => "/admin/emailmerge/view",
                 ],
                 [
                     "text" => "Number of Events",
@@ -62,16 +71,9 @@ class Dashboard extends Admin_Controller {
                 [
                     "text" => "Number of Editions",
                     "number" => $edition_count,
-                    "font-color" => "red-haze",
+                    "font-color" => "blue-sharp",
                     "icon" => "icon-calendar",
                     "uri" => "/admin/edition/view",
-                ],
-                [
-                    "text" => "Number of Races",
-                    "number" => $race_count,
-                    "font-color" => "blue-sharp",
-                    "icon" => "icon-speedometer",
-                    "uri" => "/admin/race/view",
                 ],
                     //font-purple-soft
             ];
