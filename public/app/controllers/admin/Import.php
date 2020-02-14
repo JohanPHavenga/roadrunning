@@ -8,36 +8,45 @@ class Import extends Admin_Controller {
         $this->load->helper(array('form'));
         $this->load->library('form_validation');
     }
-    
-    public function index() {
 
+    public function index() {
+        // models and stuff
+        $this->load->model('admin/asamember_model');
         $this->load->library('upload');
         $this->load->library('table');
         $this->load->library('excel');
 
-        $this->data_to_header['title'] = "Import Result Set";
-        $this->data_to_view['form_url'] = "/admin/import/confirm";
+        // send thigns to view
+        $this->data_to_header['title'] = "Import Event Info";
+        $this->data_to_view['form_url'] = "/admin/import/index/confirm";
+        $this->data_to_view['asamember_dropdown'] = $this->asamember_model->get_asamember_dropdown("name");
 
         // set config for upload
-        $config['upload_path'] = "uploads/temp";
+        $config['upload_path'] = "uploads/temp/";
         $config['allowed_types'] = 'xlsx|xls|csv';
         $config['max_size'] = 8192;
         $config['remove_spaces'] = TRUE;
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
-        
-        if (!file_exists($config['upload_path'])) {
-            if (!mkdir($config['upload_path'], 0777, true)) {
-                return false;
-            }
-        }
+
+        // check if folder exists and clear
+        $this->manage_temp_folder($config['upload_path']);
+        // clear session import
+        $this->session->unset_userdata('import');
+
+        // form validation rules
+        $this->form_validation->set_rules('asamember_id', 'ASA Memeber', 'required|numeric|greater_than[0]',
+                [
+                    "greater_than" => "Select an <b>ASA Memeber</b> to upload the event information set against",
+                ]
+        );
 
         // first check form validation
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_header);
             $this->load->view("/admin/import/file_upload", $this->data_to_view);
             $this->load->view($this->footer_url, $this->data_to_footer);
-        } elseif (!$this->upload->do_upload('race_list_file')) {
+        } elseif (!$this->upload->do_upload('event_info_file')) {
             $this->data_to_view['error'] = $this->upload->display_errors();
             $this->load->view($this->header_url, $this->data_to_header);
             $this->load->view("/admin/import/file_upload", $this->data_to_view);
@@ -49,7 +58,7 @@ class Import extends Admin_Controller {
             } else {
                 $import_xls_file = 0;
             }
-            $inputFileName = $this->upload_path . $import_xls_file;
+            $inputFileName = $config['upload_path'] . $import_xls_file;
             try {
                 $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
                 $objReader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -59,27 +68,87 @@ class Import extends Admin_Controller {
                         . '": ' . $e->getMessage());
             }
 
-            // SET SESSION
-            $_SESSION['import']['event_data'] = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-
-//            wts($file_db_w);
-//            wts($set);
-//            wts($inputFileName);
-//            wts($this->input->post());
-            wts($_SESSION['import'],1);
-            redirect("/admin/import/user");
+            // GET DATA + FORMAT + ADD ASAMEMEBER STUFF            
+            $asamember_detail=$this->asamember_model->get_asamember_detail($this->input->post("asamember_id")); // gete asamember details
+            $data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true); // set data from excel 
+            $map = $data[1]; // map the columns to the rows
+            foreach ($map as $col => $item) {
+                if (empty($item)) {
+                    unset($map[$col]);
+                }
+            }
+            array_shift($data); // drop headings
+            foreach ($data as $key=>$row) { // loop through data to setup insert data array for insert function
+                foreach ($map as $col => $item) {
+                    if (empty($item)) {
+                        continue;
+                    }
+                    $ins_data[$key][$item] = $row[$col];
+                }
+                $ins_data[$key]["asamember_id"]=$this->input->post("asamember_id");
+                $ins_data[$key]["asamember_name"]=$asamember_detail['asa_member_name'];
+            }
+            
+            // INSERT INTO TEMP TABLE
+            $import = $this->import->insert_into_temp_table("temp_import_event", $ins_data);
+            redirect("/admin/import/temp");
         }
     }
 
-    function user() {
+    private function manage_temp_folder($path) {
+        if (!file_exists($path)) {
+            if (!mkdir($config['upload_path'], 0777, true)) {
+                return false;
+            }
+        } else {
+            $files = glob($path . '*'); // get all file names
+            foreach ($files as $file) { // iterate files
+                if (is_file($file))
+                    unlink($file); // delete file
+            }
+        }
+    }
+
+    public function temp() {
+        $this->load->library('table');
         
+        // get temp table data
+        $this->data_to_view['import_data'] = $temp_data = $this->import->get_temp_table_data("temp_import_event");
+        $this->data_to_view['columns'] = array_keys($temp_data[1]);
+//        wts($temp_data,1);
+
+        // show table of data with buttons next to them to: (if IDs are not set)
+        // import users
+        // import towns
+        // import clubs
+
+        $this->data_to_header['title'] = "Import: ".$temp_data[0]['asamember_name'];
+        $this->load->view($this->header_url, $this->data_to_header);
+        $this->load->view("/admin/import/temp", $this->data_to_view);
+        $this->load->view($this->footer_url, $this->data_to_footer);
+
+
+        // loop back to this function to show results of import attempt        
+        // show errors if you try and import any, else insert ID into temp table
+        // if all ID has been filled, show button to IMPORT EVENT
+        // 
+        // Create Event, then Edition, the Races. 
+        // Do all in a transaction so if somethign goes wrong it rolls back
+        // Add event ID to temp table as you go. If you run it again and there is an ID, it is skipped
+        //
+        // show result of import attempt. Pull data from editions table and display
+        //
+    }
+
+    function user() {
+
         $this->load->model('admin/user_model');
         $this->load->model('admin/club_model');
         $this->load->model('admin/town_model');
         $this->load->model('admin/race_model');
         $this->load->model('admin/edition_model');
         $this->load->model('admin/event_model');
-        
+
         $page = "import_confirm";
         $this->load->library('table');
         $skip_add = 1;
@@ -146,11 +215,11 @@ class Import extends Admin_Controller {
             $this->data_to_view['pre_load'] = $pre_load['pre'];
             $this->data_to_view['skip'] = $skip_display;
         }
-        
+
         if ($this->session->has_userdata('edition_return_url')) {
             $this->data_to_view['cancel_url'] = $this->session->edition_return_url;
         } else {
-            $this->data_to_view['cancel_url']="/admin/result/import";
+            $this->data_to_view['cancel_url'] = "/admin/result/import";
         }
 
         $this->load->view($this->header_url, $this->data_to_header);
@@ -163,7 +232,7 @@ class Import extends Admin_Controller {
         return $field_arr;
     }
 
-    private function set_exception_fields($input_data=[], $field=null, $value=null) {
+    private function set_exception_fields($input_data = [], $field = null, $value = null) {
         switch ($field) {
             case "result_name_surname" :
                 $value_parts = explode(" ", $value);
@@ -222,7 +291,7 @@ class Import extends Admin_Controller {
                 $data['pre']["D"] = "result_name";
                 $data['pre']["E"] = "result_surname";
                 $data['pre']["F"] = "result_sex";
-                $data['pre']["G"] = "";                
+                $data['pre']["G"] = "";
                 $data['pre']["H"] = "result_age";
                 $data['pre']["I"] = "";
                 $data['pre']["J"] = "result_club";
@@ -274,7 +343,7 @@ class Import extends Admin_Controller {
 //                            } else {
 //                                $result_data[$import['column_map'][$col]] = $value;
 //                            }
-                            $result_data=$this->set_exception_fields($result_data, $import['column_map'][$col], $value);
+                            $result_data = $this->set_exception_fields($result_data, $import['column_map'][$col], $value);
                         }
                     }
                     $result_data['race_id'] = $import['race_id'];
@@ -319,11 +388,11 @@ class Import extends Admin_Controller {
             "Import" => "/admin/result/import",
             "Success" => "",
         ];
-        
+
         if ($this->session->has_userdata('edition_return_url')) {
             $this->data_to_view['return_url'] = $this->session->edition_return_url;
         } else {
-            $this->data_to_view['return_url']="/admin/result/import";
+            $this->data_to_view['return_url'] = "/admin/result/import";
         }
 
         $this->load->view($this->header_url, $this->data_to_header);

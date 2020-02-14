@@ -79,7 +79,7 @@ if (!isset($title)) {
                                     <i class="icon-trophy"></i> Result set </a>
                             </li>
                             <li>
-                                <a href="<?= base_url('admin/event/import'); ?>">
+                                <a href="<?= base_url('admin/import'); ?>">
                                     <i class="icon-info"></i> Event Information </a>
                             </li>
                             <!-- <li class="divider"> </li> -->

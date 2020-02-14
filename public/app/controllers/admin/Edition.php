@@ -138,7 +138,7 @@ class Edition extends Admin_Controller {
         $this->data_to_view['status_dropdown'] = $this->event_model->get_status_list("main");
         $this->data_to_view['status_list'] = $this->event_model->get_status_list();
         $this->data_to_view['info_status_dropdown'] = $this->event_model->get_status_list("info");
-        $this->data_to_view['asamember_dropdown'] = $this->asamember_model->get_asamember_dropdown();
+        $this->data_to_view['asamember_dropdown'] = $this->asamember_model->get_asamember_dropdown("name");
         $this->data_to_view['sponsor_dropdown'] = $this->sponsor_model->get_sponsor_dropdown();
         $this->data_to_view['entrytype_dropdown'] = $this->entrytype_model->get_entrytype_dropdown();
         $this->data_to_view['regtype_dropdown'] = $this->regtype_model->get_regtype_dropdown();

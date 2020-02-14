@@ -162,7 +162,7 @@
                     echo form_dropdown('user_id', $contact_dropdown, set_value('user_id', $edition_detail['user_id']), ["id" => "user_id", "class" => "form-control"]);
                     ?>
                 </div>
-                <div class='col-sm-3'>
+                <div class='col-sm-6'>
                     <?php
                     echo form_label('ASA Affiliation', 'edition_asa_member');
                     echo form_dropdown('edition_asa_member', $asamember_dropdown, set_value('edition_asa_member', $edition_detail['edition_asa_member']), ["id" => "edition_asa_member", "class" => "form-control"]);

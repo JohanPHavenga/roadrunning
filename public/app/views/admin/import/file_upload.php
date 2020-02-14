@@ -6,7 +6,7 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase">Import race list</span>
+                    <span class="caption-subject font-dark bold uppercase">Import event information</span>
                 </div>
             </div>
             <?php
@@ -19,8 +19,8 @@
                 <div class='col-md-6 col-sm-6'>
                     <div class='form-group'>
                         <?php
-                        echo form_label('Race <span class="compulsary">*</span>', 'race_id');
-                        echo form_dropdown('race_id', $race_dropdown, set_value('race_id',$race_id), ["id" => "race_id", "class" => "form-control"]);
+                        echo form_label('ASA Memeber <span class="compulsary">*</span>', 'asamember_id');
+                        echo form_dropdown('asamember_id', $asamember_dropdown, [], ["id" => "asamember_id", "class" => "form-control"]);
                         ?>
                     </div>
                 </div>
@@ -29,10 +29,10 @@
                 <div class='col-md-8'>
                     <div class='form-group'>
                         <?php
-                        echo form_label('File to upload <span class="compulsary">*</span>', 'result_file');
+                        echo form_label('File to upload <span class="compulsary">*</span>', 'event_info_file');
                         echo form_upload([
-                            'name' => 'result_file',
-                            'id' => 'result_file',
+                            'name' => 'event_info_file',
+                            'id' => 'event_info_file',
                             'class' => 'filestyle',
                             "accept" => '.xls,.xlsx,.csv',
                         ]);

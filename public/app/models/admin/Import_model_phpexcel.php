@@ -38,4 +38,22 @@ class Import_model_phpexcel extends Admin_model {
         return $query->result_array();
     }
 
+    public function insert_into_temp_table($table, $data) {
+        $this->db->truncate($table);
+        foreach ($data as $row) {
+            $this->db->insert($table, $row);
+        }
+
+        $query = $this->db->get($table);
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
+
+    public function get_temp_table_data($table) {
+        $query = $this->db->get($table);
+        return $query->result_array();
+    }
+
 }
