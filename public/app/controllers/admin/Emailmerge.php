@@ -439,7 +439,7 @@ class Emailmerge extends Admin_Controller {
                 $url = $this->edition_model->get_edition_url_from_id($linked_id);
                 $merge_data['edition_url'] = $url['edition_url'];
                 if (isset($date_list[3])) {
-                    $merge_data['entries_close'] = fdateHumanFull($date_list[3][0]['date_start'],true, true);
+                    $merge_data['entries_close'] = fdateHumanFull($date_list[3][0]['date_end'],true, true);
                 }
                 break;
             default:
