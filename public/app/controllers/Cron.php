@@ -196,26 +196,39 @@ class Cron extends Frontend_Controller {
     }
 
     private function autoemails_closing_date() {
-        $this->load->model('admin/event_model');
-        $params = [
-            'date_from' => date("Y-m-d"),
-            'entry_date' => date("Y-m-d", strtotime("1 week")),
-            'only_active' => 1,
+        $log_data['runtime_jobname'] = __FUNCTION__;
+        $log_data['start'] = $this->get_date();
+
+        echo "<p><b>AUTO EMAILS on CLOSING DATE</b></p>";
+
+        $this->load->model('edition_model');
+        $this->load->model('date_model');
+        
+        $query_params = [
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months"))],
         ];
-        $n = 0;
-        $entry_date_close_data = $this->event_model->get_event_list_summary("date_range", $params);
-        foreach ($entry_date_close_data as $year => $year_list) {
-            foreach ($year_list as $month => $month_list) {
-                foreach ($month_list as $day => $edition_list) {
-                    foreach ($edition_list as $edition_id => $edition) {
-                        if ($this->auto_mailer(4, $edition_id)) {
-                            $n++;
-                        }
-                    }
+        $edition_list = $this->date_model->add_dates($this->edition_model->get_edition_list($query_params));
+
+        $n=0;
+        foreach ($edition_list as $edition_id => $edition) {
+            if (isset($edition['date_list'][3][0]['date_end'])) {
+                $online_close_date = strtotime($edition['date_list'][3][0]['date_end']);
+            } else {
+                $online_close_date = 0;
+            }
+            if (($online_close_date > time()) && ($online_close_date < strtotime("1 week"))) {
+                if ($this->auto_mailer(4, $edition_id)) {
+                    $n++;
                 }
             }
         }
+
         echo "$n Auto Emails Set: <b>" . date("Y-m-d H:i:s") . "</b>";
+
+        // LOG RUNTIME DATA
+        $log_data['end'] = $this->get_date();
+        $this->log_runtime($log_data);
     }
 
 }
