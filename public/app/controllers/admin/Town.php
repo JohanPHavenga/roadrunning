@@ -145,7 +145,7 @@ class Town extends Admin_Controller {
         // set validation rules
         $this->form_validation->set_rules('town_name', 'Town Name', 'required');
         $this->form_validation->set_rules('province_id', 'Province', 'required|numeric|greater_than[0]', ["greater_than" => "Please select a Province"]);
-        $this->form_validation->set_rules('province_id', 'Area', 'required|numeric|greater_than[0]', ["greater_than" => "Please select an Area"]);
+//        $this->form_validation->set_rules('province_id', 'Area', 'required|numeric|greater_than[0]', ["greater_than" => "Please select an Area"]);
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {

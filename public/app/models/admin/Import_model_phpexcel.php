@@ -51,9 +51,43 @@ class Import_model_phpexcel extends Admin_model {
         return false;
     }
 
-    public function get_temp_table_data($table) {
-        $query = $this->db->get($table);
-        return $query->result_array();
+    public function get_temp_table_data() {
+        $query = $this->db->get("temp_import_event");
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['temp_id']]=$row;
+            }
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function check_ids($field) {
+        $this->db->select($field);
+        $this->db->from("temp_import_event");
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                if (!$row[$field]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+     public function update_field($temp_id, $field, $value) {
+        if (!($temp_id)) {
+            return false;
+        } else {
+            $this->db->trans_start();
+            $this->db->update('temp_import_event', [$field => $value, "timestamp" => date("Y-m-d H:i:s")], array('temp_id' => $temp_id));
+            $this->db->trans_complete();
+            return $this->db->trans_status();
+        }
     }
 
 }

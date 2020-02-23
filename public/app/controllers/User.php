@@ -514,11 +514,4 @@ class User extends Frontend_Controller {
         return $this->set_email($data);
     }
 
-    private function int_phone($phone) {
-        $phone = trim($phone);
-        $phone = str_replace(" ", "", $phone);
-        $phone = str_replace("-", "", $phone);
-        return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
-    }
-
 }

@@ -10,6 +10,21 @@ class Event_model extends Admin_model {
     public function record_count() {
         return $this->db->count_all("events");
     }
+    
+    public function get_event_id($event_name) {
+        $this->db->select("event_id");
+        $this->db->from("events");
+        $this->db->where('LOWER(event_name)', strtolower($event_name));
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data = $row['event_id'];
+            }
+            return $data;
+        } 
+        return false;
+    }
 
     public function get_event_list($limit = NULL, $start = NULL) {
         if (isset($limit) && isset($start)) {
@@ -78,7 +93,13 @@ class Event_model extends Admin_model {
             );
             $organise_club_data = ["club_id" => $this->input->post('club_id'), "event_id" => $event_id];
         } else {
-            $organise_club_data = ["club_id" => 8, "event_id" => $event_id];
+            if ($event_data['club_id']) {
+                $club_id=$event_data['club_id'];
+                unset($event_data['club_id']);
+            } else {
+                $club_id=8;
+            }
+            $organise_club_data = ["club_id" => $club_id, "event_id" => $event_id];
             if (!isset($event_data['event_status'])) {
                 $event_data['event_status'] = 1;
             }

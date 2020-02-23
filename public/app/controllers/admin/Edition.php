@@ -151,10 +151,6 @@ class Edition extends Admin_Controller {
             "on the day" => "on the day",
         ];
 
-        $this->data_to_view['sponsor_list'] = $this->sponsor_model->get_edition_sponsor_list($edition_id);
-        $this->data_to_view['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
-        $this->data_to_view['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
-
         if ($action == "edit") {
             $this->data_to_view['edition_detail'] = $this->edition_model->get_edition_detail($edition_id);
             $this->data_to_view['race_list'] = $this->race_model->get_race_list($edition_id);
@@ -164,23 +160,33 @@ class Edition extends Admin_Controller {
             $this->data_to_view['url_list'] = $this->url_model->get_url_list("edition", $edition_id);
             $this->data_to_view['file_list'] = $this->file_model->get_file_list("edition", $edition_id);
             $this->data_to_view['file_list_by_type'] = $this->file_model->get_file_list("edition", $edition_id, true);
-            foreach ($this->data_to_view['race_list'] as $race_id => $race) {
-                $this->data_to_view['race_list'][$race_id]['has_results'] = $this->result_model->result_exist_for_race($race_id);
-                $this->data_to_view['race_list'][$race_id]['file_list'] = $this->file_model->get_file_list("race", $race_id, true);
+//            wts($this->data_to_view['race_list'],1);
+            if (!empty($this->data_to_view['race_list'])) {
+                foreach ($this->data_to_view['race_list'] as $race_id => $race) {
+                    $this->data_to_view['race_list'][$race_id]['has_results'] = $this->result_model->result_exist_for_race($race_id);
+                    $this->data_to_view['race_list'][$race_id]['file_list'] = $this->file_model->get_file_list("race", $race_id, true);
+                }
             }
             $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $edition_id;
             // set edition_return_url for races
             $this->session->set_userdata('edition_return_url', "/" . uri_string());
             $this->data_to_view['event_edit_url'] = "/admin/event/create/edit/" . $this->data_to_view['edition_detail']['event_id'];
+
+            $this->data_to_view['sponsor_list'] = $this->sponsor_model->get_edition_sponsor_list($edition_id);
+            $this->data_to_view['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
+            $this->data_to_view['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
         } else {
             $this->data_to_view['edition_detail'] = $this->edition_model->get_edition_field_array();
             $this->data_to_view['edition_detail']['edition_status'] = 1;
             $this->data_to_view['edition_detail']['edition_info_status'] = 14;
             $this->data_to_view['edition_detail']['edition_isfeatured'] = 0;
-            $this->data_to_view['edition_detail']['sponsor_id'][] = 4;
-            $this->data_to_view['edition_detail']['entrytype_id'][] = 5;
+            $this->data_to_view['sponsor_list'] = [4];
+            $this->data_to_view['entrytype_list'] = [5];
+            $this->data_to_view['regtype_list'] = [3];
             $this->data_to_view['edition_detail']['user_id'] = 60;
             $this->data_to_view['edition_detail']['edition_asa_member'] = '';
+            $this->data_to_view['edition_detail']['edition_info_prizegizing'] = "00:00";
+            $this->data_to_view['edition_detail']['edition_date'] = fdateShort();
         }
 
         // set validation rules
@@ -225,7 +231,7 @@ class Edition extends Admin_Controller {
                 // DATES checks
                 $this->check_start_end_dates($id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
                 // CEHCK TAGS
-                $this->set_tags_on_post($id, $new_edition_detail, $race_data);
+                $this->set_tags($id, $new_edition_detail, $race_data);
                 // AUTO MAILER for INFO VERIFIED
                 if ($new_edition_detail['edition_info_status'] == 16) {
                     $this->auto_mailer(3, $id);
@@ -246,68 +252,6 @@ class Edition extends Admin_Controller {
             $this->session->set_flashdata(['alert' => $alert, 'status' => $status,]);
             redirect($this->return_url);
         }
-    }
-
-    private function set_tags_on_post($edition_id, $edition_data, $race_data) {
-        $this->load->model('admin/tag_model');
-        $this->load->model('admin/tagtype_model');
-
-        $tagtype_list = $this->tagtype_model->get_tagtype_list();
-        foreach ($tagtype_list as $tagtype_id => $tagtype) {
-            $tagtype_arr[$tagtype['tagtype_name']] = $tagtype_id;
-        }
-        // SET TAGS
-        // get race distance tags
-        foreach ($race_data as $race_id => $race) {
-            $tags[trim($race['race_name'])] = $tagtype_arr['race_name'];
-            $distance = $race['race_distance'] + 0;
-            $tags[$distance . "km"] = $tagtype_arr['race_distance'];
-        }
-        unset($tagtype_arr['race_distance']);
-        unset($tagtype_arr['race_name']);
-
-        // edition_year
-        $tags[fdateYear($edition_data['edition_date'])] = $tagtype_arr['edition_year'];
-        unset($tagtype_arr['edition_year']);
-
-        // edition_month
-        $tags[fdateMonth($edition_data['edition_date']) . " " . fdateYear($edition_data['edition_date'])] = $tagtype_arr['edition_month'];
-        unset($tagtype_arr['edition_month']);
-
-        // REST of fields on flat edition_data array
-        foreach ($tagtype_arr as $tagfield_name => $tagfield_id) {
-            $tags[$edition_data[$tagfield_name]] = $tagfield_id;
-        }
-
-        // CLEAR EDITION TAGS
-        $stats['new_tag'] = 0;
-        $stats['edition_tag_link'] = 0;
-        $this->tag_model->clear_edition_tags($edition_id);
-        foreach ($tags as $tag => $tagtype_id) {
-            // CHECK IF TAGS EXISTS, ELSE ADD
-            $tag = trim($tag);
-            if (!empty($tag)) {
-                $tag_id = $this->tag_model->exists($tag);
-                if (!$tag_id) {
-                    $data = [
-                        'tag_name' => $tag,
-                        'tagtype_id' => $tagtype_id,
-                        'tag_status' => 1,
-                    ];
-                    $tag_id = $this->tag_model->set_tag("add", 0, $data);
-                    $stats['new_tag'] ++;
-                }
-                // ADD TAG
-                $this->tag_model->set_edition_tag($edition_id, $tag_id);
-                $stats['edition_tag_link'] ++;
-            }
-        }
-//        wts($tagtype_arr);
-//        wts($tags);
-//        echo $edition_id;
-//        wts($race_data);
-//        wts($edition_data, true);
-        return($stats);
     }
 
     public function race_status_update($race_id_arr, $status_id) {
@@ -709,7 +653,7 @@ class Edition extends Admin_Controller {
         $acc_stats['edition_tag_link'] = 0;
         foreach ($edition_list as $edition_id => $edition_data) {
             $race_list = $this->race_model->get_race_list($edition_id, 1);
-            $stats = $this->set_tags_on_post($edition_id, $edition_data, $race_list);
+            $stats = $this->set_tags($edition_id, $edition_data, $race_list);
             $acc_stats['new_tag'] = $acc_stats['new_tag'] + $stats['new_tag'];
             $acc_stats['edition_tag_link'] = $acc_stats['edition_tag_link'] + $stats['edition_tag_link'];
         }

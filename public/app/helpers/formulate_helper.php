@@ -56,8 +56,12 @@ function fdateDay($date) {
     return date("d", strtotime($date));
 }
 
-function fdateShort($date) {
-    return date("Y-m-d", strtotime($date));
+function fdateShort($date=null) {
+    if (empty($date)) {
+        return date("Y-m-d");
+    } else {
+        return date("Y-m-d", strtotime($date));
+    }
 }
 
 function fdateHuman($date) {
@@ -89,11 +93,15 @@ function fdateEntries($date) {
     return date($date_str, strtotime($date)) . $post_text;
 }
 
-function fdateLong($date, $show_sec = true) {
-    if ($show_sec) {
-        return date("Y-m-d H:i:s", strtotime($date));
+function fdateLong($date=null, $show_sec = true) {
+    if ($date) {
+        if ($show_sec) {
+            return date("Y-m-d H:i:s", strtotime($date));
+        } else {
+            return date("Y-m-d H:i", strtotime($date));
+        }
     } else {
-        return date("Y-m-d H:i", strtotime($date));
+        return date("Y-m-d H:i:s");
     }
 }
 

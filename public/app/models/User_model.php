@@ -10,7 +10,7 @@ class User_model extends Frontend_model {
         return $this->db->count_all("users");
     }
 
-    public function get_user_id($email) {
+    public function get_user_id($email, $create=[]) {
         $this->db->select("user_id");
         $this->db->from("users");
         $this->db->where('user_email', $email);
@@ -21,6 +21,13 @@ class User_model extends Frontend_model {
                 $data = $row['user_id'];
             }
             return $data;
+        } elseif (!empty($create)) {
+            $params=[
+                "action"=>"add",
+                "user_data"=>$create,
+                "role_arr"=>[3],                
+            ];
+            return($this->set_user($params));
         }
         return false;
     }

@@ -148,6 +148,10 @@ class Url extends Admin_Controller {
                 $linked_id = $this->input->post($id_type);
                 $set = $this->set_results_flag($this->input->post("url_linked_to"), $linked_id);
             }
+            
+            // set update date on linked entity
+            $model=$this->input->post("url_linked_to")."_model";
+            $this->$model->update_field($linked_id,"updated_date", fdateLong());
 
             if ($id) {
                 $alert = "URL details has been " . $action . "ed";

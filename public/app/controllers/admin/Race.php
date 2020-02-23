@@ -201,6 +201,10 @@ class Race extends Admin_Controller {
             if ($edition_info['edition_asa_member'] > 0) {
                 $race_data = $this->race_fill_blanks($race_data, $edition_info);
             }
+            
+            
+            // set update date on linked entity
+            $this->edition_model->update_field($this->input->post('edition_id'),"updated_date", fdateLong());
 
 //            wts($race_data);
 //            wts($edition_info);

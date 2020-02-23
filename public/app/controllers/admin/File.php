@@ -67,13 +67,13 @@ class File extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function create($action, $id=0, $linked_type=NULL) {
-        
+    public function create($action, $id = 0, $linked_type = NULL) {
+
         // set return url to session should it exists
         if ($this->session->has_userdata('edition_return_url')) {
-            $this->return_url = $this->session->edition_return_url . "#file_list";            
+            $this->return_url = $this->session->edition_return_url . "#file_list";
         }
-      
+
         // additional models
         $this->load->model('admin/filetype_model');
 
@@ -109,14 +109,14 @@ class File extends Admin_Controller {
         $this->data_to_view['filetype_dropdown'] = $this->filetype_model->get_filetype_dropdown();
         $this->data_to_view['linked_to_dropdown'] = $this->filetype_model->get_linked_to_dropdown();
         $this->data_to_view['linked_to_list'] = $this->filetype_model->get_linked_to_list();
-        
+
         // dynamically get drop downs using the linked_to_table
         foreach ($this->data_to_view['linked_to_list'] as $linked_to_id => $linked_to_name) {
             $dropdown = $linked_to_name . "_dropdown";
             $model = $linked_to_name . "_model";
             $method = "get_" . $linked_to_name . "_dropdown";
 
-            $this->load->model("admin/".$model);
+            $this->load->model("admin/" . $model);
             $this->data_to_view[$dropdown] = $this->$model->$method();
         }
 
@@ -125,9 +125,9 @@ class File extends Admin_Controller {
             $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $id;
         } else {
             $this->data_to_view['file_detail'] = [];
-            if ($id>0) {
-                $this->data_to_view['file_detail']['linked_id']=$id;
-                $this->data_to_view['file_detail']['file_linked_to']=$linked_type;
+            if ($id > 0) {
+                $this->data_to_view['file_detail']['linked_id'] = $id;
+                $this->data_to_view['file_detail']['file_linked_to'] = $linked_type;
             }
         }
 
@@ -144,7 +144,7 @@ class File extends Admin_Controller {
             // UPDLOAD THE FILE and stuff            
             $alert = "File has been successfully " . $action . "ed";
             $status = "success";
-            $file_db_w=false;
+            $file_db_w = false;
 
 
             if ($_FILES['file_upload']['error'] == 4) {
@@ -182,13 +182,18 @@ class File extends Admin_Controller {
                     $alert = $file_upload['alert_text'];
                     $status = $file_upload['alert_status'];
                 }
-                
-                $results_link_arr=['edition','race'];
-                if (in_array($this->input->post("file_linked_to"),$results_link_arr)) {
+
+                $results_link_arr = ['edition', 'race'];
+                if (in_array($this->input->post("file_linked_to"), $results_link_arr)) {
                     $id_type = $this->input->post("file_linked_to") . "_id";
                     $linked_id = $this->input->post($id_type);
                     $set = $this->set_results_flag($this->input->post("file_linked_to"), $linked_id);
                 }
+
+
+                // set update date on linked entity
+                $model = $this->input->post("file_linked_to") . "_model";
+                $this->$model->update_field($linked_id, "updated_date", fdateLong());
             }
 
             if ($file_db_w) {
@@ -243,7 +248,7 @@ class File extends Admin_Controller {
     }
 
     public function delete($file_id = 0) {
-        
+
         // set return url to session should it exists
         if ($this->session->has_userdata('edition_return_url')) {
             $this->return_url = $this->session->edition_return_url;
@@ -258,14 +263,14 @@ class File extends Admin_Controller {
 
         // get file detail for nice delete message
         $file_detail = $this->file_model->get_file_detail($file_id);
-        
+
         // delete record        
-        $file_path="./uploads/".$file_detail['file_linked_to']."/".$file_detail['linked_id']."/".$file_detail['file_name'];
-        $db_del = $this->file_model->remove_file($file_id,$file_path);
-        
+        $file_path = "./uploads/" . $file_detail['file_linked_to'] . "/" . $file_detail['linked_id'] . "/" . $file_detail['file_name'];
+        $db_del = $this->file_model->remove_file($file_id, $file_path);
+
         // check results flag
-        $results_link_arr=['edition','race'];
-        if (in_array($file_detail['file_linked_to'],$results_link_arr)) {
+        $results_link_arr = ['edition', 'race'];
+        if (in_array($file_detail['file_linked_to'], $results_link_arr)) {
             $set = $this->set_results_flag($file_detail['file_linked_to'], $file_detail['linked_id']);
         }
 

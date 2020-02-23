@@ -52,6 +52,18 @@
                         <div class="col-lg-7">
                             <?php
                             echo $edition_data['edition_intro_detail'];
+
+                            if ($edition_data['sponsor_list']) {
+                                echo "<p><b>Sponsored</b> by ";
+                                foreach ($edition_data['sponsor_list'] as $sponsor_id => $sponsor) {
+                                    if (!empty($sponsor['url_name'])) {
+                                        echo "<a href='" . $sponsor['url_name'] . "' title='Visit sponsor website' class='link'>" . $sponsor['sponsor_name'] . "</a> ";
+                                    } else {
+                                        echo $sponsor['sponsor_name'] . " ";
+                                    }
+                                }
+                                echo "</p>";
+                            }
                             ?>
 
                             <div class="product-description">
@@ -112,22 +124,22 @@
                                         <?php
                                         // BUTTONS
                                         if (!in_array(5, $edition_data['entrytype_list'])) {
-                                            switch($online_entry_status) {
+                                            switch ($online_entry_status) {
                                                 case "open":
-                                                    $btn_text="Entries Open!";
-                                                    $btn_type="success";
+                                                    $btn_text = "Entries Open!";
+                                                    $btn_type = "success";
                                                     break;
                                                 case "closed":
-                                                    $btn_text="Entries Closed";
-                                                    $btn_type="danger";
+                                                    $btn_text = "Entries Closed";
+                                                    $btn_type = "danger";
                                                     break;
                                                 default:
-                                                    $btn_text="Entry Details";
-                                                    $btn_type="light";
+                                                    $btn_text = "Entry Details";
+                                                    $btn_type = "light";
                                                     break;
                                             }
                                             ?>
-                                            <a class="btn btn-<?=$btn_type;?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?=$btn_text;?>
+                                            <a class="btn btn-<?= $btn_type; ?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?= $btn_text; ?>
                                                 <i class="fa fa-arrow-right"></i></a>
                                             <?php
                                         }
@@ -364,7 +376,7 @@
                         }
                         ?>
                         <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info</a>
-                    
+
                         <?php
                         if (isset($flyer['edition'])) {
                             ?>

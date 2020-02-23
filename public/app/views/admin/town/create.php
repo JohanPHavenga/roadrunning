@@ -56,23 +56,14 @@
                 echo form_label('Region <span class="compulsary">*</span>', 'region_id');
                 echo form_dropdown('region_id', $region_dropdown, @$town_detail['region_id'], ["id" => "region_id", "class" => "form-control"]);
                 echo "</div>";
-                echo "</div>";
-                echo "</div>";
 
                 // BELOW NEED TO BE REMOVED IN TIME
                 //  PROVINCE
-                echo "<div class='form-group'>";
-                echo "<div class='row'>";
                 echo "<div class='col-md-6'>";
                 echo form_label('Province <span class="compulsary">*</span>', 'province_id');
                 echo form_dropdown('province_id', $province_dropdown, @$town_detail['province_id'], ["id" => "province_id", "class" => "form-control"]);
                 echo "</div>";
 
-                //  REGION / AREA
-                echo "<div class='col-md-6'>";
-                echo form_label('Area <span class="compulsary">*</span>', 'area_id');
-                echo form_dropdown('area_id', $area_dropdown, @$town_detail['area_id'], ["id" => "area_id", "class" => "form-control"]);
-                echo "</div>";
                 echo "</div>";
                 echo "</div>";
 

@@ -148,17 +148,22 @@ class Town_model extends Admin_model {
     }
 
     public function get_town_id($town_name) {
-        $this->db->select("town_id");
+        $this->db->select("town_id, region_id");
         $this->db->from("towns");
-        $this->db->where('town_name', $town_name);
+        $this->db->where('LOWER(town_name)', strtolower($town_name));
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $town_id = $row['town_id'];
+                if ($row['region_id']==61) {
+                    $town_id=-1;
+                } else {
+                    $town_id=$row['town_id'];
+                    break;
+                }
             }
             return $town_id;
-        }
+        } 
         return false;
     }
 
@@ -178,9 +183,7 @@ class Town_model extends Admin_model {
                 $this->db->insert('towns', $town_data);
                 // get edition ID from Insert
                 $town_id = $this->db->insert_id();
-                // update data array
-                $town_area_data["town_id"] = $town_id;
-                $this->db->insert('town_area', $town_area_data);
+                // update data array);
                 $this->db->trans_complete();
                 break;
             case "edit":
@@ -188,14 +191,7 @@ class Town_model extends Admin_model {
                 $town_data['updated_date'] = date("Y-m-d H:i:s");
 
                 // start SQL transaction
-                $this->db->trans_start();
-                // chcek if record already exists
-                $item_exists = $this->db->get_where('town_area', array('town_id' => $town_id, 'area_id' => $this->input->post('area_id')));
-                if ($item_exists->num_rows() == 0) {
-                    $town_data['updated_date'] = date("Y-m-d H:i:s");
-                    $this->db->delete('town_area', array('town_id' => $town_id));
-                    $this->db->insert('town_area', $town_area_data);
-                }
+                $this->db->trans_start();                
                 $this->db->update('towns', $town_data, array('town_id' => $town_id));
                 $this->db->trans_complete();
                 break;

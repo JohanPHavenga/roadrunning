@@ -97,7 +97,7 @@ EOT;
         }
         $user_str = implode(",", $user_list);
         $emailtemplate = $this->emailtemplate_model->get_emailtemplate_detail($emailtemplate_id);
-        
+
         // create email merge
         $merge_data = array(
             "emailmerge_status" => 4,
@@ -109,7 +109,7 @@ EOT;
         );
         $emailmerge_id = $this->emailmerge_model->set_emailmerge("add", 0, $merge_data);
         $autoemail_id = $this->autoemail_model->set_autoemail($emailtemplate_id, $edition_id);
-        
+
         return true;
     }
 
@@ -132,6 +132,14 @@ EOT;
         $crypt = my_encrypt($user_id . "|" . $linked_to . "|" . $linked_id);
         $url = base_url("user/unsubscribe/" . $crypt);
         return $url;
+    }
+
+    public function int_phone($phone) {
+        $phone = trim($phone);
+        $phone = str_replace("  ", "", $phone);
+        $phone = str_replace(" ", "", $phone);
+        $phone = str_replace("-", "", $phone);
+        return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
     }
 
     // ==============================================================================================
@@ -1238,7 +1246,6 @@ class Admin_Controller extends MY_Controller {
         if ($flag) {
             $this->auto_mailer(2, $id);
         }
-        
     }
 
     function set_admin_menu_array() {
@@ -1603,23 +1610,87 @@ class Admin_Controller extends MY_Controller {
         }
 
         // check senior fees
-        if (($race_data['race_fee_senior_licenced'] > 0) && ($race_data['race_fee_senior_unlicenced'] == 0)) {
+        if (isset($race_data['race_fee_senior_licenced'])) {
+            if (($race_data['race_fee_senior_licenced'] > 0) && ($race_data['race_fee_senior_unlicenced'] == 0)) {
 
-            $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance']);
-            if ($licence_fee > 0) {
-                $race_data['race_fee_senior_unlicenced'] = $race_data['race_fee_senior_licenced'] + $licence_fee;
+                $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance']);
+                if ($licence_fee > 0) {
+                    $race_data['race_fee_senior_unlicenced'] = $race_data['race_fee_senior_licenced'] + $licence_fee;
+                }
             }
-        }
 
-        // check junior fees
-        if (($race_data['race_fee_junior_licenced'] > 0) && ($race_data['race_fee_junior_unlicenced'] == 0)) {
-            $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance'], "asa_fee_jnr");
-            if ($licence_fee > 0) {
-                $race_data['race_fee_junior_unlicenced'] = $race_data['race_fee_junior_licenced'] + $licence_fee;
+            // check junior fees
+            if (($race_data['race_fee_junior_licenced'] > 0) && ($race_data['race_fee_junior_unlicenced'] == 0)) {
+                $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance'], "asa_fee_jnr");
+                if ($licence_fee > 0) {
+                    $race_data['race_fee_junior_unlicenced'] = $race_data['race_fee_junior_licenced'] + $licence_fee;
+                }
             }
         }
 
         return $race_data;
+    }
+    
+    public function set_tags($edition_id, $edition_data, $race_data) {
+        $this->load->model('admin/tag_model');
+        $this->load->model('admin/tagtype_model');
+
+        $tagtype_list = $this->tagtype_model->get_tagtype_list();
+        foreach ($tagtype_list as $tagtype_id => $tagtype) {
+            $tagtype_arr[$tagtype['tagtype_name']] = $tagtype_id;
+        }
+        // SET TAGS
+        // get race distance tags
+        foreach ($race_data as $race_id => $race) {
+            $tags[trim($race['race_name'])] = $tagtype_arr['race_name'];
+            $distance = $race['race_distance'] + 0;
+            $tags[$distance . "km"] = $tagtype_arr['race_distance'];
+        }
+        unset($tagtype_arr['race_distance']);
+        unset($tagtype_arr['race_name']);
+
+        // edition_year
+        $tags[fdateYear($edition_data['edition_date'])] = $tagtype_arr['edition_year'];
+        unset($tagtype_arr['edition_year']);
+
+        // edition_month
+        $tags[fdateMonth($edition_data['edition_date']) . " " . fdateYear($edition_data['edition_date'])] = $tagtype_arr['edition_month'];
+        unset($tagtype_arr['edition_month']);
+
+        // REST of fields on flat edition_data array
+        foreach ($tagtype_arr as $tagfield_name => $tagfield_id) {
+            $tags[$edition_data[$tagfield_name]] = $tagfield_id;
+        }
+
+        // CLEAR EDITION TAGS
+        $stats['new_tag'] = 0;
+        $stats['edition_tag_link'] = 0;
+        $this->tag_model->clear_edition_tags($edition_id);
+        foreach ($tags as $tag => $tagtype_id) {
+            // CHECK IF TAGS EXISTS, ELSE ADD
+            $tag = trim($tag);
+            if (!empty($tag)) {
+                $tag_id = $this->tag_model->exists($tag);
+                if (!$tag_id) {
+                    $data = [
+                        'tag_name' => $tag,
+                        'tagtype_id' => $tagtype_id,
+                        'tag_status' => 1,
+                    ];
+                    $tag_id = $this->tag_model->set_tag("add", 0, $data);
+                    $stats['new_tag'] ++;
+                }
+                // ADD TAG
+                $this->tag_model->set_edition_tag($edition_id, $tag_id);
+                $stats['edition_tag_link'] ++;
+            }
+        }
+//        wts($tagtype_arr);
+//        wts($tags);
+//        echo $edition_id;
+//        wts($race_data);
+//        wts($edition_data, true);
+        return($stats);
     }
 
 }

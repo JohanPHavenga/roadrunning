@@ -18,16 +18,15 @@ class Main extends Frontend_Controller {
 
         // featured events
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,"edition_status" => [1,3,4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
             "limit" => "5",
         ];
         $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->date_model->add_dates($this->edition_model->get_edition_list($query_params)));
 //        wts($this->data_to_views['featured_events'],1);
-
         // upcoming events
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,"edition_status" => [1,3,4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("9 days")), "edition_status" => 1],
             "order_by" => ["editions.edition_date" => "ASC"],
         ];
@@ -36,7 +35,7 @@ class Main extends Frontend_Controller {
 //        wts($this->data_to_views['upcoming_events'],true);
         // last edited
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,"edition_status" => [1,3,4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "editions.updated_date > " => date("Y-m-d H:i:s", strtotime("-1 year"))],
             "order_by" => ["editions.updated_date" => "DESC"],
             "limit" => 10,
@@ -65,7 +64,7 @@ class Main extends Frontend_Controller {
     }
 
     public function custom_404() {
-        
+
         $this->output->set_status_header('404');
         if ($this->session->flashdata('alert') !== null) {
             $this->data_to_views['page_title'] = $this->session->flashdata('alert');
@@ -91,7 +90,7 @@ class Main extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function faq($open=null) {
+    public function faq($open = null) {
         $this->data_to_views['banner_img'] = "run_03";
         $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['page_title'] = "Frequently Asked Questions";
@@ -113,7 +112,7 @@ class Main extends Frontend_Controller {
         $this->load->view('main/newsletter', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
+
     public function support() {
         $this->data_to_views['banner_img'] = "run_01";
         $this->data_to_views['banner_pos'] = "40%";
@@ -154,7 +153,7 @@ class Main extends Frontend_Controller {
                 $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?ref=9";
                 break;
             case "10km":
-            case "10km road":                
+            case "10km road":
             case "10km-road":
             case "10km-run":
             case "10km run":
@@ -168,7 +167,7 @@ class Main extends Frontend_Controller {
         }
 
         $this->data_to_views['page_title'] = $t_prog_text;
-        $this->data_to_views['meta_description'] = "Link through to ".$t_prog_text."s from Coach Parry";
+        $this->data_to_views['meta_description'] = "Link through to " . $t_prog_text . "s from Coach Parry";
         $this->data_to_views['coach_parry_link'] = $t_prog_link;
 
         $this->load->view($this->header_url, $this->data_to_views);
@@ -203,6 +202,24 @@ class Main extends Frontend_Controller {
         }
 
         return ($return_arr);
+    }
+
+    private function url_get_contents($Url) {
+        if (!function_exists('curl_init')) {
+            die('CURL is not installed!');
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $Url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+
+    public function geolocation() {
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyD9KIL9WMsRtNOWuJtDa9EVj9C2YvO8JwM";
+        $return = $this->url_get_contents($url);
+        wts($return);
     }
 
 }

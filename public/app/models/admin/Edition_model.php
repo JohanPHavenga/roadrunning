@@ -263,7 +263,7 @@ class Edition_model extends Admin_model {
 //            $this->db->where('edition_id', $id);
 //            $query = $this->db->get();
 
-            $this->db->select("*, asa_member_id AS edition_asa_member");
+            $this->db->select("*, editions.updated_date as edition_updated_date, editions.created_date as edition_created_date, asa_member_id AS edition_asa_member");
             $this->db->from("editions");
             $this->db->join('events', 'event_id');
             $this->db->join('towns', 'town_id');
@@ -393,6 +393,8 @@ class Edition_model extends Admin_model {
                 }
                 unset($edition_data['edition_asa_member']);
             }
+            
+            $edition_data['edition_slug'] = url_title($edition_data['edition_name']);
         }
 
         if ($debug) {
@@ -501,7 +503,7 @@ class Edition_model extends Admin_model {
                     $this->db->trans_complete();
 
 
-                    // check of die naam van die edition verander het, indien wel, kryf na editions_past
+                    // check of die naam van die edition verander het, indien wel, skryf na editions_past
 
                     if ($this->input->post('edition_name_past') != $this->input->post('edition_name')) {
                         $this->db->trans_start();

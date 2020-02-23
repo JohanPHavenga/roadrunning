@@ -238,7 +238,7 @@ class Edition_model extends Frontend_model {
         $this->db->from("editions");
         $this->db->where("edition_name", $edition_name);
 //            $this->db->where("REPLACE(edition_name, '\'', '')='$edition_name'"); // fix vir as daar 'n ' in die naam is
-//            $this->db->or_where("REPLACE(edition_name, '/', ' ')=$edition_name`"); // fix vir as daar 'n / in die naam is
+//            $this->db->or_where("REPLACE(edition_name, '/', ' ')=$edition_name"); // fix vir as daar 'n / in die naam is
 //            echo $this->db->get_compiled_select(); exit();
         $editions_query = $this->db->get();
 
@@ -247,7 +247,7 @@ class Edition_model extends Frontend_model {
         $this->db->select("edition_id");
         $this->db->from("editions_past");
         $this->db->where("edition_name", $edition_name);
-//            $this->db->where("REPLACE(edition_name, '\'', '')=`$edition_name`"); // fix vir as daar 'n ' in die naam is
+//            $this->db->where("REPLACE(edition_name, '\'', '')=$edition_name"); // fix vir as daar 'n ' in die naam is
 //            $this->db->or_where("REPLACE(edition_name, '/', ' ')='$edition_name'"); // fix vir as daar 'n / in die naam is
 //            echo $this->db->get_compiled_select();   exit();
 
@@ -275,6 +275,23 @@ class Edition_model extends Frontend_model {
         if ($editions_query->num_rows() > 0) {
             $result = $editions_query->result_array();
             return $result[0]['edition_name'];
+        } else {
+            return false;
+        }
+    }
+
+    public function get_edition_sponsor_list($edition_id = null) {
+        if (!$edition_id) {
+            return false;
+        }
+        // had to go manual for advanced querys
+        $query = $this->db->query("SELECT `sponsor_id`, `sponsor_name`, `url_name` FROM `edition_sponsor` JOIN `sponsors` USING (`sponsor_id`) LEFT JOIN `urls` ON `sponsors`.`sponsor_id`=`linked_id` AND `urltype_id` = 1 AND `url_linked_to` = 'sponsor' WHERE `edition_id` = '$edition_id'");
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['sponsor_id']] = $row;
+            }
+            return $data;
         } else {
             return false;
         }
