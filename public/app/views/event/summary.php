@@ -53,7 +53,7 @@
                             <?php
                             echo $edition_data['edition_intro_detail'];
 
-                            if ($edition_data['sponsor_list']) {
+                            if (isset($edition_data['sponsor_list'])) {
                                 echo "<p><b>Sponsored</b> by ";
                                 foreach ($edition_data['sponsor_list'] as $sponsor_id => $sponsor) {
                                     if (!empty($sponsor['url_name'])) {

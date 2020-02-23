@@ -104,6 +104,9 @@ class Event extends Frontend_Controller {
         $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
         $this->data_to_views['edition_data']['club_url_list'] = $this->url_model->get_url_list("club", $edition_data['club_id'], false);
         $this->data_to_views['edition_data']['sponsor_list'] = $this->edition_model->get_edition_sponsor_list($edition_id);
+        if (array_keys_exists([4],$this->data_to_views['edition_data']['sponsor_list'])) {
+            unset($this->data_to_views['edition_data']['sponsor_list']);
+        }
 
         // calc values
         if (strtotime($edition_data['edition_date']) < time()) {

@@ -141,6 +141,19 @@ EOT;
         $phone = str_replace("-", "", $phone);
         return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
     }
+    
+    // API CALL
+    public function url_get_contents($Url) {
+        if (!function_exists('curl_init')) {
+            die('CURL is not installed!');
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $Url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
 
     // ==============================================================================================
     // SESSION CHECKS

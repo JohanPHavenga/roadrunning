@@ -114,7 +114,7 @@ class Import extends Admin_Controller {
         unset($_SESSION['import']);
         // get temp table data
         $_SESSION['import']['event'] = $temp_data = $this->import->get_temp_table_data();
-        $unset_arr = ["address", "gps", "time", "contact", "phone", "asamember_id", "asamember_name", "timestamp"];
+        $unset_arr = ["time", "contact", "phone", "asamember_id", "asamember_name", "timestamp"];
         $this->data_to_view['asamember_name'] = $temp_data[1]['asamember_name'];
         foreach ($temp_data as $key => $row) {
             foreach ($row as $column => $value) {
@@ -221,16 +221,17 @@ class Import extends Admin_Controller {
                 $this->load->model('admin/club_model');
                 foreach ($_SESSION['import']['event'] as $temp_id => $event) {
                     if (empty($event['gps'])) {
-                        // set club_arr for create if needed. Can only be done after town
-                        curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . "/certs/cacert.pem");
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                        $geocode = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=South+East+Boulevard+Shopping+Centre,+Vanderbijlpark,+South+Africa&key=AIzaSyD9KIL9WMsRtNOWuJtDa9EVj9C2YvO8JwM&sensor=false");
-                        $output = json_decode($geocode);
-                        // WE GET FILE CONTENT
-                        wts($output, 1);
 
-                        // set club_id in temp table
-                        $set = $this->import->update_field($temp_id, "club_id", $club_id);
+                        $address = url_title($event['address'], "+") . "," . url_title($event['town'], "+") . ",South+Africa";
+                        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . $address . "&key=AIzaSyD9KIL9WMsRtNOWuJtDa9EVj9C2YvO8JwM";
+                        $data = json_decode($this->url_get_contents($url));
+                        if (isset($data->results[0]->geometry->location->lat)) {
+                            $lat = $data->results[0]->geometry->location->lat;
+                            $lng = $data->results[0]->geometry->location->lng;
+
+                            $gps = $lat . "," . $lng;
+                            $set = $this->import->update_field($temp_id, "gps", $gps);
+                        }
                     }
                 }
                 break;
@@ -400,6 +401,7 @@ class Import extends Admin_Controller {
                         $race_id_str = implode(",", $race_id_arr);
                         // set event_id in temp table
                         $set = $this->import->update_field($temp_id, "race_ids", $race_id_str);
+                        unset($race_id_arr);
                     } else {
                         $s++;
                     }

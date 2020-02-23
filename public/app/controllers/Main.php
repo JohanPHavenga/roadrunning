@@ -204,22 +204,4 @@ class Main extends Frontend_Controller {
         return ($return_arr);
     }
 
-    private function url_get_contents($Url) {
-        if (!function_exists('curl_init')) {
-            die('CURL is not installed!');
-        }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $Url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
-    }
-
-    public function geolocation() {
-        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyD9KIL9WMsRtNOWuJtDa9EVj9C2YvO8JwM";
-        $return = $this->url_get_contents($url);
-        wts($return);
-    }
-
 }
