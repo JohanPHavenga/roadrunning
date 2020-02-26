@@ -185,7 +185,7 @@ class User extends Frontend_Controller {
                     redirect($return_url);
                 } else {
                     $return_url = base_url("event/" . $slug);
-                    $this->data_to_views['form_url'] = base_url('user/subscribe/event/' . $slug);
+                    $this->data_to_views['form_url'] = base_url('user/subscribe/edition/' . $slug);
                     $this->data_to_views['cancel_url'] = $return_url;
                     $linked_to_id = $edition_data['edition_id'];
                     $this->data_to_views['page_title'] = "Mailing List Addition";
@@ -204,6 +204,7 @@ class User extends Frontend_Controller {
                 break;
         }
 
+//        wts($linked_to_id);
 //        wts($slug);
 //        wts($type);
 //        wts($_POST);

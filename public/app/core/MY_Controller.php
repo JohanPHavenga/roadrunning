@@ -918,13 +918,13 @@ class Frontend_Controller extends MY_Controller {
                         break;
                     case 14:
                         $msg = "<b>INFO UNCONFIRMED</b><br>Waiting for race information from the organisers";
-                        $short_msg = "Dates not confirmed yet";
+                        $short_msg = "Dates confirmed. Awaiting more info from organisers";
                         $state = "warning";
                         $icon = "info-circle";
                         break;
                     case 15:
                         $msg = "<b>INFO INCOMPLETE</b><br>All information loaded has been confirmed as correct, but listing is not complete";
-                        $short_msg = "Outstanding information";
+                        $short_msg = "Listing almost complete";
                         $state = "info";
                         $icon = "info-circle";
                         break;

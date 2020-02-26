@@ -261,7 +261,7 @@ class Import extends Admin_Controller {
                 $this->load->model('admin/url_model');
                 foreach ($_SESSION['import']['event'] as $temp_id => $event) {
                     if (($event['club_id'] > 0) && ($event['club_web'])) {
-                        $url_id=$this->url_model->exists("club", $event['club_id'], 1);
+                        $url_id = $this->url_model->exists("club", $event['club_id'], 1);
                         if (!$url_id) {
                             // set url_arr for create if needed. Can only be done after club import
                             $url_arr = array(
@@ -279,9 +279,9 @@ class Import extends Admin_Controller {
                     } else {
                         $s++;
                     }
-                } 
+                }
                 $this->session->set_flashdata([
-                    'alert' => "<b>" . $n . "</b> new URLs were created. <b>".$o."</b> were already created. There were no URLs listed for <b>" . $s . "</b> of the clubs.",
+                    'alert' => "<b>" . $n . "</b> new URLs were created. <b>" . $o . "</b> were already created. There were no URLs listed for <b>" . $s . "</b> of the clubs.",
                     'status' => "success",
                 ]);
                 break;
