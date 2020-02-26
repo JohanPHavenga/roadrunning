@@ -104,6 +104,14 @@ span.post-meta a:hover {
 }
 address { display: inline; }
 
+#pageMenu-trigger {
+    font-size: 20px;
+    margin-top: 3px;
+}
+.page-menu #pageMenu-trigger i {
+    color: #ccc;
+}
+
 
 
 /* Color fixes */

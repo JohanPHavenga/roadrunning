@@ -223,7 +223,7 @@ class Import extends Admin_Controller {
                     if (empty($event['gps'])) {
 
                         $address = url_title($event['address'], "+") . "," . url_title($event['town'], "+") . ",South+Africa";
-                        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . $address . "&key=AIzaSyD9KIL9WMsRtNOWuJtDa9EVj9C2YvO8JwM";
+                        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . $address . "&key=".$_SESSION['webdata']['google']['api_key'];
                         $data = json_decode($this->url_get_contents($url));
                         if (isset($data->results[0]->geometry->location->lat)) {
                             $lat = $data->results[0]->geometry->location->lat;

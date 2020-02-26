@@ -7,17 +7,12 @@ class Login extends Frontend_Controller {
     }
 
     function glogin() {
-        // Fill CLIENT ID, CLIENT SECRET ID, REDIRECT URI from Google Developer Console
-        $client_id = '159529821777-mjm0rouog7vj7nd2mh34uvbmrhb5qasd.apps.googleusercontent.com';
-        $client_secret = 'k8xcCfccVpA90xqglw2fo0Zr';
-        $redirect_uri = base_url('login/gcallback');
-
         //Create Client Request to access Google API
         $client = new Google_Client();
-        $client->setApplicationName("Yourappname");
-        $client->setClientId($client_id);
-        $client->setClientSecret($client_secret);
-        $client->setRedirectUri($redirect_uri);
+        $client->setApplicationName("RoadRunningZA");
+        $client->setClientId($_SESSION['webdata']['google']['client_id']);
+        $client->setClientSecret($_SESSION['webdata']['google']['client_secret']);
+        $client->setRedirectUri(base_url('login/gcallback'));
         $client->addScope("email");
         $client->addScope("profile");
 
@@ -30,17 +25,12 @@ class Login extends Frontend_Controller {
     }
 
     function gcallback() {
-        // Fill CLIENT ID, CLIENT SECRET ID, REDIRECT URI from Google Developer Console
-        $client_id = 'your client id';
-        $client_secret = 'your client secret';
-        $redirect_uri = base_url('login/gcallback');
-
         //Create Client Request to access Google API
         $client = new Google_Client();
-        $client->setApplicationName("Yourappname");
-        $client->setClientId($client_id);
-        $client->setClientSecret($client_secret);
-        $client->setRedirectUri($redirect_uri);
+        $client->setApplicationName("RoadRunningZA");
+        $client->setClientId($_SESSION['webdata']['google']['client_id']);
+        $client->setClientSecret($_SESSION['webdata']['google']['client_secret']);
+        $client->setRedirectUri(base_url('login/gcallback'));
         $client->addScope("email");
         $client->addScope("profile");
 
@@ -53,6 +43,8 @@ class Login extends Frontend_Controller {
         // User information retrieval starts..............................
 
         $user = $service->userinfo->get(); //get user info 
+        
+        wts($user);
 
         echo "</br> User ID :" . $user->id;
         echo "</br> User Name :" . $user->name;
@@ -89,7 +81,7 @@ class Login extends Frontend_Controller {
         redirect("/logout/confirm");
     }
 
-    public function userlogin() {
+    public function userlogin($test=false) {
         $this->load->model('user_model');
         $this->load->model('role_model');
         $this->load->model('history_model');
@@ -119,6 +111,9 @@ class Login extends Frontend_Controller {
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
+            if ($test) {
+                $this->data_to_views['show_social_login']=true;
+            }
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
             $this->load->view('login/userlogin', $this->data_to_views);

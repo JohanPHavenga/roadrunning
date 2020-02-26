@@ -69,6 +69,15 @@
                     Don't have an account yet? <a href="<?= $register_url; ?>">Register New Account</a><br>
                     Or if you forgot your password you can <a href="<?= $reset_password_url; ?>">reset your password</a>
                 </p>
+                <?php
+                if ($show_social_login) {
+                    ?>
+                    <p>
+                        <a href="<?php echo base_url(); ?>login/glogin">Login with Google</a>
+                    </p>	
+                    <?php
+                }
+                ?>
             </div>   
         </div>
     </div>

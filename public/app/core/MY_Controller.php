@@ -213,12 +213,13 @@ class Frontend_Controller extends MY_Controller {
 
         // check of weer moet laai
         if ($this->check_value_refresh()) {
+            $this->session->set_userdata("web_data", $this->get_web_data());
+            $this->session->set_userdata("calendar_date_list", $this->get_date_list());
             $this->session->set_userdata("static_pages", $this->get_static_pages());
             $this->session->set_userdata("province_pages", $this->get_province_pages());
             $this->session->set_userdata("region_pages", $this->get_region_pages());
             $this->session->set_userdata("most_viewed_pages", $this->get_most_viewed_pages());
             $this->session->set_userdata("most_searched", $this->get_most_searched());
-            $this->session->set_userdata("calendar_date_list", $this->get_date_list());
         }
 
         // set cookies
@@ -700,6 +701,11 @@ class Frontend_Controller extends MY_Controller {
             ];
         }
         return $r_arr;
+    }
+    
+    public function get_web_data() {
+        $this->load->model('webdata_model');
+        return $this->webdata_model->get_webdata();
     }
 
     public function get_date_list() {
