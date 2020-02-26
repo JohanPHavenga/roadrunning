@@ -114,7 +114,7 @@ class Import extends Admin_Controller {
         unset($_SESSION['import']);
         // get temp table data
         $_SESSION['import']['event'] = $temp_data = $this->import->get_temp_table_data();
-        $unset_arr = ["time", "contact", "phone", "asamember_id", "asamember_name", "timestamp"];
+        $unset_arr = ["time", "contact", "phone", "club_web", "asamember_id", "asamember_name", "timestamp"];
         $this->data_to_view['asamember_name'] = $temp_data[1]['asamember_name'];
         foreach ($temp_data as $key => $row) {
             foreach ($row as $column => $value) {
@@ -127,7 +127,7 @@ class Import extends Admin_Controller {
         $this->data_to_view['columns'] = array_keys($temp_data_disp[1]);
         $this->data_to_view['columns'][0] = "#";
 
-        $fields_to_check = ["user_id", "club_id", "town_id", "event_id", "edition_id"];
+        $fields_to_check = ["user_id", "club_id", "town_id", "event_id", "edition_id", "club_web", "gps"];
         foreach ($fields_to_check as $field) {
             $check = $this->import->check_ids("$field");
             if ($check) {
@@ -256,6 +256,35 @@ class Import extends Admin_Controller {
     public function table($type) {
         // import data into actual table
         switch ($type) {
+            case "club_web":
+                $n = $o = $s = 0;
+                $this->load->model('admin/url_model');
+                foreach ($_SESSION['import']['event'] as $temp_id => $event) {
+                    if (($event['club_id'] > 0) && ($event['club_web'])) {
+                        $url_id=$this->url_model->exists("club", $event['club_id'], 1);
+                        if (!$url_id) {
+                            // set url_arr for create if needed. Can only be done after club import
+                            $url_arr = array(
+                                'url_name' => $event['club_web'],
+                                'urltype_id' => 1,
+                                'url_linked_to' => "club",
+                                'linked_id' => $event['club_id'],
+                            );
+                            // get club id
+                            $url_id = $this->url_model->set_url("add", 0, $url_arr);
+                            $n++;
+                        } else {
+                            $o++;
+                        }
+                    } else {
+                        $s++;
+                    }
+                } 
+                $this->session->set_flashdata([
+                    'alert' => "<b>" . $n . "</b> new URLs were created. <b>".$o."</b> were already created. There were no URLs listed for <b>" . $s . "</b> of the clubs.",
+                    'status' => "success",
+                ]);
+                break;
             // EVENTS
             case "event":
                 $n = $o = $s = 0;

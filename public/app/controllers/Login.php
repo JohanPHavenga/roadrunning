@@ -6,6 +6,63 @@ class Login extends Frontend_Controller {
         parent::__construct();
     }
 
+    function glogin() {
+        // Fill CLIENT ID, CLIENT SECRET ID, REDIRECT URI from Google Developer Console
+        $client_id = '159529821777-mjm0rouog7vj7nd2mh34uvbmrhb5qasd.apps.googleusercontent.com';
+        $client_secret = 'k8xcCfccVpA90xqglw2fo0Zr';
+        $redirect_uri = base_url('login/gcallback');
+
+        //Create Client Request to access Google API
+        $client = new Google_Client();
+        $client->setApplicationName("Yourappname");
+        $client->setClientId($client_id);
+        $client->setClientSecret($client_secret);
+        $client->setRedirectUri($redirect_uri);
+        $client->addScope("email");
+        $client->addScope("profile");
+
+        //Send Client Request
+        $objOAuthService = new Google_Service_Oauth2($client);
+
+        $authUrl = $client->createAuthUrl();
+
+        header('Location: ' . $authUrl);
+    }
+
+    function gcallback() {
+        // Fill CLIENT ID, CLIENT SECRET ID, REDIRECT URI from Google Developer Console
+        $client_id = 'your client id';
+        $client_secret = 'your client secret';
+        $redirect_uri = base_url('login/gcallback');
+
+        //Create Client Request to access Google API
+        $client = new Google_Client();
+        $client->setApplicationName("Yourappname");
+        $client->setClientId($client_id);
+        $client->setClientSecret($client_secret);
+        $client->setRedirectUri($redirect_uri);
+        $client->addScope("email");
+        $client->addScope("profile");
+
+        //Send Client Request
+        $service = new Google_Service_Oauth2($client);
+
+        $client->authenticate($_GET['code']);
+        $_SESSION['access_token'] = $client->getAccessToken();
+
+        // User information retrieval starts..............................
+
+        $user = $service->userinfo->get(); //get user info 
+
+        echo "</br> User ID :" . $user->id;
+        echo "</br> User Name :" . $user->name;
+        echo "</br> Gender :" . $user->gender;
+        echo "</br> User Email :" . $user->email;
+        echo "</br> User Link :" . $user->link;
+        echo "</br><img src='$user->picture' height='200' width='200' > ";
+    }
+    
+
     public function logout($confirm = false) {
         if ($confirm != "confirm") {
             $this->session->unset_userdata('user');
