@@ -24,6 +24,57 @@ class Login extends Frontend_Controller {
         header('Location: ' . $authUrl);
     }
 
+    function check_logic() {
+        $this->load->model('user_model');
+        $this->load->model('role_model');
+        $email = "johan.havenga@gmail.com";
+        // check if user already exists in DB. 
+        $user_id = $this->user_model->exists($email);
+        if (!$user_id) {
+            $user_data = [
+                "user_name" => "TeST",
+                "user_surname" => "TeST",
+                "user_email" => $email,
+            ];
+            $role_arr = [2];
+            $params = [
+                "action" => "add",
+                "user_data" => $user_data,
+                "role_arr" => $role_arr,
+            ];
+            $user_id = $this->user_model->set_user($params);
+        } else {
+            $role_arr = $this->role_model->get_role_list_per_user($user_id);
+        }
+
+        $user_data = $this->user_model->get_user_detail($user_id);
+        
+        // unset some data
+        unset($user_data['user_password']);
+        unset($user_data['created_date']);
+        unset($user_data['club_id']);
+        unset($user_data['club_name']);
+        
+        // add new data 
+        $user_data['updated_date'] = fdateLong();
+        // ADD GOOGLE DATA HERE
+        $user_data['user_gender'] = "Male";
+        // set user again
+        $params = [
+            "action" => "edit",
+            "user_data" => $user_data,
+            "role_arr" => $role_arr,
+        ];
+        $user_id = $this->user_model->set_user($params);
+        wts($role_arr);
+        wts($user_data, 1);
+
+
+
+        // pull row.
+        // redirect to login
+    }
+
     function gcallback() {
         //Create Client Request to access Google API
         $client = new Google_Client();
@@ -41,19 +92,56 @@ class Login extends Frontend_Controller {
         $_SESSION['access_token'] = $client->getAccessToken();
 
         // User information retrieval starts..............................
-
         $user = $service->userinfo->get(); //get user info 
+        $this->load->model('user_model');
+        $this->load->model('role_model');
+        // check if user already exists in DB. Else create
+        $user_id = $this->user_model->exists($user->email);
+        if (!$user_id) {
+            $user_data = [
+                "user_name" => "TeST",
+                "user_surname" => "TeST",
+                "user_email" => $user->email,
+            ];
+            $role_arr = [2];
+            $params = [
+                "action" => "add",
+                "user_data" => $user_data,
+                "role_arr" => $role_arr,
+            ];
+            $user_id = $this->user_model->set_user($params);
+        } else {
+            $role_arr = $this->role_model->get_role_list_per_user($user_id);
+        }
+        // get user data from DB
+        $user_data = $this->user_model->get_user_detail($user_id);
         
-        wts($user);
-
-        echo "</br> User ID :" . $user->id;
-        echo "</br> User Name :" . $user->name;
-        echo "</br> Gender :" . $user->gender;
-        echo "</br> User Email :" . $user->email;
-        echo "</br> User Link :" . $user->link;
-        echo "</br><img src='$user->picture' height='200' width='200' > ";
+        // unset some data
+        unset($user_data['user_password']);
+        unset($user_data['created_date']);
+        unset($user_data['club_id']);
+        unset($user_data['club_name']);
+        
+        // add new data 
+        $user_data['updated_date'] = fdateLong();
+        // ADD GOOGLE DATA HERE
+        $user_data['user_name'] = $user->givenName;
+        $user_data['user_surname'] = $user->familyName;
+        $user_data['user_gender'] = $user->gender;
+        $user_data['user_locale'] = $user->locale;
+        $user_data['user_picture'] = $user->picture;
+        $user_data['user_link'] = $user->link;
+        
+        // set user again
+        $params = [
+            "action" => "edit",
+            "user_data" => $user_data,
+            "role_arr" => $role_arr,
+        ];
+        $user_id = $this->user_model->set_user($params);
+        
+        $this->log_in_user($user_data);
     }
-    
 
     public function logout($confirm = false) {
         if ($confirm != "confirm") {
@@ -81,7 +169,7 @@ class Login extends Frontend_Controller {
         redirect("/logout/confirm");
     }
 
-    public function userlogin($test=false) {
+    public function userlogin($test = false) {
         $this->load->model('user_model');
         $this->load->model('role_model');
         $this->load->model('history_model');
@@ -112,7 +200,7 @@ class Login extends Frontend_Controller {
         // load correct view
         if ($this->form_validation->run() === FALSE) {
             if ($test) {
-                $this->data_to_views['show_social_login']=true;
+                $this->data_to_views['show_social_login'] = true;
             }
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
@@ -126,23 +214,7 @@ class Login extends Frontend_Controller {
                 // check of email address confirmed is. Anders, gee nice error message
                 $is_confirmed = $this->user_model->check_user_is_confirmed($check_login['user_id']);
                 if ($is_confirmed) {
-                    $this->session->set_userdata("user", $check_login);
-                    $_SESSION['user']['logged_in'] = true;
-                    $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($check_login['user_id']);
-                    $this->session->set_flashdata([
-                        'alert' => "Login successfull",
-                        'status' => "success",
-                    ]);
-                    // update history data vir user ID
-                    $history_data = ["user_id" => $check_login['user_id']];
-                    $this->history_model->update_history_field($history_data, get_cookie('session_token'));
-                    // update user_region table
-                    if ($this->session->userdata("region_selection")) {
-                        $this->region_model->set_user_region($check_login['user_id'], $this->session->region_selection);
-                    } else {
-                        $this->session->set_userdata("region_selection", $this->region_model->get_user_region($check_login['user_id']));
-                    }
-                    redirect($this->data_to_views['success_url']);
+                    $this->log_in_user($check_login);
                 } else {
                     $this->session->set_flashdata([
                         'alert' => "<b>Login failed.</b> Seems your email address has not been confirmed yet. Please <a href='" . base_url('forgot-password?email=' . $this->input->post('user_email')) . "'>reset your password</a>.",
@@ -161,6 +233,26 @@ class Login extends Frontend_Controller {
             }
             die("Login failure");
         }
+    }
+
+    private function log_in_user($user_row) {
+        $this->session->set_userdata("user", $user_row);
+        $_SESSION['user']['logged_in'] = true;
+        $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_row['user_id']);
+        $this->session->set_flashdata([
+            'alert' => "Login successfull",
+            'status' => "success",
+        ]);
+        // update history data vir user ID
+        $history_data = ["user_id" => $user_row['user_id']];
+        $this->history_model->update_history_field($history_data, get_cookie('session_token'));
+        // update user_region table
+        if ($this->session->userdata("region_selection")) {
+            $this->region_model->set_user_region($user_row['user_id'], $this->session->region_selection);
+        } else {
+            $this->session->set_userdata("region_selection", $this->region_model->get_user_region($user_row['user_id']));
+        }
+        redirect($this->data_to_views['success_url']);
     }
 
 }

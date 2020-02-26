@@ -66,18 +66,13 @@
                 echo form_close();
                 ?>
                 <p class="small">
-                    Don't have an account yet? <a href="<?= $register_url; ?>">Register New Account</a><br>
-                    Or if you forgot your password you can <a href="<?= $reset_password_url; ?>">reset your password</a>
+                    Don't have the patience or appetite to create another web account?<br>
+                    Log in with your socials below.
                 </p>
-                <?php
-                if ($show_social_login) {
-                    ?>
-                    <p>
-                        <a href="<?php echo base_url(); ?>login/glogin">Login with Google</a>
-                    </p>	
-                    <?php
-                }
-                ?>
+                <a class="btn btn-outline-dark btn-light" href="/users/googleauth" role="button" style="text-transform:none">
+                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="<?=base_url("assets/img/google_logo.webp");?>" />
+                    Login with Google
+                </a>
             </div>   
         </div>
     </div>

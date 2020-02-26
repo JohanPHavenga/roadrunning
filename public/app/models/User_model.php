@@ -9,6 +9,18 @@ class User_model extends Frontend_model {
     public function record_count() {
         return $this->db->count_all("users");
     }
+    
+    public function exists($email) {
+        $this->db->select("user_id");
+        $this->db->from("users");
+        $this->db->where("user_email", $email);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
+            return $result[0]['user_id'];
+        } 
+        return false;
+    }
 
     public function get_user_id($email, $create=[]) {
         $this->db->select("user_id");
@@ -125,10 +137,11 @@ class User_model extends Frontend_model {
             case "edit":
                 // get ID for ease of use
                 $user_id = $user_data['user_id'];
+                
                 //check of password wat gepost is alreeds gehash is
-                if ($this->check_password($user_data['user_password'], $user_id)) {
-                    unset($user_data['user_password']);
-                }
+//                if ($this->check_password($user_data['user_password'], $user_id)) {
+//                    unset($user_data['user_password']);
+//                }
 
                 // start SQL transaction
                 $this->db->trans_start();
