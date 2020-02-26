@@ -201,7 +201,7 @@ class User_model extends Frontend_model {
 //            'user_password' => hash_pass($password),
         );
 
-        $this->db->select('user_id,user_name,user_surname,user_email,user_password,user_contact');
+        $this->db->select('*');
         $this->db->from("users");
         $this->db->where($user_data);
         $query = $this->db->get();

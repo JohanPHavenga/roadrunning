@@ -69,7 +69,7 @@
                     Don't have the patience or appetite to create another web account?<br>
                     Log in with your socials below.
                 </p>
-                <a class="btn btn-outline-dark btn-light" href="/users/googleauth" role="button" style="text-transform:none">
+                <a class="btn btn-outline-dark btn-light" href="<?=base_url("login/glogin");?>" role="button" style="text-transform:none">
                     <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="<?=base_url("assets/img/google_logo.webp");?>" />
                     Login with Google
                 </a>

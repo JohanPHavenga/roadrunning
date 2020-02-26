@@ -4,14 +4,18 @@ class Login extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model('user_model');
+        $this->load->model('role_model');
+        $this->load->model('history_model');
+        $this->load->model('region_model');
     }
 
     function glogin() {
-        //Create Client Request to access Google API
+        //Create Client Request to access Google API        
         $client = new Google_Client();
         $client->setApplicationName("RoadRunningZA");
-        $client->setClientId($_SESSION['webdata']['google']['client_id']);
-        $client->setClientSecret($_SESSION['webdata']['google']['client_secret']);
+        $client->setClientId($_SESSION['web_data']['google']['client_id']);
+        $client->setClientSecret($_SESSION['web_data']['google']['client_secret']);
         $client->setRedirectUri(base_url('login/gcallback'));
         $client->addScope("email");
         $client->addScope("profile");
@@ -24,63 +28,12 @@ class Login extends Frontend_Controller {
         header('Location: ' . $authUrl);
     }
 
-    function check_logic() {
-        $this->load->model('user_model');
-        $this->load->model('role_model');
-        $email = "johan.havenga@gmail.com";
-        // check if user already exists in DB. 
-        $user_id = $this->user_model->exists($email);
-        if (!$user_id) {
-            $user_data = [
-                "user_name" => "TeST",
-                "user_surname" => "TeST",
-                "user_email" => $email,
-            ];
-            $role_arr = [2];
-            $params = [
-                "action" => "add",
-                "user_data" => $user_data,
-                "role_arr" => $role_arr,
-            ];
-            $user_id = $this->user_model->set_user($params);
-        } else {
-            $role_arr = $this->role_model->get_role_list_per_user($user_id);
-        }
-
-        $user_data = $this->user_model->get_user_detail($user_id);
-        
-        // unset some data
-        unset($user_data['user_password']);
-        unset($user_data['created_date']);
-        unset($user_data['club_id']);
-        unset($user_data['club_name']);
-        
-        // add new data 
-        $user_data['updated_date'] = fdateLong();
-        // ADD GOOGLE DATA HERE
-        $user_data['user_gender'] = "Male";
-        // set user again
-        $params = [
-            "action" => "edit",
-            "user_data" => $user_data,
-            "role_arr" => $role_arr,
-        ];
-        $user_id = $this->user_model->set_user($params);
-        wts($role_arr);
-        wts($user_data, 1);
-
-
-
-        // pull row.
-        // redirect to login
-    }
-
     function gcallback() {
         //Create Client Request to access Google API
         $client = new Google_Client();
         $client->setApplicationName("RoadRunningZA");
-        $client->setClientId($_SESSION['webdata']['google']['client_id']);
-        $client->setClientSecret($_SESSION['webdata']['google']['client_secret']);
+        $client->setClientId($_SESSION['web_data']['google']['client_id']);
+        $client->setClientSecret($_SESSION['web_data']['google']['client_secret']);
         $client->setRedirectUri(base_url('login/gcallback'));
         $client->addScope("email");
         $client->addScope("profile");
@@ -93,8 +46,6 @@ class Login extends Frontend_Controller {
 
         // User information retrieval starts..............................
         $user = $service->userinfo->get(); //get user info 
-        $this->load->model('user_model');
-        $this->load->model('role_model');
         // check if user already exists in DB. Else create
         $user_id = $this->user_model->exists($user->email);
         if (!$user_id) {
@@ -115,13 +66,13 @@ class Login extends Frontend_Controller {
         }
         // get user data from DB
         $user_data = $this->user_model->get_user_detail($user_id);
-        
+
         // unset some data
         unset($user_data['user_password']);
         unset($user_data['created_date']);
         unset($user_data['club_id']);
         unset($user_data['club_name']);
-        
+
         // add new data 
         $user_data['updated_date'] = fdateLong();
         // ADD GOOGLE DATA HERE
@@ -131,15 +82,14 @@ class Login extends Frontend_Controller {
         $user_data['user_locale'] = $user->locale;
         $user_data['user_picture'] = $user->picture;
         $user_data['user_link'] = $user->link;
-        
+
         // set user again
         $params = [
             "action" => "edit",
             "user_data" => $user_data,
             "role_arr" => $role_arr,
         ];
-        $user_id = $this->user_model->set_user($params);
-        
+        $this->user_model->set_user($params);
         $this->log_in_user($user_data);
     }
 
@@ -170,10 +120,6 @@ class Login extends Frontend_Controller {
     }
 
     public function userlogin($test = false) {
-        $this->load->model('user_model');
-        $this->load->model('role_model');
-        $this->load->model('history_model');
-        $this->load->model('region_model');
         $this->data_to_views['page_title'] = "Login";
         $this->data_to_views['meta_description'] = "Log into RoadRunning.co.za";
         $this->data_to_views['form_url'] = base_url('login/userlogin/submit');
@@ -235,7 +181,7 @@ class Login extends Frontend_Controller {
         }
     }
 
-    private function log_in_user($user_row) {
+    public function log_in_user($user_row) {
         $this->session->set_userdata("user", $user_row);
         $_SESSION['user']['logged_in'] = true;
         $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_row['user_id']);

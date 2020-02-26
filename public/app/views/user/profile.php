@@ -22,9 +22,14 @@
                 $this->table->add_row('Name', $logged_in_user['user_name']);
                 $this->table->add_row('Surname', $logged_in_user['user_surname']);
                 $this->table->add_row('Email', $logged_in_user['user_email']);
-                $this->table->add_row('Contact', $logged_in_user['user_contact']);
-
+                if ($logged_in_user['user_contact']) {
+                    $this->table->add_row('Contact', $logged_in_user['user_contact']);
+                }
+                if ($logged_in_user['user_gender']) {
+                    $this->table->add_row('Gender', $logged_in_user['user_gender']);
+                }
                 echo $this->table->generate();
+                
                 ?>
                 <a class="btn btn-default" href="<?=base_url("user/edit");?>"><i class="fa fa-edit"></i> Edit Details</a>
             </div>

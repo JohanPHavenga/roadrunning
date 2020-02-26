@@ -1,6 +1,13 @@
 <div class="widget widget-myaccount p-cb">
     <div class="avatar">
-        <img src="<?= base_url("assets/img/Blank-Avatar.jpg"); ?>">
+        <?php
+        if ($logged_in_user['user_picture']) {
+            $img_url = $logged_in_user['user_picture'];
+        } else {
+            $img_url = base_url("assets/img/Blank-Avatar.jpg");
+        }
+        ?>
+        <img src="<?= $img_url; ?>" style="height: 80px; width: 80px;">
         <span><?= $logged_in_user['user_name']; ?> <?= $logged_in_user['user_surname']; ?></span>
         <p class="text-muted"><?= $logged_in_user['user_email']; ?></p>
     </div>
