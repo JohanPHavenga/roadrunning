@@ -51,9 +51,8 @@ class Town_model extends Admin_model {
     }
 
     public function get_town_dropdown() {
-        $this->db->select("town_id, town_name, area_id, region_id");
+        $this->db->select("town_id, town_name, region_id");
         $this->db->from("towns");
-        $this->db->join('town_area', 'town_id');
         $this->db->join('regions', 'region_id', 'left');
         $this->db->order_by('town_name');
         $query = $this->db->get();
@@ -61,7 +60,7 @@ class Town_model extends Admin_model {
         if ($query->num_rows() > 0) {
             $data[] = "Please Select";
             foreach ($query->result_array() as $row) {
-                if ($row['area_id']||$row['region_id']) {
+                if ($row['region_id']!=61) {
                     $data[$row['town_id']] = $row['town_name'];
                 }
             }

@@ -55,7 +55,7 @@
                                 echo fbuttonLink(base_url("admin/import/table/edition"), "Add Editions", $edition_id_btn);
                             }
                             if ($edition_id_btn == "default") {
-                                echo fbuttonLink(base_url("admin/import/table/race"), "Add Races", $race_id_btn);
+                                echo fbuttonLink(base_url("admin/import/table/race"), "Add Races", "primary");
                             }
                         }
                         ?>
