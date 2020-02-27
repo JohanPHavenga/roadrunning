@@ -69,10 +69,22 @@
                     Don't have the patience or appetite to create another web account?<br>
                     Log in with your socials below.
                 </p>
-                <a class="btn btn-outline-dark btn-light" href="<?=base_url("login/glogin");?>" role="button" style="text-transform:none">
-                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="<?=base_url("assets/img/google_logo.webp");?>" />
-                    Login with Google
-                </a>
+                <p>
+                    <a class="btn btn-outline-dark btn-light" href="<?= base_url("login/glogin"); ?>" role="button" style="text-transform:none">
+                        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="<?= base_url("assets/img/google_logo.webp"); ?>" />
+                        Login with Google
+                    </a>
+                    <?php
+                    if ($_GET['test']) {
+                        ?>
+                        <a class="btn btn-outline-dark btn-light" href="<?= base_url("login/fblogin"); ?>" role="button" style="text-transform:none">
+                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Facebook sign-in" src="<?= base_url("assets/img/facebook.png"); ?>" />
+                            Login with Facebook
+                        </a>
+                        <?php
+                    }
+                    ?>
+                </p>
             </div>   
         </div>
     </div>
