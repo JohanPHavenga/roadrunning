@@ -24,6 +24,7 @@ class User extends Frontend_Controller {
 
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('user/profile', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
@@ -141,8 +142,6 @@ class User extends Frontend_Controller {
         $this->load->view('user/my_subscriptions', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-
-    
 
     // CALL BACK FUNCTIONS
     public function is_password_strong($password) {

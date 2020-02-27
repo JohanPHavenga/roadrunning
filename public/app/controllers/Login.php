@@ -41,7 +41,7 @@ class Login extends Frontend_Controller {
         $this->data_to_views['meta_description'] = "Log into RoadRunning.co.za";
         $this->data_to_views['form_url'] = base_url('login/userlogin/submit');
         $this->data_to_views['error_url'] = base_url('login/userlogin');
-        $this->data_to_views['success_url'] = base_url();
+        $this->data_to_views['success_url'] = base_url('user/profile');
 
         if ($this->session->flashdata('email') != null) {
             $this->data_to_views['reset_password_url'] = base_url('forgot-password/?email=' . $this->session->flashdata('email'));
@@ -97,20 +97,16 @@ class Login extends Frontend_Controller {
             die("Login failure");
         }
     }
-    
 
     // ================================================================================================
     //  Actual LOGIN
     // ================================================================================================
-    
+
     public function log_in_user($user_row) {
         $this->session->set_userdata("user", $user_row);
         $_SESSION['user']['logged_in'] = true;
         $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_row['user_id']);
-        $this->session->set_flashdata([
-            'alert' => "Login successfull",
-            'status' => "success",
-        ]);
+
         // update history data vir user ID
         $history_data = ["user_id" => $user_row['user_id']];
         $this->history_model->update_history_field($history_data, get_cookie('session_token'));
@@ -120,10 +116,14 @@ class Login extends Frontend_Controller {
         } else {
             $this->session->set_userdata("region_selection", $this->region_model->get_user_region($user_row['user_id']));
         }
-        redirect($this->data_to_views['success_url']);
+
+        $this->session->set_flashdata([
+            'alert' => "Welcome, to the real world. Your have successfully logged in <b>" . $user_row['user_name'] . "</b>",
+            'status' => "success",
+        ]);
+        redirect(base_url('user/profile'));
     }
-    
-    
+
     // ================================================================================================
     //  GOOGLE LOGIN
     // ================================================================================================
@@ -210,23 +210,23 @@ class Login extends Frontend_Controller {
         $this->user_model->set_user($params);
         $this->log_in_user($user_data);
     }
-    
-    
+
     // ================================================================================================
     //  FACEBOOK LOGIN
     // ================================================================================================
 
     function fblogin() {
-
+//        ini_set('display_errors', 1);
         $fb = new Facebook\Facebook([
             'app_id' => $_SESSION['web_data']['facebook']['app_id'],
             'app_secret' => $_SESSION['web_data']['facebook']['app_secret'],
-            'default_graph_version' => 'v2.5',
+            'default_graph_version' => 'v6.0',
         ]);
 
         $helper = $fb->getRedirectLoginHelper();
 
-        $permissions = ['email', 'user_location', 'user_birthday', 'publish_actions'];
+//        $permissions = ['email', 'user_location', 'user_birthday', 'publish_actions'];
+        $permissions = ['email'];
 // For more permissions like user location etc you need to send your application for review
 
         $loginUrl = $helper->getLoginUrl(base_url('login/fbcallback'), $permissions);
@@ -239,7 +239,7 @@ class Login extends Frontend_Controller {
         $fb = new Facebook\Facebook([
             'app_id' => $_SESSION['web_data']['facebook']['app_id'],
             'app_secret' => $_SESSION['web_data']['facebook']['app_secret'],
-            'default_graph_version' => 'v2.5',
+            'default_graph_version' => 'v6.0',
         ]);
 
         $helper = $fb->getRedirectLoginHelper();
@@ -276,18 +276,62 @@ class Login extends Frontend_Controller {
         // User Information Retrival begins................................................
         $me = $response->getGraphUser();
 
-        $location = $me->getProperty('location');
-        echo "Full Name: " . $me->getProperty('name') . "<br>";
-        echo "First Name: " . $me->getProperty('first_name') . "<br>";
-        echo "Last Name: " . $me->getProperty('last_name') . "<br>";
-        echo "Gender: " . $me->getProperty('gender') . "<br>";
-        echo "Email: " . $me->getProperty('email') . "<br>";
-        echo "location: " . $location['name'] . "<br>";
-        echo "Birthday: " . $me->getProperty('birthday')->format('d/m/Y') . "<br>";
-        echo "Facebook ID: <a href='https://www.facebook.com/" . $me->getProperty('id') . "' target='_blank'>" . $me->getProperty('id') . "</a>" . "<br>";
-        $profileid = $me->getProperty('id');
-        echo "</br><img src='//graph.facebook.com/$profileid/picture?type=large'> ";
-        echo "</br></br>Access Token : </br>" . $accessToken;
+//        $location = $me->getProperty('location');
+//        echo "Full Name: " . $me->getProperty('name') . "<br>";
+//        echo "First Name: " . $me->getProperty('first_name') . "<br>";
+//        echo "Last Name: " . $me->getProperty('last_name') . "<br>";
+//        echo "Gender: " . $me->getProperty('gender') . "<br>";
+//        echo "Email: " . $me->getProperty('email') . "<br>";
+//        echo "location: " . $location['name'] . "<br>";
+//        echo "Birthday: " . $me->getProperty('birthday')->format('d/m/Y') . "<br>";
+//        echo "Facebook ID: <a href='https://www.facebook.com/" . $me->getProperty('id') . "' target='_blank'>" . $me->getProperty('id') . "</a>" . "<br>";
+//        $profileid = $me->getProperty('id');
+//        echo "</br><img src='http://graph.facebook.com/$profileid/picture?type=normal'> ";
+//        echo "</br></br>Access Token : </br>" . $accessToken;        
+//        die();
+
+        $user_id = $this->user_model->exists($me->getProperty('email'));
+        if (!$user_id) {
+            $user_data = [
+                "user_name" => "TeST",
+                "user_surname" => "TeST",
+                "user_email" => $me->getProperty('email'),
+            ];
+            $role_arr = [2];
+            $params = [
+                "action" => "add",
+                "user_data" => $user_data,
+                "role_arr" => $role_arr,
+            ];
+            $user_id = $this->user_model->set_user($params);
+        } else {
+            $role_arr = $this->role_model->get_role_list_per_user($user_id);
+        }
+        // get user data from DB
+        $user_data = $this->user_model->get_user_detail($user_id);
+
+        // unset some data
+        unset($user_data['user_password']);
+        unset($user_data['created_date']);
+        unset($user_data['club_id']);
+        unset($user_data['club_name']);
+
+        // add new data 
+        $user_data['updated_date'] = fdateLong();
+        // ADD GOOGLE DATA HERE
+        $user_data['user_name'] = $me->getProperty('first_name');
+        $user_data['user_surname'] = $me->getProperty('last_name');
+        $user_data['user_gender'] = $me->getProperty('gender');
+        $user_data['user_locale'] = $me->getProperty('location');
+
+        // set user again
+        $params = [
+            "action" => "edit",
+            "user_data" => $user_data,
+            "role_arr" => $role_arr,
+        ];
+        $this->user_model->set_user($params);
+        $this->log_in_user($user_data);
     }
 
 }
