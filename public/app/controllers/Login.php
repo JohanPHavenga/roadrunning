@@ -11,21 +11,12 @@ class Login extends Frontend_Controller {
     }
 
     public function logout($confirm = false) {
-        if ($confirm != "confirm") {
-            $this->session->unset_userdata('user');
-            $this->session->set_flashdata([
-                'alert' => "Buckle your seat belt Dorothy, cause Kansas is going bye-bye. Also, you have been succesfully logged out of roadrunning.co.za",
-                'status' => "success"
-            ]);
-            redirect("/logout/confirm");
-        } else {
-            $this->data_to_views['page_title'] = "Logout";
-            $this->data_to_views['meta_description'] = "Logged out of RoadRunning.co.za";
-            $this->load->view($this->header_url, $this->data_to_views);
-            $this->load->view($this->notice_url, $this->data_to_views);
-            $this->load->view('login/logout', $this->data_to_views);
-            $this->load->view($this->footer_url, $this->data_to_views);
-        }
+        $this->session->unset_userdata('user');
+        $this->session->set_flashdata([
+            'alert' => "Buckle your seat belt Dorothy, cause Kansas is going bye-bye. Also, you have been succesfully logged out of roadrunning.co.za",
+            'status' => "success"
+        ]);
+        redirect("/login");
     }
 
     public function destroy($confirm = false) {
