@@ -68,7 +68,8 @@ class Login extends Frontend_Controller {
                 // check of email address confirmed is. Anders, gee nice error message
                 $is_confirmed = $this->user_model->check_user_is_confirmed($check_login['user_id']);
                 if ($is_confirmed) {
-                    $this->log_in_user($check_login);
+                    $role_arr = $this->role_model->get_role_list_per_user($user_id);                    
+                    $this->log_in_user($check_login, $role_arr);
                 } else {
                     $this->session->set_flashdata([
                         'alert' => "<b>Login failed.</b> Seems your email address has not been confirmed yet. Please <a href='" . base_url('forgot-password?email=' . $this->input->post('user_email')) . "'>reset your password</a>.",
@@ -93,23 +94,33 @@ class Login extends Frontend_Controller {
     //  Actual LOGIN
     // ================================================================================================
 
-    public function log_in_user($user_row) {
-        $this->session->set_userdata("user", $user_row);
+    public function log_in_user($user_data, $role_arr) {
+        // set db user again
+        $user_data['lastlogin_date'] = fdateLong();
+        $user_data['updated_date'] = fdateLong();
+        $params = [
+            "action" => "edit",
+            "user_data" => $user_data,
+            "role_arr" => $role_arr,
+        ];
+        $this->user_model->set_user($params);
+        // SET Session vlues
+        $this->session->set_userdata("user", $user_data);
         $_SESSION['user']['logged_in'] = true;
-        $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_row['user_id']);
+        $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_data['user_id']);
 
         // update history data vir user ID
-        $history_data = ["user_id" => $user_row['user_id']];
+        $history_data = ["user_id" => $user_data['user_id']];
         $this->history_model->update_history_field($history_data, get_cookie('session_token'));
         // update user_region table
         if ($this->session->userdata("region_selection")) {
-            $this->region_model->set_user_region($user_row['user_id'], $this->session->region_selection);
+            $this->region_model->set_user_region($user_data['user_id'], $this->session->region_selection);
         } else {
-            $this->session->set_userdata("region_selection", $this->region_model->get_user_region($user_row['user_id']));
+            $this->session->set_userdata("region_selection", $this->region_model->get_user_region($user_data['user_id']));
         }
 
         $this->session->set_flashdata([
-            'alert' => "Welcome, to the real world. Your have successfully logged in <b>" . $user_row['user_name'] . "</b>",
+            'alert' => "Welcome, to the real world. Your have successfully logged in <b>" . $user_data['user_name'] . "</b>",
             'status' => "success",
         ]);
         redirect(base_url('user/profile'));
@@ -182,8 +193,6 @@ class Login extends Frontend_Controller {
         unset($user_data['club_id']);
         unset($user_data['club_name']);
 
-        // add new data 
-        $user_data['updated_date'] = fdateLong();
         // ADD GOOGLE DATA HERE
         $user_data['user_name'] = $user->givenName;
         $user_data['user_surname'] = $user->familyName;
@@ -192,14 +201,7 @@ class Login extends Frontend_Controller {
         $user_data['user_picture'] = $user->picture;
         $user_data['user_link'] = $user->link;
 
-        // set user again
-        $params = [
-            "action" => "edit",
-            "user_data" => $user_data,
-            "role_arr" => $role_arr,
-        ];
-        $this->user_model->set_user($params);
-        $this->log_in_user($user_data);
+        $this->log_in_user($user_data,$role_arr);
     }
 
     // ================================================================================================
@@ -307,22 +309,13 @@ class Login extends Frontend_Controller {
         unset($user_data['club_id']);
         unset($user_data['club_name']);
 
-        // add new data 
-        $user_data['updated_date'] = fdateLong();
-        // ADD GOOGLE DATA HERE
+        // ADD FACEBOOK DATA HERE
         $user_data['user_name'] = $me->getProperty('first_name');
         $user_data['user_surname'] = $me->getProperty('last_name');
         $user_data['user_gender'] = $me->getProperty('gender');
         $user_data['user_locale'] = $me->getProperty('location');
-
-        // set user again
-        $params = [
-            "action" => "edit",
-            "user_data" => $user_data,
-            "role_arr" => $role_arr,
-        ];
-        $this->user_model->set_user($params);
-        $this->log_in_user($user_data);
+        
+        $this->log_in_user($user_data,$role_arr);
     }
 
 }
