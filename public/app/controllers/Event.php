@@ -415,23 +415,24 @@ class Event extends Frontend_Controller {
         $edition_info = $this->edition_model->get_edition_id_from_slug($edition_slug);
         $edition_id = $edition_info['edition_id'];
 
-        $edition_data = $this->edition_model->get_edition_detail($edition_id);
-        $race_list = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
-
-        $edition_url = base_url("event/" . $edition_data['edition_slug']);
-        $address = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
-
+//        $edition_data = $this->edition_model->get_edition_detail($edition_id);
+//        $race_list = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
+        
+        // new way to pull data
+        $query_params = [
+            "where" => ["edition_id" => $edition_id],
+        ];
+        $edition_list = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        $edition_data=$edition_list[$edition_id];
+        
+//        wts($edition_data,1);
+        
+        $edition_url = $edition_data['edition_url'];
+        $address = $edition_data['edition_address'] . ", " . $edition_data['town_name'];
 
         // dates
-        $date = $edition_data['edition_date'];
-        $time = "23:59:00";
-        foreach ($race_list as $race) {
-            $race_time = $race['race_time_start'];
-            if ($race_time < $time) {
-                $time = $race_time;
-            }
-        }
-        $sdate = strtotime(str_replace("00:00:00", $time, $date));
+        $date = $edition_data['edition_date'];        
+        $sdate = $edition_data['race_time_start'];
         if ($edition_data['edition_info_prizegizing'] != "00:00:00") {
             $edate = strtotime(str_replace("00:00:00", $edition_data['edition_info_prizegizing'], $date));
         } else {
