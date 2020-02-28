@@ -107,6 +107,10 @@
                                 "name" => "edition_no_auto_mail",
                                 "text" => "Block Auto Emails",
                             ],
+                            [
+                                "name" => "edition_remove_audit",
+                                "text" => "Remove from audit",
+                            ],
                         ];
                         foreach ($checkbox_array as $checkbox) {
                             $data = array(

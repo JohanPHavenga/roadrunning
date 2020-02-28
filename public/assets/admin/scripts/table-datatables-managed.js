@@ -297,7 +297,24 @@ var TableDatatablesManaged = function () {
             ]
         });
     };
-
+    
+    // Audit Table
+    var initAuditTable = function () {
+        var table = $('#audit_table');
+        table.dataTable({
+            order: [[0, "asc"]],
+            responsive: true,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            columnDefs: [
+                {orderable: false, targets: [-1]},
+                {searchable: false, targets: [-1]},
+                {responsivePriority: 1, targets: 1},
+                {responsivePriority: 2, targets: -1},
+                {responsivePriority: 3, targets: -2}
+            ]
+        });
+    };
+    
     // GENERIC list table
     var initListTable = function () {
         var table = $('#list_table');
@@ -337,6 +354,7 @@ var TableDatatablesManaged = function () {
             initEditionFileTable();
             initDateTypeTable();
             initResultTable();
+            initAuditTable();
             initListTable();
         }
     };

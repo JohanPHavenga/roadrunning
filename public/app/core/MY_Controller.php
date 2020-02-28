@@ -1283,7 +1283,7 @@ class Admin_Controller extends MY_Controller {
                     ],
                     [
                         "text" => "Audit",
-                        "url" => 'admin/dashboard/audit',
+                        "url" => 'admin/dashboard/audit/'.date("Y"),
                         "icon" => "bulb",
                     ],
                     [

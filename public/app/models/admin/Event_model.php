@@ -544,10 +544,13 @@ class Event_model extends Admin_model {
         $date_from = date($previous_year . "-1-1");
         $date_to = date($year . "-12-31");
 
-        $this->db->select("events.event_id, event_name, edition_id, edition_name, edition_date");
+        $this->db->select("events.event_id, event_name, edition_id, edition_name, edition_date, asa_member_abbr");
         $this->db->from("events");
         $this->db->join('editions', 'event_id');
+        $this->db->join('edition_asa_member', 'edition_id','left');
+        $this->db->join('asa_members', 'asa_member_id','left');
         $this->db->where("(edition_date BETWEEN '" . $date_from . "' AND '" . $date_to . "')");
+        $this->db->where("edition_remove_audit",0);
         $this->db->order_by("edition_date", "ASC");
 
         $query = $this->db->get();

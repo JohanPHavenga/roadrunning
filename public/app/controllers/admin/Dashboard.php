@@ -153,8 +153,10 @@ class Dashboard extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function audit() {
-        $year = date("Y");
+    public function audit($year=0) {
+        if (!is_numeric($year)) { die("That is not a year"); }
+        if ($year>date("Y")) { die("Year too big"); }
+        if ($year<2016) { die("Year too small"); }
         $previous_year = $year - 1;
 
         $this->load->library('table');
@@ -166,9 +168,21 @@ class Dashboard extends Admin_Controller {
             "Dashboard" => "/admin/dashboard",
             "Audit" => "",
         ];
+        
+        $this->data_to_header['css_to_load'] = array(
+            "assets/admin/plugins/datatables/datatables.min.css",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+        );
 
         $this->data_to_footer['js_to_load'] = array(
+            "assets/admin/scripts/datatable.js",
+            "assets/admin/plugins/datatables/datatables.min.js",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
             "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+        );
+
+        $this->data_to_footer['scripts_to_load'] = array(
+            "assets/admin/scripts/table-datatables-managed.js",
         );
 
         $this->data_to_view['year'] = $year;
