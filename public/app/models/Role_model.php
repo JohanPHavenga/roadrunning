@@ -29,9 +29,9 @@ class Role_model extends Frontend_model {
         $this->db->select("role_id");
         $this->db->from("user_role");
         $this->db->where(["user_id" => $id]);
+//        $sql = $this->db->get_compiled_select();
         $query = $this->db->get();
-
-
+        
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 $data[$row['role_id']] = $row['role_id'];

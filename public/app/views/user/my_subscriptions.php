@@ -36,9 +36,21 @@ if (!empty($edition_subs)) {
     }
 }
 ?>
-<section id="page-content" class="sidebar-right">
-    <div class="container">        
+<section id="page-content" class="sidebar-left">
+    <div class="container">
         <div class="row">
+
+            <!-- Sidebar-->
+            <div class="sidebar col-lg-3">  
+                <?php
+                // PROFILE WIDGET
+                $this->load->view('widgets/profile');
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
+                ?>
+            </div>
+            <!-- end: Sidebar-->
+
             <!-- Content-->
             <div class="content col-lg-9">
                 <?php
@@ -113,9 +125,9 @@ if (!empty($edition_subs)) {
                                         <?= $sub['edition_name']; ?>
                                     </td>
                                     <td>
-                                        <button class="btn btn-light btn-xs" data-href="" data-toggle="modal" data-target="#confirm-edition-<?=$key?>">
-                                        Unsubscribe
-                                    </button>
+                                        <button class="btn btn-light btn-xs" data-href="" data-toggle="modal" data-target="#confirm-edition-<?= $key ?>">
+                                            Unsubscribe
+                                        </button>
                                     </td>
                                 </tr>
                                 <?php
@@ -133,16 +145,6 @@ if (!empty($edition_subs)) {
             </div>
             <!-- end: Content-->
 
-            <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
-                <?php
-                // PROFILE WIDGET
-                $this->load->view('widgets/profile');
-                // ADS WIDGET
-                $this->load->view('widgets/side_ad');
-                ?>
-            </div>
-            <!-- end: Sidebar-->
         </div>
     </div>
 </section>

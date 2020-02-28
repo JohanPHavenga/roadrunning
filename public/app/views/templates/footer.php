@@ -168,6 +168,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                 echo "| <a href='" . base_url("admin") . "'>Admin Dashboard</a> ";
                             }
                         }
+//                        wts($logged_in_user);
                         ?>
                     </div>
                 </div>

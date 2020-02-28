@@ -68,7 +68,8 @@ class Login extends Frontend_Controller {
                 // check of email address confirmed is. Anders, gee nice error message
                 $is_confirmed = $this->user_model->check_user_is_confirmed($check_login['user_id']);
                 if ($is_confirmed) {
-                    $role_arr = $this->role_model->get_role_list_per_user($user_id);                    
+                    $role_arr = $this->role_model->get_role_list_per_user($check_login['user_id']);
+                    $check_login['lastlogin_from'] = "direct";
                     $this->log_in_user($check_login, $role_arr);
                 } else {
                     $this->session->set_flashdata([
@@ -108,7 +109,7 @@ class Login extends Frontend_Controller {
         $this->session->set_userdata("user", $user_data);
         $_SESSION['user']['logged_in'] = true;
         $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_data['user_id']);
-
+        
         // update history data vir user ID
         $history_data = ["user_id" => $user_data['user_id']];
         $this->history_model->update_history_field($history_data, get_cookie('session_token'));
@@ -194,14 +195,19 @@ class Login extends Frontend_Controller {
         unset($user_data['club_name']);
 
         // ADD GOOGLE DATA HERE
-        $user_data['user_name'] = $user->givenName;
-        $user_data['user_surname'] = $user->familyName;
+        if (empty($user_data['user_name'])) {
+            $user_data['user_name'] = $user->givenName;
+        }
+        if (empty($user_data['user_surname'])) {
+            $user_data['user_surname'] = $user->familyName;
+        }
         $user_data['user_gender'] = $user->gender;
         $user_data['user_locale'] = $user->locale;
         $user_data['user_picture'] = $user->picture;
         $user_data['user_link'] = $user->link;
+        $user_data['lastlogin_from'] = "google";
 
-        $this->log_in_user($user_data,$role_arr);
+        $this->log_in_user($user_data, $role_arr);
     }
 
     // ================================================================================================
@@ -310,12 +316,17 @@ class Login extends Frontend_Controller {
         unset($user_data['club_name']);
 
         // ADD FACEBOOK DATA HERE
-        $user_data['user_name'] = $me->getProperty('first_name');
-        $user_data['user_surname'] = $me->getProperty('last_name');
+        if (empty($user_data['user_name'])) {
+            $user_data['user_name'] = $me->getProperty('first_name');
+        }
+        if (empty($user_data['user_surname'])) {
+            $user_data['user_surname'] = $me->getProperty('last_name');
+        }
         $user_data['user_gender'] = $me->getProperty('gender');
         $user_data['user_locale'] = $me->getProperty('location');
-        
-        $this->log_in_user($user_data,$role_arr);
+        $user_data['lastlogin_from'] = "facebook";
+
+        $this->log_in_user($user_data, $role_arr);
     }
 
 }

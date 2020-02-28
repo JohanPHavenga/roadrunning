@@ -112,6 +112,10 @@ address { display: inline; }
     color: #ccc;
 }
 
+ul li.active a {
+    color: #26B8F3;
+}
+
 
 
 /* Color fixes */
