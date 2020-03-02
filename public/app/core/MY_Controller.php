@@ -7,6 +7,8 @@ class MY_Controller extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        // make ini file content available 
+        $this->ini_array = parse_ini_file("server_config.ini", true);
     }
 
     public function set_email_body($body, $post_text = null) {
@@ -30,7 +32,7 @@ text-decoration:none!important;
 <table cellpadding = "0" cellspacing = "0" border = "0" align = "center" bgcolor = "#FFFFFF" style = "margin:0; max-width: 600px; width: 100%;"><tbody><tr><td style = "padding:0 20px;" align = "left">
 <div style = "margin:0 0 25px 0;"><img alt = "RoadRunningZA" width = "72" height = "72" src = "https://www.roadrunning.co.za/img/favicon/android-icon-72x72.png" /></div>
 
-<div style = "color:#000000;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:16px;line-height:25.6px;text-align:left;">
+<div style = "color:#000000;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;text-align:left;">
 $body
 </div>
 
@@ -39,7 +41,7 @@ $body
 <div style = "margin:20px 0;" > Copyright &copy;
 $year RoadRunningZA. All rights reserved.</div>
 $post_text
-<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/snapscan_LAzMFdGZ.png' style='margin-bottom: 10px;'></a><br>Consider supporting the wesbite via SnapScan</p>
+<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/snapscan_LAzMFdGZ.png' style='margin-bottom: 10px;'></a><br>Please consider supporting my website via SnapScan to help keep the info flowing</p>
 </div>
 </td></tr></tbody></table>
 </td></tr></tbody></table>
@@ -141,7 +143,7 @@ EOT;
         $phone = str_replace("-", "", $phone);
         return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
     }
-    
+
     // API CALL
     public function url_get_contents($Url) {
         if (!function_exists('curl_init')) {
@@ -203,8 +205,6 @@ class Frontend_Controller extends MY_Controller {
 
     function __construct() {
         parent::__construct();
-        // make ini file content available 
-        $this->ini_array = parse_ini_file("server_config.ini", true);
         // doen checks en set session vars
         $this->data_to_views['logged_in_user'] = $this->logged_in_user = $this->check_if_user_is_logged_in();
         $this->data_to_views['history'] = $this->check_history();
@@ -702,7 +702,7 @@ class Frontend_Controller extends MY_Controller {
         }
         return $r_arr;
     }
-    
+
     public function get_web_data() {
         $this->load->model('webdata_model');
         return $this->webdata_model->get_webdata();
@@ -1283,7 +1283,7 @@ class Admin_Controller extends MY_Controller {
                     ],
                     [
                         "text" => "Audit",
-                        "url" => 'admin/dashboard/audit/'.date("Y"),
+                        "url" => 'admin/dashboard/audit/' . date("Y"),
                         "icon" => "bulb",
                     ],
                     [
@@ -1649,7 +1649,7 @@ class Admin_Controller extends MY_Controller {
 
         return $race_data;
     }
-    
+
     public function set_tags($edition_id, $edition_data, $race_data) {
         $this->load->model('admin/tag_model');
         $this->load->model('admin/tagtype_model');

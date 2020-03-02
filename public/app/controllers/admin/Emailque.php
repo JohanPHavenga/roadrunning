@@ -71,7 +71,7 @@ class Emailque extends Admin_Controller {
                     case 5: // pending
                         unset($this->data_to_view['action_array'][$emailque_id]);
                         $this->data_to_view['action_array'][$emailque_id][0] = [
-                            "url" => "/admin/emailque/status/$emailque_id/4",
+                            "url" => "/admin/emailque/status/$emailque_id/4/5",
                             "text" => "Cancel send",
                             "icon" => "icon-ban",
                         ];
@@ -230,7 +230,7 @@ class Emailque extends Admin_Controller {
     }
 
     // change status with URL call
-    public function status($emailque_id, $emailque_status) {
+    public function status($emailque_id, $emailque_status, $return_status) {
         $range = [4, 5, 6, 7];
         $valid_id = $this->emailque_model->check_id($emailque_id);
         if ((in_array($emailque_status, $range)) && ($valid_id)) {
@@ -238,7 +238,7 @@ class Emailque extends Admin_Controller {
             if ($status_update) {
                 $msg = "Email status successfully updated";
                 $status = "success";
-                $this->return_url = base_url("admin/emailque/view/$emailque_status");
+                $this->return_url = base_url("admin/emailque/view/$return_status");
             } else {
                 $msg = "Update to database failed";
                 $status = "danger";

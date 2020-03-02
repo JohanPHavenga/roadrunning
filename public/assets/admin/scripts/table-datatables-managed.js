@@ -305,6 +305,7 @@ var TableDatatablesManaged = function () {
             order: [[0, "asc"]],
             responsive: true,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            bStateSave: true,
             columnDefs: [
                 {orderable: false, targets: [-1]},
                 {searchable: false, targets: [-1]},
