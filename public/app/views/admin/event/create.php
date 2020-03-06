@@ -17,7 +17,7 @@
                 echo form_input([
                         'name'          => 'event_name',
                         'id'            => 'event_name',
-                        'value'         => set_value('event_name', @$event_detail['event_name']),
+                        'value'         => set_value('event_name', @$event_detail['event_name'], false),
                         'class'         => 'form-control',
                     ]);
 

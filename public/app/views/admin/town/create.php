@@ -16,7 +16,7 @@
                 echo form_input([
                     'name' => 'town_name',
                     'id' => 'town_name',
-                    'value' => set_value('town_name', @$town_detail['town_name']),
+                    'value' => set_value('town_name', @$town_detail['town_name'], false),
                     'class' => 'form-control',
                 ]);
 
@@ -47,8 +47,8 @@
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
-                
-                
+
+
                 //  REGION
                 echo "<div class='form-group'>";
                 echo "<div class='row'>";

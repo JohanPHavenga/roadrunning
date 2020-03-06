@@ -189,6 +189,9 @@ class Import extends Admin_Controller {
                     if ($event['town_id'] == 0) {
                         // get town id
                         $town_id = $this->town_model->get_town_id($event['town']);
+                        
+                        wts($town_id,1);
+                        
                         // set town_id in temp table
                         if ($town_id == -1) {
                             $error_arr[$event['town']] = "<b>" . $event['town'] . "</b> has no region set ";

@@ -150,8 +150,8 @@ class Town_model extends Admin_model {
         $this->db->select("town_id, region_id");
         $this->db->from("towns");
         $this->db->where("LOWER(town_name)", strtolower($town_name));
-        echo $this->db->get_compiled_select();
-        exit();
+//        echo $this->db->get_compiled_select();
+//        exit();
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -177,7 +177,7 @@ class Town_model extends Admin_model {
             'region_id' => $this->input->post('region_id'),
         );
         $town_area_data = ["town_id" => $town_id, "area_id" => $this->input->post('area_id')];
-
+        
         switch ($action) {
             case "add":
                 $this->db->trans_start();
