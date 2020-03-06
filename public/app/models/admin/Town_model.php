@@ -28,14 +28,14 @@ class Town_model extends Admin_model {
 //        }
 //        return false;
 //    }
-    
-    public function get_town_list($query_params=[]) {
+
+    public function get_town_list($query_params = []) {
         $this->db->select("*");
         $this->db->from("towns");
         $this->db->join('provinces', 'provinces.province_id = towns.province_id', 'left');
-        $this->db->join('regions', 'region_id','left');
-        foreach ($query_params as $operator=>$clause_arr) {
-            foreach ($clause_arr as $field=>$value) {
+        $this->db->join('regions', 'region_id', 'left');
+        foreach ($query_params as $operator => $clause_arr) {
+            foreach ($clause_arr as $field => $value) {
                 $this->db->$operator($field, $value);
             }
         }
@@ -60,7 +60,7 @@ class Town_model extends Admin_model {
         if ($query->num_rows() > 0) {
             $data[] = "Please Select";
             foreach ($query->result_array() as $row) {
-                if ($row['region_id']!=61) {
+                if ($row['region_id'] != 61) {
                     $data[$row['town_id']] = $row['town_name'];
                 }
             }
@@ -68,7 +68,7 @@ class Town_model extends Admin_model {
         }
         return false;
     }
-    
+
     // AFTER AREA IS NO LONGER IN USE, USE THIS TO GET THE TOWN_DROPDOWN
 //    public function get_town_dropdown() {
 //        $this->db->select("town_id, town_name, region_id");
@@ -93,11 +93,11 @@ class Town_model extends Admin_model {
         } else {
             $this->db->select("towns.*,area_id");
             $this->db->from("towns");
-            $this->db->join('town_area', 'town_id','left');
-            $this->db->join('regions', 'region_id','left');
-            $this->db->where("town_id",$id);
+            $this->db->join('town_area', 'town_id', 'left');
+            $this->db->join('regions', 'region_id', 'left');
+            $this->db->where("town_id", $id);
             $query = $this->db->get();
-        
+
 //            $query = $this->db->get_where('towns', array('town_id' => $id));
 
             if ($query->num_rows() > 0) {
@@ -134,7 +134,7 @@ class Town_model extends Admin_model {
         $this->db->join('regions', 'region_id', 'left');
         $this->db->join('town_area', 'town_id', 'left');
         $this->db->join('areas', 'area_id', 'left');
-        $this->db->where("town_name LIKE '%$ss%'");
+        $this->db->where("town_name LIKE '%" . addslashes($ss) . "%'");
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -149,20 +149,22 @@ class Town_model extends Admin_model {
     public function get_town_id($town_name) {
         $this->db->select("town_id, region_id");
         $this->db->from("towns");
-        $this->db->where('LOWER(town_name)', strtolower($town_name));
+        $this->db->where("LOWER(town_name)", strtolower($town_name));
+        echo $this->db->get_compiled_select();
+        exit();
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                if ($row['region_id']==61) {
-                    $town_id=-1;
+                if ($row['region_id'] == 61) {
+                    $town_id = -1;
                 } else {
-                    $town_id=$row['town_id'];
+                    $town_id = $row['town_id'];
                     break;
                 }
             }
             return $town_id;
-        } 
+        }
         return false;
     }
 
@@ -190,7 +192,7 @@ class Town_model extends Admin_model {
                 $town_data['updated_date'] = date("Y-m-d H:i:s");
 
                 // start SQL transaction
-                $this->db->trans_start();                
+                $this->db->trans_start();
                 $this->db->update('towns', $town_data, array('town_id' => $town_id));
                 $this->db->trans_complete();
                 break;

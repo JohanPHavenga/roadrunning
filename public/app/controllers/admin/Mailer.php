@@ -2,7 +2,7 @@
 
 class Mailer extends Admin_Controller {
 
-    private $debug_email = true;
+    private $debug_email = false;
     private $debug_html = false;
 
     public function info_mail($edition_id) {

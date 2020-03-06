@@ -209,12 +209,12 @@ class Edition extends Admin_Controller {
             $this->load->view($this->create_url, $this->data_to_view);
             $this->load->view($this->footer_url, $this->data_to_footer);
         } else {
-            $id = $this->edition_model->set_edition($action, $edition_id, [], false);
-            if ($id) {
+            $old_edition_id = $this->edition_model->set_edition($action, $edition_id, [], false);
+            if ($old_edition_id) {
                 $alert = "<b>" . $this->input->post('edition_name') . "</b> has been successfully saved";
                 $status = "success";
                 if ($action == "edit") {
-                    $new_edition_detail = $this->edition_model->get_edition_detail($id);
+                    $new_edition_detail = $this->edition_model->get_edition_detail($old_edition_id);
                     if ($this->input->post('edition_status') !== $this->data_to_view['edition_detail']['edition_status']) {
                         $this->race_status_update(array_keys($this->data_to_view['race_list']), $this->input->post('edition_status'));
                         $alert .= "<br>Status change on races also actioned";
@@ -229,12 +229,12 @@ class Edition extends Admin_Controller {
                     }
                 }
                 // DATES checks
-                $this->check_start_end_dates($id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
+                $this->check_start_end_dates($old_edition_id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
                 // CEHCK TAGS
-                $this->set_tags($id, $new_edition_detail, $race_data);
+                $this->set_tags($old_edition_id, $new_edition_detail, $race_data);
                 // AUTO MAILER for INFO VERIFIED
                 if ($new_edition_detail['edition_info_status'] == 16) {
-                    $this->auto_mailer(3, $id);
+                    $this->auto_mailer(3, $old_edition_id);
                 }
             } else {
                 $alert = "Error committing to the database";
@@ -247,7 +247,7 @@ class Edition extends Admin_Controller {
             }
             // save_only takes you back to the edit page.
             if (array_key_exists("save_only", $this->input->post())) {
-                $this->return_url = base_url("admin/edition/create/edit/" . $id . "#" . $this->input->post("save_only"));
+                $this->return_url = base_url("admin/edition/create/edit/" . $old_edition_id . "#" . $this->input->post("save_only"));
             }
             $this->session->set_flashdata(['alert' => $alert, 'status' => $status,]);
             redirect($this->return_url);
@@ -326,7 +326,7 @@ class Edition extends Admin_Controller {
         return $valid;
     }
 
-    private function check_start_end_dates($e_id, $edition_details, $entrytype_list, $regtype_list) {
+    private function check_start_end_dates($new_edition_id, $edition_details, $entrytype_list, $regtype_list) {
         $this->load->model('admin/date_model');
 
         $datetype_id_list = [1]; // edition start and end dates
@@ -364,13 +364,13 @@ class Edition extends Admin_Controller {
         }
         // check if dates is loaded, else add
         foreach ($datetype_id_list as $datetype_id) {
-            if (!$this->date_model->exists("edition", $e_id, $datetype_id)) {
+            if (!$this->date_model->exists("edition", $new_edition_id, $datetype_id)) {
                 $date_data = [
                     'date_start' => $edition_details['edition_date'],
                     'date_end' => $edition_details['edition_date'],
                     'datetype_id' => $datetype_id,
                     'date_linked_to' => "edition",
-                    'linked_id' => $e_id,
+                    'linked_id' => $new_edition_id,
                 ];
                 $this->date_model->set_date("add", NULL, $date_data, false);
             }
@@ -409,7 +409,7 @@ class Edition extends Admin_Controller {
     // EDITION COPY FUCNTIONS
     // ==========================================================================================
     // MAKE A COPY OF AN OLD EDITION
-    public function copy($id) {
+    public function copy($old_edition_id) {
         $this->load->model('admin/user_model');
         $this->load->model('admin/event_model');
         $this->load->model('admin/race_model');
@@ -420,9 +420,9 @@ class Edition extends Admin_Controller {
         $this->load->model('admin/file_model');
 
         // get data
-        $race_list = $this->race_model->get_race_list($id);
-        $edition_detail = $this->edition_model->get_edition_detail($id);
-        $file_list = $this->file_model->get_file_list("edition", $id, true);
+        $race_list = $this->race_model->get_race_list($old_edition_id);
+        $edition_detail = $this->edition_model->get_edition_detail($old_edition_id);
+        $file_list = $this->file_model->get_file_list("edition", $old_edition_id, true);
 
         // create new edition data
         $name = substr($edition_detail['edition_name'], 0, -5);
@@ -444,15 +444,15 @@ class Edition extends Admin_Controller {
         $edition_data['edition_asa_member'] = $edition_detail['edition_asa_member'];
         $edition_data['edition_no_auto_mail'] = $edition_detail['edition_no_auto_mail'];
 
-        $e_id = $this->edition_model->set_edition("add", NULL, $edition_data, false);
+        $new_edition_id = $this->edition_model->set_edition("add", NULL, $edition_data, false);
 
         // create new RACES
-        foreach ($race_list as $race) {
+        foreach ($race_list as $race_id => $race) {
             $race_data['race_distance'] = $race['race_distance'];
             $race_data['race_time_start'] = $race['race_time_start'];
             $race_data['race_status'] = $race['race_status'];
             $race_data['racetype_id'] = $race['racetype_id'];
-            $race_data['edition_id'] = $e_id;
+            $race_data['edition_id'] = $new_edition_id;
             $this->race_model->set_race("add", NULL, $race_data, false);
         }
 
@@ -462,40 +462,38 @@ class Edition extends Admin_Controller {
             'date_end' => $edition_data['edition_date'],
             'datetype_id' => 1,
             'date_linked_to' => "edition",
-            'linked_id' => $e_id,
+            'linked_id' => $new_edition_id,
         ];
         $this->date_model->set_date("add", NULL, $date_data, false);
-//        $date_data = [
-//            'date_date' => $edition_data['edition_date'],
-//            'datetype_id' => 2,
-//            'date_linked_to' => "edition",
-//            'linked_id' => $e_id,
-//        ];
-//        $this->date_model->set_date("add", NULL, $date_data, false);
-        // copy LOGO over
-        if (isset($file_list[1])) {
-            $file_data = $file_list[1][0];
-            $file_data['linked_id'] = $e_id;
-            $to_remove = ['file_id', 'created_date', 'updated_date', 'filetype_name', 'filetype_helptext', 'filetype_buttontext'];
-            $date_to_set = array_diff_key($file_data, array_flip($to_remove));
-            $file_id = $this->file_model->set_file([], $date_to_set);
+        
+        // copy files over
+        $filetypes_to_copy = [1, 7]; // 1=logo; 7=route_maps
+        foreach ($filetypes_to_copy as $filetype_id) {
+            // edition files
+            if (isset($file_list[$filetype_id])) {
+                $file_data = $file_list[$filetype_id][0];
+                $file_data['linked_id'] = $new_edition_id;
+                $to_remove = ['file_id', 'created_date', 'updated_date', 'filetype_name', 'filetype_helptext', 'filetype_buttontext'];
+                $date_to_set = array_diff_key($file_data, array_flip($to_remove));
+                $file_id = $this->file_model->set_file([], $date_to_set);
 
-            $src = "./uploads/edition/" . $id . "/" . $file_data['file_name'];
-            $dest = "./uploads/edition/" . $e_id . "/" . $file_data['file_name'];
-            // check new folder
-            $dest_folder = "./uploads/edition/" . $e_id;
-            if (!file_exists($dest_folder)) {
-                if (!mkdir($dest_folder, 0777, true)) {
-                    return false;
+                $src = "./uploads/edition/" . $old_edition_id . "/" . $file_data['file_name'];
+                $dest = "./uploads/edition/" . $new_edition_id . "/" . $file_data['file_name'];
+                // check new folder
+                $dest_folder = "./uploads/edition/" . $new_edition_id;
+                if (!file_exists($dest_folder)) {
+                    if (!mkdir($dest_folder, 0777, true)) {
+                        return false;
+                    }
                 }
+                copy($src, $dest);
             }
-            copy($src, $dest);
         }
 
-        if ($e_id) {
+        if ($new_edition_id) {
             $alert = "Edition information has been successfully added";
             $status = "success";
-            $return_url = base_url("admin/edition/create/edit/" . $e_id);
+            $return_url = base_url("admin/edition/create/edit/" . $new_edition_id);
         } else {
             $alert = "Error trying to add <b>" . $edition_data['edition_name'] . "</b> to the database";
             $status = "danger";
@@ -544,10 +542,10 @@ class Edition extends Admin_Controller {
         $edition_list = $this->edition_model->get_edition_list();
         $n = 0;
         $r = 0;
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             if (strtotime($edition['edition_date_end']) < 1) {
 
-                $update = $this->edition_model->update_field($e_id, "edition_date_end", $edition['edition_date']);
+                $update = $this->edition_model->update_field($new_edition_id, "edition_date_end", $edition['edition_date']);
                 $n++;
             }
         }
@@ -563,12 +561,12 @@ class Edition extends Admin_Controller {
         $edition_list = $this->edition_model->get_edition_list();
         $l = 0;
         $nl = 0;
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             if ($edition['edition_results_isloaded']) {
-                $update = $this->edition_model->update_field($e_id, "edition_results_status", 11);
+                $update = $this->edition_model->update_field($new_edition_id, "edition_results_status", 11);
                 $l++;
             } else {
-                $update = $this->edition_model->update_field($e_id, "edition_results_status", 10);
+                $update = $this->edition_model->update_field($new_edition_id, "edition_results_status", 10);
                 $nl++;
             }
         }
@@ -585,18 +583,18 @@ class Edition extends Admin_Controller {
         $edition_list = $this->edition_model->get_edition_list();
         $future = 0;
         $verified = 0;
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             // gee nuwe veld die resutls status value
-//            $this->edition_model->update_field($e_id, "edition_info_status", $edition['edition_results_status']);
+//            $this->edition_model->update_field($new_edition_id, "edition_info_status", $edition['edition_results_status']);
             // as event nog in die toekoms is, gee dit 'n status van Preliminary
             if ($edition['edition_date'] > date("Y-m-d H:i:s")) {
                 $future++;
-                $this->edition_model->update_field($e_id, "edition_info_status", 14);
+                $this->edition_model->update_field($new_edition_id, "edition_info_status", 14);
 
                 // as info confirmed is, set status na Verified
                 if ($edition['tbr_edition_info_isconfirmed']) {
                     $verified++;
-                    $this->edition_model->update_field($e_id, "edition_info_status", 16);
+                    $this->edition_model->update_field($new_edition_id, "edition_info_status", 16);
                 }
             }
         }
@@ -615,8 +613,8 @@ class Edition extends Admin_Controller {
         $this->load->model('admin/edition_model');
         $edition_list = $this->edition_model->get_edition_list();
         $n = 0;
-        foreach ($edition_list as $e_id => $edition) {
-            $this->edition_model->update_field($e_id, "edition_slug", url_title($edition['edition_name']));
+        foreach ($edition_list as $new_edition_id => $edition) {
+            $this->edition_model->update_field($new_edition_id, "edition_slug", url_title($edition['edition_name']));
             $n++;
         }
 
@@ -630,9 +628,9 @@ class Edition extends Admin_Controller {
         $this->load->model('admin/edition_model');
         $edition_list = $this->edition_model->get_edition_list();
         $n = 0;
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             $gps = str_replace(" ", "", trim($edition['latitude_num']) . "," . trim($edition['longitude_num']));
-            $this->edition_model->update_field($e_id, "edition_gps", $gps);
+            $this->edition_model->update_field($new_edition_id, "edition_gps", $gps);
             $n++;
         }
 
@@ -690,15 +688,15 @@ class Edition extends Admin_Controller {
 //        wts($edition_list);
 //        die();
         // run deur edition list
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             foreach ($date_fields_to_move as $datetype_id => $edition_field_array) {
-//                if ((!isset($date_list[$datetype_id][$e_id])) && ($edition[$edition_field])) 
+//                if ((!isset($date_list[$datetype_id][$new_edition_id])) && ($edition[$edition_field])) 
 //                if ($edition[$edition_field]) {
 
                 $date_data = array(
                     'datetype_id' => $datetype_id,
                     'date_linked_to' => "edition",
-                    'linked_id' => $e_id,
+                    'linked_id' => $new_edition_id,
                 );
                 foreach ($edition_field_array as $des_field => $edition_field) {
                     if (isset($edition[$edition_field])) {
@@ -733,9 +731,9 @@ class Edition extends Admin_Controller {
         $this->load->model('admin/edition_model');
         $edition_list = $this->edition_model->get_edition_list();
         $n = 0;
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             ;
-            $this->edition_model->update_field($e_id, "edition_general_detail", $edition['edition_description']);
+            $this->edition_model->update_field($new_edition_id, "edition_general_detail", $edition['edition_description']);
             $n++;
         }
 
@@ -748,8 +746,8 @@ class Edition extends Admin_Controller {
         $this->load->model('admin/edition_model');
         $edition_list = $this->edition_model->get_edition_list();
         $n = 0;
-        foreach ($edition_list as $e_id => $edition) {
-            $this->edition_model->update_field($e_id, "edition_address_end", $edition['edition_address']);
+        foreach ($edition_list as $new_edition_id => $edition) {
+            $this->edition_model->update_field($new_edition_id, "edition_address_end", $edition['edition_address']);
             $n++;
         }
 
@@ -765,26 +763,26 @@ class Edition extends Admin_Controller {
         $this->load->model('admin/edition_model');
         $edition_list = $this->edition_model->get_edition_list_new();
         $e = $s = $r = 0;
-        foreach ($edition_list as $e_id => $edition) {
+        foreach ($edition_list as $new_edition_id => $edition) {
             // REG TYPE
-            $regtype_list = $this->regtype_model->get_edition_regtype_list($e_id);
+            $regtype_list = $this->regtype_model->get_edition_regtype_list($new_edition_id);
             // if no reg_type
             if (key($regtype_list) == 0) {
-                $this->regtype_model->set_edition_regtype($e_id, 3);
+                $this->regtype_model->set_edition_regtype($new_edition_id, 3);
                 $r++;
             }
             // ENTRY TYPE
-            $entrytype_list = $this->entrytype_model->get_edition_entrytype_list($e_id);
+            $entrytype_list = $this->entrytype_model->get_edition_entrytype_list($new_edition_id);
             // if no entry_type
             if (key($entrytype_list) == 0) {
-                $this->entrytype_model->set_edition_entrytype($e_id, 5);
+                $this->entrytype_model->set_edition_entrytype($new_edition_id, 5);
                 $e++;
             }
             // SPONSOR
-            $sponsor_list = $this->sponsor_model->get_edition_sponsor_list($e_id);
+            $sponsor_list = $this->sponsor_model->get_edition_sponsor_list($new_edition_id);
             // if no reg_type
             if (key($sponsor_list) == 0) {
-                $this->sponsor_model->set_edition_sponsor($e_id, 4);
+                $this->sponsor_model->set_edition_sponsor($new_edition_id, 4);
                 $s++;
             }
         }
