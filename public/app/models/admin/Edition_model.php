@@ -109,17 +109,18 @@ class Edition_model extends Admin_model {
 
     public function get_edition_url_from_id($edition_id) {
         // CHECK Editions table vir die naame
-        $this->db->select("edition_name");
+        $this->db->select("edition_name, edition_slug");
         $this->db->from("editions");
         $this->db->where("edition_id", $edition_id);
         $editions_query = $this->db->get();
         if ($editions_query->num_rows() > 0) {
             $result = $editions_query->result_array();
             $e_name = $result[0]['edition_name'];
+            $e_slug = $result[0]['edition_slug'];
             $return = [
                 'edition_id' => $edition_id,
                 'edition_name' => $e_name,
-                'edition_url' => base_url() . "event/" . encode_edition_name($e_name)
+                'edition_url' => base_url("event/".$e_slug),
             ];
             return $return;
         } else {
