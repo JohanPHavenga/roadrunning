@@ -217,7 +217,7 @@ class Cron extends Frontend_Controller {
             } else {
                 $online_close_date = 0;
             }
-            if (($online_close_date > time()) && ($online_close_date < strtotime("1 week"))) {
+            if (($online_close_date > time()) && ($online_close_date < strtotime("3 days"))) {
                 if ($this->auto_mailer(4, $edition_id)) {
                     $n++;
                 }

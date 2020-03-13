@@ -148,7 +148,7 @@
                                             <i class="fa fa-arrow-right"></i></a>
                                     </div>
                                 </div>
-                                <div class="row m-b-30">
+                                <div class="row m-b-10">
                                     <div class="col-lg-12">
                                         <?php
                                         if (isset($flyer['edition'])) {
@@ -164,6 +164,22 @@
                                                 <i class="fa fa-link"></i> Race Website</a>
 
                                             <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <?php
+                                        // check vir closing date
+                                        if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
+                                            $d = '';
+                                            // check if already closed
+                                            if (strtotime($date_list[3][0]['date_end']) < time()) {
+                                                $d = "d";
+                                            }
+                                            echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
                                         }
                                         ?>
                                     </div>

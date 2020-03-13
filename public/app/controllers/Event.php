@@ -175,6 +175,7 @@ class Event extends Frontend_Controller {
             $this->data_to_views['results'] = $this->get_result_arr($slug);
         }
         $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
+        $this->data_to_views['tshirt'] = $this->get_tshirt_arr($slug);
 
         if ((isset($this->data_to_views['url_list'][2])) || (isset($this->data_to_views['file_list'][2]))) {
             $this->data_to_views['flyer'] = $this->get_flyer_arr($slug);
@@ -240,6 +241,17 @@ class Event extends Frontend_Controller {
         }
 
         return $results;
+    }
+    
+    private function get_tshirt_arr($slug) {
+        $tshirt_list = [];
+        if (isset($this->data_to_views['file_list'][8])) {
+            $tshirt_list['edition']['url'] = base_url("file/edition/" . $slug . "/t-shirt/" . $this->data_to_views['file_list'][8][0]['file_name']);
+            $tshirt_list['edition']['text'] = "View T-Shirt Design";
+            $tshirt_list['edition']['icon'] = "file-image";
+        } 
+
+        return $tshirt_list;
     }
 
     private function get_routemap_arr($slug) {

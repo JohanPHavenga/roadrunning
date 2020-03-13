@@ -50,16 +50,12 @@
                                 <?php
                                 // Online entries
                                 // check vir online entries
-                                if (isset($edition_data['entrytype_list'][4])) {
-                                    // check if open date has past or not
-                                    if (strtotime($date_list[3][0]['date_start']) < time()) {
-                                        $text = "opened";
-                                    } else {
-                                        $text = "will open";
-                                    }
+                                if (isset($edition_data['entrytype_list'][4])) {                                   
                                     // if open date is not equal to the race date
                                     if (strtotime($date_list[3][0]['date_start']) != strtotime($edition_data['edition_date'])) {
-                                        echo "<li>Online entries $text on <b style='color: red;'>" . fdateEntries($date_list[3][0]['date_start'], true) . " </b>";
+                                        if (strtotime($date_list[3][0]['date_start']) > time()) {
+                                            echo "<li>Online entries will open on <b style='color: red;'>" . fdateEntries($date_list[3][0]['date_start'], true) . " </b>";
+                                        }
                                     } else {
                                         echo "<li>Online entries will <b>open soon</b>";
                                     }
@@ -70,7 +66,7 @@
                                         if (strtotime($date_list[3][0]['date_end']) < time()) {
                                             $d = "d";
                                         }
-                                        echo "<li>Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></li>";
+                                        echo "<li>Online entries close$d on <b style='color: red;'>" . fdateEntries($date_list[3][0]['date_end']) . "</b></li>";
                                     }
                                 } else {
                                     echo "<li class='text-danger'>No online entries available</li>";
@@ -132,7 +128,6 @@
 //                                        }
 //                                    }
 //                                }
-
                                 // ENTRY LIMIT
                                 if (!empty($edition_data['edition_entry_limit'])) {
                                     echo "<li><strong>NOTE</strong> that the entry limit for this event is <u>" . $edition_data['edition_entry_limit'] . " entrants</u></li>";
@@ -172,16 +167,6 @@
                                     }
                                     echo "</li>";
                                 }
-
-                                // TSHIRT FEES
-                                if ($edition_data['edition_tshirt_amount'] > 0) {
-                                    echo "<li>An event <strong>T-Shirt</strong> is available for purchase as part of the entry process for <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong></li>";
-                                    if (!empty($edition_data['edition_tshirt_text'])) {
-                                        echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
-                                    }
-                                } elseif (!empty($edition_data['edition_tshirt_text'])) {
-                                    echo "<li><b>T-Shirt</b>:  " . $edition_data['edition_tshirt_text'] . "</li>";
-                                }
                                 ?>
                             </ul>
                             <?php
@@ -191,6 +176,34 @@
                             }
                         }
                         ?>
+                        <div class="row m-t-30">
+                            <div class="col-lg-12"> 
+                                <?php
+                                if (isset($tshirt['edition'])) {
+                                    ?>
+                                    <a href="<?= $tshirt['edition']['url']; ?>" class="btn btn-light">
+                                        <i class="fa fa-<?= $tshirt['edition']['icon']; ?>"></i> <?= $tshirt['edition']['text']; ?></a>
+
+                                    <?php
+                                }
+                                ?>
+                                <ul>                               
+                                    <?php
+                                    // TSHIRT
+                                    if ($edition_data['edition_tshirt_amount'] > 0) {                                        
+                                        if (!empty($edition_data['edition_tshirt_text'])) {
+                                            echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
+                                        } else {
+                                            echo "<li>An event <strong>T-Shirt</strong> is available for purchase as part of the entry process for <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong></li>";
+                                        }
+                                    } elseif (!empty($edition_data['edition_tshirt_text'])) {
+                                        echo "<li><b>T-Shirt</b>:  " . $edition_data['edition_tshirt_text'] . "</li>";
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div class="row m-t-30">
                             <div class="col-lg-12">
                                 <?php
@@ -236,3 +249,7 @@
     </div>
 </section>
 <!-- end: Shop products -->
+
+<?php
+//    wts($file_list);
+?>

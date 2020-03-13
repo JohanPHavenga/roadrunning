@@ -8,7 +8,7 @@
                     <div class="display">
                         <div class="number">
                             <h3 class="font-<?= $stat['font-color']; ?>">
-                                <span data-counter="counterup" data-value="" class="counter"><?= number_format($stat['number'],0,"."," "); ?></span>
+                                <span data-counter="counterup" data-value="" class="counter"><?= number_format($stat['number'], 0, ".", " "); ?></span>
                             </h3>
                             <small><?= strtoupper($stat['text']); ?></small>
                         </div>
@@ -48,14 +48,14 @@
                         foreach ($month_list as $day => $edition_list) {
                             foreach ($edition_list as $edition) {
                                 $row['date'] = fdateDay($edition['edition_timestamp']);
-                                
-                                $url="<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
+
+                                $url = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
                                 if ($edition['edition_isfeatured']) {
                                     $row['name'] = "<strong>$url</strong>";
                                 } else {
                                     $row['name'] = $url;
                                 }
-                                
+
 
                                 $email_link = '/admin/mailer/info_mail/' . $edition['edition_id'];
                                 if ($edition['user_email']) {
@@ -80,33 +80,7 @@
     </div>
 
     <div class="col-md-6">
-        
-        <div class="portlet light">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="icon-rocket"></i>
-                    <span class="bold"> Entry dates close within the next week</span>
-                </div>
-            </div>
-            <div class="portlet-body">
-                <?php
-                // create table
-                $this->table->set_template(ftable('editions_entries_close_table'));
-                foreach ($event_list_entry_date as $edition) {
-                    
-                    $entry_data = "<span style='color: red; font-weight: inherit;'>".fdateLong($edition['entry_close'], FALSE)."</span>";  
-                    $row['name']=$edition['name'];
-                    $row['entry_date']=$entry_data;
-                    $row['merge_url']=$edition['merge_url'];
-                    
-                    $this->table->add_row($row);
-                    unset($row);
-                }
-                echo $this->table->generate();
-                ?>
-            </div>
-        </div>
-        
+
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
@@ -118,18 +92,20 @@
                 <?php
                 // create table
                 $this->table->set_template(ftable('editions_noresults_table'));
-                foreach ($event_list_noresults as $year => $year_list) {
-                    foreach ($year_list as $month => $month_list) {
-                        $cell = array('data' => "<b>$month</b>", 'colspan' => 3);
-                        $this->table->add_row($cell);
-                        foreach ($month_list as $day => $edition_list) {
-                            foreach ($edition_list as $edition) {
+                if ($event_list_noresults) {
+                    foreach ($event_list_noresults as $year => $year_list) {
+                        foreach ($year_list as $month => $month_list) {
+                            $cell = array('data' => "<b>$month</b>", 'colspan' => 3);
+                            $this->table->add_row($cell);
+                            foreach ($month_list as $day => $edition_list) {
+                                foreach ($edition_list as $edition) {
 //                                if (!$edition['results_file']) {
-                                $row['date'] = fdateDay($edition['edition_timestamp']);
-                                $row['name'] = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
-                                $this->table->add_row($row);
-                                unset($row);
+                                    $row['date'] = fdateDay($edition['edition_timestamp']);
+                                    $row['name'] = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
+                                    $this->table->add_row($row);
+                                    unset($row);
 //                                }
+                                }
                             }
                         }
                     }
@@ -138,7 +114,7 @@
                 ?>
             </div>
         </div>
-        
+
     </div>
 </div>
 

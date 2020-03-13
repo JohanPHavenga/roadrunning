@@ -72,17 +72,22 @@ class Asafee_model extends Admin_model {
         }
     }
 
-    public function get_asafee_from_distance($asa_member_id, $year, $distance, $field="asa_fee_snr") {
-        
+    public function get_asafee_from_distance($asa_member_id, $year, $distance, $field = "asa_fee_snr") {
+
+        if ((!$asa_member_id) || ($asa_member_id == 0)) {
+            return 0;
+        }
+
         $this->db->select("*");
         $this->db->from($this->table);
-        $this->db->where('asa_member_id',  $asa_member_id);
+        $this->db->where('asa_member_id', $asa_member_id);
         $this->db->where("asa_fee_year", $year);
-        $this->db->where("asa_fee_distance_to > ",$distance);
-        $this->db->where("asa_fee_distance_from <= ",$distance);
-//        echo $this->db->get_compiled_select(); exit();
-        $query = $this->db->get();   
-                    
+        $this->db->where("asa_fee_distance_to >= ", $distance, false);
+        $this->db->where("asa_fee_distance_from <= ", $distance, false);
+//        echo $this->db->get_compiled_select();
+//        exit();
+        $query = $this->db->get();
+
         if ($query->num_rows() > 0) {
             $data = $query->result_array();
             return $data[0][$field];
