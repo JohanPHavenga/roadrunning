@@ -1350,6 +1350,11 @@ class Admin_Controller extends MY_Controller {
                         "icon" => "pin",
                     ],
                     [
+                        "text" => "ASA Licence Fees",
+                        "url" => 'admin/asafee',
+                        "icon" => "credit-card",
+                    ],
+                    [
                         "text" => "Tags",
                         "url" => 'admin/tag',
                         "icon" => "tag",
@@ -1423,9 +1428,9 @@ class Admin_Controller extends MY_Controller {
                         "icon" => "notebook",
                     ],
                     [
-                        "text" => "ASA Licence Fees",
-                        "url" => 'admin/asafee',
-                        "icon" => "credit-card",
+                        "text" => "Timing Providers",
+                        "url" => 'admin/timingprovider',
+                        "icon" => "clock",
                     ],
                     [
                         "text" => "Roles",

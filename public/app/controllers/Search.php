@@ -202,6 +202,9 @@ class Search extends Frontend_Controller {
                 $query_part= explode(" ", $query);
                 $month_num = date("m", strtotime("$query_part[0]-$query_part[1]"));
                 redirect(base_url("calendar/".$query_part[1]."/".$month_num));
+                break;            
+            case "asa_member_abbr":
+                $search_params['where']["asa_member_abbr"] = $query;
                 break;
             default:
                 redirect("404");

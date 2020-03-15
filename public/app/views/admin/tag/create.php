@@ -43,21 +43,9 @@
                     </div>
                 </div>
             </div>
-            <div class="portlet-footer">
-                <div class='btn-group'>
-                    <?php
-                    if ($action=="edit") {
-                    echo fbutton($text = "Apply", $type = "submit", $status = "primary", NULL, "save_only");
-                    }
-                    echo fbutton($text = "Save", $type = "submit", $status = "success");
-                    ?>
-                </div>
-                <div class='btn-group'>
-                    <?php
-                    echo fbuttonLink($return_url, "Cancel", $status = "warning");
-                    ?>
-                </div>
-            </div>
+            <?php
+            $this->load->view('templates/admin/create_footer');
+            ?>
         </div>
 
     </div>

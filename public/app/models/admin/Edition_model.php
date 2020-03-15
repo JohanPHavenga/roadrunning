@@ -147,7 +147,7 @@ class Edition_model extends Admin_model {
         return false;
     }
 
-    public function get_edition_list_new($query_params = [], $field_arr = NULL) {
+    public function get_edition_list_new($query_params = [], $field_arr = NULL, $show_query=false) {
         if (is_null($field_arr)) {
             $field_arr = [
                 "edition_id", "edition_name", "edition_date", "edition_slug", "editions.created_date", "editions.updated_date",
@@ -168,6 +168,7 @@ class Edition_model extends Admin_model {
         $this->db->join('towns', 'events.town_id=towns.town_id');
         $this->db->join('regions', 'region_id');
         $this->db->join('provinces', 'regions.province_id=provinces.province_id');
+        $this->db->join('timingproviders', 'timingprovider_id');
         foreach ($query_params as $operator => $clause_arr) {
             if (is_array($clause_arr)) {
                 foreach ($clause_arr as $field => $value) {
@@ -180,8 +181,9 @@ class Edition_model extends Admin_model {
         if (!isset($query_params['order_by'])) {
             $this->db->order_by('edition_date', 'ASC');
         }
-
-//        die($this->db->get_compiled_select());
+        if ($show_query) {
+            die($this->db->get_compiled_select());
+        }
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

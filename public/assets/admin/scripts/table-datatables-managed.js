@@ -316,6 +316,25 @@ var TableDatatablesManaged = function () {
         });
     };
     
+     // Unconfirmed Data Table on Dashboard
+    var initUnconfirmedDataTable = function () {
+        var table = $('#unconfirmed_date_table');
+        table.dataTable({
+//            order: [[0, "asc"]],
+            responsive: true,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            bStateSave: true,
+            columnDefs: [
+                {searchable: false, targets: [-1]},
+                {responsivePriority: 1, targets: 0},
+                {responsivePriority: 2, targets: -1},
+                {responsivePriority: 3, targets: 1},
+                {responsivePriority: 4, targets: 2}
+            ]
+        });
+    };
+    
+    
     // GENERIC list table
     var initListTable = function () {
         var table = $('#list_table');
@@ -356,6 +375,7 @@ var TableDatatablesManaged = function () {
             initDateTypeTable();
             initResultTable();
             initAuditTable();
+            initUnconfirmedDataTable();
             initListTable();
         }
     };

@@ -1,13 +1,13 @@
 <?php
 
-class Venue extends Admin_Controller {
+class Timingprovider extends Admin_Controller {
 
-    private $return_url = "/admin/venue";
-    private $create_url = "/admin/venue/create";
+    private $return_url = "/admin/timingprovider";
+    private $create_url = "/admin/timingprovider/create";
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('admin/venue_model');
+        $this->load->model('admin/timingprovider_model');
     }
 
     public function _remap($method, $params = array()) {
@@ -22,22 +22,22 @@ class Venue extends Admin_Controller {
         // load helpers / libraries
         $this->load->library('table');
 
-        $this->data_to_view["venue_data"] = $this->venue_model->get_venue_list();
-        $this->data_to_view['heading'] = ["ID", "Venue", "Province", "Status", "Actions"];
+        $this->data_to_view["timingprovider_data"] = $this->timingprovider_model->get_timingprovider_list();
+        $this->data_to_view['heading'] = ["ID", "Timing Provider", "Abbr", "Status", "Actions"];
 
         $this->data_to_view['create_link'] = $this->create_url;
-        $this->data_to_header['title'] = "List of Venues";
+        $this->data_to_header['title'] = "List of RaceTypes";
         $this->data_to_header['crumbs'] = [
             "Home" => "/admin",
-            "Venue" => "/admin/venue",
+            "Timingprovider" => "/admin/timingprovider",
             "List" => "",
         ];
 
         $this->data_to_header['page_action_list'] = [
             [
-                "name" => "Add Venue",
-                "icon" => "pin",
-                "uri" => "venue/create/add",
+                "name" => "Add Timingprovider",
+                "icon" => "bell",
+                "uri" => "timingprovider/create/add",
             ],
         ];
 
@@ -61,20 +61,20 @@ class Venue extends Admin_Controller {
 
         // load view
         $this->load->view($this->header_url, $this->data_to_header);
-        $this->load->view("/admin/venue/view", $this->data_to_view);
+        $this->load->view("/admin/timingprovider/view", $this->data_to_view);
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
     public function create($action, $id = 0) {
         // additional models
-        $this->load->model('admin/province_model');
+        $this->load->model('admin/town_model');
 
         // load helpers / libraries
         $this->load->helper('form');
         $this->load->library('form_validation');
 
         // set data
-        $this->data_to_header['title'] = "Venue Input Page";
+        $this->data_to_header['title'] = "Timing Provider Input Page";
         $this->data_to_view['action'] = $action;
         $this->data_to_view['form_url'] = $this->create_url . "/" . $action;
 
@@ -82,22 +82,20 @@ class Venue extends Admin_Controller {
         $this->data_to_view['js_script_to_load'] = '$(".autocomplete").select2({minimumInputLength: 2});';
         $this->data_to_view['css_to_load'] = array("select2.css", "select2-bootstrap.css");
 
-        $this->data_to_view['status_dropdown'] = $this->venue_model->get_status_dropdown();
-        $this->data_to_view['province_dropdown'] = $this->province_model->get_province_dropdown();
+        $this->data_to_view['status_dropdown'] = $this->timingprovider_model->get_status_dropdown();
 
         if ($action == "edit") {
-            $this->data_to_view['venue_detail'] = $this->venue_model->get_venue_detail($id);
+            $this->data_to_view['timingprovider_detail'] = $this->timingprovider_model->get_timingprovider_detail($id);
             $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $id;
         } else {
-            $this->data_to_view['venue_detail'] = $this->venue_model->get_venue_field_array();
-            $this->data_to_view['venue_detail']['venue_status'] = 1;
-            $this->data_to_view['venue_detail']['province_id'] = 12;
+            $this->data_to_view['timingprovider_detail'] = $this->timingprovider_model->get_timingprovider_field_array();
+            $this->data_to_view['timingprovider_detail']['timingprovider_status'] = 1;
         }
 
         // set validation rules
-        $this->form_validation->set_rules('venue_name', 'Venue Name', 'required');
-        $this->form_validation->set_rules('venue_status', 'Venue Status', 'required');
-        $this->form_validation->set_rules('province_id', 'Province', 'required|numeric|greater_than[0]', ["greater_than" => "Please select a Province"]);
+        $this->form_validation->set_rules('timingprovider_name', 'Timing Provider Name', 'required');
+        $this->form_validation->set_rules('timingprovider_abbr', 'Timing Provider Abbrivation', 'required');
+        $this->form_validation->set_rules('timingprovider_status', 'Timing Provider Status', 'required');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
@@ -106,9 +104,9 @@ class Venue extends Admin_Controller {
             $this->load->view($this->create_url, $this->data_to_view);
             $this->load->view($this->footer_url, $this->data_to_footer);
         } else {
-            $db_write = $this->venue_model->set_venue($action, $id);
+            $db_write = $this->timingprovider_model->set_timingprovider($action, $id);
             if ($db_write) {
-                $alert = "Venue has been updated";
+                $alert = "Timing Provider has been updated";
                 $status = "success";
             } else {
                 $alert = "Error committing to the database";
@@ -122,16 +120,16 @@ class Venue extends Admin_Controller {
 
             // save_only takes you back to the edit page.
             if (array_key_exists("save_only", $this->input->post())) {
-                $this->return_url = base_url("admin/venue/create/edit/" . $id);
+                $this->return_url = base_url("admin/timingprovider/create/edit/" . $id);
             }
 
             redirect($this->return_url);
         }
     }
 
-    public function delete($venue_id) {
+    public function delete($timingprovider_id) {
 
-        if (($venue_id == 0) AND ( !is_int($venue_id))) {
+        if (($timingprovider_id == 0) AND ( !is_int($timingprovider_id))) {
             $this->session->set_flashdata('alert', 'Cannot delete record: ' . $id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
@@ -139,16 +137,16 @@ class Venue extends Admin_Controller {
         }
 
         // get edition detail for nice delete message
-        $venue_detail = $this->venue_model->get_venue_detail($venue_id);
+        $timingprovider_detail = $this->timingprovider_model->get_timingprovider_detail($timingprovider_id);
         // delete record
-        $db_del = $this->venue_model->remove_venue($venue_id);
+        $db_del = $this->timingprovider_model->remove_timingprovider($timingprovider_id);
 
 
         if ($db_del) {
-            $msg = "Venue <b>" . $venue_detail['venue_name'] . "</b> has been deleted";
+            $msg = "Entry Type <b>" . $timingprovider_detail['timingprovider_name'] . "</b> has been deleted";
             $status = "success";
         } else {
-            $msg = "Error committing to the database ID:'.$venue_id";
+            $msg = "Error committing to the database ID:'.$timingprovider_id";
             $status = "danger";
         }
 

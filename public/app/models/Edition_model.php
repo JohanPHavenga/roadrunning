@@ -65,7 +65,7 @@ class Edition_model extends Frontend_model {
         if (is_null($field_arr)) {
             $field_arr = [
                 "editions.edition_id", "edition_name", "edition_status", "edition_isfeatured", "edition_info_status", "edition_date", "edition_slug", "edition_address", "edition_info_prizegizing",
-                "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id", "province_abbr", "club_name",
+                "events.event_id", "event_name", "towns.town_name", "regions.region_id", "provinces.province_id", "province_abbr", "club_name", "asa_member_abbr",
                 "editions.created_date", "editions.updated_date",
             ];
         }
@@ -78,6 +78,8 @@ class Edition_model extends Frontend_model {
         $this->db->join('organising_club', 'event_id');
         $this->db->join('clubs', 'club_id');
         $this->db->join('provinces', 'regions.province_id=provinces.province_id');
+        $this->db->join('edition_asa_member', 'edition_id', 'left');
+        $this->db->join('asa_members', 'asa_member_id', 'left');
         foreach ($query_params as $operator => $clause_arr) {
             if (is_array($clause_arr)) {
                 foreach ($clause_arr as $field => $value) {
@@ -105,6 +107,7 @@ class Edition_model extends Frontend_model {
     }
 
     // SHOULD NOT USE ANYMORE
+    // rather first get edition data from query above and add race info with race_model function
     public function get_edition_list_incl_races($query_params = [], $field_arr = []) {
         if (!$field_arr) {
             $field_arr = [

@@ -1,7 +1,7 @@
 <?php
+
 class Dashboard extends Admin_Controller {
 
-    
     // check if method exists, if not calls "view" method
     public function _remap($method, $params = array()) {
         if (method_exists($this, $method)) {
@@ -81,22 +81,29 @@ class Dashboard extends Admin_Controller {
             // get list of editions that need attention
             $params = [
                 'only_active' => 1,
-                'info_status' => [13,14,15],
+                'info_status' => [13, 14, 15],
                 'date_from' => date("Y-m-d"),
                 'date_to' => date("Y-m-d", strtotime("+3 months")),
             ];
             $this->data_to_view['event_list_unconfirmed'] = $this->event_model->get_event_list_summary("date_range", $params);
 
-            // set dashbaord_return_url for editions to return here
-            $this->session->set_userdata('dashboard_return_url', "/" . uri_string());
-
-            // get list of editions that has no results
-            $params = [
-                'info_status' => [10],
-                'date_from' => date("Y-m-d", strtotime("-1 month")),
-                'date_to' => date("Y-m-d"),
+            // unconfirmed data
+            $query_params = [
+                "where_in" => ["edition_info_status" => [13, 14, 15]],
+                "where" => ["edition_date >=" => date("Y-m-d"), "edition_date <" => date("Y-m-d", strtotime("2 months")), "edition_status" => 1],
+                "order_by" => ["editions.edition_date" => "ASC"],
             ];
-            $this->data_to_view['event_list_noresults'] = $this->event_model->get_event_list_summary("date_range", $params);           
+            $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured", "edition_info_email_sent",
+                "asa_member_name", "asa_member_abbr", "user_email", "timingprovider_abbr"];
+            $this->data_to_view['event_list_unconfirmed'] = $this->chronologise_data($this->edition_model->get_edition_list_new($query_params, $field_list, false), "edition_date");
+
+            // no results
+            $query_params = [
+                "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-2 months")), "edition_status" => 1],
+                "order_by" => ["editions.edition_date" => "ASC"],
+            ];
+            $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured", "asa_member_name", "asa_member_abbr", "timingprovider_abbr"];
+            $this->data_to_view['event_list_noresults'] = $this->chronologise_data($this->edition_model->get_edition_list_new($query_params, $field_list, false), "edition_date");
 
             // actions on the toolbar
             $this->data_to_header['page_action_list'] = [
@@ -116,6 +123,25 @@ class Dashboard extends Admin_Controller {
                     "uri" => "race/create/add",
                 ],
             ];
+
+            // set dashbaord_return_url for editions to return here
+            $this->session->set_userdata('dashboard_return_url', "/" . uri_string());
+
+            $this->data_to_header['css_to_load'] = array(
+                "assets/admin/plugins/datatables/datatables.min.css",
+                "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+            );
+
+            $this->data_to_footer['js_to_load'] = array(
+                "assets/admin/scripts/datatable.js",
+                "assets/admin/plugins/datatables/datatables.min.js",
+                "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+                "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+            );
+
+            $this->data_to_footer['scripts_to_load'] = array(
+                "assets/admin/scripts/table-datatables-managed.js",
+            );
         }
 
         $this->load->view($this->header_url, $this->data_to_header);
@@ -123,10 +149,16 @@ class Dashboard extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function audit($year=0) {
-        if (!is_numeric($year)) { die("That is not a year"); }
-        if ($year>date("Y")) { die("Year too big"); }
-        if ($year<2016) { die("Year too small"); }
+    public function audit($year = 0) {
+        if (!is_numeric($year)) {
+            die("That is not a year");
+        }
+        if ($year > date("Y")) {
+            die("Year too big");
+        }
+        if ($year < 2016) {
+            die("Year too small");
+        }
         $previous_year = $year - 1;
 
         $this->load->library('table');
@@ -138,7 +170,7 @@ class Dashboard extends Admin_Controller {
             "Dashboard" => "/admin/dashboard",
             "Audit" => "",
         ];
-        
+
         $this->data_to_header['css_to_load'] = array(
             "assets/admin/plugins/datatables/datatables.min.css",
             "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",

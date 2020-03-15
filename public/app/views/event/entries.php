@@ -32,19 +32,30 @@
                             <?php
                         } else {
                             if (
-                                    isset($edition_data['entrytype_list'][4]) &&
-                                    isset($url_list[5]) &&
-                                    isset($date_list[3][0]['date_start']) &&
-                                    (strtotime($date_list[3][0]['date_start']) < time()) &&
-                                    (strtotime($date_list[3][0]['date_end']) > time())
+                                    isset($edition_data['entrytype_list'][4]) &&            // entrytype for online entries
+                                    isset($url_list[5]) &&                                  // there is a url loaded for online entries
+                                    isset($date_list[3][0]['date_start']) &&                // online entries open date exists
+                                    (strtotime($date_list[3][0]['date_start']) < time())    // online entries date has passed
                             ) {
+                                // check if entries has closed
+                                if (strtotime($date_list[3][0]['date_end']) < time()) {
+                                    $btn_state="danger";
+                                    $btn_text="Online entries closed";
+                                    $icon="minus-circle";
+                                } else {
+                                    $btn_state="default";
+                                    $btn_text="Enter online";
+                                    $icon="arrow-right";
+                                }
                                 ?>
                                 <p>
-                                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-default btn-creative btn-icon-holder btn-shadow btn-light-hover">Enter online
-                                        <i class="fa fa-arrow-right"></i></a>
+                                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-<?=$btn_state;?> btn-creative btn-icon-holder btn-shadow btn-light-hover"><?=$btn_text;?>
+                                        <i class="fa fa-<?=$icon;?>"></i></a>
                                 </p>
                                 <?php
                             }
+//                            echo "Now: ".time();
+//                            echo "<br>Close date: ".strtotime($date_list[3][0]['date_end']);
                             ?>
                             <ul>
                                 <?php
@@ -61,7 +72,7 @@
                                     }
                                     // check vir closing date
                                     if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
-                                        $d = '';
+                                        $d = 's';
                                         // check if already closed
                                         if (strtotime($date_list[3][0]['date_end']) < time()) {
                                             $d = "d";

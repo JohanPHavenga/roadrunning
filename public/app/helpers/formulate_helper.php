@@ -56,7 +56,7 @@ function fdateDay($date) {
     return date("d", strtotime($date));
 }
 
-function fdateShort($date=null) {
+function fdateShort($date = null) {
     if (empty($date)) {
         return date("Y-m-d");
     } else {
@@ -65,8 +65,11 @@ function fdateShort($date=null) {
 }
 
 function fdateHuman($date) {
-
     return date("D j M", strtotime($date));
+}
+
+function fdateHumanShort($date) {
+    return date("d M", strtotime($date));
 }
 
 function fdateHumanFull($date, $show_dotw = false, $show_time = false) {
@@ -93,7 +96,7 @@ function fdateEntries($date) {
     return date($date_str, strtotime($date)) . $post_text;
 }
 
-function fdateLong($date=null, $show_sec = true) {
+function fdateLong($date = null, $show_sec = true) {
     if ($date) {
         if ($show_sec) {
             return date("Y-m-d H:i:s", strtotime($date));

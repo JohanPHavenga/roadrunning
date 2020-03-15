@@ -29,7 +29,7 @@
 
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
@@ -40,15 +40,18 @@
             <div class="portlet-body">
                 <?php
                 // create table
-                $this->table->set_template(ftable('editions_unconfirmed_table'));
+                $this->table->set_template(ftable('unconfirmed_date_table'));
+                $this->table->set_heading(["Date","Race","ASA","Time","Mail?"]);
                 foreach ($event_list_unconfirmed as $year => $year_list) {
                     foreach ($year_list as $month => $month_list) {
-                        $cell = array('data' => "<b>$month</b>", 'colspan' => 3);
-                        $this->table->add_row($cell);
+//                        $cell = array('data' => "<b>$month</b>", 'colspan' => 5);
+//                        $this->table->add_row($cell);
                         foreach ($month_list as $day => $edition_list) {
                             foreach ($edition_list as $edition) {
-                                $row['date'] = fdateDay($edition['edition_timestamp']);
+                                // column 1
+                                $row['date'] = fdateHumanShort($edition['edition_date']);
 
+                                // column 2
                                 $url = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
                                 if ($edition['edition_isfeatured']) {
                                     $row['name'] = "<strong>$url</strong>";
@@ -56,7 +59,12 @@
                                     $row['name'] = $url;
                                 }
 
+                                // column 3
+                                $row['asa_member'] = "<span title='" . $edition['asa_member_name'] . "'>" . $edition['asa_member_abbr'] . "</span>";
+                                // column 4
+                                $row['timingprovider'] = $edition['timingprovider_abbr'];
 
+                                // column 5
                                 $email_link = '/admin/mailer/info_mail/' . $edition['edition_id'];
                                 if ($edition['user_email']) {
                                     if ($edition['edition_info_email_sent']) {
@@ -79,7 +87,7 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-5">
 
         <div class="portlet light">
             <div class="portlet-title">
@@ -95,16 +103,27 @@
                 if ($event_list_noresults) {
                     foreach ($event_list_noresults as $year => $year_list) {
                         foreach ($year_list as $month => $month_list) {
-                            $cell = array('data' => "<b>$month</b>", 'colspan' => 3);
+                            $cell = array('data' => "<b>$month</b>", 'colspan' => 4);
                             $this->table->add_row($cell);
                             foreach ($month_list as $day => $edition_list) {
                                 foreach ($edition_list as $edition) {
-//                                if (!$edition['results_file']) {
-                                    $row['date'] = fdateDay($edition['edition_timestamp']);
-                                    $row['name'] = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
+                                    // column 1
+                                    $row['date'] = fdateDay($edition['edition_date']);
+                                    // column 2
+                                    $link = "<a href='/admin/edition/create/edit/" . $edition['edition_id'] . "'>" . $edition['edition_name'] . "</a>";
+                                    if ($edition['edition_isfeatured']) {
+                                        $row['name'] = "<b>$link</b>";
+                                    } else {
+                                        $row['name'] = $link;
+                                    }
+                                    // column 3
+                                    $row['asa_member'] = "<span title='" . $edition['asa_member_name'] . "'>" . $edition['asa_member_abbr'] . "</span>";
+                                    // column 4
+                                    $row['timingprovider'] = $edition['timingprovider_abbr'];
+
+                                    // generate row
                                     $this->table->add_row($row);
                                     unset($row);
-//                                }
                                 }
                             }
                         }
@@ -116,8 +135,8 @@
         </div>
 
     </div>
+    <?php
+//    wts($event_list_noresults);
+    ?>          
 </div>
 
-<?php
-//wts($event_list_unconfirmed);
-?>            
