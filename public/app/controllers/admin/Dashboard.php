@@ -90,7 +90,7 @@ class Dashboard extends Admin_Controller {
             // unconfirmed data
             $query_params = [
                 "where_in" => ["edition_info_status" => [13, 14, 15]],
-                "where" => ["edition_date >=" => date("Y-m-d"), "edition_date <" => date("Y-m-d", strtotime("2 months")), "edition_status" => 1],
+                "where" => ["edition_date >=" => date("Y-m-d"), "edition_date <" => date("Y-m-d", strtotime("2 months")), "edition_status" => 1, "edition_remove_audit" => 0],
                 "order_by" => ["editions.edition_date" => "ASC"],
             ];
             $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured", "edition_info_email_sent",

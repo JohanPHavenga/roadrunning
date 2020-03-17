@@ -355,10 +355,14 @@
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3"> 
-                <div role="alert" class="m-b-30 alert alert-<?= $status_notice['state']; ?>">
-                    <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <?= $status_notice['msg']; ?> </div>
+            <div class="sidebar col-lg-3">                 
                 <?php
+                // RACE STATUS
+                if ($edition_data['edition_status']==1) {
+                    $this->load->view('widgets/race_status', $status_notice);
+                    echo "<div class='m-b-30'></div>";
+                }
+                 
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Receive race notification";
                 $this->load->view('widgets/subscribe', $data_to_widget);

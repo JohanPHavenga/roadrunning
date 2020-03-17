@@ -13,7 +13,7 @@ class Search extends Frontend_Controller {
     public function index() {
 
         // SET BAIC STATUS CHECK 
-        $search_params['where_in']["edition_status"] = [1, 3, 4];
+        $search_params['where_in']["edition_status"] = [1, 3, 9];
 
         // Get correct search paramaters from post
         // QUERY

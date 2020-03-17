@@ -95,7 +95,7 @@
         <!-- FLAGS -->
         <div class="form-group">
             <div class="row">
-                <div class='col-md-8'>
+                <div class='col-md-12'>
                     <div class='mt-checkbox-inline'>
                         <?php
                         $checkbox_array = [
@@ -109,7 +109,7 @@
                             ],
                             [
                                 "name" => "edition_remove_audit",
-                                "text" => "Remove from audit",
+                                "text" => "Remove frm audit/unconfirmed",
                             ],
                         ];
                         foreach ($checkbox_array as $checkbox) {
@@ -240,12 +240,17 @@
 //                            ]);
                     ?>
                 </div>
+                <div class="form-group">
+                    <?php
+                    echo form_label('Timing Provider', 'timingprovider_id');
+                    echo form_dropdown('timingprovider_id', $timingprovider_dropdown, set_value('timingprovider_id', $edition_detail['timingprovider_id']), ["id" => "timingprovider_id", "class" => "form-control"]);
+                    ?>
+                </div>
             </div>
             <div class='col-sm-6'>
                 <?php
-                
-                if ($action == "edit") { 
-                    $address_nospaces=url_title($edition_detail['edition_address_end'].", ".$edition_detail['town_name'].", ZA"); 
+                if ($action == "edit") {
+                    $address_nospaces = url_title($edition_detail['edition_address_end'] . ", " . $edition_detail['town_name'] . ", ZA");
                     ?>
                     <iframe
                         width="100%"

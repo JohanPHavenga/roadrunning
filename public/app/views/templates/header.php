@@ -139,6 +139,15 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
             </div>
             <!-- end: Topbar -->
 
+
+            <div class='alert alert-info' role='alert'>
+                <i class='fa fa-info-circle' aria-hidden='true'></i> 
+                <b>CORONA VIRUS UPDATE:</b> Race organisers across the country are engaging with stakeholders and sponsors regarding the future of running events scheduled 
+                over the next few weeks and months. <br>
+                I am doing my best to get information out of the organisers. If you want to be kept up to date for a particular race, if it is going ahead or postponed or cancelled, add yourself to the mailing list. As soon as I get clear 
+                directive for the race I will send an email to the mailing list to inform everyone.
+            </div>
+
             <!-- Header -->
             <header id="header" data-fullwidth="true" <?= $header_vals; ?>>
                 <div class="header-inner">
@@ -306,6 +315,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             </div>
                         </div>
                         <!--END: NAVIGATION-->
+
                     </div>
                 </div>
             </header>

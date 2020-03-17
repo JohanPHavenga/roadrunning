@@ -189,7 +189,13 @@ class Event extends Frontend_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
-        $this->load->view('templates/page_menu', $this->data_to_views);
+        $this->load->view('templates/page_menu', $this->data_to_views);        
+
+        // RACE STATUS
+        if ($edition_data['edition_status'] != 1) {
+            $this->load->view('widgets/race_status',  $this->data_to_views['status_notice']);
+        }
+
         $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }

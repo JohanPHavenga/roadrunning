@@ -897,7 +897,7 @@ class Frontend_Controller extends MY_Controller {
                 } else {
                     $email = '';
                 }
-                $msg = "<strong>This event has been CANCELLED.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a>";
+                $msg = "<strong>This event has been CANCELLED.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' title='Email organisers'>$email</a>";
                 $short_msg = "CANCELLED";
                 $state = "danger";
                 $icon = "times-circle";
@@ -908,7 +908,7 @@ class Frontend_Controller extends MY_Controller {
                 } else {
                     $email = '';
                 }
-                $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' class='link' title='Email organisers'>$email</a><br>"
+                $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' title='Email organisers'>$email</a><br>"
                         . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
                 $short_msg = "POSTPONED";
                 $state = "warning";
