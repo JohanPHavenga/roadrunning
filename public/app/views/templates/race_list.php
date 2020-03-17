@@ -16,6 +16,7 @@
                             <?php
                             if ($edition_list) {
                                 foreach ($edition_list as $edition_id => $edition) {
+                                    $badge_state=false;
                                     foreach ($edition['race_list'] as $race) {
                                         if ($race['racetype_abbr'] == "R/W") {
                                             $race['racetype_abbr'] = "R";
@@ -45,7 +46,23 @@
                                             echo date("d M", strtotime($edition['edition_date'])) . " - " . $edition['edition_name'];
                                             if ($edition['edition_isfeatured']) {
                                                 echo "</b>";
-                                                echo " <span class='badge badge-danger' title='Featured Race'>Featured</span>";
+                                                $badge_state="success";
+                                                $badge_text="Featured";
+                                            }
+                                            
+                                            // check state for badge
+                                            if ($edition['edition_status']==3) {
+                                                $badge_state="danger";
+                                                $badge_text="Cancelled";
+                                            }
+                                            // check state for badge
+                                            if ($edition['edition_status']==9) {
+                                                $badge_state="warning";
+                                                $badge_text="Postponed";
+                                            }
+                                            
+                                            if ($badge_state) {                                                
+                                                echo " <span class='badge badge-$badge_state'>$badge_text</span>";
                                             }
 //                                            echo "&nbsp";
 //                                            foreach ($race_summary['icon'] as $rt) {
