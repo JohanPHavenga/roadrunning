@@ -51,18 +51,20 @@
 
                         <div class="col-lg-7">
                             <?php
-                            echo $edition_data['edition_intro_detail'];
+                            if ($edition_data['edition_status'] == 1) {
+                                echo $edition_data['edition_intro_detail'];
 
-                            if (isset($edition_data['sponsor_list'])) {
-                                echo "<p><b>Sponsored</b> by ";
-                                foreach ($edition_data['sponsor_list'] as $sponsor_id => $sponsor) {
-                                    if (!empty($sponsor['url_name'])) {
-                                        echo "<a href='" . $sponsor['url_name'] . "' title='Visit sponsor website' class='link'>" . $sponsor['sponsor_name'] . "</a> ";
-                                    } else {
-                                        echo $sponsor['sponsor_name'] . " ";
+                                if (isset($edition_data['sponsor_list'])) {
+                                    echo "<p><b>Sponsored</b> by ";
+                                    foreach ($edition_data['sponsor_list'] as $sponsor_id => $sponsor) {
+                                        if (!empty($sponsor['url_name'])) {
+                                            echo "<a href='" . $sponsor['url_name'] . "' title='Visit sponsor website' class='link'>" . $sponsor['sponsor_name'] . "</a> ";
+                                        } else {
+                                            echo $sponsor['sponsor_name'] . " ";
+                                        }
                                     }
+                                    echo "</p>";
                                 }
-                                echo "</p>";
                             }
                             ?>
 
@@ -117,83 +119,93 @@
                                 </div>
                             </div>
                             <?php
-                            if (!$in_past) {
-                                ?>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <?php
-                                        // BUTTONS
-                                        if (!in_array(5, $edition_data['entrytype_list'])) {
-                                            switch ($online_entry_status) {
-                                                case "open":
-                                                    $btn_text = "Entries Open!";
-                                                    $btn_type = "success";
-                                                    break;
-                                                case "closed":
-                                                    $btn_text = "Entries Closed";
-                                                    $btn_type = "danger";
-                                                    break;
-                                                default:
-                                                    $btn_text = "Entry Details";
-                                                    $btn_type = "light";
-                                                    break;
+                            if ($edition_data['edition_status'] == 1) {
+                                if (!$in_past) {
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <?php
+                                            // BUTTONS
+                                            if (!in_array(5, $edition_data['entrytype_list'])) {
+                                                switch ($online_entry_status) {
+                                                    case "open":
+                                                        $btn_text = "Entries Open!";
+                                                        $btn_type = "success";
+                                                        break;
+                                                    case "closed":
+                                                        $btn_text = "Entries Closed";
+                                                        $btn_type = "danger";
+                                                        break;
+                                                    default:
+                                                        $btn_text = "Entry Details";
+                                                        $btn_type = "light";
+                                                        break;
+                                                }
+                                                ?>
+                                                <a class="btn btn-<?= $btn_type; ?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?= $btn_text; ?>
+                                                    <i class="fa fa-arrow-right"></i></a>
+                                                <?php
                                             }
                                             ?>
-                                            <a class="btn btn-<?= $btn_type; ?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?= $btn_text; ?>
+                                            <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
                                                 <i class="fa fa-arrow-right"></i></a>
-                                            <?php
-                                        }
-                                        ?>
-                                        <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
-                                            <i class="fa fa-arrow-right"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row m-b-10">
-                                    <div class="col-lg-12">
-                                        <?php
-                                        if (isset($flyer['edition'])) {
-                                            ?>
-                                            <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
-                                                <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
-
+                                    <div class="row m-b-10">
+                                        <div class="col-lg-12">
                                             <?php
-                                        }
-                                        if (isset($url_list[1])) {
-                                            ?>
-                                            <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
-                                                <i class="fa fa-link"></i> Race Website</a>
+                                            if (isset($flyer['edition'])) {
+                                                ?>
+                                                <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                                                    <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
 
-                                            <?php
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <?php
-                                        // check vir closing date
-                                        if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
-                                            $d = '';
-                                            // check if already closed
-                                            if (strtotime($date_list[3][0]['date_end']) < time()) {
-                                                $d = "d";
+                                                <?php
                                             }
-                                            echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
-                                        }
-                                        ?>
+                                            if (isset($url_list[1])) {
+                                                ?>
+                                                <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                                                    <i class="fa fa-link"></i> Race Website</a>
+
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
-                                </div>
-                                <?php
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <?php
+                                            // check vir closing date
+                                            if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
+                                                $d = '';
+                                                // check if already closed
+                                                if (strtotime($date_list[3][0]['date_end']) < time()) {
+                                                    $d = "d";
+                                                }
+                                                echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <a class="btn btn-default btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">View results
+                                                <i class="fa fa-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
                             } else {
-                                ?>
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <a class="btn btn-default btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">View results
-                                            <i class="fa fa-arrow-right"></i></a>
-                                    </div>
-                                </div>
-                                <?php
+                                if (isset($file_list[10])) {
+                                    ?>
+                                    <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-default">
+                                        <i class="fa fa-file-pdf"></i> Official Press Release</a>
+
+                                    <?php
+                                }
                             }
                             ?>
                         </div>
@@ -358,11 +370,11 @@
             <div class="sidebar col-lg-3">                 
                 <?php
                 // RACE STATUS
-                if ($edition_data['edition_status']==1) {
+                if ($edition_data['edition_status'] == 1) {
                     $this->load->view('widgets/race_status', $status_notice);
                     echo "<div class='m-b-30'></div>";
                 }
-                 
+
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Receive race notification";
                 $this->load->view('widgets/subscribe', $data_to_widget);

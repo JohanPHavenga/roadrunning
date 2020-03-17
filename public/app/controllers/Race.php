@@ -19,7 +19,7 @@ class Race extends Frontend_Controller {
 
     public function list($year = null, $month = null, $day = null) {
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 9]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months")),],
             "order_by" => ["edition_date" => "ASC"],
         ];
