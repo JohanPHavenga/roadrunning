@@ -238,6 +238,14 @@ class Edition extends Admin_Controller {
                 if ($new_edition_detail['edition_info_status'] == 16) {
                     $this->auto_mailer(3, $old_edition_id);
                 }
+                // AUTO MAILER for CANCELLED
+                if ($new_edition_detail['edition_status'] == 3) {
+                    $this->auto_mailer(8, $old_edition_id);
+                }
+                // AUTO MAILER for POSTPONED
+                if ($new_edition_detail['edition_status'] == 9) {
+                    $this->auto_mailer(8, $old_edition_id);
+                }
             } else {
                 $alert = "Error committing to the database";
                 $status = "danger";

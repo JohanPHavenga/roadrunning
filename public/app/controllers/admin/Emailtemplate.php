@@ -103,7 +103,7 @@ class Emailtemplate extends Admin_Controller {
                 'emailtemplate_body' => $this->input->post('emailtemplate_body'),
                 'emailtemplate_linked_to' => $this->input->post('emailtemplate_linked_to'),
             );
-            $return_id=$this->emailtemplate_model->set_emailtemplate($action, $id, $data);
+            $return_id = $this->emailtemplate_model->set_emailtemplate($action, $id, $data);
 
             if ($return_id) {
                 $alert = "Email Template has been " . $action . "ed";
@@ -153,6 +153,37 @@ class Emailtemplate extends Admin_Controller {
         $this->session->set_flashdata('alert', $msg);
         $this->session->set_flashdata('status', $status);
         redirect($this->return_url);
+    }
+
+    
+    public function copy($old_id) {
+
+        // get data
+        $template_detail = $this->emailtemplate_model->get_emailtemplate_detail($old_id);
+        
+        $template_data['emailtemplate_name'] = $template_detail['emailtemplate_name']." copy";
+        $template_data['emailtemplate_body'] = $template_detail['emailtemplate_body'];
+        $template_data['emailtemplate_linked_to'] = $template_detail['emailtemplate_linked_to'];
+        
+        $new_id = $this->emailtemplate_model->set_emailtemplate("add", NULL, $template_data);
+
+        if ($new_id) {
+            $alert = "Email template has been copied";
+            $status = "success";
+            $return_url = base_url("admin/emailtemplate/view");
+        } else {
+            $alert = "Error trying to add a copy of <b>" . $template_detail['emailtemplate_name'] . "</b> template to the database";
+            $status = "danger";
+            $return_url = base_url("admin/emailtemplate/view");
+        }
+
+        $this->session->set_flashdata([
+            'alert' => $alert,
+            'status' => $status,
+        ]);
+
+        redirect($return_url);
+        die();
     }
 
 }

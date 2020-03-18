@@ -13,12 +13,17 @@
                     // create table
                     $this->table->set_template(ftable('emailtemplates_table'));
                     $this->table->set_heading($heading);
-                    foreach ($emailtemplate_data as $data_entry) {    
+                    foreach ($emailtemplate_data as $data_entry) {
                         $action_array = [
                             [
                                 "url" => "/admin/emailtemplate/create/edit/" . $data_entry['emailtemplate_id'],
                                 "text" => "Edit",
                                 "icon" => "icon-pencil",
+                            ],
+                            [
+                                "url" => "/admin/emailtemplate/copy/" . $data_entry['emailtemplate_id'],
+                                "text" => "Copy",
+                                "icon" => "icon-share-alt",
                             ],
                             [
                                 "url" => "/admin/emailtemplate/delete/" . $data_entry['emailtemplate_id'],
@@ -28,7 +33,7 @@
                             ],
                         ];
                         $row['id'] = $data_entry['emailtemplate_id'];
-                        $row['name'] = $data_entry['emailtemplate_name'];
+                        $row['name'] = "<a href='/admin/emailtemplate/create/edit/" . $data_entry['emailtemplate_id'] . "'>" . $data_entry['emailtemplate_name'] . "</a>";
                         $row['linked_to'] = $data_entry['emailtemplate_linked_to'];
                         $row['actions'] = fbuttonActionGroup($action_array);
 
