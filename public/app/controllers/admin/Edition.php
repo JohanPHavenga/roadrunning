@@ -234,6 +234,7 @@ class Edition extends Admin_Controller {
                 $this->check_start_end_dates($old_edition_id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
                 // CEHCK TAGS
                 $this->set_tags($old_edition_id, $new_edition_detail, $race_data);
+                
                 // AUTO MAILER for INFO VERIFIED
                 if ($new_edition_detail['edition_info_status'] == 16) {
                     $this->auto_mailer(3, $old_edition_id);
@@ -244,8 +245,9 @@ class Edition extends Admin_Controller {
                 }
                 // AUTO MAILER for POSTPONED
                 if ($new_edition_detail['edition_status'] == 9) {
-                    $this->auto_mailer(8, $old_edition_id);
+                    $this->auto_mailer(9, $old_edition_id);
                 }
+                
             } else {
                 $alert = "Error committing to the database";
                 $status = "danger";
