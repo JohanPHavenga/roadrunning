@@ -142,7 +142,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
             <div class='alert alert-info' role='alert'>
                 <i class='fa fa-info-circle' aria-hidden='true'></i> 
-                <b>COVID-19:</b> All events has been cancelled or postponed. Add yourself to the mailing list of an event to receive updates
+                <b>COVID-19:</b> All events has been cancelled or postponed until further notice. Please add yourself to the mailing list of a particular event to receive updates
             </div>
 
             <!-- Header -->

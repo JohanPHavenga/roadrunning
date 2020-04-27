@@ -171,7 +171,10 @@
                                             ?>
                                         </div>
                                     </div>
-
+                            
+                                    <?php
+                                    if (isset($date_list[3])) {
+                                    ?>
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <?php
@@ -188,6 +191,7 @@
                                         </div>
                                     </div>
                                     <?php
+                                    }
                                 } else {
                                     ?>
                                     <div class="row">
