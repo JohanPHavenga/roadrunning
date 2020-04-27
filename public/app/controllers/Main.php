@@ -18,7 +18,7 @@ class Main extends Frontend_Controller {
 
         // featured events
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
             "limit" => "5",
         ];
@@ -26,7 +26,7 @@ class Main extends Frontend_Controller {
 //        wts($this->data_to_views['featured_events'],1);
         // upcoming events
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("9 days")), "edition_status" => 1],
             "order_by" => ["editions.edition_date" => "ASC"],
         ];
@@ -35,7 +35,7 @@ class Main extends Frontend_Controller {
 //        wts($this->data_to_views['upcoming_events'],true);
         // last edited
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 9]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "editions.updated_date > " => date("Y-m-d H:i:s", strtotime("-1 year"))],
             "order_by" => ["editions.updated_date" => "DESC"],
             "limit" => 10,
