@@ -31,14 +31,14 @@ class Contact extends Frontend_Controller {
         $this->data_to_views['meta_description'] = "Use the form on this page to send us an email";
         $this->data_to_views['form_url'] = '/contact';
         $this->data_to_views['error_url'] = '/contact';
-        
-        $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
-        
+
+        $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+
         // validation rules
         $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email');
-//        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
@@ -52,7 +52,7 @@ class Contact extends Frontend_Controller {
                 $email_data[$field] = $value;
             }
             $mail_id = $this->send_contact_email($email_data);
-            
+
             $this->session->set_flashdata([
                 'alert' => "Your contact email has been send",
                 'status' => "success",
@@ -63,8 +63,8 @@ class Contact extends Frontend_Controller {
             ]);
 
             redirect(base_url("contact/confirm"));
-            
-            
+
+
 //            $this->data_to_views['mail_id'] = $mail_id;
 //            $this->data_to_views['email'] = $this->input->post('user_email');
 //
@@ -88,14 +88,14 @@ class Contact extends Frontend_Controller {
             . "<b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
             . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
             . "<p style='padding-left: 15px; padding-bottom:0; margin: 20px 0; border-left: 4px solid #ccc;'><b>Comment:</b><br>" . nl2br($email_data['user_message']) . "</p>",
-            "subject" => "Enquiry from RoadRunning.co.za #". uniqid(),
+            "subject" => "Enquiry from RoadRunning.co.za #" . uniqid(),
             "from" => $email_data['user_email'],
-            "from_name" => $email_data['user_name']." ".$email_data['user_surname'],
-        ];        
+            "from_name" => $email_data['user_name'] . " " . $email_data['user_surname'],
+        ];
 //        echo $data['body'];
 //        wts($data,1);
         $this->set_email($data);
-        
+
         // send mail to user
         $data['to'] = $email_data['user_email'];
         $this->set_email($data);
@@ -113,7 +113,7 @@ class Contact extends Frontend_Controller {
             $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
             $this->data_to_views['cancel_url'] = base_url("event/" . $slug);
         }
-        $this->data_to_views['scripts_to_load']=["https://www.google.com/recaptcha/api.js"];
+        $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
 
         $this->data_to_views['edition_data'] = $this->edition_model->get_edition_detail($edition_sum['edition_id']);
 
@@ -164,18 +164,18 @@ class Contact extends Frontend_Controller {
 //            "to" => $edition_data['user_email'].",".$this->ini_array['email']['from_address_server'],
             "to" => $edition_data['user_email'],
             "cc" => $this->ini_array['email']['from_address_server'],
-            "subject" => $edition_data['annual_name']. " - Enquiry from RoadRunning.co.za #". uniqid(),
+            "subject" => $edition_data['annual_name'] . " - Enquiry from RoadRunning.co.za #" . uniqid(),
             "body" => "<p>Hello,</p>"
             . "<p>Please see below for an enquiry send from the "
             . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a> website "
-            . "by a runner enquiring about the <b>".$edition_data['edition_name']."</b> race:"
+            . "by a runner enquiring about the <b>" . $edition_data['edition_name'] . "</b> race:"
             . "<p><b>Name:</b> " . $email_data['user_name'] . " " . $email_data['user_surname'] . "<br>"
             . "<b>Email:</b> " . $email_data['user_email'] . "</p>"
             . "<p style='padding-left: 15px; padding-bottom: 0; margin: 20px 0; border-left: 4px solid #ccc;'><b>Query:</b><br> " . nl2br($email_data['user_message']) . "</p>"
-            . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/event/".$edition_data['edition_slug']."' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
+            . "<p>View the race listing <a href = 'https://www.roadrunning.co.za/event/" . $edition_data['edition_slug'] . "' style = 'color:#222222 !important;text-decoration:underline !important;'>here</a>."
             . "<br>Please reply to this email to answer the runner's query.</p>",
             "from" => $email_data['user_email'],
-            "from_name" => $email_data['user_name']." ".$email_data['user_surname'],
+            "from_name" => $email_data['user_name'] . " " . $email_data['user_surname'],
         ];
         // send mail to organiser
         $this->set_email($data);

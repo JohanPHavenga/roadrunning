@@ -1,11 +1,11 @@
 <?php
 if (!isset($page_title)) {
-    $page_title = "RoadRunning.co.za - Running without being chased";
+    $page_title = "RoadRunning.co.za - Run without being chased";
 } else {
 //    $page_title=$page_title." - RoadRunning.co.za";
 }
 if (!isset($meta_description)) {
-    $meta_description = "Listing of Road Running race information in South Africa. Presented in a uniform, easy to read and consume format.";
+    $meta_description = "Listing Road Running races all over South Africa, presented in a modern, uniform manner";
 }
 if (!isset($meta_robots)) {
     $meta_robots = "index";
