@@ -33,9 +33,11 @@
                         <?= fbuttonLink(base_url("admin/import/fill_temp/town"), "Import Towns", $town_id_btn); ?>
                         <?php
                         if ($town_id_btn == "default") {
-                            echo fbuttonLink(base_url("admin/import/fill_temp/gps"), "Get GPS", $gps_btn);
                             echo fbuttonLink(base_url("admin/import/fill_temp/user"), "Import Users", $user_id_btn); 
                             echo fbuttonLink(base_url("admin/import/fill_temp/club"), "Import Clubs", $club_id_btn);
+                        }                        
+                        if (($user_id_btn == "default") && ($town_id_btn == "default") && ($club_id_btn == "default")) {
+                            echo fbuttonLink(base_url("admin/import/fill_temp/gps"), "Get GPS", $gps_btn);                            
                         }
                         if ($club_id_btn == "default") {
                             echo fbuttonLink(base_url("admin/import/table/club_web"), "Import Clubs URLs", "default");
@@ -50,7 +52,7 @@
                     <div class='btn-group' style="margin: 10px 0 15px;">
                         <?php
                         
-                        if (($user_id_btn == "default") && ($town_id_btn == "default") && ($club_id_btn == "default")) {
+                        if (($user_id_btn == "default") && ($town_id_btn == "default") && ($club_id_btn == "default") && ($gps_btn == "default")) {
                             echo fbuttonLink(base_url("admin/import/table/event"), "Add Events", $event_id_btn);
                             if ($event_id_btn == "default") {
                                 echo fbuttonLink(base_url("admin/import/table/edition"), "Add Editions", $edition_id_btn);
