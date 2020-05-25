@@ -38,18 +38,12 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <meta name="description" content="<?= $meta_description; ?>">
         <meta name="robots" content="<?= $meta_robots; ?>" />
 
-
-        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.eot'); ?>" as="font">
-        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.svg'); ?>" as="font">
-        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.ttf'); ?>" as="font">
-        <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.woff'); ?>" as="font">
-
-        <link href="<?= base_url('assets/css/plugins.css'); ?>" rel="stylesheet" media="screen">
+<!--        <link href="<?= base_url('assets/css/plugins.css'); ?>" rel="stylesheet" media="screen">
         <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet" media="screen">
-        <link href="<?= base_url('assets/css/responsive.css'); ?>" rel="stylesheet" media="screen"> 
+        <link href="<?= base_url('assets/css/responsive.css'); ?>" rel="stylesheet" media="screen"> -->
 
         <!-- critical path css -->
-        <!--<link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet preload" type="text/css">-->
+        <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet preload" type="text/css">
         <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
 
         <link rel="apple-touch-icon" sizes="57x57" href="<?= base_url('assets/favicon/apple-icon-57x57.png'); ?>">

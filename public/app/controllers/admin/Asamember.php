@@ -141,45 +141,33 @@ class Asamember extends Admin_Controller {
             
             redirect($this->return_url);
         }
-    }
+    }    
+    
+    public function delete($asa_member_id = 0) {
 
-
-    public function delete($confirm=false) {
-
-        $id=$this->encryption->decrypt($this->input->post('asa_member_id'));
-
-        if ($id==0) {
-            $this->session->set_flashdata('alert', 'Cannot delete record: '.$id);
+        if (($asa_member_id == 0) AND ( !is_int($asa_member_id))) {
+            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $asa_member_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
             die();
         }
 
-        if ($confirm=='confirm')
-        {
-            $db_del=$this->asamember_model->remove_asamember($id);
-            if ($db_del)
-            {
-                $msg="ASA Member has been deleted";
-                $status="success";
-            }
-            else
-            {
-                $msg="Error committing to the database ID:'.$id";
-                $status="danger";
-            }
+        // get detail for nice delete message
+        $member_detail = $this->asamember_model->get_asamember_detail($asa_member_id);
+        // delete record
+        $db_del = $this->asamember_model->remove_asamember($asa_member_id);
 
-            $this->session->set_flashdata('alert', $msg);
-            $this->session->set_flashdata('status', $status);
-            redirect($this->return_url);
+        if ($db_del) {
+            $msg = "ASA Memeber has successfully been removed: " . $member_detail['asa_member_name'];
+            $status = "success";
+        } else {
+            $msg = "Error in deleting the record:'.$asa_member_id";
+            $status = "danger";
         }
-        else
-        {
-            $this->session->set_flashdata('alert', 'Cannot delete record');
-            $this->session->set_flashdata('status', 'danger');
-            redirect($this->return_url);
-            die();
-        }
+
+        $this->session->set_flashdata('alert', $msg);
+        $this->session->set_flashdata('status', $status);
+        redirect($this->return_url);
     }
 
 }
