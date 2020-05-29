@@ -38,7 +38,7 @@
                 echo form_input([
                         'name'          => 'asa_member_url',
                         'id'            => 'asa_member_url',
-                        'value'         => set_value('asa_member_name', @$asamember_detail['asa_member_url']),
+                        'value'         => set_value('asa_member_url', @$asamember_detail['asa_member_url']),
                         'class'         => 'form-control',
                     ]);
 

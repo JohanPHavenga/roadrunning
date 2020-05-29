@@ -1,7 +1,9 @@
 <?php
-$img_url = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/" . $edition_data['edition_gps'] . "/14?mapSize=1920,161&format=png&key=An56kGemZ2QHt-SqwYx3fi9E89M_lMQDqODLp55fEnUejV10d2fH9jkrlUoC6xlS";
-//$img_url = "https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=TfJdtiWUXW_RiwrtcR0gi6CFDpx2OEBOmSYGORDmx48&c=". $edition_data['edition_gps']."&z=13&nodot&h=161&w=1920&r=10k&sb=mk&t=2";
+//$img_url = "https://dev.virtualearth.net/REST/V1/Imagery/Map/Road/" . $edition_data['edition_gps'] . "/14?mapSize=1920,161&format=png&key=An56kGemZ2QHt-SqwYx3fi9E89M_lMQDqODLp55fEnUejV10d2fH9jkrlUoC6xlS";
+$img_url = "https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=TfJdtiWUXW_RiwrtcR0gi6CFDpx2OEBOmSYGORDmx48&c=". $edition_data['edition_gps']."&z=13&nodot&h=161&w=1920&r=10k&sb=mk&t=2";
 //$img_url = "https://maps.googleapis.com/maps/api/staticmap?center=". urlencode($edition_data['edition_address']) . "," . urlencode($edition_data['town_name']) ."&zoom=13&size=161x1920&maptype=roadmap&key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw";
+
+//wts($img_url,1);
 
 $page_title = $edition_data['event_name'];
 $page_sub_title = fdateHumanFull($edition_data['edition_date']);

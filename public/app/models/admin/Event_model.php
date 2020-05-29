@@ -552,7 +552,10 @@ class Event_model extends Admin_model {
         $this->db->where("(edition_date BETWEEN '" . $date_from . "' AND '" . $date_to . "')");
         $this->db->where("edition_remove_audit",0);
         $this->db->order_by("edition_date", "ASC");
-
+        
+//        echo $this->db->get_compiled_select();
+//        die();
+        
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

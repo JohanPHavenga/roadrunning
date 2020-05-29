@@ -104,7 +104,7 @@ class Asamember extends Admin_Controller {
         // set validation rules
         $this->form_validation->set_rules('asa_member_name', 'ASA Member Name', 'required');
         $this->form_validation->set_rules('asa_member_abbr', 'ASA Member Abbreviation', 'required');
-        $this->form_validation->set_rules('asa_member_url', 'ASA Member URL', 'required');
+//        $this->form_validation->set_rules('asa_member_url', 'ASA Member URL', 'required');
         $this->form_validation->set_rules('asa_member_status', 'ASA Member Status', 'required');
 
         // load correct view
