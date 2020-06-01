@@ -18,9 +18,16 @@ class Province extends Frontend_Controller {
     }
     
     public function list() { 
+        $this->load->model('edition_model');
         $this->data_to_views['banner_img'] = "run_04";
         $this->data_to_views['banner_pos'] = "20%";
-        $this->data_to_views['page_title'] = "Province List";
+        $this->data_to_views['page_title'] = "Province List";        
+        
+        foreach ($this->session->province_pages as $province_id=>$province) {
+            $province_count=$this->edition_model->edition_count($province_id);
+            $this->data_to_views['province_list'][$province_id]=$province;
+            $this->data_to_views['province_list'][$province_id]['edition_count']=$province_count;
+        }
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -28,7 +35,7 @@ class Province extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function calendar($slug) {   
+    public function calendar($slug="index") {   
         $this->load->model('edition_model');
         $this->load->model('race_model');
         // as daar nie 'n province naam deurgestuur word nie

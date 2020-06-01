@@ -58,7 +58,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             }
                             ?>
                             <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
-                            <li><a href='<?= base_url('old'); ?>'>Back to old site</a></li>
+                            <!--<li><a href='<?= base_url('old'); ?>'>Back to old site</a></li>-->
                         </ul>
                     </div>
                     <!-- end: Footer PAGES --> 
@@ -78,7 +78,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                 echo "</a></li>";
                             }
                             ?>
-                            <li><a href='<?= $this->session->static_pages['featured-regions']['loc']; ?>'><?= $this->session->static_pages['featured-regions']['display']; ?></a></li>
+                            <li><a href='<?= $this->session->static_pages['featured-regions']['loc']; ?>'>
+                                <?= $this->session->static_pages['featured-regions']['display']; ?> <span class='badge badge-danger'>VIEW</span>
+                                </a></li>
                             <li><a href='<?= base_url('region/switch'); ?>'>Switch Regions</a></li>
                         </ul>
                     </div>

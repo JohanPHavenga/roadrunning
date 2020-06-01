@@ -300,4 +300,24 @@ class Edition_model extends Frontend_model {
         }
     }
 
+    public function edition_count($province_id, $region_id = false, $show_query = false) {
+
+        $this->db->from('editions');
+        $this->db->join('events', 'event_id');
+        $this->db->join('towns', 'town_id');
+        $this->db->join('regions', 'region_id');
+        $this->db->join('provinces', 'regions.province_id=provinces.province_id');
+        $this->db->where("edition_date >= ", date("Y-m-d H:i:s"));
+//        $this->db->where("edition_status", 1);
+        $this->db->where("provinces.province_id", $province_id);
+        if ($region_id) {
+            $this->db->where("regions.region_id", $region_id);
+        }
+
+        if ($show_query) {
+            die($this->db->get_compiled_select());
+        }
+        return $this->db->count_all_results(); 
+    }
+
 }

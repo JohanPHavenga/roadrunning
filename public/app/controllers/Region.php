@@ -16,16 +16,36 @@ class Region extends Frontend_Controller {
             $this->calendar($method, $params = array());
         }
     }
+    
+    function add_edition_count($region_list) {
+        foreach ($region_list as $province_id => $province) {
+            $province_count = $this->edition_model->edition_count($province_id);
+            $return_list[$province_id]=$province;
+            $return_list[$province_id]['province_count']=$province_count;
+            foreach ($province['region_list'] as $region_id => $region) {
+                $region_count = $this->edition_model->edition_count($province_id, $region_id);
+                $return_list[$province_id]['region_list'][$region_id] = $region;
+                $return_list[$province_id]['region_list'][$region_id]['region_count'] = $region_count;
+            }
+        }
+        
+        return $return_list;
+    }
 
     public function list() {
+        $this->load->model('edition_model');
+
         $this->data_to_views['banner_img'] = "run_04";
         $this->data_to_views['banner_pos'] = "20%";
         $this->data_to_views['page_title'] = "Region List";
         $this->data_to_views['meta_description'] = "List of all available regions and running races in them";
 
-        $this->data_to_views['region_list'] = $this->region_model->get_region_list(true);
-        unset($this->data_to_views['region_list']["No Province"]);
-//        wts($this->data_to_views['region_list'],1);
+        $region_list = $this->region_model->get_region_list(true);
+        unset($region_list["No Province"]);
+//        wts($region_list, 1);
+        $this->data_to_views['region_list']=$this->add_edition_count($region_list);
+        
+//        wts($this->data_to_views['region_list'], 1);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -39,7 +59,7 @@ class Region extends Frontend_Controller {
         // as daar nie 'n region naam deurgestuur word nie
         if ($slug == "index") {
             redirect("/region/list");
-        } 
+        }
 
         $query_params["where"] = ["edition_date >= " => date("Y-m-d H:i:s")];
         $query_params["order_by"] = ["edition_date" => "ASC"];
@@ -77,7 +97,7 @@ class Region extends Frontend_Controller {
             $region_pages = $this->session->region_pages;
             $region_name = $region_pages[$region_id]['display'];
             // set search form
-            $this->data_to_views['where']="reg_".$region_id;
+            $this->data_to_views['where'] = "reg_" . $region_id;
         }
         // kry al die editions vir die provinsie 
         $query_params["where_in"] = ["regions.region_id" => $region_id_arr];
@@ -97,8 +117,9 @@ class Region extends Frontend_Controller {
         }
         $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region";
 
-        // GET REGION LIST FOR FOOTER        
-        $this->data_to_views['region_by_province_list'] = $this->region_model->get_region_list(true);
+        // GET REGION LIST FOR FOOTER
+        $region_list=$this->region_model->get_region_list(true);;
+        $this->data_to_views['region_by_province_list'] = $this->add_edition_count($region_list);
 
         // check cookie vir listing preference.
         if (get_cookie("listing_pref") == "grid") {

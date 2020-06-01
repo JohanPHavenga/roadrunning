@@ -137,11 +137,8 @@ EOT;
     }
 
     public function int_phone($phone) {
-        $phone = trim($phone);
-        $phone = str_replace("  ", "", $phone);
-        $phone = str_replace(" ", "", $phone);
-        $phone = str_replace("-", "", $phone);
-        return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
+        $p_replace = str_replace("-", "", str_replace(" ", "", str_replace("  ", "", trim($phone))));
+        return preg_replace('/^(?:\+?27|0)?/', '+27', $p_replace);
     }
 
     // API CALL
@@ -456,13 +453,6 @@ class Frontend_Controller extends MY_Controller {
                         "changefreq" => "daily",
                         "badge" => "POPULAR",
                     ],
-//                    "per_region" => [
-//                        "display" => "Per Region",
-//                        "loc" => base_url("race/per-region"),
-//                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
-//                        "priority" => 1,
-//                        "changefreq" => "daily",
-//                    ],
                     "featured" => [
                         "display" => "Featured",
                         "loc" => base_url("race/featured"),
@@ -484,13 +474,13 @@ class Frontend_Controller extends MY_Controller {
                         "priority" => 0.8,
                         "changefreq" => "daily",
                     ],
-//                    "add-listing" => [
-//                        "display" => "Add Listing",
-//                        "loc" => base_url("race/add"), //calendar/past
-//                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 month")),
-//                        "priority" => 0.8,
-//                        "changefreq" => "daily",
-//                    ],
+                    "province" => [
+                        "display" => "Per Province",
+                        "loc" => base_url("province/list"), //calendar/past
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "daily",
+                    ],
                     "training" => [
                         "display" => "Training Programs",
                         "loc" => base_url("training-programs"),
@@ -591,7 +581,7 @@ class Frontend_Controller extends MY_Controller {
                 "priority" => 0.8,
                 "changefreq" => "monthly",
                 "sub-menu" => [
-                    "upcoming" => [
+                    "cape-town" => [
                         "display" => "Cape Town",
                         "loc" => base_url("region/capetown"),
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),

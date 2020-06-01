@@ -7,11 +7,16 @@
                 <p>Below find a list of provinces that have races list in them. Click on them to view races in that province<p>
                 <ul>
                     <?php
-                    foreach ($this->session->province_pages as $province) {
-                        echo "<li><a href='" . $province['loc'] . "'>" . $province['display'] . "</a></li>";
+                    foreach ($province_list as $province) {
+                        echo "<li><a href='" . $province['loc'] . "'>" . $province['display'] . "</a> (".$province['edition_count'].")</li>";
                     }
                     ?>
                 </ul>
+                <a class="btn btn-default m-t-20" href="<?=base_url("region/list");?>">View region breakdown</a>
+                
+                <?php
+//                wts($province_list);
+                ?>
             </div>
             <!-- end: Content-->
 

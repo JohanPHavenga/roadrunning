@@ -13,7 +13,7 @@ class Region_model extends Frontend_model {
 
     public function get_region_list($by_province=false) {
 
-        $this->db->select("regions.*,province_name");
+        $this->db->select("regions.*,provinces.*");
         $this->db->join('provinces', 'province_id');
         $this->db->from("regions");
         $this->db->where('province_id !=', 12);
@@ -26,7 +26,11 @@ class Region_model extends Frontend_model {
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 if ($by_province) {
-                    $data[$row['province_name']][$row['region_name']] = $row;
+                    $data[$row['province_id']]['province_id']=$row['province_id'];
+                    $data[$row['province_id']]['province_name']=$row['province_name'];
+                    $data[$row['province_id']]['province_slug']=$row['province_slug'];
+                    $data[$row['province_id']]['province_abbr']=$row['province_abbr'];
+                    $data[$row['province_id']]['region_list'][$row['region_id']] = $row;
                 } else {
                     $data[$row['region_id']] = $row;
                 }

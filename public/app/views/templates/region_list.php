@@ -10,7 +10,7 @@
         <div class="row">
             <?php
             $count = 0;
-            foreach ($region_by_province_list as $province_name => $region_list) {
+            foreach ($region_by_province_list as $province_id => $province) {
                 if ($count == 0) {
                     ?>
                     <div class="col-lg-4">
@@ -19,12 +19,12 @@
                         }
                         ?>
                         <div class="ac-item">
-                            <h5 class="ac-title"><?= $province_name; ?></h5>
+                            <h5 class="ac-title"><?= $province['province_name']; ?><br><span style="font-size: 0.8em; color: #999;"><?= $province['province_count']; ?> upcoming races</span></h5>
                             <div class="ac-content">
                                 <ul class="list">
                                     <?php
-                                    foreach ($region_list as $region) {
-                                        echo '<li><a href="' . base_url("region/" . $region['region_slug']) . '">' . $region["region_name"] . '</a></li>';
+                                    foreach ($province['region_list'] as $region) {
+                                        echo '<li><a href="' . base_url("region/" . $region['region_slug']) . '">' . $region["region_name"] . '</a> ('.$region["region_count"].')</li>';
                                     }
                                     ?>
                                 </ul>
