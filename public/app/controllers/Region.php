@@ -16,19 +16,19 @@ class Region extends Frontend_Controller {
             $this->calendar($method, $params = array());
         }
     }
-    
+
     function add_edition_count($region_list) {
         foreach ($region_list as $province_id => $province) {
             $province_count = $this->edition_model->edition_count($province_id);
-            $return_list[$province_id]=$province;
-            $return_list[$province_id]['province_count']=$province_count;
+            $return_list[$province_id] = $province;
+            $return_list[$province_id]['province_count'] = $province_count;
             foreach ($province['region_list'] as $region_id => $region) {
                 $region_count = $this->edition_model->edition_count($province_id, $region_id);
                 $return_list[$province_id]['region_list'][$region_id] = $region;
                 $return_list[$province_id]['region_list'][$region_id]['region_count'] = $region_count;
             }
         }
-        
+
         return $return_list;
     }
 
@@ -43,8 +43,8 @@ class Region extends Frontend_Controller {
         $region_list = $this->region_model->get_region_list(true);
         unset($region_list["No Province"]);
 //        wts($region_list, 1);
-        $this->data_to_views['region_list']=$this->add_edition_count($region_list);
-        
+        $this->data_to_views['region_list'] = $this->add_edition_count($region_list);
+
 //        wts($this->data_to_views['region_list'], 1);
 
         $this->load->view($this->header_url, $this->data_to_views);
@@ -54,6 +54,9 @@ class Region extends Frontend_Controller {
     }
 
     public function calendar($slug) {
+
+        $slug = strtolower($slug);
+
         $this->load->model('edition_model');
         $this->load->model('race_model');
         // as daar nie 'n region naam deurgestuur word nie
@@ -67,39 +70,46 @@ class Region extends Frontend_Controller {
         // setup array for special regions
         $special_arr = ["capetown", "cape-town", "gauteng", "kzn-coast", "kzncoast", "gardenroute", "garden-route"];
         if (in_array(strtolower($slug), $special_arr)) {
-
             switch ($slug) {
                 case "capetown":
                 case "cape-town":
                     $region_id_arr = [2, 3, 4, 5, 6, 63];
                     $region_name = "Cape Town";
                     $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
+                    $province_name="Western Cape";
                     break;
                 case "gauteng":
                     $region_id_arr = [26, 27, 28, 29, 30];
-                    $region_name = "Gauteng";
+                    $region_name = "greater";
+                    $province_name="Gauteng";
                     break;
                 case "kzncoast":
                 case "kzn-coast":
                     $region_id_arr = [35, 32];
-                    $region_name = "KwaZulu-Natal Coast";
+                    $region_name = "the Coastal";
                     $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
+                    $province_name="KwaZulu-Natal";
                     break;
                 case "garden-route":
                 case "gardenroute":
                     $region_id_arr = [62];
                     $region_name = "Garden Route";
+                    $province_name="Western Cape";
                     break;
             }
         } else {
             $region_id = $this->region_model->get_region_id_from_slug($slug);
+            $region=$this->region_model->get_region_detail($region_id);
             $region_id_arr = [$region_id];
-            $region_pages = $this->session->region_pages;
-            $region_name = $region_pages[$region_id]['display'];
+            $region_name = $region['region_name'];
+            $province_name = $region['province_name'];
             // set search form
             $this->data_to_views['where'] = "reg_" . $region_id;
         }
-        // kry al die editions vir die provinsie 
+
+//        wts($region_id_arr, 1);
+
+        // kry al die editions vir die region 
         $query_params["where_in"] = ["regions.region_id" => $region_id_arr];
 
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
@@ -108,17 +118,17 @@ class Region extends Frontend_Controller {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
             }
             $region_pages = $this->session->region_pages;
-            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region";
+            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of ". $province_name;
         } else {
             if (!isset($region_name)) {
                 $region_name = ucwords(str_replace("-", " ", $slug));
             }
-            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region";
+            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of ". $province_name;
         }
-        $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region";
+        $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region with in the ". $province_name ." province of South Africa";
 
         // GET REGION LIST FOR FOOTER
-        $region_list=$this->region_model->get_region_list(true);;
+        $region_list = $this->region_model->get_region_list(true);
         $this->data_to_views['region_by_province_list'] = $this->add_edition_count($region_list);
 
         // check cookie vir listing preference.
