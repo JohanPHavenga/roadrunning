@@ -192,12 +192,17 @@ class User extends Frontend_Controller {
                 }
                 break;
             case "newsletter":
-                $return_url = base_url("newsletter");
+                if (empty($this->logged_in_user)) {
+                    $return_url = base_url("newsletter");
+                } else {
+                    $return_url = base_url("user/my-subscriptions");
+                }
                 $this->data_to_views['form_url'] = base_url('user/subscribe/newsletter');
-                $this->data_to_views['cancel_url'] = $return_url;
+                $this->data_to_views['cancel_url'] = base_url("newsletter");
                 $this->data_to_views['page_title'] = "Newsletter Subscriptions";
                 $this->data_to_views['meta_description'] = "User subscription to the monthly newsletter";
                 $linked_to_id = 0;
+                
                 break;
             default:
                 break;
@@ -262,19 +267,30 @@ class User extends Frontend_Controller {
             'status' => "danger",
             'icon' => "minus-circle",
         ]);
+
         // check if the subscription exists
         if ($this->usersubscription_model->exists($user_id, $linked_to, $linked_id)) {
             $remove = $this->usersubscription_model->remove_usersubscription($user_id, $linked_to, $linked_id);
             if ($remove) {
                 $this->session->set_flashdata([
-                    'alert' => "Subscription successfully removed.",
+                    'alert' => "Your hace successfully been removed from the mailing list.",
                     'status' => "success",
                     'icon' => "minus-circle",
                 ]);
             }
         }
 
-        redirect(base_url("user/my-subscriptions"));
+        // check if logged in, then redirect to my-subscriptions, else, go to edition that is being unsubscribed from, or newsletter page
+        if (empty($this->logged_in_user)) {
+            if ($linked_to == "edition") {
+                $this->load->model('edition_model');
+                $slug = $this->edition_model->get_edition_slug($linked_id);
+                redirect(base_url("event/" . $slug));
+            }
+            redirect(base_url("newsletter"));
+        } else {
+            redirect(base_url("user/my-subscriptions"));
+        }
     }
 
     // REGISTER 
