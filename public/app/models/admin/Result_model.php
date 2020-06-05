@@ -35,13 +35,19 @@ class Result_model extends Admin_model {
         return $field_arr;
     }
 
-    public function get_result_list() {
-        $this->db->select("results.*, race_distance, edition_date, event_name, racetype_abbr");
+    public function get_result_list($race_id=null) {
+        $this->db->select("results.*, race_name, race_distance, edition_name, edition_date, event_name, racetype_abbr");
         $this->db->from($this->table);
         $this->db->join('races', 'race_id');
         $this->db->join('racetypes', 'racetype_id');
         $this->db->join('editions', 'edition_id');
         $this->db->join('events', 'event_id', 'left');
+        if ($race_id) {
+            $this->db->where('race_id', $race_id);
+        } else {
+            $this->db->limit(1000);
+        }
+        $this->db->order_by('edition_date', 'DESC');
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -49,7 +55,7 @@ class Result_model extends Admin_model {
                 $data[$row['result_id']] = $row;
                 $distance = str_pad(round($row['race_distance'], 0), 2, '0', STR_PAD_LEFT);
                 $year = date('Y', strtotime($row['edition_date']));
-                $data[$row['result_id']]['race_name'] = $row['event_name'] . " | " . $year . " | " . $distance . " km | " . $row['racetype_abbr'];
+                $data[$row['result_id']]['race_sum'] = $row['event_name'] . " | " . $year . " | " . $distance . " km | " . $row['racetype_abbr'];
             }
             return $data;
         }

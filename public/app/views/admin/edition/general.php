@@ -14,7 +14,7 @@
         <!-- EDITION NAME -->
         <div class='form-group'>
             <div class='row'>
-                <div class='col-sm-7'>
+                <div class='col-sm-12 col-md-7'>
                     <?php
                     echo form_label('Edition Name <span class="compulsary">*</span>', 'edition_name');
                     echo form_input([
@@ -31,7 +31,7 @@
                         'type' => 'hidden',
                     ]);
                     ?>
-                    <p class='help-block' style='font-style: italic;'> Remember the <b>year</b> at the end of the edition name </p>
+                    <p class='help-block' style='font-style: italic;'> Remember the <b>year</b> at the end</p>
 
                     <?php
                     // EVENT INPUT ON ADD
@@ -52,17 +52,17 @@
                     }
                     ?>
                     <div class='row'>
-                        <div class='col-sm-6'>
+                        <div class='col-sm-12 col-md-12 col-lg-6'>
                             <?php
                             // EDITION STATUS    
                             echo form_label('Edition Status <span class="compulsary">*</span>', 'edition_status');
-                            echo form_dropdown('edition_status', $status_dropdown, set_value('edition_status', $edition_detail['edition_status']), ["id" => "edition_status", "class" => "form-control input-small"]);
+                            echo form_dropdown('edition_status', $status_dropdown, set_value('edition_status', $edition_detail['edition_status']), ["id" => "edition_status", "class" => "form-control"]);
                             ?>
                         </div>
-                        <div class='col-sm-6'>
+                        <div class='col-sm-12 col-md-12 col-lg-6'>
                             <?php
-                            echo form_label('Information Status <span class="compulsary">*</span>', 'edition_info_status');
-                            echo form_dropdown('edition_info_status', $info_status_dropdown, set_value('edition_info_status', $edition_detail['edition_info_status']), ["id" => "edition_info_status", "class" => "form-control input-small"]);
+                            echo form_label('Info Status <span class="compulsary">*</span>', 'edition_info_status');
+                            echo form_dropdown('edition_info_status', $info_status_dropdown, set_value('edition_info_status', $edition_detail['edition_info_status']), ["id" => "edition_info_status", "class" => "form-control"]);
                             ?>
                         </div>
                     </div>
@@ -192,7 +192,7 @@
                             ["id" => "entrytype_id", "class" => "form-control", "size" => 5]);
                     ?>
                 </div>
-                <div class='col-sm-3'>
+                <div class='col-sm-4'>
                     <?php
                     echo form_label('Registration Types', 'reg_types');
                     echo form_multiselect('regtype_id[]', $regtype_dropdown, set_value('regtype_id', $regtype_list),

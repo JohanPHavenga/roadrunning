@@ -23,7 +23,7 @@
             ?>
             <div class="form-group">
                 <div class="row">
-                    <div class='col-sm-3'>
+                    <div class='col-sm-3 col-md-6'>
                         <?php
                         $field = "date_start";
                         $display = "Start";
@@ -41,7 +41,7 @@
                         echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
                         ?>
                     </div>
-                    <div class='col-sm-3'>
+                    <div class='col-sm-3 col-md-6'>
                         <?php
                         $field = "date_end";
                         $display = "End";
@@ -63,18 +63,21 @@
                         echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
                         ?>
                     </div>
-                    <?php
-                    // =====================================================================
-                    // ON THE DAY ENTRY
-                    // =====================================================================
-                    if (in_array(1, $entrytype_list)) {
-                        $dateype_id = 6;
-                        if (isset($date_list_by_type[$dateype_id])) {
-                            $date_detail = $date_list_by_type[$dateype_id][0];
-                            $date_id = $date_detail['date_id'];
-                            ?>
-                            <div class='col-sm-1'></div>
-                            <div class='col-sm-2'>
+                </div>
+            </div>
+            <?php
+            // =====================================================================
+            // ON THE DAY ENTRY
+            // =====================================================================
+            if (in_array(1, $entrytype_list)) {
+                $dateype_id = 6;
+                if (isset($date_list_by_type[$dateype_id])) {
+                    $date_detail = $date_list_by_type[$dateype_id][0];
+                    $date_id = $date_detail['date_id'];
+                    ?>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class='col-sm-2 col-md-3'>
                                 <?php
                                 $field = "date_start";
                                 $display = "Open";
@@ -96,7 +99,7 @@
                                 echo '<span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button></div>';
                                 ?>
                             </div>
-                            <div class='col-sm-2'>
+                            <div class='col-sm-2 col-md-3'>
                                 <?php
                                 $field = "date_end";
                                 $display = "Close";
@@ -118,12 +121,12 @@
                                 echo '<span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button></div>';
                                 ?>
                             </div>
-                            <?php
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
             <?php
         } else {
             echo "<div class='note note-danger' role='alert'><b>EDITION DATES</b> NOT LOADED</div>";
@@ -139,7 +142,7 @@
                 ?>
                 <div class="form-group">
                     <div class="row">
-                        <div class='col-sm-4'>
+                        <div class='col-sm-6'>
                             <?php
                             $field = "date_start";
                             $display = "Open";
@@ -161,7 +164,7 @@
                             echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
                             ?>
                         </div>
-                        <div class='col-sm-4'>
+                        <div class='col-sm-6'>
                             <?php
                             $field = "date_end";
                             $display = "Close";
@@ -223,7 +226,7 @@
 //                            echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
                         ?>
                         <!--</div>-->
-                        <div class='col-sm-4'>
+                        <div class='col-sm-6'>
                             <?php
                             $field = "date_end";
                             $display = "Close";
@@ -245,7 +248,7 @@
                             echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
                             ?>
                         </div>
-                        <div class='col-sm-5'>
+                        <div class='col-sm-6'>
                             <?php
                             // venue_id on open date
                             $field = "venue_id";
@@ -285,75 +288,81 @@
                     foreach ($date_list_by_type[$dateype_id] as $date_detail) {
                         $date_id = $date_detail['date_id'];
                         ?>
+                        <div class="form-group">
 
-                        <div class="row">
-                            <div class='col-sm-4'>
-                                <?php
-                                $field = "date_start";
-                                $display = "Open";
-                                $error_value = $edition_detail['edition_date'];
-                                $field_id = $field . "_" . $date_id;
-                                $field_name = 'dates[' . $date_id . '][' . $field . ']';
-                                echo form_label($display, $field_id);
-                                $form_input_array = [
-                                    'name' => 'dates[' . $date_id . '][' . $field . ']',
-                                    'id' => $field_id,
-                                    'class' => 'form-control form_datetime',
-                                    'value' => set_value($field_name, fdateLong($date_detail[$field], false)),
-                                ];
-                                if ($date_detail[$field] == $error_value) {
-                                    $form_input_array['class'] = $form_input_array['class'] . " danger";
-                                }
-                                echo '<div class="input-group">';
-                                echo form_input($form_input_array);
-                                echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
-                                ?>
-                            </div>
-                            <div class='col-sm-2'>
-                                <?php
-                                $field = "date_end";
-                                $display = "Close";
-                                $error_value = strtotime($date_detail["date_start"]);
-                                $field_id = $field . "_" . $date_id;
-                                $field_name = 'dates[' . $date_id . '][' . $field . ']';
-                                echo form_label($display, $field_id);
-                                $form_input_array = [
-                                    'name' => 'dates[' . $date_id . '][' . $field . ']',
-                                    'id' => $field_id,
-                                    'class' => 'form-control timepicker timepicker-24 input-xsmall',
-                                    'value' => set_value($field_name, ftimeSort($date_detail[$field])),
-                                ];
-                                if (strtotime($date_detail[$field]) <= $error_value) {
-                                    $form_input_array['class'] = $form_input_array['class'] . " danger";
-                                }
-                                echo '<div class="input-group input-xsmall">';
-                                echo form_input($form_input_array);
-                                echo '<span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button></div>';
-                                ?>
-                            </div>
-                            <div class='col-sm-4'>
-                                <?php
-                                // venue_id on open date
-                                $field = "venue_id";
-                                $field_id = $field . "_" . $date_id;
-                                $field_name = 'dates[' . $date_id . '][' . $field . ']';
-                                echo form_label("Venue", $field_id);
-                                echo form_dropdown(
-                                        'dates[' . $date_id . '][' . $field . ']',
-                                        $venue_dropdown,
-                                        set_value($field_name, $date_detail['venue_id']),
-                                        ["id" => $field_id, "class" => "form-control"]
-                                );
-                                ?>
-                            </div>
-                            <div class='col-sm-2'>
-                                <div class='btn-group' style="position: relative; top:28px;">
+                            <div class="row">
+                                <div class='col-sm-1'></div>
+                                <div class='col-sm-6'>
                                     <?php
-                                    echo fbutton("<i class='fa fa-copy white'></i>", "submit", "primary", "sm", "copy_date", "/admin/date/copy/" . $date_id . "/dates_entry_flat");
-//                                echo fbuttonLink("/admin/date/copy/" . $date_id . "/dates_entry_flat", "<i class='fa fa-copy white'></i>", "info", "sm");
-                                    $confirm = "data-toggle='confirmation' data-original-title='Are you sure ?' data-placement='top'";
-                                    echo fbuttonLink("/admin/date/delete/" . $date_id . "/dates_entry_flat", "<i class='fa fa-times-circle white'></i>", "danger", "sm", $confirm);
+                                    $field = "date_start";
+                                    $display = "Open";
+                                    $error_value = $edition_detail['edition_date'];
+                                    $field_id = $field . "_" . $date_id;
+                                    $field_name = 'dates[' . $date_id . '][' . $field . ']';
+                                    echo form_label($display, $field_id);
+                                    $form_input_array = [
+                                        'name' => 'dates[' . $date_id . '][' . $field . ']',
+                                        'id' => $field_id,
+                                        'class' => 'form-control form_datetime',
+                                        'value' => set_value($field_name, fdateLong($date_detail[$field], false)),
+                                    ];
+                                    if ($date_detail[$field] == $error_value) {
+                                        $form_input_array['class'] = $form_input_array['class'] . " danger";
+                                    }
+                                    echo '<div class="input-group">';
+                                    echo form_input($form_input_array);
+                                    echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
                                     ?>
+                                </div>
+                                <div class='col-sm-2'>
+                                    <?php
+                                    $field = "date_end";
+                                    $display = "Close";
+                                    $error_value = strtotime($date_detail["date_start"]);
+                                    $field_id = $field . "_" . $date_id;
+                                    $field_name = 'dates[' . $date_id . '][' . $field . ']';
+                                    echo form_label($display, $field_id);
+                                    $form_input_array = [
+                                        'name' => 'dates[' . $date_id . '][' . $field . ']',
+                                        'id' => $field_id,
+                                        'class' => 'form-control timepicker timepicker-24 input-xsmall',
+                                        'value' => set_value($field_name, ftimeSort($date_detail[$field])),
+                                    ];
+                                    if (strtotime($date_detail[$field]) <= $error_value) {
+                                        $form_input_array['class'] = $form_input_array['class'] . " danger";
+                                    }
+                                    echo '<div class="input-group input-xsmall">';
+                                    echo form_input($form_input_array);
+                                    echo '<span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button></div>';
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class='col-sm-1'></div>
+                                <div class='col-sm-8'>
+                                    <?php
+                                    // venue_id on open date
+                                    $field = "venue_id";
+                                    $field_id = $field . "_" . $date_id;
+                                    $field_name = 'dates[' . $date_id . '][' . $field . ']';
+                                    echo form_label("Venue", $field_id);
+                                    echo form_dropdown(
+                                            'dates[' . $date_id . '][' . $field . ']',
+                                            $venue_dropdown,
+                                            set_value($field_name, $date_detail['venue_id']),
+                                            ["id" => $field_id, "class" => "form-control"]
+                                    );
+                                    ?>
+                                </div>
+                                <div class='col-sm-3'>
+                                    <div class='btn-group' style="position: relative; top:28px;">
+                                        <?php
+                                        echo fbutton("<i class='fa fa-copy white'></i>", "submit", "primary", "sm", "copy_date", "/admin/date/copy/" . $date_id . "/dates_entry_flat");
+//                                echo fbuttonLink("/admin/date/copy/" . $date_id . "/dates_entry_flat", "<i class='fa fa-copy white'></i>", "info", "sm");
+                                        $confirm = "data-toggle='confirmation' data-original-title='Are you sure ?' data-placement='top'";
+                                        echo fbuttonLink("/admin/date/delete/" . $date_id . "/dates_entry_flat", "<i class='fa fa-times-circle white'></i>", "danger", "sm", $confirm);
+                                        ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -366,6 +375,24 @@
                 echo "<div class='note note-danger' role='alert'><b>PRE ENTRY DATES</b> NOT LOADED</div>";
             }
         }
+        ?>
+    </div>
+</div>
+<div class="portlet light" id="dates_entry_flat">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-edit font-dark"></i>
+            <span class="caption-subject font-dark bold uppercase">ADDITIONAL ENTRY DETAILS</span>
+        </div>
+        <div class='btn-group pull-right'>
+            <?php
+            echo fbutton("Apply", "submit", "primary", null, "save_only", "dates_entry_flat");
+//            echo fbuttonLink("/admin/date/create/add/" . $edition_detail['edition_id'] . "/edition", "Add Date", "info");
+            ?>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <?php
         // =====================================================================
         // ENTRY FLAGS
         // =====================================================================
@@ -438,7 +465,7 @@
                 // =====================================================================
                 if ($edition_detail['edition_entry_nosubstitution']) {
                     ?>              
-                    <div class='col-sm-5'>
+                    <div class='col-sm-6'>
                         <?php
                         $dateype_id = 7;
                         if (isset($date_list_by_type[$dateype_id])) {
@@ -472,7 +499,7 @@
                 }
                 if ($edition_detail['edition_entry_nodowngrade']) {
                     ?>              
-                    <div class='col-sm-5'>
+                    <div class='col-sm-6'>
                         <?php
                         $dateype_id = 8;
                         if (isset($date_list_by_type[$dateype_id])) {
@@ -508,9 +535,9 @@
             </div>
         </div>
         <div class="row">
-            <div class='col-md-2'>
+            <div class='col-sm-2'>
                 <?php
-                echo form_label('Admin Fee', 'edition_admin_fee');
+                echo form_label('Fee', 'edition_admin_fee');
                 echo form_input([
                     'name' => 'edition_admin_fee',
                     'id' => 'edition_admin_fee',

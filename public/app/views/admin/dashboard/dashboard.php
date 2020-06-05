@@ -68,9 +68,9 @@
                                 $email_link = '/admin/mailer/info_mail/' . $edition['edition_id'];
                                 if ($edition['user_email']) {
                                     if ($edition['edition_info_email_sent']) {
-                                        $row['info_email'] = '<a href="' . $email_link . '" class="btn btn-xs default" data-toggle="confirmation" data-original-title="Are you sure you want to resend the email? ' . $edition['user_email'] . '"><i class="fa fa-envelope-o"></i> Resend Email</a>';
+                                        $row['info_email'] = '<a href="' . $email_link . '" class="btn btn-xs default" data-toggle="confirmation" data-original-title="Are you sure you want to resend the email? ' . $edition['user_email'] . '"><i class="fa fa-envelope-o"></i> Resend</a>';
                                     } else {
-                                        $row['info_email'] = '<a href="' . $email_link . '" class="btn btn-xs blue" data-toggle="confirmation" data-original-title="Confirm send email to organiser? ' . $edition['user_email'] . '"><i class="fa fa-envelope-o"></i> Send Email</a>';
+                                        $row['info_email'] = '<a href="' . $email_link . '" class="btn btn-xs blue" data-toggle="confirmation" data-original-title="Confirm send email to organiser? ' . $edition['user_email'] . '"><i class="fa fa-envelope-o"></i> Send</a>';
                                     }
                                 } else {
                                     $row['info_email'] = '<a class="btn btn-xs red" title="Add contact to event to send email"><i class="fa fa-user"></i> No contact</a>';

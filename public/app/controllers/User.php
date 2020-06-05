@@ -273,7 +273,7 @@ class User extends Frontend_Controller {
             $remove = $this->usersubscription_model->remove_usersubscription($user_id, $linked_to, $linked_id);
             if ($remove) {
                 $this->session->set_flashdata([
-                    'alert' => "Your hace successfully been removed from the mailing list.",
+                    'alert' => "Your have successfully been removed from the mailing list.",
                     'status' => "success",
                     'icon' => "minus-circle",
                 ]);

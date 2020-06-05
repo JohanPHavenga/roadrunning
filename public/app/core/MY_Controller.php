@@ -1400,7 +1400,7 @@ class Admin_Controller extends MY_Controller {
                     ],
                 ],
             ],
-            // STATIS INFO
+            // STATIC INFO
             [
                 "text" => "Static",
                 "url" => '',
@@ -1505,6 +1505,11 @@ class Admin_Controller extends MY_Controller {
                 "icon" => "trophy",
                 "seg0" => ['result'],
                 "submenu" => [
+                    [
+                        "text" => "Search Results",
+                        "url" => 'admin/result/search',
+                        "icon" => "magnifier",
+                    ],
                     [
                         "text" => "List Results",
                         "url" => 'admin/result/view',

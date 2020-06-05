@@ -88,7 +88,7 @@
                                     'required' => '',
                                 ]);
                                 ?>
-                                <span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button>
+                                <!--<span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button>-->
                             </div>
                         </div>
                         <div class='col-sm-2'>
@@ -105,16 +105,17 @@
                                     'required' => '',
                                 ]);
                                 ?>
-                                <span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button>
+                                <!--<span class="input-group-btn"><button class="btn default date-set" type="button"><i class="fa fa-clock-o"></i></button>-->
                             </div>
                         </div>
                         <?php
                         if ($race['race_distance'] >= 10) {
                             ?>
-                            <div class='col-sm-2'>
+                            <div class='col-sm-3'>
                                 <?php
-                                echo form_label('Senior Lic', 'race_fee_senior_licenced_' . $race_id);
-                                echo '<div class="input-group"><span class="input-group-addon"><i class="fa fa-money"></i></span>';
+                                echo form_label('Senior Fee', 'race_fee_senior_licenced_' . $race_id);
+                                echo '<div class="input-group">';
+                                echo '<span class="input-group-addon"><i class="fa fa-money"></i></span>';
                                 echo form_input([
                                     'name' => 'races[' . $race_id . '][race_fee_senior_licenced]',
                                     'id' => 'race_fee_senior_licenced_' . $race_id,
@@ -127,34 +128,14 @@
                                 echo "</div>";
                                 ?>
                             </div>
-                            <?php
-                            if ($race['race_distance'] < 20) {
-                                ?>
-                                <div class='col-sm-2'>
-                                    <?php
-                                    echo form_label('Junior Lic', 'race_fee_junior_licenced_' . $race_id);
-                                    echo '<div class="input-group"><span class="input-group-addon"><i class="fa fa-money"></i></span>';
-                                    echo form_input([
-                                        'name' => 'races[' . $race_id . '][race_fee_junior_licenced]',
-                                        'id' => 'race_fee_junior_licenced_' . $race_id,
-                                        'value' => set_value('races[' . $race_id . '][race_fee_junior_licenced]', $race['race_fee_junior_licenced']),
-                                        'class' => 'form-control input-xsmall',
-                                        'type' => 'number',
-                                        'step' => ".01",
-                                        'min' => '0',
-                                    ]);
-                                    echo "</div>";
-                                    ?>
-
-                                </div>
-                                <?php
-                            }
+                            <?php                            
                         } else {
                             ?>
-                            <div class='col-sm-2'>
+                            <div class='col-sm-3'>
                                 <?php
                                 echo form_label('Flat Fee', 'race_fee_flat_' . $race_id);
-                                echo '<div class="input-group"><span class="input-group-addon"><i class="fa fa-money"></i></span>';
+                                echo '<div class="input-group">';
+                                echo '<span class="input-group-addon"><i class="fa fa-money"></i></span>';
                                 echo form_input([
                                     'name' => 'races[' . $race_id . '][race_fee_flat]',
                                     'id' => 'race_fee_flat_' . $race_id,
@@ -170,7 +151,7 @@
                             <?php
                         }
                         ?>
-                        <div class='col-sm-4'>
+                        <div class='col-sm-5'>
                             <?php
                             echo form_label("Name", 'race_name_' . $race_id);
                             echo form_input([

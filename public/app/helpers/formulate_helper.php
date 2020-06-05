@@ -112,8 +112,12 @@ function fdateYear($date) {
     return date("Y", strtotime($date));
 }
 
-function ftimeSort($time) {
-    return date("H:i", strtotime($time));
+function ftimeSort($time, $show_sec=false) {
+    if ($show_sec) {
+        return date("H:i:s", strtotime($time));        
+    } else {
+        return date("H:i", strtotime($time));
+    }
 }
 
 function ftimeMil($time) {

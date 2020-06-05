@@ -1,11 +1,12 @@
 <?= form_open($form_url); ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <div class="portlet light">
             <div class="portlet-title">
-                <div class="caption">
+                <div class="caption uppercase" style="font-size: 0.9em">
                     <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase"><?= ucfirst($action); ?> Result</span>
+                    <span class="caption-subject font-dark bold "><?= ucfirst($action); ?> Result</span>
+                    : <?= $race_detail['edition_name'] . " " . $race_detail['race_name']; ?>
                 </div>
             </div>
             <div class="portlet-body">
@@ -30,7 +31,7 @@
                             echo form_input([
                                 'name' => 'result_surname',
                                 'id' => 'result_surname',
-                                'value' => set_value('result_surname', $result_detail['result_surname']),
+                                'value' => set_value('result_surname', $result_detail['result_surname'], false),
                                 'class' => 'form-control',
                             ]);
                             ?>
@@ -43,7 +44,7 @@
                             echo form_input([
                                 'name' => 'result_name',
                                 'id' => 'result_name',
-                                'value' => set_value('result_name', $result_detail['result_name']),
+                                'value' => set_value('result_name', $result_detail['result_name'], false),
                                 'class' => 'form-control',
                             ]);
                             ?>
@@ -54,19 +55,11 @@
                     <div class='col-md-6 col-sm-6'>
                         <div class='form-group'>
                             <?php
-                            echo form_label('Race <span class="compulsary">*</span>', 'province_id');
-                            echo form_dropdown('race_id', $race_dropdown, set_value('race_id', $result_detail['race_id']), ["id" => "race_id", "class" => "form-control"]);
-                            ?>
-                        </div>
-                    </div>
-                    <div class='col-md-6 col-sm-6'>
-                        <div class='form-group'>
-                            <?php
                             echo form_label('Club', 'result_club');
                             echo form_input([
                                 'name' => 'result_club',
                                 'id' => 'result_club',
-                                'value' => set_value('result_club', $result_detail['result_club']),
+                                'value' => set_value('result_club', $result_detail['result_club'], false),
                                 'class' => 'form-control',
                             ]);
                             ?>
@@ -110,11 +103,11 @@
                                 <?php
                                 echo form_label('Sex', 'result_sex');
                                 echo form_dropdown(
-                                        'result_sex', 
-                                        ["N" => "None", "M" => "M", "F" => "F"], 
-                                        set_value('result_sex', $result_detail['result_sex']), 
+                                        'result_sex',
+                                        ["N" => "None", "M" => "M", "F" => "F"],
+                                        set_value('result_sex', $result_detail['result_sex']),
                                         ["id" => "result_sex", "class" => "form-control"]
-                                        );
+                                );
                                 ?>
                             </div>
                         </div>
@@ -179,7 +172,61 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <div class="col-lg-6">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption uppercase" style="font-size: 0.9em">
+                    <span class="caption-subject font-dark bold ">Claimed Results</span> for 
+                    Result #<?= $result_id; ?><br>
+                </div>
+                <div class='btn-group pull-right'>
+                    <?= fbuttonLink("/admin/userresult/create/add/" . $result_id, "Add Claim", "info"); ?>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <?php
+                if (!(empty($user_result_list))) {
+                    // create table
+                    $this->table->set_template(ftable('user_result_table'));
+                    $this->table->set_heading(["ID", "Name", "Surname", "Actions"]);
+                    foreach ($user_result_list as $user_result) {
+
+                        $action_array = [
+                            [
+                                "url" => "/admin/userresult/delete/". $user_result['user_id'] ."/".$result_id,
+                                "text" => "Delete",
+                                "icon" => "icon-dislike",
+                                "confirmation_text" => "<b>Are you sure?</b>",
+                            ],
+                        ];
+
+
+                        $row['user_id'] = $user_result['user_id'];
+                        $row['user_name'] = $user_result['user_name'];
+                        $row['user_surname'] = $user_result['user_surname'];
+                        $row['actions'] = fbuttonActionGroup($action_array);
+
+                        $this->table->add_row($row);
+                        unset($row);
+                    }
+                    echo $this->table->generate();
+                } else {
+                    echo "<p>No claims on this result yet</p>";
+                }
+//                wts($user_result_list);
+                ?>
+            </div>
+        </div>
+    </div>
+
 </div>
-<?= form_close(); ?>
+
+
+<?php
+echo form_hidden([
+    'race_id' => $race_id,
+]);
+echo form_close();
+?>

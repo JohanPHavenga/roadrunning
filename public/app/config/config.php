@@ -380,7 +380,7 @@ $config['encryption_key'] = 'uXLeu4TT4cX4zTodeET8Xn4g9sKZgMya8slGnYjIrN3juJo3jXA
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'rr_coyote';
-$config['sess_expiration'] = 28800; // 8 hours
+$config['sess_expiration'] = 0; 
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;

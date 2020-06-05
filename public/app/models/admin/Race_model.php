@@ -305,5 +305,35 @@ class Race_model extends Admin_model {
             return $this->db->trans_status();
         }
     }
+    
+    public function get_race_list_with_results($limit_results=true) {
+        $this->db->distinct();
+        $this->db->select("races.race_id, race_name, race_distance, edition_name, edition_date, event_name, racetype_abbr");
+        $this->db->from("races");
+        $this->db->join('results', 'results.race_id = races.race_id', 'inner');
+        $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
+        $this->db->join('events', 'editions.event_id=events.event_id', 'left');
+        $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
+        // limit the list a little
+        if ($limit_results) {
+            $this->db->where("edition_date > ", date("Y-m-d", strtotime("3 months ago")));
+            $this->db->where("edition_date < ", date("Y-m-d", strtotime("+9 month")));
+        }
+        $this->db->order_by('edition_date', "DESC");
+        $this->db->order_by('race_distance', "DESC");
+//        echo $this->db->get_compiled_select();
+//        die();
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $distance = round($row['race_distance'], 0);
+                $year = date('Y', strtotime($row['edition_date']));
+                $data[$row['race_id']] = $row['event_name'] . " | " . $year . " | " . $distance . " km | " . $row['racetype_abbr'];
+            }
+            return $data;
+        }
+        return false;
+    }
 
 }

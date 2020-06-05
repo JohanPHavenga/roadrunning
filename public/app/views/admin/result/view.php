@@ -32,9 +32,9 @@
                         ];
 
                         $row['pos'] = $data_entry['result_pos'];
-                        $row['race'] = $data_entry['race_name'];
-                        $row['surname'] = $data_entry['result_surname'];
-                        $row['name'] = $data_entry['result_name'];
+                        $row['race'] = $data_entry['race_sum'];
+                        $row['name'] = $data_entry['result_name']." ".$data_entry['result_surname'];
+                        $row['date'] = fdateShort($data_entry['edition_date']);
                         $row['club'] = $data_entry['result_club'];
                         $row['time'] = ftimeSort($data_entry['result_time'], true);
                         $row['actions'] = fbuttonActionGroup($action_array);

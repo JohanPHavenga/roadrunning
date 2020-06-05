@@ -2,7 +2,7 @@
 
 class Result extends Admin_Controller {
 
-    private $return_url = "/admin/result";
+    private $return_url = "/admin/result/view";
     private $create_url = "/admin/result/create";
 
     public function __construct() {
@@ -21,12 +21,63 @@ class Result extends Admin_Controller {
         }
     }
 
-    public function view() {
+    public function search($search_string = null) {
+        unset($this->session->edition_return_url);
+        // add models+helpers
+        $this->load->model('admin/race_model');
+        $this->load->library('table');
+        // set form url
+        $this->data_to_view['form_url'] = "";
+        $this->data_to_view['create_link'] = $this->create_url;
+
+        // stuff to load
+        $this->data_to_header['css_to_load'] = array(
+            "assets/admin/plugins/typeahead/typeahead.css",
+            "assets/admin/plugins/datatables/datatables.min.css",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+        );
+        $this->data_to_footer['js_to_load'] = array(
+            "assets/admin/plugins/typeahead/typeahead.bundle.min.js",
+            "assets/admin/scripts/datatable.js",
+            "assets/admin/plugins/datatables/datatables.min.js",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+            "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js"
+        );
+        $this->data_to_footer['scripts_to_load'] = array(
+            "assets/admin/scripts/auto_complete_generic.js",
+            "assets/admin/scripts/table-datatables-managed.js"
+        );
+        // get race list for auto_complete field
+        $this->data_to_view['race_list'] = $this->race_model->get_race_list_with_results(false);
+
+
+        if ($this->input->post('race_summary')) {
+            // get race_id
+            $this->data_to_view['post_data'] = $post_data = $this->input->post();
+            $race_id = array_search($post_data['race_summary'], $this->data_to_view['race_list']);
+
+            if ($race_id > 0) {
+                $this->data_to_view['race_id'] = $race_id;
+                // get race info
+                $this->data_to_view["race_info"] = $this->race_model->get_race_detail($race_id);
+                // get results
+                $this->data_to_view["result_data"] = $this->result_model->get_result_list($race_id);
+            }
+        }
+
+        // load view
+        $this->load->view($this->header_url, $this->data_to_header);
+        $this->load->view("/admin/result/search", $this->data_to_view);
+        $this->load->view($this->footer_url, $this->data_to_footer);
+    }
+
+    public function view($race_id = 0) {
+        unset($this->session->edition_return_url);
         // load helpers / libraries
         $this->load->library('table');
 
-        $this->data_to_view["result_data"] = $this->result_model->get_result_list();
-        $this->data_to_view['heading'] = ["Pos", "Race", "Name", "Surname", "Club", "Time", "Actions"];
+        $this->data_to_view["result_data"] = $this->result_model->get_result_list($race_id);
+        $this->data_to_view['heading'] = ["Pos", "Race", "Name", "Date", "Club", "Time", "Actions"];
 
         $this->data_to_header['title'] = "List of all Results";
         $this->data_to_view['create_link'] = $this->create_url;
@@ -75,14 +126,24 @@ class Result extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function create($action, $id = 0) {
+    public function create($action, $id = 0) {        
+        // block add
+        if ($action != "edit") {
+            $this->session->set_flashdata('alert', "Can only edit results, not add them");
+            $this->session->set_flashdata('status', 'danger');
+            redirect($this->return_url);
+            die();
+        }
+        
         // additional models
         $this->load->model('admin/race_model');
+        $this->load->model('admin/userresult_model');
+        $this->load->library('table');
 
         // set data
         $this->data_to_header['title'] = "Result Input Page";
         $this->data_to_view['action'] = $action;
-        $this->data_to_view['form_url'] = $this->create_url . "/" . $action;
+        $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $id;
 
         $this->data_to_header['css_to_load'] = array(
             "assets/admin/plugins/typeahead/typeahead.css",
@@ -100,16 +161,22 @@ class Result extends Admin_Controller {
             "assets/admin/scripts/components-date-time-pickers.js",
         );
 
-        $this->data_to_view['race_dropdown'] = $this->race_model->get_race_dropdown(true);
-
         if ($action == "edit") {
             $this->data_to_view['result_detail'] = $this->result_model->get_result_detail($id);
-            $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $id;
+            $result_id=$id;
+            $race_id = $this->data_to_view['result_detail']['race_id'];
+            $this->data_to_view['user_result_list'] = $this->userresult_model->get_userresult_list(null, $result_id);
         } else {
+            $race_id = $id;
+            $result_id = "";
             $this->data_to_view['result_detail'] = $this->result_model->get_result_field_array();
             $this->data_to_view['result_detail']['race_id'] = 0;
             $this->data_to_view['result_detail']['result_time'] = 0;
         }
+        
+        $this->data_to_view['race_detail'] = $this->race_model->get_race_detail($race_id);
+        $this->data_to_view['race_id'] = $race_id;
+        $this->data_to_view['result_id'] = $result_id;
 
         // set validation rules
         $this->form_validation->set_rules('result_pos', 'Position', 'required|numeric|greater_than[0]');
@@ -119,13 +186,13 @@ class Result extends Admin_Controller {
 
         $this->data_to_header['crumbs'] = [
             "Home" => "/admin",
-            "Results" => "/admin/result",
-            ucfirst($action) => "",
+            "Results" => "/admin/result/view/" . $race_id,
+            ucfirst($action) . " #".$result_id => "",
         ];
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
-            $this->data_to_view['return_url'] = $this->return_url;
+            $this->data_to_view['return_url'] = $this->return_url . "/" . $race_id;
             $this->load->view($this->header_url, $this->data_to_header);
             $this->load->view($this->create_url, $this->data_to_view);
             $this->load->view($this->footer_url, $this->data_to_footer);
@@ -150,7 +217,7 @@ class Result extends Admin_Controller {
                 $this->return_url = base_url("admin/result/create/edit/" . $id);
             }
 
-            redirect($this->return_url);
+            redirect($this->return_url . "/" . $race_id);
         }
     }
 
@@ -177,21 +244,25 @@ class Result extends Admin_Controller {
         $this->session->set_flashdata('status', $status);
         redirect($this->return_url);
     }
-    
+
     public function delete_result_set($race_id = 0) {
         $this->load->model('admin/race_model');
-        
+
         // set return url to session should it exists
         if ($this->session->has_userdata('edition_return_url')) {
             $this->return_url = $this->session->edition_return_url;
+        } else {
+            $this->return_url = base_url("admin/result/search");;
         }
+
+//        wts($race_id,1);
         // get race detail for nice delete message
         $race_detail = $this->race_model->get_race_detail($race_id);
         // delete record
         $db_del = $this->result_model->remove_result_set($race_id);
 
         if ($db_del) {
-            $msg = "Result ser has successfully been deleted for " . $race_detail['race_name'];
+            $msg = "Result set successfully deleted for the <b>" . $race_detail['edition_name'] . " " . $race_detail['race_name'] . "</b>";
             $status = "success";
         } else {
             $msg = "Error in deleting the result set for Race ID: '.$race_id";
@@ -214,7 +285,7 @@ class Result extends Admin_Controller {
         $this->data_to_header['title'] = "Import Result Set";
         $this->data_to_view['form_url'] = "/admin/result/import/confirm";
         $this->data_to_view['race_dropdown'] = $this->race_model->get_race_dropdown(true);
-        $this->data_to_view['race_id']=$race_id; 
+        $this->data_to_view['race_id'] = $race_id;
 
         // set config for upload
         $config['upload_path'] = $this->upload_path;
@@ -359,11 +430,11 @@ class Result extends Admin_Controller {
             $this->data_to_view['pre_load'] = $pre_load['pre'];
             $this->data_to_view['skip'] = $skip_display;
         }
-        
+
         if ($this->session->has_userdata('edition_return_url')) {
             $this->data_to_view['cancel_url'] = $this->session->edition_return_url;
         } else {
-            $this->data_to_view['cancel_url']="/admin/result/import";
+            $this->data_to_view['cancel_url'] = "/admin/result/import";
         }
 
         $this->load->view($this->header_url, $this->data_to_header);
@@ -376,7 +447,7 @@ class Result extends Admin_Controller {
         return $field_arr;
     }
 
-    private function set_exception_fields($input_data=[], $field=null, $value=null) {
+    private function set_exception_fields($input_data = [], $field = null, $value = null) {
         switch ($field) {
             case "result_name_surname" :
                 $value_parts = explode(" ", $value);
@@ -435,7 +506,7 @@ class Result extends Admin_Controller {
                 $data['pre']["D"] = "result_name";
                 $data['pre']["E"] = "result_surname";
                 $data['pre']["F"] = "result_sex";
-                $data['pre']["G"] = "";                
+                $data['pre']["G"] = "";
                 $data['pre']["H"] = "result_age";
                 $data['pre']["I"] = "";
                 $data['pre']["J"] = "result_club";
@@ -487,7 +558,7 @@ class Result extends Admin_Controller {
 //                            } else {
 //                                $result_data[$import['column_map'][$col]] = $value;
 //                            }
-                            $result_data=$this->set_exception_fields($result_data, $import['column_map'][$col], $value);
+                            $result_data = $this->set_exception_fields($result_data, $import['column_map'][$col], $value);
                         }
                     }
                     $result_data['race_id'] = $import['race_id'];
@@ -532,11 +603,11 @@ class Result extends Admin_Controller {
             "Import" => "/admin/result/import",
             "Success" => "",
         ];
-        
+
         if ($this->session->has_userdata('edition_return_url')) {
             $this->data_to_view['return_url'] = $this->session->edition_return_url;
         } else {
-            $this->data_to_view['return_url']="/admin/result/import";
+            $this->data_to_view['return_url'] = "/admin/result/import";
         }
 
         $this->load->view($this->header_url, $this->data_to_header);

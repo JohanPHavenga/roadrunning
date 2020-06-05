@@ -300,5 +300,21 @@ class User_model extends Admin_model {
             return false;
         }
     }
+    
+    public function get_user_autocomplete_list() {
+
+        $this->db->select("*");
+        $this->db->from("users");
+        $this->db->order_by('user_name', 'user_surname');
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['user_id']] = $row['user_name']." ".$row['user_surname']." #".$row['user_id'];
+            }
+            return $data;
+        }
+        return false;
+    }
 
 }
