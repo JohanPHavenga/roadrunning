@@ -28,25 +28,29 @@ class Search extends Frontend_Controller {
             $this->edition_model->log_search($this->input->post("query"));
         }
         // WHERE
-        switch ($this->input->post("where")) {
-            case "my":
-                if (isset($this->session->region_selection)) {
-                    $search_params['where_in']["region_id"] = $this->session->region_selection;
-                }
-                break;
-            case "all":
-                break;
-            default:
-                $field_parts = explode("_", $this->input->post("where"));
-                // REGION
-                if ($field_parts[0] == "reg") {
-                    $search_params['where']["region_id"] = $field_parts[1];
-                }
-                // PROVINCE
-                if ($field_parts[0] == "pro") {
-                    $search_params['where']["provinces.province_id"] = $field_parts[1];
-                }
-                break;
+        if ($this->input->post("where")!==NULL) {
+            switch ($this->input->post("where")) {
+                case "my":
+                    if (isset($this->session->region_selection)) {
+                        $search_params['where_in']["region_id"] = $this->session->region_selection;
+                    }
+                    break;
+                case "all":
+                    break;
+                default:
+                    $field_parts = explode("_", $this->input->post("where"));
+                    // REGION
+                    if ($field_parts[0] == "reg") {
+                        $search_params['where']["region_id"] = $field_parts[1];
+                    }
+                    // PROVINCE
+                    if ($field_parts[0] == "pro") {
+                        $search_params['where']["provinces.province_id"] = $field_parts[1];
+                    }
+                    break;
+            }
+        } else {
+            $search_params['where_in']["region_id"] = $this->session->region_selection;
         }
 
         // DISTANCE 
@@ -142,7 +146,8 @@ class Search extends Frontend_Controller {
             $sort = "DESC";
         }
         $search_params['order_by']["edition_date"] = $sort;
-        $search_params['limit'] = 100;
+        // LIMIT
+        $search_params['limit'] = 50;
 
 //        wts($search_params,true);
         // DO THE SEARCH
@@ -170,16 +175,16 @@ class Search extends Frontend_Controller {
 
         $search_params['where']["edition_date >= "] = date("Y-m-d 00:00:00");
         $search_params['where']["edition_date <= "] = date("Y-m-d 23:59:59", strtotime("1 year"));
-        $race_search_params=[];
+        $race_search_params = [];
 
-        $query=urldecode($query);
-        
+        $query = urldecode($query);
+
         switch ($tag_type) {
             case "race_name":
                 $race_search_params['where']["race_name"] = $query;
                 break;
             case "race_distance":
-                $race_search_params['where']["race_distance"] = floatval(str_replace("km","",$query));
+                $race_search_params['where']["race_distance"] = floatval(str_replace("km", "", $query));
                 break;
             case "region_name":
                 $search_params['where']["region_name"] = $query;
@@ -198,13 +203,13 @@ class Search extends Frontend_Controller {
                 $search_params['where']["event_name"] = $query;
                 break;
             case "edition_year":
-                redirect(base_url("calendar/".$query));
+                redirect(base_url("calendar/" . $query));
                 break;
             case "edition_month":
-                $query_part= explode(" ", $query);
+                $query_part = explode(" ", $query);
                 $month_num = date("m", strtotime("$query_part[0]-$query_part[1]"));
-                redirect(base_url("calendar/".$query_part[1]."/".$month_num));
-                break;            
+                redirect(base_url("calendar/" . $query_part[1] . "/" . $month_num));
+                break;
             case "asa_member_abbr":
                 $search_params['where']["asa_member_abbr"] = $query;
                 break;
@@ -226,7 +231,6 @@ class Search extends Frontend_Controller {
 //        wts($this->data_to_views['edition_list']);
 //        wts($race_search_params);
 //        wts($search_params, true);
-
         // SHOW AS 
         set_cookie("listing_pref", $this->input->post("show"), 7200);
         if ($this->input->post("show") == "grid") {
@@ -236,7 +240,7 @@ class Search extends Frontend_Controller {
         }
         $this->data_to_views['page_title'] = "Search";
         $this->data_to_views['tag'] = $query;
-        
+
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/search_form');
