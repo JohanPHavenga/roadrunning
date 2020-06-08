@@ -22,6 +22,7 @@ class Search extends Frontend_Controller {
             $search_params['like']["edition_name"] = $this->input->post("query");
             $search_params['or_like']["event_name"] = $this->input->post("query");
             $search_params['or_like']["town_name"] = $this->input->post("query");
+            $search_params['or_like']["province_name"] = $this->input->post("query");
             $search_params['group_end'] = "";
 
             $this->edition_model->log_search($this->input->post("query"));
@@ -127,7 +128,7 @@ class Search extends Frontend_Controller {
         $search_params['where']["edition_date <= "] = $to_date;
 
 
-        // SHOW AS 
+        // SHOW AS
         set_cookie("listing_pref", $this->input->post("show"), 7200);
         if ($this->input->post("show") == "grid") {
             $view_to_load = 'race_grid';
@@ -141,9 +142,10 @@ class Search extends Frontend_Controller {
             $sort = "DESC";
         }
         $search_params['order_by']["edition_date"] = $sort;
+        $search_params['limit'] = 100;
 
 //        wts($search_params,true);
-        // DO TEH SEARCH
+        // DO THE SEARCH
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params), $race_search_params);
         if (!empty($this->data_to_views['edition_list'])) {
             foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
@@ -154,7 +156,7 @@ class Search extends Frontend_Controller {
 //        echo $view_to_load;
 //        wts($this->input->post());
 //        wts($search_params, true);
-//        wts($this->data_to_views['search_result'], true);
+//        wts($this->data_to_views['edition_list'], true);
 
         $this->data_to_views['page_title'] = "Search";
         $this->load->view($this->header_url, $this->data_to_views);

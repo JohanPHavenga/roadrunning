@@ -34,15 +34,13 @@ class Userresult_model extends Admin_model {
         if ($user_id) {
             $this->db->where('user_id', $user_id);
         }
-
         if ($result_id) {
             $this->db->where('result_id', $result_id);
         }
-
         if ($race_id) {
             $this->db->where('race_id', $race_id);
         }
-        
+
         $this->db->order_by('user_surname', "ASC");
 //        echo $this->db->get_compiled_select();
 //        die();        
