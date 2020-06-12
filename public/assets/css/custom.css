@@ -116,7 +116,10 @@ ul li.active a {
     color: #26B8F3;
 }
 
-
+.content ul.pagination li.paginate_button a.page-link {
+    text-decoration: none;
+    font-size: 0.9em;
+}
 
 /* Color fixes */
 
@@ -142,6 +145,12 @@ a.btn:not([href]):not([tabindex]):hover, a.btn:not([href]):not([tabindex]):focus
     color: #fff;
 }
 
+.form-control, .p-cb {
+    border: 1px solid #ced4da;
+}
+.sidebar .widget {
+    border-bottom: 1px solid #ced4da;
+}
 .form-control:focus, input:focus, select:focus {
     border-color: #26B8F3;
 }
@@ -476,6 +485,13 @@ table th {
     text-decoration: none;
     cursor: help;
 }
+
+.content table.result_table td a:not(.btn) {
+    color: #565656;
+    text-decoration: none;
+    display: block;
+    padding: 4px 4px;
+}
 /*
 table.race_table td:first-child {font-weight: bold; }
 table.race_table th {
@@ -493,6 +509,24 @@ table.race_table th {
     cursor: help;
 }*/
 
+.content .breadcrumb {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .5px;
+    list-style: none;
+    text-align: left;
+    padding: 0;
+}
+.content .breadcrumb ul {
+    margin-left: 0;
+}
+.content .breadcrumb li {
+    font-size: 12px
+}
+.content .breadcrumb li a:not(btn) {
+    color: #565656;
+    text-decoration: none;
+}
 
 /* net groot */
 @media (min-width: 991px) { 

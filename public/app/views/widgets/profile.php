@@ -22,7 +22,7 @@
 
         <?php
         $class = false;
-        if ($page_title == "My Results") {
+        if (key_exists("My Results", $crumbs_arr)) {
             $class = "active";
         }
         ?>

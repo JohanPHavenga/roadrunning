@@ -46,6 +46,14 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet preload" type="text/css">
         <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
 
+        <?php
+        if (isset($css_to_load)) :
+            foreach ($css_to_load as $css_link):
+                echo "<link href='$css_link' rel='stylesheet' type='text/css' />";
+            endforeach;
+        endif;
+        ?>
+
         <link rel="apple-touch-icon" sizes="57x57" href="<?= base_url('assets/favicon/apple-icon-57x57.png'); ?>">
         <link rel="apple-touch-icon" sizes="60x60" href="<?= base_url('assets/favicon/apple-icon-60x60.png'); ?>">
         <link rel="apple-touch-icon" sizes="72x72" href="<?= base_url('assets/favicon/apple-icon-72x72.png'); ?>">

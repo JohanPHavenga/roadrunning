@@ -5,6 +5,7 @@ class User extends Frontend_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('user_model');
+        $this->load->library('table');
     }
 
     // VIEW PROFILE
@@ -18,7 +19,6 @@ class User extends Frontend_Controller {
             redirect(base_url("login"));
         }
         // load helpers / libraries        
-        $this->load->library('table');
         $this->data_to_views['page_title'] = "User Profile";
         $this->data_to_views['meta_description'] = "Information regarding the logged in user";
 
@@ -90,12 +90,24 @@ class User extends Frontend_Controller {
         }
     }
 
-    // RESULTS
+    // MY RESULTS
     public function my_results() {
-        $this->data_to_views['banner_img'] = "run_03";
-        $this->data_to_views['banner_pos'] = "15%";
+        $this->load->model('admin/userresult_model');
+
+        $this->data_to_views['banner_img'] = "run_07";
+        $this->data_to_views['banner_pos'] = "65%";
         $this->data_to_views['page_title'] = "My Results";
         $this->data_to_views['meta_description'] = "Dashboard showing a consolidated view of your own results";
+
+        $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
+        $this->data_to_views['scripts_to_load'] = [
+            base_url("assets/js/plugins/components/datatables/datatables.min.js"),
+            base_url("assets/js/data-tables.js"),
+        ];
+
+        if ($this->logged_in_user) {
+            $this->data_to_views['user_result_list'] = $this->userresult_model->get_userresult_list($this->logged_in_user['user_id']);
+        }
 
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
@@ -202,7 +214,7 @@ class User extends Frontend_Controller {
                 $this->data_to_views['page_title'] = "Newsletter Subscriptions";
                 $this->data_to_views['meta_description'] = "User subscription to the monthly newsletter";
                 $linked_to_id = 0;
-                
+
                 break;
             default:
                 break;

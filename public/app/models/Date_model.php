@@ -84,9 +84,11 @@ class Date_model extends Frontend_model {
         }
     }
     
-    public function add_dates($edition_list) {
-        foreach ($edition_list as $edition_id => $edition) {
-            $edition_list[$edition_id]['date_list']=$this->get_date_list("edition",$edition_id, false, true);
+    public function add_dates($edition_list=[]) {
+        if (!empty($edition_list)) {
+            foreach ($edition_list as $edition_id => $edition) {
+                $edition_list[$edition_id]['date_list']=$this->get_date_list("edition",$edition_id, false, true);
+            }
         }
         return $edition_list;
     }

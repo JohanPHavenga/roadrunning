@@ -15,7 +15,7 @@ class Userresult_model extends Admin_model {
         $this->db->select("*");
         $this->db->from("user_result");
         $this->db->where('user_id', $user_id);
-        $this->db->where('result_to', $result_id);
+        $this->db->where('result_id', $result_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return true;
@@ -25,11 +25,16 @@ class Userresult_model extends Admin_model {
 
     public function get_userresult_list($user_id = null, $result_id = null, $race_id = null) {
 
-        $this->db->select("*");
+        if (($user_id == null) && ($result_id == null) && ($race_id == null)) {
+            return false;
+        }
+
+        $this->db->select("results.*,races.*,user_id, user_name, user_surname, edition_date, edition_name,edition_slug");
         $this->db->from("user_result");
         $this->db->join("users", "user_id");
         $this->db->join("results", "result_id");
         $this->db->join("races", "race_id");
+        $this->db->join("editions", "edition_id");
 
         if ($user_id) {
             $this->db->where('user_id', $user_id);
@@ -41,14 +46,16 @@ class Userresult_model extends Admin_model {
             $this->db->where('race_id', $race_id);
         }
 
+        $this->db->order_by('edition_date', "DESC");
         $this->db->order_by('user_surname', "ASC");
 //        echo $this->db->get_compiled_select();
-//        die();        
+//        die();
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            foreach ($query->result_array() as $row) {
-                $userresult_list[] = $row;
+            foreach ($query->result_array() as $key => $row) {
+                $userresult_list[$key] = $row;
+                $userresult_list[$key]['race_color'] = $this->get_race_color($row['race_distance']);
             }
             return $userresult_list;
         }

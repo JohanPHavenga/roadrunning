@@ -518,7 +518,7 @@ class Frontend_Controller extends MY_Controller {
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
                         "priority" => 0.8,
                         "changefreq" => "weekly",
-                        "badge" => "COMING SOON",
+                        "badge" => "BETA",
                     ],
                 ],
             ],
