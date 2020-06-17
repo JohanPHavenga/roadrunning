@@ -19,7 +19,7 @@ class Race_model extends Admin_model {
         return $data;
     }
 
-    public function get_race_list($edition_id = 0, $status=null) {
+    public function get_race_list($edition_id = 0, $status = null) {
 
         $this->db->select("races.*, edition_name, edition_date, racetype_name, racetype_abbr");
         $this->db->from("races");
@@ -46,7 +46,7 @@ class Race_model extends Admin_model {
         return false;
     }
 
-    public function get_race_dropdown($limit_results=true) {
+    public function get_race_dropdown($limit_results = true) {
         $this->db->select("race_id, race_name, race_distance, edition_name, event_name, racetype_abbr, edition_date");
         $this->db->from("races");
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
@@ -98,7 +98,7 @@ class Race_model extends Admin_model {
 
     public function set_race($action, $race_id, $race_data = [], $debug = false) {
 
-        
+
         if (!isset($race_data['race_status'])) {
             $race_data['race_status'] = 1;
         }
@@ -153,40 +153,40 @@ class Race_model extends Admin_model {
         }
     }
 
-    function get_race_color($distance) {
-
-        switch (true) {
-            case $distance <= 9:
-                $color = 'yellow';
-                break;
-
-            case $distance == 10:
-                $color = 'yellow-1';
-                break;
-
-            case $distance < 21:
-                $color = 'green-2';
-                break;
-
-            case $distance == 21:
-                $color = 'blue';
-                break;
-
-            case $distance < 42:
-                $color = 'purple';
-                break;
-
-            case $distance == 42:
-                $color = 'red-2';
-                break;
-
-            default:
-                $color = 'red-3';
-                break;
-        }
-
-        return $color;
-    }
+//    function get_race_color($distance) {
+//
+//        switch (true) {
+//            case $distance <= 9:
+//                $color = 'yellow';
+//                break;
+//
+//            case $distance == 10:
+//                $color = 'yellow-1';
+//                break;
+//
+//            case $distance < 21:
+//                $color = 'green-2';
+//                break;
+//
+//            case $distance == 21:
+//                $color = 'blue';
+//                break;
+//
+//            case $distance < 42:
+//                $color = 'purple';
+//                break;
+//
+//            case $distance == 42:
+//                $color = 'red-2';
+//                break;
+//
+//            default:
+//                $color = 'red-3';
+//                break;
+//        }
+//
+//        return $color;
+//    }
 
     public function get_next_prev_race_list($race_list, $direction) {
 
@@ -294,7 +294,7 @@ class Race_model extends Admin_model {
             return false;
         }
     }
-    
+
     public function update_field($r_id, $field, $value) {
         if (!($r_id)) {
             return false;
@@ -305,8 +305,8 @@ class Race_model extends Admin_model {
             return $this->db->trans_status();
         }
     }
-    
-    public function get_race_list_with_results($limit_results=true) {
+
+    public function get_race_list_with_results($limit_results = true) {
         $this->db->distinct();
         $this->db->select("races.race_id, race_name, race_distance, edition_name, edition_date, event_name, racetype_abbr");
         $this->db->from("races");
@@ -330,6 +330,49 @@ class Race_model extends Admin_model {
                 $distance = round($row['race_distance'], 0);
                 $year = date('Y', strtotime($row['edition_date']));
                 $data[$row['race_id']] = $row['event_name'] . " | " . $year . " | " . $distance . " km | " . $row['racetype_abbr'];
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function get_race_list_with_no_results($how_far_back) {
+        $this->db->distinct();
+        $this->db->select("races.race_id, race_name, race_distance, results.file_id, editions.edition_id, edition_name, edition_date, edition_slug, event_name, racetype_name, racetype_abbr, asa_member_abbr, timingprovider_abbr");
+        $this->db->from("races");
+        $this->db->join('results', 'results.race_id = races.race_id', 'left');
+        $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
+        $this->db->join('events', 'editions.event_id=events.event_id', 'left');
+        $this->db->join('edition_asa_member', 'editions.edition_id=edition_asa_member.edition_id', 'left');
+        $this->db->join('asa_members', 'asa_member_id', 'left');
+        $this->db->join('timingproviders', 'timingprovider_id');
+        $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
+        // limit the list a little        
+        $this->db->where("edition_date > ", date("Y-m-d", strtotime("-".$how_far_back)));
+        // from today
+        $this->db->where("edition_date < ", date("Y-m-d 23:59:59"));
+        $this->db->where("editions.edition_status", 1);
+        $this->db->where("races.race_distance >= ", 10);
+        $this->db->group_start();
+            $this->db->where("editions.edition_info_status", 10);
+            $this->db->or_group_start();
+                $this->db->where("editions.edition_info_status", 11);
+                $this->db->where("results.file_id", NULL);
+            $this->db->group_end();
+        $this->db->group_end();
+        $this->db->order_by('edition_date', "DESC");
+        $this->db->order_by('race_distance', "DESC");
+//        echo $this->db->get_compiled_select();
+//        die();
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $distance = round($row['race_distance'], 0);
+                $year = date('Y', strtotime($row['edition_date']));
+                $data[$row['race_id']] = $row;
+                $data[$row['race_id']]['color'] = $this->get_race_color($row['race_distance']);
+                $data[$row['race_id']]['summary'] = $row['event_name'] . " | " . $year . " | " . $distance . " km | " . $row['racetype_abbr'];
             }
             return $data;
         }

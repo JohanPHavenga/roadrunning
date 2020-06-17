@@ -1511,6 +1511,11 @@ class Admin_Controller extends MY_Controller {
                         "icon" => "magnifier",
                     ],
                     [
+                        "text" => "Races with NO results",
+                        "url" => 'admin/race/no_result',
+                        "icon" => "speedometer",
+                    ],
+                    [
                         "text" => "List Results",
                         "url" => 'admin/result/view',
                         "icon" => "list",

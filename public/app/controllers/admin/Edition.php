@@ -234,7 +234,7 @@ class Edition extends Admin_Controller {
                 $this->check_start_end_dates($old_edition_id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
                 // CEHCK TAGS
                 $this->set_tags($old_edition_id, $new_edition_detail, $race_data);
-                
+
                 // AUTO MAILER for INFO VERIFIED
                 if ($new_edition_detail['edition_info_status'] == 16) {
                     $this->auto_mailer(3, $old_edition_id);
@@ -247,7 +247,6 @@ class Edition extends Admin_Controller {
                 if ($new_edition_detail['edition_status'] == 9) {
                     $this->auto_mailer(9, $old_edition_id);
                 }
-                
             } else {
                 $alert = "Error committing to the database";
                 $status = "danger";
@@ -477,7 +476,7 @@ class Edition extends Admin_Controller {
             'linked_id' => $new_edition_id,
         ];
         $this->date_model->set_date("add", NULL, $date_data, false);
-        
+
         // copy files over
         $filetypes_to_copy = [1, 7]; // 1=logo; 7=route_maps
         foreach ($filetypes_to_copy as $filetype_id) {
@@ -803,6 +802,54 @@ class Edition extends Admin_Controller {
         echo "<b>" . $r . "</b> regtypes fields were updated<br>";
         echo "<b>" . $e . "</b> entrytypes fields were updated<br>";
         echo "<b>" . $s . "</b> sponsors fields were updated<br>";
+    }
+
+    // LIST OF EDITION WITH NO RESULTS LOADED
+    public function no_result() {
+        // load helpers / libraries
+        $this->load->library('table');
+        // unset dashboard return url session
+//        $this->session->unset_userdata('dashboard_return_url');
+        // editions with no results for the last year
+        $query_params = [
+            "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-1 year")), "edition_status" => 1],
+            "order_by" => ["editions.edition_date" => "ASC"],
+        ];
+        $field_list = ["edition_id", "edition_name", "edition_status", "edition_slug", "edition_date", "edition_isfeatured", "event_name", "asa_member_name", "asa_member_abbr", "timingprovider_abbr"];
+        $this->data_to_view['edition_data'] = $this->edition_model->get_edition_list_new($query_params, $field_list, false);
+
+        $this->data_to_view['heading'] = ["ID", "Edition Name", "Status", "Affiliation", "Edition Date", "Timing", "Event Name", "Actions"];
+
+        $this->data_to_view['create_link'] = $this->create_url;
+        $this->data_to_header['title'] = "List of Editions with no Results Loaded";
+        $this->data_to_header['crumbs'] = [
+            "Home" => "/admin",
+            "Editions" => "/admin/edition",
+            "No Results" => "",
+        ];
+
+        $this->data_to_view['url'] = $this->url_disect();
+
+        $this->data_to_header['css_to_load'] = array(
+            "assets/admin/plugins/datatables/datatables.min.css",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+        );
+
+        $this->data_to_footer['js_to_load'] = array(
+            "assets/admin/scripts/datatable.js",
+            "assets/admin/plugins/datatables/datatables.min.js",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+            "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+        );
+
+        $this->data_to_footer['scripts_to_load'] = array(
+            "assets/admin/scripts/table-datatables-managed.js",
+        );
+
+        // load view
+        $this->load->view($this->header_url, $this->data_to_header);
+        $this->load->view("/admin/edition/no_results", $this->data_to_view);
+        $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
 }

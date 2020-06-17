@@ -41,7 +41,7 @@
                 <?php
                 // create table
                 $this->table->set_template(ftable('unconfirmed_date_table'));
-                $this->table->set_heading(["Date","Race","ASA","Time","Mail?"]);
+                $this->table->set_heading(["Date", "Race", "ASA", "Time", "Mail?"]);
                 foreach ($event_list_unconfirmed as $year => $year_list) {
                     foreach ($year_list as $month => $month_list) {
 //                        $cell = array('data' => "<b>$month</b>", 'colspan' => 5);
@@ -128,9 +128,14 @@
                             }
                         }
                     }
+                    echo $this->table->generate();
+                } else {
+                    echo "<p>No editions over the past 2 months without results</p>";
                 }
-                echo $this->table->generate();
                 ?>
+                <p>
+                    <a class="btn btn-default btn-sm green-sharp" href="<?= base_url("admin/race/no_result"); ?>">Show more</a>
+                </p>
             </div>
         </div>
 

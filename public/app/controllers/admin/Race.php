@@ -265,6 +265,43 @@ class Race extends Admin_Controller {
         $this->session->set_flashdata('status', $status);
         redirect($this->return_url);
     }
+    
+    
+    public function no_result($how_far_back="1year") {
+        // load helpers / libraries
+        $this->load->library('table');
+        // unset edition return url session
+        $this->session->unset_userdata('edition_return_url');
+
+        $this->data_to_view["race_data"] = $this->race_model->get_race_list_with_no_results($how_far_back);
+//        wts($this->data_to_view["race_data"],1);
+
+        $this->data_to_view['create_link'] = $this->create_url;
+        $this->data_to_header['title'] = "List of Races without results";
+        $this->data_to_header['crumbs'] = [
+            "Home" => "/admin",
+            "Races" => "/admin/race",
+            "No Results" => "",
+        ];
+        $this->data_to_view['url'] = $this->url_disect();
+        $this->data_to_header['css_to_load'] = array(
+            "assets/admin/plugins/datatables/datatables.min.css",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+        );
+        $this->data_to_footer['js_to_load'] = array(
+            "assets/admin/scripts/datatable.js",
+            "assets/admin/plugins/datatables/datatables.min.js",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+            "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+        );
+        $this->data_to_footer['scripts_to_load'] = array(
+            "assets/admin/scripts/table-datatables-managed.js",
+        );
+        // load view
+        $this->load->view($this->header_url, $this->data_to_header);
+        $this->load->view("/admin/race/no_result", $this->data_to_view);
+        $this->load->view($this->footer_url, $this->data_to_footer);
+    }
 
     // ==========================================================================================
     // TEMP DATA GENERATION SCRIPTS

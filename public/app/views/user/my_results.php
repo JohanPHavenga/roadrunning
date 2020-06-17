@@ -82,6 +82,8 @@
                             $this->table->add_row($row);
                         }
                         echo $this->table->generate();
+                    } else {
+                        echo "<p>No results linked to your profile</p>";
                     }
 //                wts($user_result_list);
                 } else {
