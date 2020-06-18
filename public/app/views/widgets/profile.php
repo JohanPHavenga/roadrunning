@@ -13,46 +13,18 @@
     </div>
     <ul class="text-center">
         <?php
-        $class = false;
-        if ($page_title == "User Profile") {
-            $class = "active";
+        foreach ($page_menu as $key => $page) {
+            $cl = null;
+            if ($page['loc'] == current_url()) {
+                $cl = "active";
+            }
+            if ($key == "logout") {
+                echo "<li class='$cl'><a href='' data-href='' data-toggle='modal' data-target='#confirm-logout'><i class='$page[icon]'></i>$page[display]</a>";
+            } else {
+                echo "<li class='$cl'><a href='$page[loc]'><i class='$page[icon]'></i>$page[display]</a></li>";
+            }
         }
         ?>
-        <li class='<?= $class; ?>'><a href="<?= base_url("user/profile"); ?>"><i class="icon-user11"></i>My profile</a></li>
-
-        <?php
-        $class = false;
-        if (key_exists("My Results", $crumbs_arr)) {
-            $class = "active";
-        }
-        ?>
-        <li class='<?= $class; ?>'><a href="<?= base_url("user/my-results"); ?>"><i class="icon-clock21"></i>My Results</a></li>
-
-        <?php
-        $class = false;
-        if ($page_title == "My Subscriptions") {
-            $class = "active";
-        }
-        ?>
-        <li class='<?= $class; ?>'><a href="<?= base_url("user/my-subscriptions"); ?>"><i class="icon-mail"></i>My Subscriptions</a></li>
-
-        <?php
-        $class = false;
-        if ($page_title == "Region Selection") {
-            $class = "active";
-        }
-        ?>
-        <li class='<?= $class; ?>'><a href="<?= base_url("region/switch"); ?>"><i class="icon-settings1"></i>My Regions</a></li>
-
-        <?php
-        $class = false;
-        if ($page_title == "Donations") {
-            $class = "active";
-        }
-        ?>
-        <li class='<?= $class; ?>'><a href="<?= base_url("support"); ?>"><i class="icon-user-check1"></i>Donate</a></li>
-
-        <li><a href="<?= base_url("logout"); ?>"><i class="icon-log-out"></i>Log Out</a>
         </li>
     </ul>
 </div>

@@ -6,10 +6,20 @@ class User extends Frontend_Controller {
         parent::__construct();
         $this->load->model('user_model');
         $this->load->library('table');
+
+        $this->data_to_views['page_menu'] = $this->get_user_menu();
     }
 
-    // VIEW PROFILE
-    public function profile() {
+    // check if method exists, if not calls "view" method
+    public function _remap($method, $params = array()) {
+        if (method_exists($this, $method)) {
+            return call_user_func_array(array($this, $method), $params);
+        } else {
+            $this->dashboard($method, $params);
+        }
+    }
+
+    private function check_login() {
         if (empty($this->logged_in_user)) {
             $this->session->set_flashdata([
                 'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
@@ -18,6 +28,28 @@ class User extends Frontend_Controller {
             ]);
             redirect(base_url("login"));
         }
+    }
+
+    // DASHBOARD
+    public function dashboard() {
+        $this->check_login();
+        // load helpers / libraries        
+        $this->data_to_views['page_title'] = "User Dashboard";
+        $this->data_to_views['meta_description'] = "User dashboard containing result, profile and subscription information";
+
+//        wts($this->data_to_views['page_menu'],1);
+        
+        // load view
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/page_menu', $this->data_to_views);
+        $this->load->view('user/dashboard', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
+    // VIEW PROFILE
+    public function profile() {
+        $this->check_login();
         // load helpers / libraries        
         $this->data_to_views['page_title'] = "User Profile";
         $this->data_to_views['meta_description'] = "Information regarding the logged in user";
@@ -25,24 +57,24 @@ class User extends Frontend_Controller {
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/page_menu', $this->data_to_views);
         $this->load->view('user/profile', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
     // EDIT PROFILE
     public function edit() {
-        if (empty($this->logged_in_user)) {
-            $this->session->set_flashdata([
-                'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
-                'status' => "warning",
-                'icon' => "info-circle",
-            ]);
-            redirect(base_url("login"));
-        }
+        $this->check_login();
         // load helpers / libraries        
         $this->load->library('table');
         $this->data_to_views['page_title'] = "Edit Profile";
         $this->data_to_views['meta_description'] = "Editing information regarding the logged in user";
+        $this->data_to_views['crumbs_arr'] = [
+            "Home" => base_url(),
+            "User" => base_url("user"),
+            "Profile" => base_url("user/profile"),
+            "Edit" => "",
+        ];
 
         $this->data_to_views['form_url'] = '/user/edit';
         $this->data_to_views['error_url'] = '/user/edit';
@@ -59,6 +91,7 @@ class User extends Frontend_Controller {
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
+            $this->load->view('templates/page_menu', $this->data_to_views);
             $this->load->view('user/edit', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
@@ -113,20 +146,16 @@ class User extends Frontend_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
+        if ($this->logged_in_user) {
+            $this->load->view('templates/page_menu', $this->data_to_views);
+        }
         $this->load->view('user/my_results', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
     // SUBSCRIPTIONS
     public function my_subscriptions() {
-        if (empty($this->logged_in_user)) {
-            $this->session->set_flashdata([
-                'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
-                'status' => "warning",
-                'icon' => "info-circle",
-            ]);
-            redirect(base_url("login"));
-        }
+        $this->check_login();
         $this->load->model('usersubscription_model');
         $this->data_to_views['page_title'] = "My Subscriptions";
         $this->data_to_views['meta_description'] = "Listing the subscriptions the logged in user is part of";
@@ -151,6 +180,7 @@ class User extends Frontend_Controller {
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/page_menu', $this->data_to_views);
         $this->load->view('user/my_subscriptions', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }

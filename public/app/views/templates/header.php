@@ -115,9 +115,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <div class="topbar-dropdown">
                                 <?php
                                 if ($this->session->user['logged_in']) {
-                                    echo "<a class='title' href='" . base_url("user/profile") . "'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
+                                    echo "<a class='title' href='" . base_url("user") . "'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
                                 } else {
-                                    echo "<a class='title' href='" . base_url('login') . "><i class='fa fa-user'></i> Login</a>";
+                                    echo "<a class='title' href='" . base_url('login') . "'><i class='fa fa-user'></i> Login</a>";
                                 }
                                 ?>
 
@@ -141,10 +141,10 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
             </div>
             <!-- end: Topbar -->
 
-<!--            <div class='alert alert-info' role='alert'>
-                <i class='fa fa-info-circle' aria-hidden='true'></i> 
-                <b>COVID-19:</b> All events has been cancelled or postponed until further notice. Please add yourself to the mailing list of a particular event to receive updates
-            </div>-->
+            <!--            <div class='alert alert-info' role='alert'>
+                            <i class='fa fa-info-circle' aria-hidden='true'></i> 
+                            <b>COVID-19:</b> All events has been cancelled or postponed until further notice. Please add yourself to the mailing list of a particular event to receive updates
+                        </div>-->
 
             <!-- Header -->
             <header id="header" data-fullwidth="true" <?= $header_vals; ?>>
@@ -232,9 +232,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                                     </div>
                                                     <hr>
                                                     <div class="cart-buttons">
-                                                        <a href="<?= base_url('user/profile'); ?>" class="btn btn-xs">Profile</a>
-                                                        <a href="<?= base_url('logout'); ?>" class="btn btn-xs btn-light">Logout</a>
-                                                        <!--<button class="btn btn-xs">Log Out</button>-->
+                                                        <a href="<?= base_url('user'); ?>" class="btn btn-xs">Dashboard</a>
+                                                        <!--<a data-href="" data-toggle="modal" data-target="#confirm-logout" class="btn btn-xs btn-light">Logout</a>-->
+                                                        <button class="btn btn-xs btn-light" data-href="" data-toggle="modal" data-target="#confirm-logout">Logout</button>
                                                     </div>
                                                     <?php
                                                 } else {
@@ -265,22 +265,31 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         <!--end: Navigation Responsive Trigger-->
 
                         <!--Navigation-->
-                        <div id="mainMenu">
+                        <div id="mainMenu" class="menu-lines">
                             <div class="container">
-                                <nav>
+                                <nav style="margin-right: 10px;">
                                     <ul>
                                         <?php
-                                        $white_list = ["home", "races", "results", "faq", "about", "contact"];
+                                        $white_list = ["races", "results", "faq", "about", "contact"];
                                         foreach ($this->session->static_pages as $key => $page) {
+                                            $i_cl = $d_cl = null;
                                             if (!in_array($key, $white_list)) {
                                                 continue;
                                             }
+                                            //if top menu item 
+                                            if ($page['loc'] == current_url()) {
+                                                $i_cl = "current";
+                                            }
+                                            // else if there is a sub-menu check in sub-menu for url match
                                             if (isset($page['sub-menu'])) {
                                                 $d_cl = "dropdown";
-                                            } else {
-                                                $d_cl = "";
+                                                foreach ($page['sub-menu'] as $sub_page) {
+                                                    if ($sub_page['loc'] == current_url()) {
+                                                        $i_cl = "current";
+                                                    }
+                                                }
                                             }
-                                            echo "<li class='$d_cl'><a href='$page[loc]'>$page[display]</a>";
+                                            echo "<li class='$d_cl $i_cl'><a href='$page[loc]'>$page[display]</a>";
                                             if (isset($page['sub-menu'])) {
                                                 echo '<ul class="dropdown-menu">';
                                                 foreach ($page['sub-menu'] as $sub_page) {
@@ -302,8 +311,26 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                                             echo "</li>";
                                         }
                                         if ($this->session->user['logged_in']) {
-                                            echo "<li><a href='" . base_url('user/profile') . "'>My Profile</a></li>";
-                                            echo "<li><a href='" . base_url('logout') . "'>Logout</a></li>";
+                                            $i_cl = $menu_html = null;
+                                            foreach ($user_menu as $key=>$menu_item) {
+                                                if ($menu_item['loc'] == current_url()) {
+                                                    $i_cl = "current";
+                                                }
+                                                if ($key == "logout") {
+                                                    $menu_html .= '<li><a href="" data-href="" data-toggle="modal" data-target="#confirm-logout">' . $menu_item['display'] . '</a>';
+                                                } else {
+                                                    $menu_html .= "<li><a href='" . $menu_item['loc'] . "'>" . $menu_item['display'] . "</a></li>";
+                                                }
+                                                
+                                            }
+                                            ?>
+                                            <li class="dropdown <?= $i_cl; ?>">
+                                                <a href="/user"><?= $this->session->user['user_name']; ?></a>
+                                                <ul class="dropdown-menu">
+                                                    <?= $menu_html; ?>
+                                                </ul>
+                                            </li>
+                                            <?php
                                         } else {
                                             echo "<li><a href='" . base_url('login') . "'>Login</a></li>";
                                         }
@@ -317,8 +344,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     </div>
                 </div>
             </header>
-
             <?php
 //                wts(current_url());
 //                wts(uri_string());
+//                wts($user_menu,1);
             ?>

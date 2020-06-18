@@ -3,8 +3,12 @@
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
+                <?php
+                // CRUMBS WIDGET
+                $this->load->view('widgets/crumbs');
+                ?>
                 <h3 class="text-uppercase">Edit Profile</h3>
-                <p>Correct your profile data below</p>
+                <p>Change your profile data below</p>
                 <?php
                 if (validation_errors()) {
                     echo "<div class='alert alert-danger' role='alert'><strong><i class='fa fa-exclamation-circle'></i> Validation Error</strong>";
@@ -83,6 +87,8 @@
                         'class' => 'btn',
                     );
                     echo form_button($data);
+                    
+                    echo "<a href='".base_url("user/profile")."' class='btn btn-light'>Cancel</a>";
                     echo form_close();
                     ?>
                 </div>

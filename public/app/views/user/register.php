@@ -106,7 +106,7 @@
                         );
                         echo form_button($data);
                         ?>
-                        <a href="<?= base_url(); ?>" class="btn btn-light">
+                        <a href="<?= base_url("login"); ?>" class="btn btn-light">
                             <i class="fa fa-minus-circle" aria-hidden="true"></i>&nbsp;Cancel</a>
                     </div>
                 </div>

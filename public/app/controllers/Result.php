@@ -4,10 +4,6 @@ class Result extends Frontend_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('user_model');
-        $this->load->model('race_model');
-        $this->load->library('table');
-
         if (empty($this->logged_in_user)) {
             $this->session->set_flashdata([
                 'alert' => "You are not currently logged in, or your session has expired. Please log in or register",
@@ -15,6 +11,11 @@ class Result extends Frontend_Controller {
                 'icon' => "info-circle",
             ]);
             redirect(base_url("login"));
+        } else {
+            $this->load->model('user_model');
+            $this->load->model('race_model');
+            $this->load->library('table');
+            $this->data_to_views['page_menu'] = $this->get_user_menu();
         }
     }
 
@@ -36,8 +37,8 @@ class Result extends Frontend_Controller {
 //        wts($this->data_to_view['race_list'],1);
             // load view
             $this->load->view($this->header_url, $this->data_to_views);
-//        $this->load->view($this->banner_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
+            $this->load->view('templates/page_menu', $this->data_to_views);
             $this->load->view('result/search', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
@@ -68,15 +69,16 @@ class Result extends Frontend_Controller {
                 $params['name'] = $this->logged_in_user['user_name'];
                 $params['surname'] = $this->logged_in_user['user_surname'];
             }
-
             $this->data_to_views['result_list'] = $this->race_model->get_race_detail_with_results($params);
-            if ($this->data_to_views['result_list']) {
-                $firstKey = array_key_first($this->data_to_views['result_list']);
-                $result = $this->data_to_views['result_list'][$firstKey];
-                foreach ($result as $key => $value) {
-                    if (strpos($key, "result_") === false) {
-                        $this->data_to_views['race_info'][$key] = $value;
-                    }
+            if (!$this->data_to_views['result_list']) {
+                redirect(base_url("result/list/".$race_id."/full"));
+            }
+            
+            $firstKey = array_key_first($this->data_to_views['result_list']);
+            $result = $this->data_to_views['result_list'][$firstKey];
+            foreach ($result as $key => $value) {
+                if (strpos($key, "result_") === false) {
+                    $this->data_to_views['race_info'][$key] = $value;
                 }
             }
 
@@ -89,6 +91,7 @@ class Result extends Frontend_Controller {
             // load view
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
+            $this->load->view('templates/page_menu', $this->data_to_views);
             $this->load->view('result/list', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
@@ -156,6 +159,27 @@ class Result extends Frontend_Controller {
         } else {
             $this->session->set_flashdata([
                 'alert' => "That result does not exist. Use the form below to find race results",
+                'status' => "danger",
+                'icon' => "times-circle",
+            ]);
+        }
+        redirect(base_url("user/my-results"));
+    }
+
+    public function remove($result_id) {
+        $this->load->model('admin/userresult_model');
+        if ((is_numeric($result_id)) && ($this->userresult_model->exists($this->logged_in_user['user_id'], $result_id))) {
+            $user_id = $this->logged_in_user['user_id'];
+            // check if already exists
+            $this->userresult_model->remove_userresult($user_id, $result_id);
+            $this->session->set_flashdata([
+                'alert' => "Result has been removed from your profile",
+                'status' => "success",
+                'icon' => "check-circle",
+            ]);
+        } else {
+            $this->session->set_flashdata([
+                'alert' => "You are not linked to that result.",
                 'status' => "danger",
                 'icon' => "times-circle",
             ]);

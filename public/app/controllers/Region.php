@@ -76,30 +76,30 @@ class Region extends Frontend_Controller {
                     $region_id_arr = [2, 3, 4, 5, 6, 63];
                     $region_name = "Cape Town";
                     $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
-                    $province_name="Western Cape";
+                    $province_name = "Western Cape";
                     break;
                 case "gauteng":
                     $region_id_arr = [26, 27, 28, 29, 30];
                     $region_name = "greater";
-                    $province_name="Gauteng";
+                    $province_name = "Gauteng";
                     break;
                 case "kzncoast":
                 case "kzn-coast":
                     $region_id_arr = [35, 32];
                     $region_name = "the Coastal";
                     $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
-                    $province_name="KwaZulu-Natal";
+                    $province_name = "KwaZulu-Natal";
                     break;
                 case "garden-route":
                 case "gardenroute":
                     $region_id_arr = [62];
                     $region_name = "Garden Route";
-                    $province_name="Western Cape";
+                    $province_name = "Western Cape";
                     break;
             }
         } else {
             $region_id = $this->region_model->get_region_id_from_slug($slug);
-            $region=$this->region_model->get_region_detail($region_id);
+            $region = $this->region_model->get_region_detail($region_id);
             $region_id_arr = [$region_id];
             $region_name = $region['region_name'];
             $province_name = $region['province_name'];
@@ -108,7 +108,6 @@ class Region extends Frontend_Controller {
         }
 
 //        wts($region_id_arr, 1);
-
         // kry al die editions vir die region 
         $query_params["where_in"] = ["regions.region_id" => $region_id_arr];
 
@@ -118,14 +117,14 @@ class Region extends Frontend_Controller {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
             }
             $region_pages = $this->session->region_pages;
-            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of ". $province_name;
+            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of " . $province_name;
         } else {
             if (!isset($region_name)) {
                 $region_name = ucwords(str_replace("-", " ", $slug));
             }
-            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of ". $province_name;
+            $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of " . $province_name;
         }
-        $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region with in the ". $province_name ." province of South Africa";
+        $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region with in the " . $province_name . " province of South Africa";
 
         // GET REGION LIST FOR FOOTER
         $region_list = $this->region_model->get_region_list(true);
@@ -159,12 +158,24 @@ class Region extends Frontend_Controller {
         $this->data_to_views['region_dropdown'] = $this->region_model->get_region_dropdown();
         $this->data_to_views['form_url'] = base_url("region/switch");
 
+        if ($this->logged_in_user) {
+            $this->data_to_views['page_menu'] = $this->get_user_menu();
+            $this->data_to_views['crumbs_arr'] = [
+                "Home" => base_url(),
+                "User" => base_url("user"),
+                "Region Selection" => "",
+            ];
+        }
         $this->form_validation->set_rules('site_version[]', 'Region', 'required');
+
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_views);
             $this->load->view($this->notice_url, $this->data_to_views);
+            if ($this->logged_in_user) {
+                $this->load->view('templates/page_menu', $this->data_to_views);
+            }
             $this->load->view('region/switch', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {

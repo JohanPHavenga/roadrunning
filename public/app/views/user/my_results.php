@@ -1,30 +1,17 @@
-<section id="page-content" class="sidebar-left">
+<section id="page-content" class="sidebar-right">
     <div class="container">
         <div class="row">
-            <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
-                <?php
-                if (!empty($logged_in_user)) {
-                    // PROFILE WIDGET
-                    $this->load->view('widgets/profile');
-                }
-                // ADS WIDGET
-                $this->load->view('widgets/side_ad');
-                ?>
-            </div>
-            <!-- end: Sidebar-->
 
             <!-- Content-->
             <div class="content col-lg-9">
                 <h3 class="text-uppercase"><?= $page_title; ?> 
                     <span class="badge badge-danger" style="font-size: 0.6em; position: relative; top: -2px">Beta</span></h3>
-                <p>I am busy working on a module where all available results are imported into a database. <br>
-                    From there you can search and <b>claim a result</b> as your own, building up a nice history of your results. </p>
-                <p>Currently we have loaded results for <u>races in the Western Cape</u> only. This will be expanded on over time.</p>
+                <p>I am busy working on a module where you can search and <b>claim a result</b> as your own, building up a nice history of your results. </p>
+                <p>Currently we have loaded results for <u>races in the Western Cape</u> starting from October 2019. This will be expanded on over time.</p>
                 <?php
                 if ($logged_in_user) {
                     ?>
-                    <p>Use the search form below to search for your results and add them to your profile.</p>
+                    <p>Use the search form below to search for your results to add them to your profile.</p>
 
 
                     <h4 class="text-uppercase">Search for results</h4>
@@ -88,15 +75,28 @@
 //                wts($user_result_list);
                 } else {
                     ?>
-                    <p>To give it a try, please <a href="/login"/>log in</a> to your profile.</p>
-                    <p>
-                        <a class="btn" href="/login"/>Login</a>
-                    </p>
+                    <p>To give it a try, please <a href="/login">log in</a> or <a href="/register">create a new profile</a>.</p>
+                    <div class="form-group">
+                        <a class="btn" href="/login">Login</a>
+                        <a class="btn btn-light" href="/register">Register</a>
+                    </div>
                     <?php
                 }
                 ?>
             </div>
             <!-- end: Content-->
+            <!-- Sidebar-->
+            <div class="sidebar col-lg-3">  
+                <?php
+                if (!empty($logged_in_user)) {
+                    // PROFILE WIDGET
+                    $this->load->view('widgets/profile');
+                }
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
+                ?>
+            </div>
+            <!-- end: Sidebar-->
 
         </div>
     </div>

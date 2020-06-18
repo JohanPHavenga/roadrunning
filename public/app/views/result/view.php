@@ -66,7 +66,10 @@
 
                 echo $this->table->generate();
                 ?>
-                <a href="/user/my-results" class="btn"><i class="fa fa-arrow-left"></i> Back</a>
+                <!--<div class="btn-group">-->
+                    <a href="/user/my-results" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back</a>
+                    <a href="" data-href="" data-toggle="modal" data-target="#confirm-remove" class="btn btn-danger"><i class="fa fa-times-circle"></i> Remove</a>
+                <!--</div>-->
             </div>
             <!-- end: Content-->
 
@@ -74,5 +77,25 @@
     </div>
 </section>
 <!-- end: My Results -->
+
+<!-- logout confirmation modal -->
+<div class="modal fade" id="confirm-remove" tabindex="-1" role="dialog" aria-labelledby="confirm-logout-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">           
+            <div class="modal-header">
+                <h4 class="text-uppercase">Confirmation required</h4>
+            </div>        
+            <div class="modal-body">
+                Please confirm that you did not hit the <b>remove</b> button by mistake.<br>
+                This will remove the result from your profile.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light btn-xs" data-dismiss="modal">My Bad</button>
+                <a class="btn btn-danger btn-ok btn-xs" href="<?= base_url("result/remove/".$result_detail['result_id']); ?>">Remove Result</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- logout confirmation modal -->
 
 

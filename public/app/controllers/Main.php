@@ -118,9 +118,17 @@ class Main extends Frontend_Controller {
         $this->data_to_views['banner_pos'] = "40%";
         $this->data_to_views['page_title'] = "Donations";
         $this->data_to_views['meta_description'] = "Show your appriciation by donating to the site via SnapScan";
+
+        if ($this->logged_in_user) {
+            $this->data_to_views['page_menu'] = $this->get_user_menu();
+        }
+
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
+        if ($this->logged_in_user) {
+            $this->load->view('templates/page_menu', $this->data_to_views);
+        }
         $this->load->view('main/support', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }

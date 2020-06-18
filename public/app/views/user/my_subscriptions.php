@@ -36,23 +36,16 @@ if (!empty($edition_subs)) {
     }
 }
 ?>
-<section id="page-content" class="sidebar-left">
+<section id="page-content" class="sidebar-right">
     <div class="container">
         <div class="row">
-
-            <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
-                <?php
-                // PROFILE WIDGET
-                $this->load->view('widgets/profile');
-                // ADS WIDGET
-                $this->load->view('widgets/side_ad');
-                ?>
-            </div>
-            <!-- end: Sidebar-->
-
             <!-- Content-->
             <div class="content col-lg-9">
+                <?php
+                // CRUMBS WIDGET
+                $this->load->view('widgets/crumbs');
+                ?>
+                <h3 class="text-uppercase"><?= $page_title; ?></h3>
                 <?php
                 if (!empty($newsletter_subs)) {
                     ?>
@@ -144,6 +137,17 @@ if (!empty($edition_subs)) {
                 ?>
             </div>
             <!-- end: Content-->
+            
+            <!-- Sidebar-->
+            <div class="sidebar col-lg-3">  
+                <?php
+                // PROFILE WIDGET
+                $this->load->view('widgets/profile');
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
+                ?>
+            </div>
+            <!-- end: Sidebar-->
 
         </div>
     </div>

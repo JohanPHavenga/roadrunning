@@ -1,20 +1,12 @@
-<section id="page-content" class="sidebar-left">
+<section id="page-content" class="sidebar-right">
     <div class="container">
-        <div class="row">
-            <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
-                <?php
-                if (!empty($logged_in_user)) {
-                    // PROFILE WIDGET
-                    $this->load->view('widgets/profile');
-                }
-                // ADS WIDGET
-//                $this->load->view('widgets/side_ad');
-                ?>
-            </div>
-            <!-- end: Sidebar-->
+        <div class="row">           
             <!-- Content-->
             <div class="content col-lg-9">
+                <?php
+                // CRUMBS WIDGET
+                $this->load->view('widgets/crumbs');
+                ?>
                 <h3 class="text-uppercase"><?= $page_title; ?></h3>
                 <p>Please use form below to select the regions you would like to see races in.<p>
 
@@ -52,6 +44,18 @@
                 ?>
             </div>
             <!-- end: Content-->
+             <!-- Sidebar-->
+            <div class="sidebar col-lg-3">  
+                <?php
+                if (!empty($logged_in_user)) {
+                    // PROFILE WIDGET
+                    $this->load->view('widgets/profile');
+                }
+                // ADS WIDGET
+                $this->load->view('widgets/side_ad');
+                ?>
+            </div>
+            <!-- end: Sidebar-->
 
         </div>
     </div>

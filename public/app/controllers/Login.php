@@ -109,7 +109,7 @@ class Login extends Frontend_Controller {
         $this->session->set_userdata("user", $user_data);
         $_SESSION['user']['logged_in'] = true;
         $_SESSION['user']['role_list'] = $this->role_model->get_role_list_per_user($user_data['user_id']);
-        
+
         // update history data vir user ID
         $history_data = ["user_id" => $user_data['user_id']];
         $this->history_model->update_history_field($history_data, get_cookie('session_token'));
@@ -124,7 +124,20 @@ class Login extends Frontend_Controller {
             'alert' => "Welcome, to the real world. Your have successfully logged in <b>" . $user_data['user_name'] . "</b>",
             'status' => "success",
         ]);
-        redirect(base_url('user/profile'));
+
+        // redirect to last valid page visited. Driven by last 5 urls saved in History module
+        $skip_controllers = ["login", "logout", "register", "forgot-password"];
+        foreach ($_SESSION['last_5_urls'] as $url) {
+            // remove the base_url
+            $short_url = str_replace(base_url(), "", $url);
+            $url_bits = explode("/", $short_url);
+            if (!in_array($url_bits[0], $skip_controllers)) {
+                redirect($url);
+                die();
+            }
+        }
+        redirect(base_url('user'));
+        die();
     }
 
     // ================================================================================================

@@ -45,18 +45,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             <li><a href='<?= $this->session->static_pages['about']['loc']; ?>'><?= $this->session->static_pages['about']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $this->session->static_pages['contact']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['add-listing']['loc']; ?>'><?= $this->session->static_pages['add-listing']['display']; ?></a></li>
-                            <li><a href='<?= $this->session->static_pages['search']['loc']; ?>'><?= $this->session->static_pages['search']['display']; ?></a></li>
-                            <?php
-                            if ($this->session->user['logged_in']) {
-                                ?>
-                                <li><a href='<?= base_url("logout"); ?>'>Logout</a></li>
-                                <?php
-                            } else {
-                                ?>
-                                <li><a href='<?= $this->session->static_pages['login']['loc']; ?>'><?= $this->session->static_pages['login']['display']; ?></a></li>
-                                <?php
-                            }
-                            ?>
+                            <li><a href='<?= $this->session->static_pages['search']['loc']; ?>'><?= $this->session->static_pages['search']['display']; ?></a></li>                           
+                            <li><a href='<?= $this->session->static_pages['contact']['sub-menu']['support']['loc']; ?>'><?= $this->session->static_pages['contact']['sub-menu']['support']['display']; ?></a></li>
                             <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
                             <!--<li><a href='<?= base_url('old'); ?>'>Back to old site</a></li>-->
                         </ul>
@@ -79,7 +69,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                             }
                             ?>
                             <li><a href='<?= $this->session->static_pages['featured-regions']['loc']; ?>'>
-                                <?= $this->session->static_pages['featured-regions']['display']; ?> <span class='badge badge-danger'>VIEW</span>
+                                    <?= $this->session->static_pages['featured-regions']['display']; ?> <span class='badge badge-danger'>VIEW</span>
                                 </a></li>
                             <li><a href='<?= base_url('region/switch'); ?>'>Switch Regions</a></li>
                         </ul>
@@ -124,9 +114,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     <!-- end: Footer widget area 5 --> 
 
                     <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
-                    <div class="m-b-10 m-r-20" style="padding: 10px; background-color: #fff; float: left;">
+                    <div class="m-b-10 m-r-20" style="float: left;">
                         <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
-                            <img src='<?= base_url("assets/img/snapscan_LAzMFdGZ.png"); ?>' /> 
+                            <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ.png"); ?>' /> 
                         </a>
                     </div>
                     <p style=''>Consider supporting the wesbite via SnapScan</p>
@@ -181,6 +171,24 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 </div>
 
+<!-- logout confirmation modal -->
+<div class="modal fade" id="confirm-logout" tabindex="-1" role="dialog" aria-labelledby="confirm-logout-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">           
+            <div class="modal-header">
+                <h4 class="text-uppercase">Confirmation required</h4>
+            </div>        
+            <div class="modal-body">
+                Please confirm that you did not hit the "<b>logout</b>" button by mistake.<br> Don't feel bad, it happens.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light btn-xs" data-dismiss="modal">My Bad</button>
+                <a class="btn btn-success btn-ok btn-xs" href="<?= base_url("logout"); ?>">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- logout confirmation modal -->
 
 <a id="scrollTop"><i class="icon-chevron-up1"></i><i class="icon-chevron-up1"></i></a>
 
@@ -239,7 +247,6 @@ foreach ($this->session->most_searched as $search_id => $search) {
 
 <?php
 //if ($this->ini_array['enviroment']['server'] != "production") {
-//if (1 == 2) {
 if (($logged_in_user) && (in_array(1, $logged_in_user['role_list'])) && (isset($_GET['debug']))) {
 //    wts($this->session->most_viewed_pages);
     ?> 

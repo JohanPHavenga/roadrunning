@@ -207,6 +207,9 @@ class Frontend_Controller extends MY_Controller {
         $this->data_to_views['history'] = $this->check_history();
         $this->data_to_views['crumbs_arr'] = $this->set_crumbs();
         $this->data_to_views['where'] = "my";
+        if ($this->logged_in_user) {
+            $this->data_to_views['user_menu'] = $this->get_user_menu();
+        }
 
         // check of weer moet laai
         if ($this->check_value_refresh()) {
@@ -248,6 +251,17 @@ class Frontend_Controller extends MY_Controller {
     // HISTORY
     // ============================================================================================== 
     private function check_history() {
+        // keep last 5 URLs
+        if (!isset($_SESSION['last_5_urls'])) {
+            $_SESSION['last_5_urls'] = [current_url()];
+        } else {
+            if ($_SESSION['last_5_urls'][0] != current_url()) {
+                array_unshift($_SESSION['last_5_urls'], current_url());
+                if (count($_SESSION['last_5_urls']) > 5) {
+                    array_pop($_SESSION['last_5_urls']);
+                }
+            }
+        }
         // check current session history
         if (!isset($_SESSION['history'])) {
             $_SESSION['history'] = [];
@@ -261,6 +275,7 @@ class Frontend_Controller extends MY_Controller {
         } else {
             $session_token = get_cookie('session_token');
         }
+
         // check if the url not already in session
         if (!in_array(current_url(), $_SESSION['history'])) {
             // set session variable
@@ -504,7 +519,7 @@ class Frontend_Controller extends MY_Controller {
                 "priority" => 0.8,
                 "changefreq" => "weekly",
                 "sub-menu" => [
-                    "upcoming" => [
+                    "results" => [
                         "display" => "Race Results",
                         "loc" => base_url("race/results"),
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-5 day")),
@@ -863,6 +878,51 @@ class Frontend_Controller extends MY_Controller {
             }
         }
         return $return;
+    }
+
+    // ==============================================================================================
+    // USER PAGE MENU
+    // ==============================================================================================
+    public function get_user_menu() {
+
+        $menu_arr = [
+            "dashboard" => [
+                "display" => "Dashboard",
+                "loc" => base_url("user"),
+                "icon" => "icon-clipboard21",
+            ],
+            "profile" => [
+                "display" => "My Profile",
+                "loc" => base_url("user/profile"),
+                "icon" => "icon-user11",
+            ],
+            "results" => [
+                "display" => "My Results",
+                "loc" => base_url("user/my-results"),
+                "icon" => "icon-clock21",
+            ],
+            "subscriptions" => [
+                "display" => "My Subscriptions",
+                "loc" => base_url("user/my-subscriptions"),
+                "icon" => "icon-mail",
+            ],
+            "regions" => [
+                "display" => "My Regions",
+                "loc" => base_url("region/switch"),
+                "icon" => "icon-settings1",
+            ],
+            "donate" => [
+                "display" => "Donate",
+                "loc" => base_url("user/donate"),
+                "icon" => "icon-clipboard21",
+            ],
+            "logout" => [
+                "display" => "Logout",
+                "loc" => base_url("logout"),
+                "icon" => "icon-log-out",
+            ],
+        ];
+        return $menu_arr;
     }
 
     // ==============================================================================================
