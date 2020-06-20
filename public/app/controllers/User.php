@@ -34,10 +34,30 @@ class User extends Frontend_Controller {
     public function dashboard() {
         $this->check_login();
         // load helpers / libraries        
+        $this->load->model('admin/userresult_model');
         $this->data_to_views['page_title'] = "User Dashboard";
         $this->data_to_views['meta_description'] = "User dashboard containing result, profile and subscription information";
 
-//        wts($this->data_to_views['page_menu'],1);
+        $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/morrisjs/morris.css")];
+        $this->data_to_views['scripts_to_load'] = [
+            base_url("assets/js/plugins/components/amcharts/core.js"),
+            base_url("assets/js/plugins/components/amcharts/charts.js"),
+            base_url("assets/js/plugins/components/amcharts/themes/animated.js"),
+            base_url("assets/js/amchart_42.js"),
+            base_url("assets/js/amchart_21.js"),
+            base_url("assets/js/amchart_10.js"),
+            base_url("assets/js/amchart_5.js"),
+        ];
+        
+        // get list of results
+        $result_list=$this->userresult_model->get_userresult_list($this->logged_in_user['user_id']);    
+        foreach ($result_list as $result) {
+            $key="dist_".round($result['race_distance']);
+            $this->data_to_views["result_list"][$key][$result['result_id']]=$result;
+        }
+        // get result count
+        $this->data_to_views["result_count"]=$this->userresult_model->get_userresult_count($this->logged_in_user['user_id']);
+//        wts($result_count,1);
         
         // load view
         $this->load->view($this->header_url, $this->data_to_views);

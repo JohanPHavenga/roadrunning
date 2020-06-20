@@ -528,6 +528,11 @@ table.race_table th {
     text-decoration: none;
 }
 
+.graph_holder {
+    width: 100%; 
+    height: 400px;
+}
+
 /* net groot */
 @media (min-width: 991px) { 
     .topbar-transparent .topbar-dropdown a.title,

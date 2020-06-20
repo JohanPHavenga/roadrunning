@@ -71,9 +71,9 @@ class Result extends Frontend_Controller {
             }
             $this->data_to_views['result_list'] = $this->race_model->get_race_detail_with_results($params);
             if (!$this->data_to_views['result_list']) {
-                redirect(base_url("result/list/".$race_id."/full"));
+                redirect(base_url("result/list/" . $race_id . "/full"));
             }
-            
+
             $firstKey = array_key_first($this->data_to_views['result_list']);
             $result = $this->data_to_views['result_list'][$firstKey];
             foreach ($result as $key => $value) {
@@ -185,6 +185,18 @@ class Result extends Frontend_Controller {
             ]);
         }
         redirect(base_url("user/my-results"));
+    }
+
+    public function my_data($dist) {
+        $this->load->model('admin/userresult_model');
+        $result_list = array_reverse($this->userresult_model->get_userresult_list($this->logged_in_user['user_id'],null,null,$dist));
+        
+        foreach ($result_list as $key=>$result) {
+            $data[$key]['date']= fdateShort($result['edition_date']);
+            $data[$key]['time']= strval(strtotime("1970-01-01 ".$result['result_time']." UTC"));
+            $data[$key]['race']= $result['edition_name'];
+        }
+        echo json_encode($data);
     }
 
 }

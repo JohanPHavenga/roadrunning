@@ -1,4 +1,5 @@
-<section class="p-b-150 p-t-150" data-parallax-image="<?= base_url("assets/img/banner/run_02.webp"); ?>"><div class="parallax-container img-loaded" data-velocity="-.090" style="background: rgba(0, 0, 0, 0) url(&quot;<?= base_url("assets/img/banner/run_02webp"); ?>&quot;) repeat scroll 0% 0px;"></div>
+<section class="p-b-150 p-t-150" data-parallax-image="<?= base_url("assets/img/banner/run_02.webp"); ?>">
+    <div class="parallax-container img-loaded" data-velocity="-.090" style="background: rgba(0, 0, 0, 0) url(&quot;<?= base_url("assets/img/banner/run_02.webp"); ?>&quot;) repeat scroll 0% 0px;"></div>
     <div class="container">
         <div class="row">
             <div class="col-lg-6">

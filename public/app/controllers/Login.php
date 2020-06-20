@@ -95,7 +95,7 @@ class Login extends Frontend_Controller {
     //  Actual LOGIN
     // ================================================================================================
 
-    public function log_in_user($user_data, $role_arr) {
+    public function log_in_user($user_data, $role_arr, $debug = true) {
         // set db user again
         $user_data['lastlogin_date'] = fdateLong();
         $user_data['updated_date'] = fdateLong();
@@ -125,19 +125,14 @@ class Login extends Frontend_Controller {
             'status' => "success",
         ]);
 
-        // redirect to last valid page visited. Driven by last 5 urls saved in History module
-        $skip_controllers = ["login", "logout", "register", "forgot-password"];
-        foreach ($_SESSION['last_5_urls'] as $url) {
-            // remove the base_url
-            $short_url = str_replace(base_url(), "", $url);
-            $url_bits = explode("/", $short_url);
-            if (!in_array($url_bits[0], $skip_controllers)) {
-                redirect($url);
-                die();
-            }
+        // redirect to last valid page visited. Driven by last 5 urls saved in History module       
+        if (isset($_SESSION['last_5_urls'])) {
+            redirect($_SESSION['last_5_urls'][0]);
+            die();
+        } else {
+            redirect(base_url('user'));
+            die();
         }
-        redirect(base_url('user'));
-        die();
     }
 
     // ================================================================================================

@@ -34,15 +34,15 @@
                 $this->table->set_heading('Pos', 'Name', 'Surname', 'Club', 'Age', 'Cat', 'Time');
                 foreach ($result_list as $result_id => $result) {
                     $url = base_url("result/claim/" . $result_id);
+                    $ref = "href='' data-href='' data-toggle='modal' data-target='#confirm-claim-" . $result_id . "'";
                     $row = [
-                        "<a href='' data-href='' data-toggle='modal' data-target='#confirm-claim-" . $result_id . "'>" . $result['result_pos'] . "</a>",
-//                        "<a href='$url'>$result[result_pos]</a>",
-                        "<a href='$url'>" . $result['result_name'] . "</a>",
-                        "<a href='$url'>" . $result['result_surname'] . "</a>",
-                        "<a href='$url'>" . $result['result_club'] . "</a>",
-                        "<a href='$url'>" . $result['result_age'] . "</a>",
-                        "<a href='$url'>" . $result['result_cat'] . "</a>",
-                        "<a href='$url'>" . $result['result_time'] . "</a>",
+                        "<a $ref>$result[result_pos]</a>",
+                        "<a $ref>$result[result_name]</a>",
+                        "<a $ref>$result[result_surname]</a>",
+                        "<a $ref>$result[result_club]</a>",
+                        "<a $ref>$result[result_age]</a>",
+                        "<a $ref>$result[result_cat]</a>",
+                        "<a $ref>$result[result_time]</a>",
                     ];
                     $this->table->add_row($row);
                 }

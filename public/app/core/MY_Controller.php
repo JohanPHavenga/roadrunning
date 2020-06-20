@@ -256,9 +256,13 @@ class Frontend_Controller extends MY_Controller {
             $_SESSION['last_5_urls'] = [current_url()];
         } else {
             if ($_SESSION['last_5_urls'][0] != current_url()) {
-                array_unshift($_SESSION['last_5_urls'], current_url());
-                if (count($_SESSION['last_5_urls']) > 5) {
-                    array_pop($_SESSION['last_5_urls']);
+                $skip_controllers = ["login", "logout", "register", "forgot-password", "404", "assets", "file", "favicon.ico"];
+                $url_bits = explode("/", uri_string());
+                if (!in_array($url_bits[0], $skip_controllers)) {
+                    array_unshift($_SESSION['last_5_urls'], current_url());
+                    if (count($_SESSION['last_5_urls']) > 5) {
+                        array_pop($_SESSION['last_5_urls']);
+                    }
                 }
             }
         }

@@ -23,7 +23,7 @@ class Userresult_model extends Admin_model {
         return false;
     }
 
-    public function get_userresult_list($user_id = null, $result_id = null, $race_id = null) {
+    public function get_userresult_list($user_id = null, $result_id = null, $race_id = null, $distance = null) {
 
         if (($user_id == null) && ($result_id == null) && ($race_id == null)) {
             return false;
@@ -44,6 +44,9 @@ class Userresult_model extends Admin_model {
         }
         if ($race_id) {
             $this->db->where('race_id', $race_id);
+        }
+        if ($distance) {
+            $this->db->where('race_distance', $distance, false);
         }
 
         $this->db->order_by('edition_date', "DESC");
@@ -108,6 +111,40 @@ class Userresult_model extends Admin_model {
             $this->db->trans_complete();
             return $this->db->trans_status();
         }
+    }
+    
+    public function get_userresult_count($user_id) {
+        $this->db->select("race_distance, COUNT(race_distance) AS count");
+        $this->db->from("user_result");
+        $this->db->join("results", "result_id");
+        $this->db->join("races", "race_id");
+        $this->db->where('user_result.user_id', $user_id);
+        $this->db->group_by("race_distance");
+        $this->db->order_by("race_distance", "DESC");
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+             foreach ($query->result_array() as $key => $row) {
+                $round_dist=round($row['race_distance']);
+                $key="dist_".$round_dist;
+                $userresult_list[$key]['count'] = $row['count'];
+                $userresult_list[$key]['distance'] = $round_dist;
+                $userresult_list[$key]['chart'] = "chart_".$round_dist;
+                switch ($round_dist) {
+                    case 42:
+                        $userresult_list[$key]['name']="Marathons";
+                        break;
+                    case 21:
+                        $userresult_list[$key]['name']="Half-Marathons";
+                        break;
+                    default:
+                        $userresult_list[$key]['name']=$round_dist."km Races";
+                        break;
+                }
+            }
+            return $userresult_list;
+        }
+        return false;
     }
 
 }
