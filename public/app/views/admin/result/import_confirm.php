@@ -31,7 +31,6 @@
                         $form_fields = [
                             form_dropdown('skip', $skip_arr, set_value('skip', $skip), ["id" => 'skip', "class" => "form-control"]),
                         ];
-                        $pre_load = [];
                         foreach ($columns as $key => $column) {
 
                             if ($key == 0) {
