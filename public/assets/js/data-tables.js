@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    var table = $('#datatable_date').DataTable({
+    $('#datatable_date').DataTable({
         order: [[0, "desc"]],
-            responsive: true
-    });  
-    var table = $('#datatable').DataTable({
+        responsive: true
+    });
+    $('#datatable').DataTable({
         buttons: [
             {
                 extend: 'print',
@@ -38,6 +38,4 @@ $(document).ready(function () {
             }
         ],
     });
-    table.buttons().container().appendTo('#export_buttons');
-    $("#export_buttons .btn").removeClass('btn-secondary').addClass('btn-light');
 });

@@ -9,7 +9,7 @@
     </div>
     <div class="portlet-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <?= form_open($form_url, ["class" => "form-inline"]); ?>
                 <div class='form-group'>
                     <?php
@@ -26,16 +26,23 @@
                 <?php
                 echo fbutton("Show", "submit", "success");
                 echo form_close();
+                if (isset($race_id)) {
+                    ?>
+                    <p style="margin-top:10px;">
+                        <b>Edition:</b> <?= $race_info['edition_name']; ?> <b>Race:</b> <?= $race_info['race_name']; ?> 
+                    </p>
+                    <?php
+                }
                 ?>
             </div>
             <?php
             if (isset($race_id)) {
                 ?>
-                <div class="col-md-8">
-                    <p style="margin: 6px 0 0 0;">
-                        <b><?= sizeof($result_data); ?></b> result records found for the 
-                        <?= fdateYear($race_info['edition_date']); ?> edition of the <b><?= $race_info['event_name']; ?></b>
-                        which ran on <b><?= fdateHumanFull($race_info['edition_date'], true); ?></b>.
+                <div class="col-md-7">
+                    <p style="margin-top:6px;">
+                    There were <b><?= sizeof($result_data); ?></b> result records found for the 
+                    <?= fdateYear($race_info['edition_date']); ?> edition of the <b><?= $race_info['event_name']; ?></b>
+                    which ran on <b><?= fdateHumanFull($race_info['edition_date'], true); ?></b>.
                     </p>
                     <?php
 //                    wts($_POST);
