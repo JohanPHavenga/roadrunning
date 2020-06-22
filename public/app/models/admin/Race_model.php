@@ -46,16 +46,20 @@ class Race_model extends Admin_model {
         return false;
     }
 
-    public function get_race_dropdown($limit_results = true) {
-        $this->db->select("race_id, race_name, race_distance, edition_name, event_name, racetype_abbr, edition_date");
+    public function get_race_dropdown($limit_results = true, $no_results=false) {
+        $this->db->select("races.race_id, race_name, race_distance, edition_name, event_name, racetype_abbr, edition_date");
         $this->db->from("races");
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
         $this->db->join('events', 'editions.event_id=events.event_id', 'left');
         $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
+        $this->db->join('results', 'results.race_id=races.race_id', 'left');
         // limit the list a little
         if ($limit_results) {
             $this->db->where("edition_date > ", date("Y-m-d", strtotime("3 months ago")));
             $this->db->where("edition_date < ", date("Y-m-d", strtotime("+9 month")));
+        }
+        if ($no_results) {
+        $this->db->where("result_id", NULL);
         }
         $this->db->order_by('event_name');
         $this->db->order_by('edition_date', "DESC");

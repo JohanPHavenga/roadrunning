@@ -22,7 +22,8 @@ class Result extends Admin_Controller {
     }
 
     public function search($search_string = null) {
-        unset($this->session->edition_return_url);
+        $this->session->unset_userdata('edition_return_url');   
+        
         // add models+helpers
         $this->load->model('admin/race_model');
         $this->load->library('table');
@@ -72,7 +73,7 @@ class Result extends Admin_Controller {
     }
 
     public function view($race_id = 0) {
-        unset($this->session->edition_return_url);
+        $this->session->unset_userdata('edition_return_url');
         // load helpers / libraries
         $this->load->library('table');
 
@@ -284,7 +285,7 @@ class Result extends Admin_Controller {
 
         $this->data_to_header['title'] = "Import Result Set";
         $this->data_to_view['form_url'] = "/admin/result/import/confirm";
-        $this->data_to_view['race_dropdown'] = $this->race_model->get_race_dropdown(true);
+        $this->data_to_view['race_dropdown'] = $this->race_model->get_race_dropdown(false, true);
         $this->data_to_view['race_id'] = $race_id;
 
         // set config for upload
@@ -402,6 +403,7 @@ class Result extends Admin_Controller {
 //                    } else {
 //                        $input_data[$field] = $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column];
 //                    }
+                    if (!isset($input_data)) { $input_data=[]; }
                     $input_data = $this->set_exception_fields($input_data, $field, $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column]);
                 }
             }

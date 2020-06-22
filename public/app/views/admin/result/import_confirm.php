@@ -24,14 +24,25 @@
                         }
                         $this->table->add_row($columns);
 
+                        if (!isset($skip)) {
+                            $skip = 0;
+                        }
+
                         $form_fields = [
                             form_dropdown('skip', $skip_arr, set_value('skip', $skip), ["id" => 'skip', "class" => "form-control"]),
                         ];
+                        $pre_load = [];
                         foreach ($columns as $key => $column) {
+
                             if ($key == 0) {
                                 continue;
                             }
-                            $form_fields[] = form_dropdown("columns[$column]", $result_fields, set_value("columns[$column]", $pre_load[$column]), ["id" => "columns[$column]", "class" => "form-control"]);
+                            if (isset($pre_load[$column])) {
+                                $val = $pre_load[$column];
+                            } else {
+                                $val = "";
+                            }
+                            $form_fields[] = form_dropdown("columns[$column]", $result_fields, set_value("columns[$column]", $val), ["id" => "columns[$column]", "class" => "form-control"]);
                         }
 
                         $this->table->add_row($form_fields);
@@ -46,7 +57,7 @@
                 <div class="row">
                     <div class='col-md-12 col-sm-12'>
                         <div class='btn-group' style="float: right">
-                            <?= fbutton($text = "Reload Data", $type = "submit", $status = "info", $size = NULL, $name = "reload", $value = "preview"); ?>
+<?= fbutton($text = "Reload Data", $type = "submit", $status = "info", $size = NULL, $name = "reload", $value = "preview"); ?>
                         </div>
                     </div>
                 </div>
@@ -57,12 +68,12 @@
                     <?php
                     if (!(empty($input_data))) {
                         // remove fields not used
-                        foreach ($result_fields as $field=>$short_name) {
+                        foreach ($result_fields as $field => $short_name) {
                             if (!isset($input_data[$field])) {
                                 unset($result_fields[$field]);
                             }
                         }
-                        
+
                         $this->table->set_template(ftable('preview_import_table'));
                         $this->table->set_heading(array_keys($result_fields));
                         foreach ($result_fields as $result_field => $short_name) {
@@ -79,8 +90,8 @@
             <div class="row">
                 <div class='col-md-12 col-sm-12'>
                     <div class='btn-group' style="float: right">
-                        <?= fbutton($text = "Upload Results", $type = "submit", $status = "danger", $size = NULL, $name = "upload"); ?>
-                        <?= fbuttonLink($cancel_url, "Cancel", $status = "warning"); ?>
+<?= fbutton($text = "Upload Results", $type = "submit", $status = "danger", $size = NULL, $name = "upload"); ?>
+<?= fbuttonLink($cancel_url, "Cancel", $status = "warning"); ?>
                     </div>
                 </div>
             </div>
