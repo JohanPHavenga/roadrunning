@@ -292,6 +292,10 @@ h3 span.badge a:hover { color: #ccc; }
 {
     margin-left: 24px;
 }
+.content .tabs ul
+{
+    margin-left: 0;
+}
 .content ul li,
 .content ol li 
 {
@@ -312,6 +316,13 @@ h3 span.badge a:hover { color: #ccc; }
 .body a:not(.btn) {
     color: #26B8F3;
     text-decoration: underline;
+}
+
+.content .tabs a:not(.btn) {
+    text-decoration: none;
+}
+.content .tabs a:hover:not(.btn) {
+    text-decoration: none;
 }
 
 .content a:hover:not(.btn),

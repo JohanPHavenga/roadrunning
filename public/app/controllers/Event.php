@@ -104,7 +104,7 @@ class Event extends Frontend_Controller {
         $this->data_to_views['edition_data']['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
         $this->data_to_views['edition_data']['club_url_list'] = $this->url_model->get_url_list("club", $edition_data['club_id'], false);
         $this->data_to_views['edition_data']['sponsor_list'] = $this->edition_model->get_edition_sponsor_list($edition_id);
-        if (array_keys_exists([4],$this->data_to_views['edition_data']['sponsor_list'])) {
+        if (array_keys_exists([4], $this->data_to_views['edition_data']['sponsor_list'])) {
             unset($this->data_to_views['edition_data']['sponsor_list']);
         }
 
@@ -160,13 +160,28 @@ class Event extends Frontend_Controller {
                     $this->data_to_views['page_title'] = "Mailing List";
                     $meta_title = "Add yourself to the mailing list for the ";
                     break;
+                case "results":
+                    $this->load->library('table');
+                    $meta_title = $this->data_to_views['page_title'] . " for the ";
+                    foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+                        $results = $this->race_model->get_race_detail_with_results(["race_id" => $race_id]);
+                        if ($results) {
+                            $this->data_to_views['result_list'][$race_id] = $results;
+                        }
+                    }
+                    $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
+                    $this->data_to_views['scripts_to_load'] = [
+                        base_url("assets/js/plugins/components/datatables/datatables.min.js"),
+                        base_url("assets/js/data-tables.js"),
+                    ];
+                    break;
                 default:
-                    $meta_title = $this->data_to_views['page_title']." for the ";
+                    $meta_title = $this->data_to_views['page_title'] . " for the ";
                     break;
             }
-            $this->data_to_views['page_title']=$this->data_to_views['page_title']." - ".$page_title;
+            $this->data_to_views['page_title'] = $this->data_to_views['page_title'] . " - " . $page_title;
             $this->data_to_views['meta_description'] = $meta_title . fDateYear($edition_data['edition_date']) . " edition of the " . substr($edition_data['edition_name'], 0, -5);
-            $this->data_to_views['meta_description']= str_replace("the The", "The", $this->data_to_views['meta_description']);
+            $this->data_to_views['meta_description'] = str_replace("the The", "The", $this->data_to_views['meta_description']);
         }
 
 
@@ -189,9 +204,9 @@ class Event extends Frontend_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
-        $this->load->view('templates/page_menu', $this->data_to_views);  
+        $this->load->view('templates/page_menu', $this->data_to_views);
         if ($edition_data['edition_status'] != 1) {
-            $this->load->view('widgets/race_status',  $this->data_to_views['status_notice']);
+            $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
         }
         $this->load->view('event/' . $url_params[0], $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
@@ -233,26 +248,28 @@ class Event extends Frontend_Controller {
                 $results['race'][$race_id . $n]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
                 $results['race'][$race_id . $n]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
                 $results['race'][$race_id . $n]['icon'] = "file-excel";
+                $results['race'][$race_id . $n]['race_id'] = $race_id;
                 $n++;
             }
             if (isset($race_url_list[4])) {
                 $results['race'][$race_id . $n]['url'] = $race_url_list[4][0]['url_name'];
                 $results['race'][$race_id . $n]['text'] = $race['race_name'] . " Results";
                 $results['race'][$race_id . $n]['icon'] = "external-link-alt";
+                $results['race'][$race_id . $n]['race_id'] = $race_id;
                 $n++;
             }
         }
 
         return $results;
     }
-    
+
     private function get_tshirt_arr($slug) {
         $tshirt_list = [];
         if (isset($this->data_to_views['file_list'][8])) {
             $tshirt_list['edition']['url'] = base_url("file/edition/" . $slug . "/t-shirt/" . $this->data_to_views['file_list'][8][0]['file_name']);
             $tshirt_list['edition']['text'] = "View T-Shirt Design";
             $tshirt_list['edition']['icon'] = "file-image";
-        } 
+        }
 
         return $tshirt_list;
     }
@@ -432,21 +449,20 @@ class Event extends Frontend_Controller {
 
 //        $edition_data = $this->edition_model->get_edition_detail($edition_id);
 //        $race_list = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
-        
         // new way to pull data
         $query_params = [
             "where" => ["edition_id" => $edition_id],
         ];
         $edition_list = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        $edition_data=$edition_list[$edition_id];
-        
+        $edition_data = $edition_list[$edition_id];
+
 //        wts($edition_data,1);
-        
+
         $edition_url = $edition_data['edition_url'];
         $address = $edition_data['edition_address'] . ", " . $edition_data['town_name'];
 
         // dates
-        $date = $edition_data['edition_date'];        
+        $date = $edition_data['edition_date'];
         $sdate = $edition_data['race_time_start'];
         if ($edition_data['edition_info_prizegizing'] != "00:00:00") {
             $edate = strtotime(str_replace("00:00:00", $edition_data['edition_info_prizegizing'], $date));
