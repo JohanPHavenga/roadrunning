@@ -91,15 +91,22 @@ function time_is_midnight($date) {
         return false;
     }
 }
-    function time_is_almost_midnight($date) {
+
+function time_is_almost_midnight($date) {
     $time = date("H:i", strtotime($date));
-    if (($time == "23:55")||($time == "23:59")) {
+    if (($time == "23:55") || ($time == "23:59")) {
         return true;
     } else {
         return false;
     }
 }
 
+function convert_seconds($seconds) {
+    $dt1 = new DateTime("@0");
+    $dt2 = new DateTime("@$seconds");
+//    return $dt1->diff($dt2)->format('%a days, %h hours, %i minutes and %s seconds');
+    return $dt1->diff($dt2)->format('%a');
+}
 
 function move_to_top(&$array, $key) {
     $temp = array($key => $array[$key]);

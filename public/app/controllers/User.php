@@ -155,7 +155,7 @@ class User extends Frontend_Controller {
         $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
         $this->data_to_views['scripts_to_load'] = [
             base_url("assets/js/plugins/components/datatables/datatables.min.js"),
-            base_url("assets/js/data-tables.js"),
+            base_url("assets/js/data-tables_20200706.js"),
         ];
 
         if ($this->logged_in_user) {

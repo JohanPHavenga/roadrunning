@@ -41,7 +41,12 @@
                 <!-- end: Sidebar-->
                 <?php
             } else {
-                $days_ago = date("j", time() - strtotime($edition_data['edition_date']));
+                $days_ago = convert_seconds(time() - strtotime($edition_data['edition_date']));
+                if ($days_ago>1) {
+                    $d="days";
+                } else {
+                    $d="day";
+                }
                 switch ($edition_data['edition_info_status']) {
                     case 10:
                         // pending
@@ -50,7 +55,7 @@
                             <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
                                 <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b><?= $status_notice['msg']; ?></b>
                             </div>
-                            <p class="text-danger"><b>Race was ran <?= $days_ago; ?> day(s) ago.</b></p>
+                            <p class="text-danger"><b>Race was ran <?= $days_ago; ?> <?=$d;?> ago.</b></p>
                             <p><b>Please note:</b> Results can take <u>up to 7 working days</u> to be released. 
                                 As soon as results are published by the organisers I will load it here.</p>
                             <?= $mailing_list_notice; ?>
@@ -86,7 +91,7 @@
                                                 } else {
                                                     $a = "";
                                                 }
-                                                $tab = url_title("result-".$race_result['text']);
+                                                $tab = url_title("result-" . $race_result['text']);
                                                 ?>
                                                 <li class="nav-item">
                                                     <a class="nav-link <?= $a; ?> show" id="<?= $tab . "-tab"; ?>" data-toggle="tab" href="#<?= $tab; ?>" role="tab" aria-controls="<?= $tab; ?>" aria-selected="true"><?= $race_result['text']; ?></a>
@@ -103,7 +108,7 @@
                                                 } else {
                                                     $a = "";
                                                 }
-                                                $tab = url_title("result-".$race_result['text']);
+                                                $tab = url_title("result-" . $race_result['text']);
                                                 $race_id = $race_result['race_id'];
                                                 $race_info = $race_list[$race_id];
                                                 ?>
@@ -130,8 +135,13 @@
                                                         $this->table->set_template($template);
                                                         $this->table->set_heading('Pos', 'Name', 'Surname', 'Club', 'Age', 'Cat', 'Time');
                                                         foreach ($result_list[$race_id] as $result_id => $result) {
-                                                            $url = base_url("result/claim/" . $result_id);
-                                                            $ref = "href='' data-href='' data-toggle='modal' data-target='#confirm-claim-" . $result_id . "'";
+                                                            if ($logged_in_user) {
+                                                                $url = base_url("result/claim/" . $result_id);
+                                                                $ref = "href='' data-href='' data-toggle='modal' data-target='#confirm-claim-" . $result_id . "'";
+                                                            } else {
+                                                                $ref = "href='' data-href='' data-toggle='modal' data-target='#login-user-" . $race_id . "'";
+                                                            }
+
                                                             $row = [
                                                                 "<a $ref>$result[result_pos]</a>",
                                                                 "<a $ref>$result[result_name]</a>",
@@ -249,4 +259,89 @@
 </div>
 </section>
 <!-- end: Shop products -->
+
+<?php
+if ($edition_data['edition_info_status'] == 11 && $result_list) {
+    // for every race in the edition
+    foreach ($results['race'] as $key => $race_result) {
+        $race_id = $race_result['race_id'];
+        // for each result of that race
+        if ($logged_in_user) {
+            foreach ($result_list[$race_id] as $result_id => $result_detail) {
+                $claim_url = base_url("result/claim/" . $result_id);
+                ?>
+                <!-- logout confirmation modal -->
+                <div class="modal fade" id="confirm-claim-<?= $result_id; ?>" tabindex="-1" role="dialog" aria-labelledby="confirm-claim-label-<?= $result_id; ?>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">  
+                            <div class="modal-header">
+                                <h4 class="text-uppercase">Review Result</h4>
+                            </div> 
+                            <div class="modal-body">
+                                <p>Please review the result details below:</p>
+                                <?php
+                                $template = array(
+                                    'table_open' => '<table class="table table-striped table-bordered table-hover table-sm">',
+                                );
+                                $this->table->set_template($template);
+                                $this->table->add_row(["Position", $result_detail['result_pos']]);
+                                $this->table->add_row(["Time", $result_detail['result_time']]);
+                                $this->table->add_row(["Name", $result_detail['result_name']]);
+                                $this->table->add_row(["Surame", $result_detail['result_surname']]);
+                                if ($result_detail['result_club']) {
+                                    $this->table->add_row(["Club", $result_detail['result_club']]);
+                                }
+                                if ($result_detail['result_age']) {
+                                    $this->table->add_row(["Age", $result_detail['result_age']]);
+                                }
+                                if ($result_detail['result_sex']) {
+                                    $this->table->add_row(["Gender", $result_detail['result_sex']]);
+                                }
+                                if ($result_detail['result_cat']) {
+                                    $this->table->add_row(["Category", $result_detail['result_cat']]);
+                                }
+                                if ($result_detail['result_asanum']) {
+                                    $this->table->add_row(["ASA Number", $result_detail['result_asanum']]);
+                                }
+                                if ($result_detail['result_racenum']) {
+                                    $this->table->add_row(["Race Number", $result_detail['result_racenum']]);
+                                }
+
+                                echo $this->table->generate();
+                                ?>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light btn-xs" data-dismiss="modal">Not Me</button>
+                                <a class="btn btn-success btn-ok btn-xs" href="<?= $claim_url; ?>">Claim Result</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- logout confirmation modal -->
+                <?php
+            }
+        } else {
+            ?>
+            <div class="modal fade" id="login-user-<?= $race_id; ?>" tabindex="-1" role="dialog" aria-labelledby="login-user-label-<?= $race_id; ?>" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">  
+                        <div class="modal-header">
+                            <h4 class="text-uppercase">Log In</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>You need to log in in order to claim a result</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light btn-xs" data-dismiss="modal">Nevermind</button>
+                            <a class="btn btn-success btn-ok btn-xs" href="<?= base_url("login"); ?>">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+        }
+    }
+}
+?>
+
 
