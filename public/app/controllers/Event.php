@@ -130,6 +130,11 @@ class Event extends Frontend_Controller {
             }
         }
 
+        // if results loaded, get URLS to use
+        if ($edition_data['edition_info_status'] == 11) {
+            $this->data_to_views['results'] = $this->get_result_arr($slug);
+        }
+
         // GPS
         $gps_parts = explode(",", $edition_data['edition_gps']);
         $this->data_to_views['gps']['lat'] = $gps_parts[0];
@@ -137,6 +142,7 @@ class Event extends Frontend_Controller {
         $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
 
         // SET PAGE TITLE AND META DESCRIPTIONS
+        $view_to_load = $url_params[0];
         $this->data_to_views['page_title'] = $page_title = substr($edition_data['edition_name'], 0, -5) . " - " . fdateTitle($edition_data['edition_date']);
         if ($url_params[0] == "summary") {
             $this->data_to_views['structured_data'] = $this->load->view('/event/structured_data', $this->data_to_views, TRUE);
@@ -161,7 +167,6 @@ class Event extends Frontend_Controller {
                     $meta_title = "Add yourself to the mailing list for the ";
                     break;
                 case "results":
-                    $this->load->library('table');
                     $meta_title = $this->data_to_views['page_title'] . " for the ";
                     foreach ($this->data_to_views['race_list'] as $race_id => $race) {
                         $results = $this->race_model->get_race_detail_with_results(["race_id" => $race_id]);
@@ -169,11 +174,34 @@ class Event extends Frontend_Controller {
                             $this->data_to_views['result_list'][$race_id] = $results;
                         }
                     }
-                    $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
-                    $this->data_to_views['scripts_to_load'] = [
-                        base_url("assets/js/plugins/components/datatables/datatables.min.js"),
-                        base_url("assets/js/data-tables_20200706.js"),
-                    ];
+                    // as dar iets na /results is
+                    if ((isset($url_params[1])) && (isset($this->data_to_views['results']['race']))) {
+                        if (is_numeric($url_params[1])) {
+                            $dist = $url_params[1];
+                            $racetype = $url_params[2];
+                            // R/W exception
+                            if (isset($url_params[3])) {
+                                if (($url_params[3] == "W") && ($url_params[2] == "R")) {
+                                    $racetype = "R/W";
+                                }
+                            }
+                            $this->data_to_views['race_data']=$this->data_to_views['results']['race'][$racetype][$dist];
+                            $this->data_to_views['race_info']=$this->data_to_views['race_list'][$this->data_to_views['race_data']['race_id']];
+                            $this->data_to_views['race_id']=$this->data_to_views['race_data']['race_id'];
+                                    
+                            $this->load->library('table');
+                            $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
+                            $this->data_to_views['scripts_to_load'] = [
+                                base_url("assets/js/plugins/components/datatables/datatables.min.js"),
+                                base_url("assets/js/data-tables_20200706.js"),
+                            ];
+                            // set view
+                            if (!empty($this->data_to_views['race_info'])) {
+                                $view_to_load = "result-race";
+                            }
+                        }
+                    }
+
                     break;
                 default:
                     $meta_title = $this->data_to_views['page_title'] . " for the ";
@@ -185,10 +213,7 @@ class Event extends Frontend_Controller {
         }
 
 
-        // if results loaded, get URLS to use
-        if ($edition_data['edition_info_status'] == 11) {
-            $this->data_to_views['results'] = $this->get_result_arr($slug);
-        }
+
         $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
         $this->data_to_views['tshirt'] = $this->get_tshirt_arr($slug);
 
@@ -208,7 +233,7 @@ class Event extends Frontend_Controller {
         if ($edition_data['edition_status'] != 1) {
             $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
         }
-        $this->load->view('event/' . $url_params[0], $this->data_to_views);
+        $this->load->view('event/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
@@ -244,18 +269,21 @@ class Event extends Frontend_Controller {
         foreach ($this->data_to_views['race_list'] as $race_id => $race) {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
             $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
+            $round_dist = round($race['race_distance']);
             if (isset($race_file_list[4])) {
-                $results['race'][$race_id . $n]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
-                $results['race'][$race_id . $n]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
-                $results['race'][$race_id . $n]['icon'] = "file-excel";
-                $results['race'][$race_id . $n]['race_id'] = $race_id;
+                $results['race'][$race['racetype_abbr']][$round_dist]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
+                $results['race'][$race['racetype_abbr']][$round_dist]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
+                $results['race'][$race['racetype_abbr']][$round_dist]['icon'] = "file-excel";
+                $results['race'][$race['racetype_abbr']][$round_dist]['race_id'] = $race_id;
+                $results['race'][$race['racetype_abbr']][$round_dist]['distance'] = $round_dist;
                 $n++;
             }
             if (isset($race_url_list[4])) {
-                $results['race'][$race_id . $n]['url'] = $race_url_list[4][0]['url_name'];
-                $results['race'][$race_id . $n]['text'] = $race['race_name'] . " Results";
-                $results['race'][$race_id . $n]['icon'] = "external-link-alt";
-                $results['race'][$race_id . $n]['race_id'] = $race_id;
+                $results['race'][$race['racetype_abbr']][$round_dist]['url'] = $race_url_list[4][0]['url_name'];
+                $results['race'][$race['racetype_abbr']][$round_dist]['text'] = $race['race_name'] . " Results";
+                $results['race'][$race['racetype_abbr']][$round_dist]['icon'] = "external-link-alt";
+                $results['race'][$race['racetype_abbr']][$round_dist]['race_id'] = $race_id;
+                $results['race'][$race['racetype_abbr']][$round_dist]['distance'] = $round_dist;
                 $n++;
             }
         }
