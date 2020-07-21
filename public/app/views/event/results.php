@@ -79,122 +79,123 @@
                         // loaded
                         if (isset($results['race'])) {
                             ?>
-                            <div class="content col-lg-12 m-t-20">
+                            <div class="content col-lg-12 m-t-30">
                                 <?php
                                 if ($result_list) {
                                     ?>
                                     <div class="row pricing-table colored">
                                         <?php
                                         foreach ($results['race'] as $racetype_abbr => $racetype_list) {
+                                            
                                             foreach ($racetype_list as $dist => $race_result) {
 //                                                wts($race_result);
                                                 $url = base_url("event/" . $slug . "/results/" . $dist . "/" . $racetype_abbr);
                                                 ?>
                                                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
-                                                    <div class="plan">
+                                                    <div class="plan featured">
                                                         <div class="plan-header">
                                                             <h4><?= str_replace("Results", "", $race_result['text']); ?></h4>
                                                             <p class="text-muted">Results</p>
                                                             <div class="plan-price"><sup></sup><?= $race_result['distance']; ?><span>km</span> </div>
-                                                            <a class="btn btn-light btn-light btn-light-hover" href="<?=$url;?>"><span><i class="fa fa-list-alt"></i> View</span></a> 
+                                                            <a class="btn btn-light btn-light btn-light-hover" href="<?= $url; ?>"><span><i class="fa fa-list-alt"></i> View</span></a> 
                                                         </div>  
-                                                    
+
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                </div>
-                                <?php
-                            } else {
-                                // old school race file load without data in the db
-                                ?>
-                                <div class="content col-lg-12">
-                                    <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
-                                        <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>RESULTS LOADED</b>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <?php
-                                            foreach ($results['race'] as $race_result) {
-                                                ?>
-                                                <a href="<?= $race_result['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $race_result['icon']; ?>"></i>
-                                                    <?= $race_result['text']; ?></a>
                                                 <?php
                                             }
-                                            ?>
+                                        }
+                                        ?>
+                                    </div>
+                                    <?php
+                                } else {
+                                    // old school race file load without data in the db
+                                    ?>
+                                    <div class="content col-lg-12">
+                                        <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
+                                            <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>RESULTS LOADED</b>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <?php
+                                                foreach ($results['race'] as $race_result) {
+                                                    ?>
+                                                    <a href="<?= $race_result['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $race_result['icon']; ?>"></i>
+                                                        <?= $race_result['text']; ?></a>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                        <?php
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                            <?php
 //                            wts($results['race']);
 //                                        wts($result_list);
-                    } elseif (isset($results['edition'])) {
-                        // old school edition file loaded results
-                        ?>
-                        <div class="content col-lg-12">
-                            <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
-                                <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>RESULTS LOADED</b>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <?php
-                                    foreach ($results['edition'] as $edition_result) {
-                                        ?>
-                                        <a href="<?= $edition_result['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $edition_result['icon']; ?>"></i>
-                                            <?= $edition_result['text']; ?></a>
+                        } elseif (isset($results['edition'])) {
+                            // old school edition file loaded results
+                            ?>
+                            <div class="content col-lg-12">
+                                <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
+                                    <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>RESULTS LOADED</b>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <?php
-                                    }
-                                    ?>
+                                        foreach ($results['edition'] as $edition_result) {
+                                            ?>
+                                            <a href="<?= $edition_result['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $edition_result['icon']; ?>"></i>
+                                                <?= $edition_result['text']; ?></a>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <?php
-                    }
+                            <?php
+                        }
 
-                    break;
-                case 12:
-                    // no results expected
-                    ?>
-                    <div class="content col-lg-9">
-                        <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
-                            <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b><?= $status_notice['msg']; ?></b>
-                        </div>
-                        <a class="btn btn-light" href="<?= base_url('event/' . $slug . '/contact'); ?>"><i class="fa fa-envelope"></i>
-                            Contact race organisers</a>
-                    </div>
-                    <!-- Sidebar-->
-                    <div class="sidebar col-lg-3">  
-                        <?php
-                        // ADS WIDGET
-                        $this->load->view('widgets/side_ad');
+                        break;
+                    case 12:
+                        // no results expected
                         ?>
-                    </div>
-                    <!-- end: Sidebar-->
-                    <?php
-                    break;
-                default:
-                    ?>
-                    <div class="content col-lg-12">
-                        <div role="alert" class="m-t-10 m-b-20 alert alert-danger">
-                            <i class="fa fa-minus-circle"></i> <b>No results available for this event</b>
+                        <div class="content col-lg-9">
+                            <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
+                                <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b><?= $status_notice['msg']; ?></b>
+                            </div>
+                            <a class="btn btn-light" href="<?= base_url('event/' . $slug . '/contact'); ?>"><i class="fa fa-envelope"></i>
+                                Contact race organisers</a>
                         </div>
-                        <p><a class="btn btn-light" href="<?= base_url('event/' . $slug . '/contact'); ?>"><i class="fa fa-envelope"></i>
-                                Contact race organisers</a></p>
-                    </div>
-                    <?php
-                    break;
+                        <!-- Sidebar-->
+                        <div class="sidebar col-lg-3">  
+                            <?php
+                            // ADS WIDGET
+                            $this->load->view('widgets/side_ad');
+                            ?>
+                        </div>
+                        <!-- end: Sidebar-->
+                        <?php
+                        break;
+                    default:
+                        ?>
+                        <div class="content col-lg-12">
+                            <div role="alert" class="m-t-10 m-b-20 alert alert-danger">
+                                <i class="fa fa-minus-circle"></i> <b>No results available for this event</b>
+                            </div>
+                            <p><a class="btn btn-light" href="<?= base_url('event/' . $slug . '/contact'); ?>"><i class="fa fa-envelope"></i>
+                                    Contact race organisers</a></p>
+                        </div>
+                        <?php
+                        break;
+                }
             }
-        }
-        ?>
+            ?>
+        </div>
+        <!-- end: Content-->
     </div>
-    <!-- end: Content-->
-</div>
 </div>
 </section>
 <!-- end: Shop products -->

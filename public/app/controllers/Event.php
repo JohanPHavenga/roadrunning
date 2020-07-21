@@ -199,6 +199,9 @@ class Event extends Frontend_Controller {
                             if (!empty($this->data_to_views['race_info'])) {
                                 $view_to_load = "result-race";
                             }
+                            
+                            $meta_title = $this->data_to_views['race_data']['text']." for the ";
+                            $page_title = $this->data_to_views['race_data']['distance']."km - ".$page_title;
                         }
                     }
 
