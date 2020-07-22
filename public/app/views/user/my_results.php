@@ -7,49 +7,58 @@
                 <h3 class="text-uppercase"><?= $page_title; ?> 
                     <span class="badge badge-danger" style="font-size: 0.6em; position: relative; top: -2px">Beta</span></h3>
                 <p>I am busy working on a module where you can search and <b>claim a result</b> as your own, building up a nice history of your results. </p>
-                <p>Currently we have loaded results for <u>races in the Western Cape</u> starting from October 2019. This will be expanded on over time.</p>
+                <p>Currently I have loaded results for <u>races in the Western Cape</u> starting from October 2019. This will be expanded on over time.</p>
                 <?php
                 if ($logged_in_user) {
                     ?>
                     <p>Use the search form below to search for your results to add them to your profile.</p>
 
-
-                    <h4 class="text-uppercase">Search for results</h4>
-                    <?php
-                    $search_url = base_url("result/search");
-                    $attributes = array('class' => '', 'role' => 'form');
-                    echo form_open($search_url, $attributes);
-                    ?>
                     <div class="row">
-
-                        <div class="form-group col-lg-6">
+                        <div class="col-lg-8">
+                            <h4 class="text-uppercase">Search results by race</h4>
                             <?php
-                            echo form_input([
-                                'name' => 'result_search',
-                                'id' => 'result_search',
-                                'value' => set_value('result_search'),
-                                'class' => 'form-control required',
-                                'placeholder' => 'Search for a race',
-                                'required' => '',
-                            ]);
-                            ?> 
-                        </div>
-
-                        <div class="form-group col-lg-4">
-                            <?php
-                            $data = array(
-                                'type' => 'submit',
-                                'content' => 'Search',
-                                'class' => 'btn',
-                            );
-                            echo form_button($data);
+                            $search_url = base_url("result/search");
+                            $attributes = array('class' => '', 'role' => 'form');
+                            echo form_open($search_url, $attributes);
                             ?>
+                            <div class="row">
+
+                                <div class="form-group col-lg-8">
+                                    <?php
+                                    echo form_input([
+                                        'name' => 'result_search',
+                                        'id' => 'result_search',
+                                        'value' => set_value('result_search'),
+                                        'class' => 'form-control required',
+                                        'placeholder' => 'Search for a race',
+                                        'required' => '',
+                                    ]);
+                                    ?> 
+                                </div>
+
+                                <div class="form-group col-lg-4">
+                                    <?php
+                                    $data = array(
+                                        'type' => 'submit',
+                                        'content' => 'Search',
+                                        'class' => 'btn',
+                                    );
+                                    echo form_button($data);
+                                    ?>
+                                </div>
+                            </div>
+                            <?= form_close(); ?>
+                        </div>
+                        <div class="col-lg-4 m-b-20">
+                            <h4 class="text-uppercase">Auto Search</h4>
+                            <p>Use your name & surname to auto find suggested results</p>
+                            <a href="<?=base_url("result/auto");?>" class="btn btn-primary">Auto Search</a>
                         </div>
                     </div>
-                    <?php
-                    echo form_close();
-                    ?>
-                    <h4 class="text-uppercase">Claimed results</h4>
+
+
+                    
+                    <h4 class="text-uppercase">Your claimed results</h4>
                     <?php
                     if ($user_result_list) {
                         $template = array(

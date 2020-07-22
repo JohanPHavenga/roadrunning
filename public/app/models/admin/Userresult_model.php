@@ -64,6 +64,25 @@ class Userresult_model extends Admin_model {
         }
         return false;
     }
+    
+    public function get_userresult_summary($user_id) {
+
+        $this->db->select("*");
+        $this->db->from("user_result");
+        $this->db->join("users", "user_id");
+        $this->db->where('user_id', $user_id);
+//        echo $this->db->get_compiled_select();
+//        die();
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $key => $row) {
+                $userresult_list[$row['result_id']] = $row;
+            }
+            return $userresult_list;
+        }
+        return false;
+    }
 
     public function set_userresult($action, $userresult_data = [], $debug = false) {
 

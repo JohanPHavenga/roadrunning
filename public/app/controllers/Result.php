@@ -104,6 +104,48 @@ class Result extends Frontend_Controller {
         }
     }
 
+    public function auto() {
+        $this->load->model('admin/result_model');
+        $this->load->model('admin/userresult_model');
+        // set basics for the view
+        $this->data_to_views['page_title'] = "Auto search for results";
+        $this->data_to_views['meta_description'] = "Auto suggest results using your name and surname";
+        $this->data_to_views['crumbs_arr'] = [
+            "Home" => base_url(),
+            "User" => base_url("user"),
+            "My Results" => base_url("user/my-results"),
+            "Auto Search" => "",
+        ];
+        
+        $params['name'] = $this->logged_in_user['user_name'];
+        $params['surname'] = $this->logged_in_user['user_surname'];
+        
+        
+        
+        // auto search result list
+        $this->data_to_views['result_list'] = $this->result_model->auto_search($params);  
+        // get already claimed results
+        $claimed_results=$this->userresult_model->get_userresult_summary($this->logged_in_user['user_id']);
+        // remove results already claimed from the result_list
+        $already_claimed=array_intersect_key($this->data_to_views['result_list'], $claimed_results);
+        foreach ($already_claimed as $result_id=>$result) {
+            unset($this->data_to_views['result_list'][$result_id]);
+        }
+
+        $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
+        $this->data_to_views['scripts_to_load'] = [
+            base_url("assets/js/plugins/components/datatables/datatables.min.js"),
+            base_url("assets/js/data-tables.js"),
+        ];
+
+        // load view
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        $this->load->view('templates/page_menu', $this->data_to_views);
+        $this->load->view('result/auto', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
     public function view($result_id) {
         $this->load->model('admin/userresult_model');
 
@@ -189,12 +231,12 @@ class Result extends Frontend_Controller {
 
     public function my_data($dist) {
         $this->load->model('admin/userresult_model');
-        $result_list = array_reverse($this->userresult_model->get_userresult_list($this->logged_in_user['user_id'],null,null,$dist));
-        
-        foreach ($result_list as $key=>$result) {
-            $data[$key]['date']= fdateShort($result['edition_date']);
-            $data[$key]['time']= strval(strtotime("1970-01-01 ".$result['result_time']." UTC"));
-            $data[$key]['race']= $result['edition_name'];
+        $result_list = array_reverse($this->userresult_model->get_userresult_list($this->logged_in_user['user_id'], null, null, $dist));
+
+        foreach ($result_list as $key => $result) {
+            $data[$key]['date'] = fdateShort($result['edition_date']);
+            $data[$key]['time'] = strval(strtotime("1970-01-01 " . $result['result_time'] . " UTC"));
+            $data[$key]['race'] = $result['edition_name'];
         }
         echo json_encode($data);
     }

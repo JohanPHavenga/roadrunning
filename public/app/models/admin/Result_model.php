@@ -140,6 +140,32 @@ class Result_model extends Admin_model {
 
         return $this->db->get();
     }
+    
+    public function auto_search($params) {
+
+        $search_result = [];
+
+        $this->db->select("results.*,race_distance,edition_name, edition_date");
+        $this->db->from($this->table);
+        $this->db->join('races', 'race_id');
+        $this->db->join('editions', 'edition_id');
+        $this->db->where('result_name', $params['name'], NULL, false);
+        $this->db->where('result_surname', $params['surname'], NULL, false);
+        $this->db->order_by("edition_date", "DESC");
+        
+//            echo $this->db->get_compiled_select();
+//            die();
+        
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['result_id']] = $row;                
+            }
+            return $data;
+        }
+        return false;
+    }
 
     public function result_exist_for_race($race_id) {
         $query = $this->db->get_where('results', array('race_id' => $race_id));
