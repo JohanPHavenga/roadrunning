@@ -11,7 +11,7 @@ class Search extends Frontend_Controller {
     }
 
     public function index() {
-        
+
         $this->load->model('admin/result_model');
 
         // SET BAIC STATUS CHECK 
@@ -96,6 +96,7 @@ class Search extends Frontend_Controller {
 
 
         // WHEN
+        set_cookie("search_when_pref", $this->input->post("when"), 7200);
         switch ($this->input->post("when")) {
             case "any":
                 $from_date = date("2016-10-01 00:00:00");
@@ -158,12 +159,12 @@ class Search extends Frontend_Controller {
             foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
                 // set has result field for both races and editions
-                $this->data_to_views['edition_list'][$edition_id]['has_results']=false;
-                foreach ($edition_data['race_list'] as $race_id=>$race) {
-                    $has_result=$this->result_model->result_exist_for_race($race_id);
-                    $this->data_to_views['edition_list'][$edition_id]['race_list'][$race_id]['has_results']=$has_result;
+                $this->data_to_views['edition_list'][$edition_id]['has_results'] = false;
+                foreach ($edition_data['race_list'] as $race_id => $race) {
+                    $has_result = $this->result_model->result_exist_for_race($race_id);
+                    $this->data_to_views['edition_list'][$edition_id]['race_list'][$race_id]['has_results'] = $has_result;
                     if ($has_result) {
-                        $this->data_to_views['edition_list'][$edition_id]['has_results']=$has_result;
+                        $this->data_to_views['edition_list'][$edition_id]['has_results'] = $has_result;
                     }
                 }
             }

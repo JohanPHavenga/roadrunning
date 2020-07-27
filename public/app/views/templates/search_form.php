@@ -37,7 +37,7 @@
             </div>
             <div class="col-lg-2 col-6">
                 <?php
-                echo form_label('When', 'when');
+                echo form_label("When", 'when');
                 $time_options = array(
                     'any' => 'Anytime',
                     'weekend' => 'This weekend',
@@ -47,7 +47,13 @@
                     'plus_1y' => '+ 1 year',
                     'minus_6m' => 'Past 6 months',
                 );
-                echo form_dropdown('when', $time_options, set_value('when', 'plus_1y'), ["id" => "when"]);
+                
+                if(get_cookie("search_when_pref")) {
+                    $init_when_value = get_cookie("search_when_pref");
+                } else {
+                    $init_when_value = 'plus_1y';
+                }
+                echo form_dropdown('when', $time_options, set_value('when', $init_when_value), ["id" => "when"]);
                 ?>
             </div>
 
