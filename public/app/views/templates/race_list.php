@@ -16,7 +16,7 @@
                             <?php
                             if ($edition_list) {
                                 foreach ($edition_list as $edition_id => $edition) {
-                                    $badge_state=false;
+                                    $badge_state = false;
                                     foreach ($edition['race_list'] as $race) {
                                         if ($race['racetype_abbr'] == "R/W") {
                                             $race['racetype_abbr'] = "R";
@@ -46,22 +46,22 @@
                                             echo date("d M", strtotime($edition['edition_date'])) . " - " . $edition['edition_name'];
                                             if ($edition['edition_isfeatured']) {
                                                 echo "</b>";
-                                                $badge_state="success";
-                                                $badge_text="Featured";
+                                                $badge_state = "success";
+                                                $badge_text = "Featured";
                                             }
-                                            
+
                                             // check state for badge
-                                            if ($edition['edition_status']==3) {
-                                                $badge_state="danger";
-                                                $badge_text="Cancelled";
+                                            if ($edition['edition_status'] == 3) {
+                                                $badge_state = "danger";
+                                                $badge_text = "Cancelled";
                                             }
                                             // check state for badge
-                                            if ($edition['edition_status']==9) {
-                                                $badge_state="warning";
-                                                $badge_text="Postponed";
+                                            if ($edition['edition_status'] == 9) {
+                                                $badge_state = "warning";
+                                                $badge_text = "Postponed";
                                             }
-                                            
-                                            if ($badge_state) {                                                
+
+                                            if ($badge_state) {
                                                 echo " <span class='badge badge-$badge_state'>$badge_text</span>";
                                             }
 //                                            echo "&nbsp";
@@ -87,9 +87,18 @@
                                                 <b>Info Status:</b> <?= $edition['status_info']['short_msg']; ?>
                                             </p>
 
-                                            <p>
-                                                <a class="btn btn-light btn-sm" href="<?= base_url("event/" . $edition['edition_slug']); ?>">More Info</a>
-                                            </p>
+                                            <div class="btn-group m-l-25">
+                                                <a class="btn btn-outline btn-sm" href="<?= base_url("event/" . $edition['edition_slug']); ?>">View <i class="fa fa-eye"></i></a>
+                                                <?php
+                                                if (isset($edition['has_results'])) {
+                                                    if ($edition['has_results']) {
+                                                        ?>
+                                                        <a class="btn btn-outline btn-sm" href="<?= base_url("event/" . $edition['edition_slug']) . "/results"; ?>">Results <i class="fa fa-list-alt" aria-hidden="true"></i></a>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
                                             <?php
 //                                            wts($edition);
 //                                            wts($race_summary);

@@ -248,19 +248,27 @@ class Dashboard extends Admin_Controller {
 
         $this->load->library('table');
         $this->load->model('admin/event_model');
+        $this->load->model('admin/result_model');
 
         if ($this->input->get('query')) {
             $params = ["ss" => $this->input->get('query'), "inc_all" => true, "inc_non_active" => true];
-            $this->data_to_view['search_results'] = $this->event_model->get_event_list_summary($from = "search", $params);
+//            $this->data_to_view['search_results'] = $this->event_model->get_event_list_summary($from = "search", $params);
+            $search_results = $this->event_model->main_search($this->input->get('query'));
             $this->data_to_view['msg'] = "<p>We could <b>not find</b> any event matching your search.<br>Please try again.</p>";
+
+            // check for results
+            foreach ($search_results as $edition_id => $edition) {
+                foreach ($edition['races'] as $race_id=>$race) {
+                    $edition['races'][$race_id]['has_results']=$this->result_model->result_exist_for_race($race_id);
+                }
+                $this->data_to_view['search_results'][$edition_id] = $edition;
+            }
         } else {
             $this->data_to_view['msg'] = "Please use the <b>search box</b> above to seach for a race.";
         }
 
 //        wts($this->data_to_view['search_results']);
 //        die();
-
-        $this->data_to_view['heading'] = ["ID", "Edition Name", "Status", "Edition Date", "Event Name", "Actions"];
 
         $this->data_to_header['css_to_load'] = array(
             "assets/admin/plugins/datatables/datatables.min.css",

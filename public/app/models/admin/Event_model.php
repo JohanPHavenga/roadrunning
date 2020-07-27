@@ -10,7 +10,7 @@ class Event_model extends Admin_model {
     public function record_count() {
         return $this->db->count_all("events");
     }
-    
+
     public function get_event_id($event_name) {
         $this->db->select("event_id");
         $this->db->from("events");
@@ -22,7 +22,7 @@ class Event_model extends Admin_model {
                 $data = $row['event_id'];
             }
             return $data;
-        } 
+        }
         return false;
     }
 
@@ -94,10 +94,10 @@ class Event_model extends Admin_model {
             $organise_club_data = ["club_id" => $this->input->post('club_id'), "event_id" => $event_id];
         } else {
             if ($event_data['club_id']) {
-                $club_id=$event_data['club_id'];
+                $club_id = $event_data['club_id'];
                 unset($event_data['club_id']);
             } else {
-                $club_id=8;
+                $club_id = 8;
             }
             $organise_club_data = ["club_id" => $club_id, "event_id" => $event_id];
             if (!isset($event_data['event_status'])) {
@@ -232,13 +232,13 @@ class Event_model extends Admin_model {
         }
 
         if (isset($params['info_status'])) {
-            $this->db->where_in("edition_info_status",$params['info_status']);
+            $this->db->where_in("edition_info_status", $params['info_status']);
         }
-        
+
         if (isset($params['entry_date'])) {
             $this->db->join('dates', "editions.edition_id = dates.linked_id AND dates.date_linked_to='edition' AND datetype_id = 3", 'left');
             $this->db->where("(date_end BETWEEN '" . $params['date_from'] . "' AND '" . $params['entry_date'] . "')");
-        } 
+        }
 
         // ONLY ACTIVE 
         if (@$params['only_active']) {
@@ -264,7 +264,6 @@ class Event_model extends Admin_model {
 //            $this->db->where("edition_results_status", $params['results_status']);
 //            $this->db->where("edition_status", 1);
 //        }
-        
         // TBR END
 
         $this->db->order_by("edition_date", $sort);
@@ -314,7 +313,7 @@ class Event_model extends Admin_model {
                         "info_status" => @$params['info_status'],
                         "only_active" => @$params['only_active'],
                         "entry_date" => @$params['entry_date'],
-                        // below to be removed
+                    // below to be removed
 //                        "confirmed" => @$params['confirmed'],
 //                        "results" => @$params['results'],
 //                        "results_status" => @$params['results_status'],
@@ -449,7 +448,7 @@ class Event_model extends Admin_model {
 
         // next 3 months races
         if (isset($params['upcoming_close'])) {
-            $this->db->where_in("edition_info_status", [14,15]);
+            $this->db->where_in("edition_info_status", [14, 15]);
 //            $this->db->where("edition_info_isconfirmed !=", 1);
             $this->db->where("(edition_date BETWEEN '" . $today . "' AND '" . $date_to . "')");
         }
@@ -457,7 +456,7 @@ class Event_model extends Admin_model {
         // rest of upcoming races
         if (isset($params['upcoming_further'])) {
 //            $this->db->where("edition_info_isconfirmed !=", 1);
-            $this->db->where_in("edition_info_status", [13,14,15]);
+            $this->db->where_in("edition_info_status", [13, 14, 15]);
             $this->db->where("edition_date >= ", $date_to);
         }
 
@@ -474,7 +473,7 @@ class Event_model extends Admin_model {
 
         // no results, more than 3 months, less than a year
         if (isset($params['no_results_year'])) {
-            $this->db->where_in("edition_info_status", [10,12]);
+            $this->db->where_in("edition_info_status", [10, 12]);
             $this->db->where("(edition_date BETWEEN '" . $year_ago . "' AND '" . $date_from . "')");
         }
 
@@ -519,7 +518,7 @@ class Event_model extends Admin_model {
         $this->db->group_end();
 
         if (!$incl_non_active) {
-            $this->db->where_in("events.event_status", [1,3,4]);
+            $this->db->where_in("events.event_status", [1, 3, 4]);
             $this->db->where("editions.edition_status", 1);
             $this->db->where("races.race_status", 1);
         }
@@ -547,15 +546,15 @@ class Event_model extends Admin_model {
         $this->db->select("events.event_id, event_name, edition_id, edition_name, edition_date, asa_member_abbr");
         $this->db->from("events");
         $this->db->join('editions', 'event_id');
-        $this->db->join('edition_asa_member', 'edition_id','left');
-        $this->db->join('asa_members', 'asa_member_id','left');
+        $this->db->join('edition_asa_member', 'edition_id', 'left');
+        $this->db->join('asa_members', 'asa_member_id', 'left');
         $this->db->where("(edition_date BETWEEN '" . $date_from . "' AND '" . $date_to . "')");
-        $this->db->where("edition_remove_audit",0);
+        $this->db->where("edition_remove_audit", 0);
         $this->db->order_by("edition_date", "ASC");
-        
+
 //        echo $this->db->get_compiled_select();
 //        die();
-        
+
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -631,6 +630,44 @@ class Event_model extends Admin_model {
                 $data[$row['edition_id']]['edition_year'] = date("Y", strtotime($row['edition_date']));
                 $edition_url_name = encode_edition_name($data[$row['edition_id']]['edition_name']);
                 $data[$row['edition_id']]['edition_url'] = "/event/" . $row['edition_slug'];
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function main_search($ss) {
+
+        $search_result = [];
+
+        $this->db->select("editions.edition_id, edition_name, edition_date, event_name, edition_status, status_name, race_id, race_distance");
+        $this->db->from("events");
+        $this->db->join('editions', 'editions.event_id = events.event_id');
+        $this->db->join('status', 'editions.edition_status = status.status_id');
+        $this->db->join('races', 'races.edition_id = editions.edition_id');
+        $this->db->join('towns', 'towns.town_id = events.town_id');
+        $this->db->join('racetypes', 'races.racetype_id = racetypes.racetype_id', 'left outer');
+        $this->db->group_start();
+        $this->db->or_like("event_name", $ss);
+        $this->db->or_like("edition_name", $ss);
+        $this->db->or_like("town_name", $ss);
+        $this->db->group_end();
+        $this->db->order_by("edition_date", "DESC");
+        $this->db->order_by("race_distance", "DESC");
+
+        $query = $this->db->get();
+//            echo $this->db->get_compiled_select();
+//            die();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']]['edition_name'] = $row['edition_name'];
+                $data[$row['edition_id']]['edition_date'] = $row['edition_date'];
+                $data[$row['edition_id']]['event_name'] = $row['event_name'];
+                $data[$row['edition_id']]['status_id'] = $row['edition_status'];
+                $data[$row['edition_id']]['status_name'] = $row['status_name'];
+                $data[$row['edition_id']]['races'][$row['race_id']]['distance'] = $row['race_distance'];
+                $data[$row['edition_id']]['races'][$row['race_id']]['color']=$this->get_race_color($row['race_distance']);
             }
             return $data;
         }

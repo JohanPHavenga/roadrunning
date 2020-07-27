@@ -2,13 +2,13 @@
     <div class="container">
         <div class="row m-b-5">
             <div class="col-lg-10">
-                <h2>Results</h2>
+                <h2><?= $edition_data['edition_name']; ?> Race Results</h2>
             </div>
         </div>
         <?php
         $this->load->view('widgets/race_meta');
         ?>      
-        <div class="row m-t-20">
+        <div class="row m-t-30">
             <!-- Content-->
             <?php
             $mailing_list_notice = "<p>If you would like to be <b>notified once results are loaded</b>, "
@@ -86,7 +86,7 @@
                                     <div class="row pricing-table colored">
                                         <?php
                                         foreach ($results['race'] as $racetype_abbr => $racetype_list) {
-                                            
+
                                             foreach ($racetype_list as $dist => $race_result) {
 //                                                wts($race_result);
                                                 $url = base_url("event/" . $slug . "/results/" . $dist . "/" . $racetype_abbr);
@@ -193,6 +193,11 @@
                 }
             }
             ?>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="<?= base_url("event/".$slug); ?>" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> Back</a>
+            </div>
         </div>
         <!-- end: Content-->
     </div>

@@ -11,6 +11,8 @@ class Search extends Frontend_Controller {
     }
 
     public function index() {
+        
+        $this->load->model('admin/result_model');
 
         // SET BAIC STATUS CHECK 
         $search_params['where_in']["edition_status"] = [1, 3, 9];
@@ -28,7 +30,7 @@ class Search extends Frontend_Controller {
             $this->edition_model->log_search($this->input->post("query"));
         }
         // WHERE
-        if ($this->input->post("where")!==NULL) {
+        if ($this->input->post("where") !== NULL) {
             switch ($this->input->post("where")) {
                 case "my":
                     if (isset($this->session->region_selection)) {
@@ -53,7 +55,7 @@ class Search extends Frontend_Controller {
             $search_params['where_in']["region_id"] = $this->session->region_selection;
         }
 
-        // DISTANCE 
+        // DISTANCE
         // search dalk eers races, en pass dan 'n lys van edition IDs
         switch ($this->input->post("distance")) {
             case 'fun':
@@ -155,6 +157,15 @@ class Search extends Frontend_Controller {
         if (!empty($this->data_to_views['edition_list'])) {
             foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+                // set has result field for both races and editions
+                $this->data_to_views['edition_list'][$edition_id]['has_results']=false;
+                foreach ($edition_data['race_list'] as $race_id=>$race) {
+                    $has_result=$this->result_model->result_exist_for_race($race_id);
+                    $this->data_to_views['edition_list'][$edition_id]['race_list'][$race_id]['has_results']=$has_result;
+                    if ($has_result) {
+                        $this->data_to_views['edition_list'][$edition_id]['has_results']=$has_result;
+                    }
+                }
             }
         }
 
