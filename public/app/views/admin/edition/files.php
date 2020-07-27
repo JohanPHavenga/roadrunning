@@ -27,7 +27,7 @@
                 ];
 
                 $file_id = my_encrypt($data_entry['file_id']);
-                $file_url = base_url("file/handler/" . $file_id);
+                $file_url = base_url("file/edition/" . $slug . "/results/" . $data_entry['file_name']);
 
                 $row['id'] = $data_entry['file_id'];
                 $row['file_name'] = "<a href='$file_url' target='_blank'>" . $data_entry['file_name'] . "</a>";

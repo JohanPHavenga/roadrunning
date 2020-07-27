@@ -16,7 +16,7 @@
             ?>
 
             <div class="row">
-                <div class='col-md-6 col-sm-6'>
+                <div class='col-md-12 col-sm-12'>
                     <div class='form-group'>
                         <?php
                         echo form_label('Race <span class="compulsary">*</span>', 'race_id');
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class='row'>
-                <div class='col-md-8'>
+                <div class='col-md-12'>
                     <div class='form-group'>
                         <?php
                         echo form_label('File to upload <span class="compulsary">*</span>', 'result_file');

@@ -272,7 +272,7 @@ class Event extends Frontend_Controller {
         foreach ($this->data_to_views['race_list'] as $race_id => $race) {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
             $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
-            $round_dist = round($race['race_distance']);
+            $round_dist = floor($race['race_distance']);
             if (isset($race_file_list[4])) {
                 $results['race'][$race['racetype_abbr']][$round_dist]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
                 $results['race'][$race['racetype_abbr']][$round_dist]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];

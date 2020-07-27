@@ -12,7 +12,7 @@
             <div class="content col-lg-12">
                 <div class="row">
                     <div class="col-md-8">
-                        <h3 class="text-uppercase m-b-0"><span class="badge badge-<?= $race_info['race_color']; ?>"><?= round($race_info['race_distance'], 0); ?>km</span></h3>
+                        <h3 class="text-uppercase m-b-0"><span class="badge badge-<?= $race_info['race_color']; ?>"><?= round($race_info['race_distance'],1); ?>km</span></h3>
                         <h4 class="text-uppercase m-b-0"><?= $race_info['edition_name']; ?></h4>
                         <h5 class="text-uppercase" style="color: #999;"><?= fdateHumanFull($race_info['edition_date'], true); ?></h5>
                     </div>
