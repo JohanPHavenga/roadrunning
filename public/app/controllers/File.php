@@ -53,7 +53,7 @@ class File extends Frontend_Controller {
                         break;
                     }
                 }
-                echo $race_id;
+//                echo $race_id;
                 $file_list = $this->file_model->get_file_list("race", $race_id, true);
                 $filetype_list = $this->file_model->get_filetype_list();
                 $filetype_id = $filetype_list[$filetype_name];
@@ -80,6 +80,7 @@ class File extends Frontend_Controller {
         }
         // Get details
         $file_detail = $this->file_model->get_file_detail($file_id);
+//        wts($file_detail,1);
         // If there is no details
         if (!$file_detail) {
             $this->show_my_404("No file found with that file ID", "danger");
@@ -90,13 +91,19 @@ class File extends Frontend_Controller {
         // add race id section here
         // set path
         $path = "./uploads/" . $id_type . "/" . $id . "/" . $file_detail['file_name'];
-        
+
         if (file_exists($path)) {
             switch ($file_detail['file_ext']) {
                 case ".xls":
                 case ".xlsx":
+//                    die("oops");
                     header("X-Robots-Tag: noindex, nofollow", true);
-                    $this->download($path);
+                    // We'll be outputting a XLS
+                    header('Content-Type: application/xls');
+                    // It will be called filename
+                    header('Content-Disposition: attachment; filename="' . $file_detail['file_name'] . '"');
+                    // The file source
+                    readfile($path);
                     break;
                 default:
                     $this->display($file_detail['file_type'], $path);

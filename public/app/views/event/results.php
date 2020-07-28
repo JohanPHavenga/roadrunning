@@ -48,6 +48,10 @@
                 } else {
                     $d = "day";
                 }
+
+                // add time provider info
+                $this->load->view('widgets/timingprovider');
+
                 switch ($edition_data['edition_info_status']) {
                     case 10:
                         // pending
@@ -196,7 +200,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <a href="<?= base_url("event/".$slug); ?>" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> Back</a>
+                <a href="<?= base_url("event/" . $slug); ?>" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> Back</a>
             </div>
         </div>
         <!-- end: Content-->
