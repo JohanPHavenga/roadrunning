@@ -125,13 +125,18 @@ class Login extends Frontend_Controller {
             'status' => "success",
         ]);
 
-        // redirect to last valid page visited. Driven by last 5 urls saved in History module       
+        // redirect to last valid page visited. Driven by last 5 urls saved in History module
         if (isset($_SESSION['last_5_urls'])) {
-            if (strpos($_SESSION['last_5_urls'][0], "confirm_email") !== false) {
+            if (
+                    (strpos($_SESSION['last_5_urls'][0], "confirm_email") !== false) ||
+                    (strpos($_SESSION['last_5_urls'][0], "reset_password") !== false) ||
+                    (strpos($_SESSION['last_5_urls'][0], "forgot_password") !== false) ||
+                    (strpos($_SESSION['last_5_urls'][0], "register") !== false)
+            ) {
                 redirect(base_url('user'));
                 die();
             } else {
-                redirect($_SESSION['last_5_urls'][0]);                
+                redirect($_SESSION['last_5_urls'][0]);
                 die();
             }
         } else {

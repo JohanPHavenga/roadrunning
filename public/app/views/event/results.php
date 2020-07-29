@@ -49,9 +49,6 @@
                     $d = "day";
                 }
 
-                // add time provider info
-                $this->load->view('widgets/timingprovider');
-
                 switch ($edition_data['edition_info_status']) {
                     case 10:
                         // pending
@@ -80,6 +77,8 @@
                         <?php
                         break;
                     case 11;
+                        // add time provider info
+                        $this->load->view('widgets/timingprovider');
                         // loaded
                         if (isset($results['race'])) {
                             ?>
