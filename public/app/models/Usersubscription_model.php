@@ -43,8 +43,8 @@ class Usersubscription_model extends Frontend_model {
         if ($linked_id) {
             $this->db->where('linked_id', $linked_id);
         }
-//        echo $this->db->get_compiled_select();
-//        die();        
+        echo $this->db->get_compiled_select();
+        die();        
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

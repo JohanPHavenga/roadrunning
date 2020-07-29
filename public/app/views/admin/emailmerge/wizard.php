@@ -8,45 +8,39 @@ echo form_open($form_url);
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase"><?=$title;?></span>
+                    <span class="caption-subject font-dark bold uppercase"><?= $title; ?></span>
                 </div>
             </div>
             <div class="portlet-body">
-                <?php
-                //  EMAIL TEMPLATE
-                echo "<div class='form-group'>";
-                echo "<div class='row'>";
-                echo "<div class='col-md-12 linked_to'>";
-                echo form_label('Template to use <span class="compulsary">*</span>', 'emailtemplate_id');
-                echo form_dropdown('emailtemplate_id', $emailtemplate_dropdown, "", ["id" => "emailtemplate_id", "class" => "form-control input-large", "required" => ""]);
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-                ?>
-            </div>
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase">Pull user subscription information from:</span>
+                <div class='form-group'>
+                    <div class="row">
+                        <div class='col-md-12 linked_to'>
+                            <?php
+                            //  EMAIL TEMPLATE
+                            echo form_label('Template to use <span class="compulsary">*</span>', 'emailtemplate_id');
+                            echo form_dropdown('emailtemplate_id', $emailtemplate_dropdown, "", ["id" => "emailtemplate_id", "class" => "form-control input-large", "required" => ""]);
+                            ?>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="portlet-body">
-                <?php
-                //  Linked to
-                echo "<div class='form-group'>";
-                echo "<div class='row'>";
-                echo "<div class='col-md-12 linked_to'>";
-                echo form_label('Subscribed to? <span class="compulsary">*</span>', 'linked_to');
-                $dropdown_data = [
-                    "id" => "linked_to",
-                    "class" => "form-control input-xlarge",
-                    "required" => "required"
-                ];
-                echo form_dropdown('linked_to', $linked_to_dropdown, @$usersubscription_detail['linked_to'], $dropdown_data);
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
+                <div class='form-group'>
+                    <div class="row">
+                        <div class='col-md-12 linked_to'>
+                            <?php
+                            //  LINKED TO TYPE
+                            echo form_label('Subscribed to? <span class="compulsary">*</span>', 'linked_to');
+                            $dropdown_data = [
+                                "id" => "linked_to",
+                                "class" => "form-control input-xlarge",
+                                "required" => "required"
+                            ];
+                            echo form_dropdown('linked_to', $linked_to_dropdown, @$usersubscription_detail['linked_to'], $dropdown_data);
+                            ?>
+                        </div>
+                    </div>
+                </div>
 
+                <?php
                 foreach ($linked_to_list as $linked_to_id => $linked_to_name) {
                     $h_class = "input-" . $linked_to_name;
                     $h_id = 0;
@@ -59,35 +53,79 @@ echo form_open($form_url);
                     } else {
                         $h_id = @$usersubscription_detail['linked_id'];
                     }
-                    echo "<div class='form-group $h_class'>";
-                    echo "<div class='row'>";
-                    echo "<div class='col-md-12'>";
-                    echo form_label(ucfirst($linked_to_name), $linked_id_name);
-                    $dropdown_data = [
-                        "id" => $linked_id_name,
-                        "class" => "form-control input-xlarge",
-                        "required" => "required"
-                    ];
-                    echo form_dropdown($linked_id_name, $$dropdown_name, @$h_id, $dropdown_data);
-                    echo "</div>";
-                    echo "</div>";
-                    echo "</div>";
+                    ?>
+                    <div class='form-group <?= $h_class; ?>'>
+                        <div class="row">
+                            <div class='col-md-12 linked_to_type'>
+                                <?php
+                                //  LINKED TO 
+                                echo form_label(ucfirst($linked_to_name), $linked_id_name);
+                                $dropdown_data = [
+                                    "id" => $linked_id_name,
+                                    "class" => "form-control input-xlarge",
+                                    "required" => "required"
+                                ];
+                                echo form_dropdown($linked_id_name, $$dropdown_name, @$h_id, $dropdown_data);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
                 }
-
-                echo "<div class='form-group'>";
-                echo "<div class='row'>";
-                echo "<div class='col-md-12'>";
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-
-                //  BUTTONS
-                echo "<div class='btn-group'>";
-                echo fbutton($text = "Continue", $type = "submit", $status = "primary");
-                echo fbuttonLink($return_url, "Cancel", $status = "default");
-                echo "</div>";
-
                 ?>
+                <div class="form-group hidden-date-range">
+                    <div class="row">
+                        <div class='col-sm-3 col-md-6'>
+                            <?php
+                            echo form_label("Date From", "date_from");
+                            $form_input_array = [
+                                'name' => 'date_from',
+                                'id' => "date_from",
+                                'class' => 'form-control',
+                                'value' => set_value("date_from", date("Y-m-d", strtotime("+1 month"))),
+                            ];
+                            echo '<div class="input-group date date-picker">';
+                            echo form_input($form_input_array);
+                            echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
+                            ?>
+                        </div>
+                        <div class='col-sm-3 col-md-6'>
+                            <?php
+                            echo form_label("Date To", "date_to");
+                            $form_input_array = [
+                                'name' => 'date_to',
+                                'id' => "date_to",
+                                'class' => 'form-control',
+                                'value' => set_value("date_to", date("Y-m-d", strtotime("+2 months"))),
+                            ];
+                            echo '<div class="input-group date date-picker">';
+                            echo form_input($form_input_array);
+                            echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class='col-md-4'>
+                            <?php
+                            echo form_label("Status","status");
+                            $dropdown_data = [
+                                "id" => "status",
+                                "class" => "form-control input-small",
+                                "required" => "required"
+                            ];
+                            echo form_dropdown("status", $status_dropdown, "status", $dropdown_data);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='btn-group'>
+                    <?php
+                    //  BUTTONS
+                    echo fbutton($text = "Continue", $type = "submit", $status = "primary");
+                    echo fbuttonLink($return_url, "Cancel", $status = "default");
+                    ?>
+                </div>
             </div>
         </div>
     </div>
@@ -133,6 +171,6 @@ echo form_open($form_url);
     ?>
 </div>
 <?php
- echo form_close();
+echo form_close();
 //wts(@$usersubscription_detail);
 ?>

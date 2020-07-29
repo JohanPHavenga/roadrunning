@@ -334,6 +334,44 @@ class Edition_model extends Admin_model {
             return false;
         }
     }
+    
+    public function get_edition_user_list($query_params = [], $field_arr = NULL, $show_query=false) {
+        if (is_null($field_arr)) {
+            $field_arr = [
+                "edition_id", "edition_name", "user_id", "edition_date"
+            ];
+        }
+        $select = implode(",", $field_arr);
+        $this->db->select($select);
+        $this->db->from("editions");
+        $this->db->join('edition_user', 'edition_id', 'left');
+        $this->db->join('users', 'user_id', 'left');
+        
+        foreach ($query_params as $operator => $clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field => $value) {
+                    $this->db->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
+        }
+        if (!isset($query_params['order_by'])) {
+            $this->db->order_by('edition_date', 'ASC');
+        }
+        if ($show_query) {
+            die($this->db->get_compiled_select());
+        }
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
 
     public function set_edition($action, $edition_id, $edition_data = [], $debug = false) {
 

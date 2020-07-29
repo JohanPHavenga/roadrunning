@@ -3,6 +3,8 @@
 // NOT SURE IF THIS CONTROLLER IS IN USE 
 // bar the dropdown method that returns nothing
 
+// seems it is needed for the email merge module
+
 
 class Newsletter_model extends Admin_model {
 
@@ -38,6 +40,7 @@ class Newsletter_model extends Admin_model {
 
         if ($query->num_rows() > 0) {
             $data[] = "Please Select";
+            $data[0] = "All";
             foreach ($query->result_array() as $row) {
                 $data[$row['newsletter_id']] = $row['newsletter_name'];
             }

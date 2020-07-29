@@ -70,6 +70,7 @@ class Emailmerge extends Admin_Controller {
         $this->load->library('form_validation');
         $this->load->model('admin/emailtemplate_model');
         $this->load->model('admin/usersubscription_model');
+        $this->load->model('admin/edition_model');
 
         // set data
         $this->data_to_header['title'] = $this->data_to_view['title'] = "Setup Mail Merge";
@@ -83,22 +84,26 @@ class Emailmerge extends Admin_Controller {
         ];
 
         $this->data_to_header['css_to_load'] = array(
-            "assets/admin/plugins/typeahead/typeahead.css"
+            "assets/admin/plugins/typeahead/typeahead.css",
+            "assets/admin/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css",
         );
 
         $this->data_to_footer['js_to_load'] = array(
             "assets/admin/plugins/typeahead/handlebars.min.js",
             "assets/admin/plugins/typeahead/typeahead.bundle.min.js",
+            "assets/admin/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
         );
 
         $this->data_to_footer['scripts_to_load'] = array(
             "assets/admin/scripts/autocomplete.js",
             "assets/admin/scripts/linked_to_hide_show.js",
+            "assets/admin/scripts/components-date-time-pickers.js",
         );
 
         $this->data_to_view['emailtemplate_dropdown'] = $this->emailtemplate_model->get_emailtemplate_dropdown();
-        $this->data_to_view['linked_to_dropdown'] = $this->emailmerge_model->get_linked_to_dropdown(7);
-        $this->data_to_view['linked_to_list'] = $this->emailmerge_model->get_linked_to_list(7);
+        $this->data_to_view['linked_to_dropdown'] = $this->emailmerge_model->get_linked_to_dropdown(8);
+        $this->data_to_view['linked_to_list'] = $this->emailmerge_model->get_linked_to_list(8);
+        $this->data_to_view['status_dropdown'] = $this->emailmerge_model->get_status_list("main");
 
         // unset linked to we are not using for now
         $unset_arr = [1, 3, 4, 5, 6];
@@ -116,7 +121,6 @@ class Emailmerge extends Admin_Controller {
 
             $this->load->model("admin/" . $model);
             $this->data_to_view[$dropdown] = $this->$model->$method();
-            $this->data_to_view[$dropdown][0] = "All";
         }
 
         // set validation rules
@@ -138,11 +142,30 @@ class Emailmerge extends Admin_Controller {
             }
             // get type of ID to use and get USER list
             $id_name = $this->input->post('linked_to') . "_id";
-            $user_arr = $this->usersubscription_model->get_usersubscription_list($this->input->post('linked_to'), $this->input->post($id_name));
+
+            // exception written for organiser emails as you are not really subscriped to it
+            if ($this->input->post('linked_to') == "organiser") {
+                $query_params = [
+                    "where" => [
+                        "edition_status" => $this->input->post('status'), 
+                        ],
+                    "order_by" => ["editions.edition_date" => "ASC"],
+                ];
+                if ($this->input->post('organiser_id')=="date_range") {
+                    $query_params["where"]["edition_date >="] = $this->input->post('date_from');
+                    $query_params["where"]["edition_date <="] = $this->input->post('date_to');
+                }
+                wts($query_params);
+                
+                $user_arr=$this->edition_model->get_edition_user_list($query_params);
+            } else {
+                $user_arr = $this->usersubscription_model->get_usersubscription_list($this->input->post('linked_to'), $this->input->post($id_name));
+            }
+
             $user_str = "";
             if (!empty($user_arr)) {
                 foreach ($user_arr as $user) {
-                    $user_list[] = $user['user_id'];
+                    $user_list[$user['user_id']] = $user['user_id'];
                 }
                 $user_str = implode(",", $user_list);
             }
@@ -160,7 +183,7 @@ class Emailmerge extends Admin_Controller {
 //            wts($_POST);
 //            wts($emailtemplate);
 //            wts($user_list);
-//            wts($merge_data);
+//            wts($merge_data, 1);
 
             redirect($this->create_url . "/edit/" . $emailmerge_id);
         }
@@ -404,7 +427,7 @@ class Emailmerge extends Admin_Controller {
             $post_text .= "<br><a href='$url'>Unsubscribe</a> from this list</p>";
         } else {
             $post_text .= "</p>";
-        }        
+        }
         $html_body = $this->set_email_body($text, $post_text);
         return $html_body;
     }
@@ -431,7 +454,7 @@ class Emailmerge extends Admin_Controller {
                 $this->load->model('admin/edition_model');
                 $this->load->model('admin/date_model');
                 $edition_detail = $this->edition_model->get_edition_detail_lite($linked_id);
-                $date_list=$this->date_model->get_date_list($linked_to,$linked_id,false,true);
+                $date_list = $this->date_model->get_date_list($linked_to, $linked_id, false, true);
                 $merge_data['edition_name'] = $edition_detail['edition_name'];
                 $merge_data['event_name'] = $edition_detail['event_name'];
                 $merge_data['edition_date'] = fdateHumanFull($edition_detail['edition_date'], true);
@@ -439,8 +462,10 @@ class Emailmerge extends Admin_Controller {
                 $url = $this->edition_model->get_edition_url_from_id($linked_id);
                 $merge_data['edition_url'] = $url['edition_url'];
                 if (isset($date_list[3])) {
-                    $merge_data['entries_close'] = fdateHumanFull($date_list[3][0]['date_end'],true, true);
+                    $merge_data['entries_close'] = fdateHumanFull($date_list[3][0]['date_end'], true, true);
                 }
+                break;
+            case "organiser":
                 break;
             default:
                 die("linked to not defined");
