@@ -70,3 +70,6 @@
 </body>
 
 </html>
+<?php
+wts($_SESSION);
+?>

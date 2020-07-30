@@ -18,7 +18,7 @@ class Organiser_model extends Admin_model {
 
 
         if ($query->num_rows() > 0) {
-            $data["all"] = "All";
+//            $data["all"] = "All";
             $data["date_range"] = "Date Range";
             return $data;
         }

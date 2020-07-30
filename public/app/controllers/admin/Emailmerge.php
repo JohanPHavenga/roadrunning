@@ -147,17 +147,22 @@ class Emailmerge extends Admin_Controller {
             if ($this->input->post('linked_to') == "organiser") {
                 $query_params = [
                     "where" => [
-                        "edition_status" => $this->input->post('status'), 
-                        ],
+                        "edition_status" => $this->input->post('status'),
+                    ],
                     "order_by" => ["editions.edition_date" => "ASC"],
                 ];
-                if ($this->input->post('organiser_id')=="date_range") {
+                if ($this->input->post('organiser_id') == "date_range") {
                     $query_params["where"]["edition_date >="] = $this->input->post('date_from');
                     $query_params["where"]["edition_date <="] = $this->input->post('date_to');
                 }
-                wts($query_params);
                 
-                $user_arr=$this->edition_model->get_edition_user_list($query_params);
+                // need to put this in the session to allow for the fill of merege varibles - to find he correct editions from user IDs
+                $_SESSION['temp']['emailmerge']['dates']['from'] = $this->input->post('date_from');
+                $_SESSION['temp']['emailmerge']['dates']['to'] = $this->input->post('date_to');
+                $_SESSION['temp']['emailmerge']['edition_status'] = $this->input->post('status');
+//                wts($query_params);
+
+                $user_arr = $this->edition_model->get_edition_user_list($query_params);
             } else {
                 $user_arr = $this->usersubscription_model->get_usersubscription_list($this->input->post('linked_to'), $this->input->post($id_name));
             }
@@ -415,7 +420,7 @@ class Emailmerge extends Admin_Controller {
             "%town_name%" => @$data_arr['town_name'],
             "%events_past%" => $this->formulate_newsletter_table($newsletter_data['past'], "past", true),
             "%events_future%" => $this->formulate_newsletter_table($newsletter_data['future'], "future", true),
-            "%unsubscribe_url%" => $data_arr['unsubscribe_url'],
+            "%unsubscribe_url%" => @$data_arr['unsubscribe_url'],
         );
         return strtr($text, $trans);
     }
@@ -424,7 +429,7 @@ class Emailmerge extends Admin_Controller {
         $post_text = "<p>This email was sent to " . $merge_data['email'];
         if (isset($merge_data['unsubscribe_url'])) {
             $url = $merge_data['unsubscribe_url'];
-            $post_text .= "<br><a href='$url'>Unsubscribe</a> from this list</p>";
+            $post_text .= "<br><a href='$url' style='text-decoration: underline;'>Unsubscribe</a> from this list</p>";
         } else {
             $post_text .= "</p>";
         }
@@ -466,6 +471,24 @@ class Emailmerge extends Admin_Controller {
                 }
                 break;
             case "organiser":
+                $this->load->model('admin/edition_model');
+                $query_params = [
+                    "where" => [
+                        "edition_status" => $_SESSION['temp']['emailmerge']['edition_status'],
+                        "edition_date >=" => $_SESSION['temp']['emailmerge']['dates']['from'],
+                        "edition_date <=" => $_SESSION['temp']['emailmerge']['dates']['to'],
+                        "users.user_id" => $merge_data['id'],
+                    ],
+                    "order_by" => ["editions.edition_date" => "ASC"],
+                ];   
+//                wts($merge_data);
+//                wts($query_params);
+//                wts($_SESSION['temp']['emailmerge']['dates']);
+                $user_arr = $this->edition_model->get_edition_user_list($query_params);
+                $merge_data['edition_name']=$user_arr[$merge_data['id']]["edition_name"];
+                $merge_data['edition_date']=fdateHumanFull($user_arr[$merge_data['id']]["edition_date"],true);
+                unset($merge_data['unsubscribe_url']);
+//                wts($user_arr,1);
                 break;
             default:
                 die("linked to not defined");
