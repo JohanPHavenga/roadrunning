@@ -1,3 +1,16 @@
+<?php
+if ($edition_data['edition_status'] == 17) {
+    $msg = "<strong>VIRTUAL RACE</strong> - This event has been converted to a virtual event. Please see detail below";
+    $short_msg = "VIRTUAL RACE";
+    $state = "primary";
+    $icon = "globe";
+    ?>
+    <div role="alert" class="alert alert-<?= $state; ?>">
+        <i class="fa fa-<?= $icon; ?>"></i> <?= $msg; ?> </div>
+    <?php
+}
+?>
+
 <section id="page-content" class="sidebar-right">
     <div class="container">
         <div class="row m-b-5">
@@ -171,26 +184,26 @@
                                             ?>
                                         </div>
                                     </div>
-                            
+
                                     <?php
                                     if (isset($date_list[3])) {
-                                    ?>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <?php
-                                            // check vir closing date
-                                            if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
-                                                $d = '';
-                                                // check if already closed
-                                                if (strtotime($date_list[3][0]['date_end']) < time()) {
-                                                    $d = "d";
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <?php
+                                                // check vir closing date
+                                                if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
+                                                    $d = '';
+                                                    // check if already closed
+                                                    if (strtotime($date_list[3][0]['date_end']) < time()) {
+                                                        $d = "d";
+                                                    }
+                                                    echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
                                                 }
-                                                echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
-                                            }
-                                            ?>
+                                                ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <?php
+                                        <?php
                                     }
                                 } else {
                                     ?>
@@ -373,11 +386,7 @@
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">                 
                 <?php
-                // RACE STATUS
-                if ($edition_data['edition_status'] == 1) {
-                    $this->load->view('widgets/race_status', $status_notice);
-                    echo "<div class='m-b-30'></div>";
-                }
+                
 
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Receive race notification";
@@ -391,6 +400,12 @@
 
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
+
+                // RACE STATUS
+//                if ($edition_data['edition_status'] == 1) {
+//                    $this->load->view('widgets/race_status', $status_notice);
+//                    echo "<div class='m-b-30'></div>";
+//                }
                 ?>
             </div>
             <!-- end: Sidebar-->

@@ -89,8 +89,8 @@ class Dashboard extends Admin_Controller {
 
             // unconfirmed data
             $query_params = [
-                "where_in" => ["edition_info_status" => [13, 14, 15]],
-                "where" => ["edition_date >=" => date("Y-m-d"), "edition_date <" => date("Y-m-d", strtotime("2 months")), "edition_status" => 1, "edition_remove_audit" => 0],
+                "where_in" => ["edition_info_status" => [13, 14, 15], "edition_status" => [1, 17]],
+                "where" => ["edition_date >=" => date("Y-m-d"), "edition_date <" => date("Y-m-d", strtotime("2 months")), "edition_remove_audit" => 0],
                 "order_by" => ["editions.edition_date" => "ASC"],
             ];
             $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured", "edition_info_email_sent",
@@ -99,7 +99,8 @@ class Dashboard extends Admin_Controller {
 
             // no results
             $query_params = [
-                "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-2 months")), "edition_status" => 1],
+                "where_in" => ["edition_status" => [1, 17]],
+                "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-2 months"))],
                 "order_by" => ["editions.edition_date" => "ASC"],
             ];
             $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured", "asa_member_name", "asa_member_abbr", "timingprovider_abbr"];
@@ -258,8 +259,8 @@ class Dashboard extends Admin_Controller {
 
             // check for results
             foreach ($search_results as $edition_id => $edition) {
-                foreach ($edition['races'] as $race_id=>$race) {
-                    $edition['races'][$race_id]['has_results']=$this->result_model->result_exist_for_race($race_id);
+                foreach ($edition['races'] as $race_id => $race) {
+                    $edition['races'][$race_id]['has_results'] = $this->result_model->result_exist_for_race($race_id);
                 }
                 $this->data_to_view['search_results'][$edition_id] = $edition;
             }

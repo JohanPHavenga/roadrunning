@@ -967,48 +967,48 @@ class Frontend_Controller extends MY_Controller {
                 $short_msg = "POSTPONED";
                 $state = "warning";
                 $icon = "minus-circle";
-                break;
+                break;            
             default:
                 switch ($edition_data['edition_info_status']) {
                     case 13:
-                        $msg = "<strong>PLEASE NOTE</strong><br>Dates and race times has <u>not yet been confirmed</u> by the race organisers";
+                        $msg = "<strong>PLEASE NOTE</strong> - Dates and race times has <u>not yet been confirmed</u> by the race organisers";
                         $short_msg = "Dates not confirmed yet";
                         $state = "danger";
                         $icon = "minus-circle";
                         break;
                     case 14:
-                        $msg = "<b>INFO UNCONFIRMED</b><br>Waiting for race information from the organisers";
+                        $msg = "<b>INFO UNCONFIRMED</b> - Waiting for race information from the organisers";
                         $short_msg = "Dates confirmed. Awaiting more info from organisers";
                         $state = "warning";
                         $icon = "info-circle";
                         break;
                     case 15:
-                        $msg = "<b>INFO INCOMPLETE</b><br>All information loaded has been confirmed as correct, but listing is not complete";
+                        $msg = "<b>INFO INCOMPLETE</b> - All information loaded has been confirmed as correct, but listing is not complete";
                         $short_msg = "Listing almost complete";
                         $state = "info";
                         $icon = "info-circle";
                         break;
                     case 16:
-                        $msg = "<b>LISTING VERIFIED</b><br>All information below has been confirmed";
+                        $msg = "<b>LISTING VERIFIED</b> - All information below has been confirmed";
                         $short_msg = "Listing complete";
                         $state = "success";
                         $icon = "check-circle";
                         break;
                     case 10:
-                        $msg = "<b>RESULTS PENDING</b><br>Waiting for results to be released by organisers. Note this can take up to a week";
+                        $msg = "<b>RESULTS PENDING</b> - Waiting for results to be released by organisers. Note this can take up to a week";
                         $short_msg = "Waiting for results";
                         $state = "info";
                         $icon = "info-circle";
                         break;
                     case 11:
                         $slug = $edition_data['edition_slug'];
-                        $msg = "<b>RESULTS LOADED</b><br>Click to <a href='" . base_url("event/$slug/results") . "'>view results</a>";
+                        $msg = "<b>RESULTS LOADED</b> - Click to <a href='" . base_url("event/$slug/results") . "'>view results</a>";
                         $short_msg = "Results loaded";
                         $state = "success";
                         $icon = "check-circle";
                         break;
                     case 12:
-                        $msg = "<b>NO RESULTS EXPECTED</b><br>No official results will be released for this event";
+                        $msg = "<b>NO RESULTS EXPECTED</b> - No official results will be released for this event";
                         $short_msg = "No results expexted";
                         $state = "warning";
                         $icon = "minus-circle";

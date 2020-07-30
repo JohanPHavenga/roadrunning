@@ -812,7 +812,8 @@ class Edition extends Admin_Controller {
 //        $this->session->unset_userdata('dashboard_return_url');
         // editions with no results for the last year
         $query_params = [
-            "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-1 year")), "edition_status" => 1],
+            "where_in" => ["edition_status" => [1,17]],
+            "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-1 year"))],
             "order_by" => ["editions.edition_date" => "ASC"],
         ];
         $field_list = ["edition_id", "edition_name", "edition_status", "edition_slug", "edition_date", "edition_isfeatured", "event_name", "asa_member_name", "asa_member_abbr", "timingprovider_abbr"];

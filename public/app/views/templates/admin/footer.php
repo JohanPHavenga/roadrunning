@@ -71,5 +71,5 @@
 
 </html>
 <?php
-wts($_SESSION);
+//wts($_SESSION);
 ?>

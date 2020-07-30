@@ -187,6 +187,10 @@ function flableStatus($status_num) {
             $text = "Postponed";
             $status = "warning";
             break;
+        case 17:
+            $text = "Virtual";
+            $status = "primary";
+            break;
         default:
             $text = "No Status";
             $status = "warning";

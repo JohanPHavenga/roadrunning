@@ -112,15 +112,17 @@ class Cron extends Frontend_Controller {
             $url_sections = explode("/", $url['history_url']);
             $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
 
-            // tel al die edition sub-pages by mekaar om die count vir die edition te kry
-            if (isset($count_list_year[$edition_info['edition_id']])) {
-                $count = $url['url_count'] + $count_list_year[$edition_info['edition_id']]['count'];
-                $count_list_year[$edition_info['edition_id']]['count'] = $count;
-            } else {
-                $count_list_year[$edition_info['edition_id']]['count'] = $url['url_count'];
-                $count_list_year[$edition_info['edition_id']]['url'] = $url['history_url'];
-                $count_list_year[$edition_info['edition_id']]['lastvisited'] = $url['lastvisited'];
-                $edition_id_list[$edition_info['edition_id']] = $edition_info['edition_id'];
+            if (!isset($url_sections[5])) {
+                // tel al die edition sub-pages by mekaar om die count vir die edition te kry
+                if (isset($count_list_year[$edition_info['edition_id']])) {
+                    $count = $url['url_count'] + $count_list_year[$edition_info['edition_id']]['count'];
+                    $count_list_year[$edition_info['edition_id']]['count'] = $count;
+                } else {
+                    $count_list_year[$edition_info['edition_id']]['count'] = $url['url_count'];
+                    $count_list_year[$edition_info['edition_id']]['url'] = $url['history_url'];
+                    $count_list_year[$edition_info['edition_id']]['lastvisited'] = $url['lastvisited'];
+                    $edition_id_list[$edition_info['edition_id']] = $edition_info['edition_id'];
+                }
             }
         }
         $query_params = [
@@ -137,12 +139,14 @@ class Cron extends Frontend_Controller {
             $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
 
             // tel al die edition sub-pages by mekaar om die count vir die edition te kry
-            if (isset($count_list_month[$edition_info['edition_id']])) {
-                $count = $url['url_count'] + $count_list_month[$edition_info['edition_id']];
-            } else {
-                $count = $url['url_count'];
+            if (!isset($url_sections[5])) {
+                if (isset($count_list_month[$edition_info['edition_id']])) {
+                    $count = $url['url_count'] + $count_list_month[$edition_info['edition_id']];
+                } else {
+                    $count = $url['url_count'];
+                }
+                $count_list_month[$edition_info['edition_id']] = $count;
             }
-            $count_list_month[$edition_info['edition_id']] = $count;
         }
         $this->history_model->update_history_counts($count_list_month, "historysum_countmonth");
 
@@ -153,12 +157,14 @@ class Cron extends Frontend_Controller {
             $url_sections = explode("/", $url['history_url']);
             $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
             // tel al die edition sub-pages by mekaar om die count vir die edition te kry
-            if (isset($count_list_week[$edition_info['edition_id']])) {
-                $count = $url['url_count'] + $count_list_week[$edition_info['edition_id']];
-            } else {
-                $count = $url['url_count'];
+            if (!isset($url_sections[5])) {
+                if (isset($count_list_week[$edition_info['edition_id']])) {
+                    $count = $url['url_count'] + $count_list_week[$edition_info['edition_id']];
+                } else {
+                    $count = $url['url_count'];
+                }
+                $count_list_week[$edition_info['edition_id']] = $count;
             }
-            $count_list_week[$edition_info['edition_id']] = $count;
         }
         $this->history_model->update_history_counts($count_list_week, "historysum_countweek");
 
@@ -203,14 +209,14 @@ class Cron extends Frontend_Controller {
 
         $this->load->model('edition_model');
         $this->load->model('date_model');
-        
+
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4]],
+            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4, 17]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months"))],
         ];
         $edition_list = $this->date_model->add_dates($this->edition_model->get_edition_list($query_params));
 
-        $n=0;
+        $n = 0;
         foreach ($edition_list as $edition_id => $edition) {
             if (isset($edition['date_list'][3][0]['date_end'])) {
                 $online_close_date = strtotime($edition['date_list'][3][0]['date_end']);

@@ -638,7 +638,7 @@ class Event_model extends Admin_model {
 
     public function main_search($ss) {
 
-        $search_result = [];
+        $data = [];
 
         $this->db->select("editions.edition_id, edition_name, edition_date, event_name, edition_status, status_name, race_id, race_distance");
         $this->db->from("events");
@@ -667,11 +667,10 @@ class Event_model extends Admin_model {
                 $data[$row['edition_id']]['status_id'] = $row['edition_status'];
                 $data[$row['edition_id']]['status_name'] = $row['status_name'];
                 $data[$row['edition_id']]['races'][$row['race_id']]['distance'] = $row['race_distance'];
-                $data[$row['edition_id']]['races'][$row['race_id']]['color']=$this->get_race_color($row['race_distance']);
+                $data[$row['edition_id']]['races'][$row['race_id']]['color'] = $this->get_race_color($row['race_distance']);
             }
-            return $data;
         }
-        return false;
+        return $data;
     }
 
 }

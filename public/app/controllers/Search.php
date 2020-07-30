@@ -15,7 +15,7 @@ class Search extends Frontend_Controller {
         $this->load->model('admin/result_model');
 
         // SET BAIC STATUS CHECK 
-        $search_params['where_in']["edition_status"] = [1, 3, 9];
+        $search_params['where_in']["edition_status"] = [1, 3, 9, 17];
 
         // Get correct search paramaters from post
         // QUERY
