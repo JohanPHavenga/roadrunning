@@ -60,6 +60,11 @@
                                                 $badge_state = "warning";
                                                 $badge_text = "Postponed";
                                             }
+                                            // check state for badge
+                                            if ($edition['edition_status'] == 17) {
+                                                $badge_state = "primary";
+                                                $badge_text = "Virtual";
+                                            }
 
                                             if ($badge_state) {
                                                 echo " <span class='badge badge-$badge_state'>$badge_text</span>";

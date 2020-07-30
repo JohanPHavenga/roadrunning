@@ -27,7 +27,7 @@ class Main extends Frontend_Controller {
         // upcoming events
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1,17]],
-            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("9 days")), "edition_status" => 1],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("9 days"))],
             "order_by" => ["editions.edition_date" => "ASC"],
         ];
         $upcoming_events = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
