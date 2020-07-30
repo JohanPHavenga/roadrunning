@@ -1,16 +1,3 @@
-<?php
-if ($edition_data['edition_status'] == 17) {
-    $msg = "<strong>VIRTUAL RACE</strong> - This event has been converted to a virtual event. Please see detail below";
-    $short_msg = "VIRTUAL RACE";
-    $state = "primary";
-    $icon = "globe";
-    ?>
-    <div role="alert" class="alert alert-<?= $state; ?>">
-        <i class="fa fa-<?= $icon; ?>"></i> <?= $msg; ?> </div>
-    <?php
-}
-?>
-
 <section id="page-content" class="sidebar-right">
     <div class="container">
         <div class="row m-b-5">
@@ -64,7 +51,7 @@ if ($edition_data['edition_status'] == 17) {
 
                         <div class="col-lg-7">
                             <?php
-                            if ($edition_data['edition_status'] == 1) {
+                            if (($edition_data['edition_status'] == 1)||($edition_data['edition_status'] == 17)) {
                                 echo $edition_data['edition_intro_detail'];
 
                                 if (isset($edition_data['sponsor_list'])) {

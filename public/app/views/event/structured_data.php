@@ -1,10 +1,17 @@
 <?php
+$e_attendance_mode = "OfflineEventAttendanceMode";
+$loc_type = "Place";
 switch ($edition_data['edition_status']) {
     case 3:
         $s_name = "EventCancelled";
         break;
     case 9:
         $s_name = "EventPostponed";
+        break;
+    case 17:
+        $s_name = "EventMovedOnline";
+        $e_attendance_mode = "OnlineEventAttendanceMode";
+        $loc_type = "VirtualLocation";
         break;
     default:
         $s_name = "EventScheduled";
@@ -68,29 +75,33 @@ if (isset($file_list[1])) {
 "eventStatus": "https://schema.org/<?= $s_name; ?>",
 "startDate": "<?= $start_date; ?>",
 "endDate": "<?= $end_date; ?>",
+"eventAttendanceMode" : "<?= $e_attendance_mode; ?>",
 "location": { 
-    "@type": "Place",
-    "name": "<?= $edition_data['edition_address_end']; ?>",
-    "address": { 
-        "@type": "PostalAddress",
-        "streetAddress": "<?= $edition_data['edition_address_end']; ?>",
-        "addressLocality": "<?= $edition_data['town_name']; ?>",
-        "addressRegion": "WC",
-        "addressCountry": "ZA"
-        }
-},
-<?php if ($edition_data['club_id'] != 8) { ?>
-        "performer": { 
-        "@type" : "Organization",
-        "name" : "<?= $edition_data['club_name']; ?>"
-    <?php if (isset($edition_data['club_url_list'][0])) { ?>
-                ,"url" : "<?= $edition_data['club_url_list'][0]['url_name']; ?>"
-    <?php } ?>
-        },
+    "@type": "<?= $loc_type; ?>",    
+<?php if ($edition_data['edition_status'] != 17) { ?>
+            "address": { 
+                "@type": "PostalAddress",
+                "streetAddress": "<?= $edition_data['edition_address_end']; ?>",
+                "addressLocality": "<?= $edition_data['town_name']; ?>",
+                "addressRegion": "WC",
+                "addressCountry": "ZA"
+                }
+<?php } else { ?>
+            "url" : "<?=base_url("event".$edition_data['edition_slug']);?>"
 <?php } ?>
-"description": "<?= html_escape($description); ?>",    
-"image": "<?= $img_url; ?>",     
-"offers": [
+    },
+<?php if ($edition_data['club_id'] != 8) { ?>
+                            "performer": { 
+                            "@type" : "Organization",
+                            "name" : "<?= $edition_data['club_name']; ?>"
+    <?php if (isset($edition_data['club_url_list'][0])) { ?>
+                                                    ,"url" : "<?= $edition_data['club_url_list'][0]['url_name']; ?>"
+    <?php } ?>
+                            },
+<?php } ?>
+    "description": "<?= html_escape($description); ?>",    
+    "image": "<?= $img_url; ?>",     
+    "offers": [
 
 <?php
 foreach ($race_list as $race) {
@@ -115,23 +126,23 @@ foreach ($race_list as $race) {
         $race_start_date = $start_date;
     }
     ?>
-        {
-        "@type": "Offer",
-        "description": "<?= $rn; ?>"
+                            {
+                            "@type": "Offer",
+                            "description": "<?= $rn; ?>"
     <?php if ($price > 0) { ?>
-                ,"price": "<?= $price; ?>",
-                "priceCurrency": "ZAR",
+                                                    ,"price": "<?= $price; ?>",
+                                                    "priceCurrency": "ZAR",
         <?php
         if ((isset($date_list[3])) && (isset($url_list[5]))) {
             $url = $url_list[5][0]['url_name'];
             ?>
-                        "url": "<?= $url; ?>",
-                        "validFrom": "<?= $valid_from_date; ?>",
-                        "validThrough": "<?= $valid_to_date; ?>",
+                                                                            "url": "<?= $url; ?>",
+                                                                            "validFrom": "<?= $valid_from_date; ?>",
+                                                                            "validThrough": "<?= $valid_to_date; ?>",
             <?= $avail; ?>
         <?php } else {
             ?>
-                        "availability": "http://schema.org/InStoreOnly"
+                                                                            "availability": "http://schema.org/InStoreOnly"
             <?php
         }
     }

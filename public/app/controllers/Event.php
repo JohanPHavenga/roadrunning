@@ -185,10 +185,10 @@ class Event extends Frontend_Controller {
                                     $racetype = "R/W";
                                 }
                             }
-                            $this->data_to_views['race_data']=$this->data_to_views['results']['race'][$racetype][$dist];
-                            $this->data_to_views['race_info']=$this->data_to_views['race_list'][$this->data_to_views['race_data']['race_id']];
-                            $this->data_to_views['race_id']=$this->data_to_views['race_data']['race_id'];
-                                    
+                            $this->data_to_views['race_data'] = $this->data_to_views['results']['race'][$racetype][$dist];
+                            $this->data_to_views['race_info'] = $this->data_to_views['race_list'][$this->data_to_views['race_data']['race_id']];
+                            $this->data_to_views['race_id'] = $this->data_to_views['race_data']['race_id'];
+
                             $this->load->library('table');
                             $this->data_to_views['css_to_load'] = [base_url("assets/js/plugins/components/datatables/datatables.min.css")];
                             $this->data_to_views['scripts_to_load'] = [
@@ -199,9 +199,9 @@ class Event extends Frontend_Controller {
                             if (!empty($this->data_to_views['race_info'])) {
                                 $view_to_load = "result-race";
                             }
-                            
-                            $meta_title = $this->data_to_views['race_data']['text']." for the ";
-                            $page_title = $this->data_to_views['race_data']['distance']."km - ".$page_title;
+
+                            $meta_title = $this->data_to_views['race_data']['text'] . " for the ";
+                            $page_title = $this->data_to_views['race_data']['distance'] . "km - " . $page_title;
                         }
                     }
 
@@ -233,6 +233,9 @@ class Event extends Frontend_Controller {
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
         $this->load->view('templates/page_menu', $this->data_to_views);
+        if ($this->data_to_views['edition_data']['edition_status'] == 17) {
+            $this->load->view('widgets/virtual_race_notice');            
+        }
         $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
         $this->load->view('event/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
@@ -266,7 +269,7 @@ class Event extends Frontend_Controller {
             $n++;
         }
 
-        // get race file and url lists
+// get race file and url lists
         foreach ($this->data_to_views['race_list'] as $race_id => $race) {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
             $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
@@ -315,7 +318,7 @@ class Event extends Frontend_Controller {
             $route_maps['edition']['icon'] = "external-link-alt";
         }
 
-        // get race file and url lists
+// get race file and url lists
         foreach ($this->data_to_views['race_list'] as $race_id => $race) {
             $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
             $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
@@ -382,7 +385,7 @@ class Event extends Frontend_Controller {
 //        wts($race_list,true);
 
         foreach ($race_list as $race) {
-            // START TIME
+// START TIME
             $start_datetime = strtotime($edition_date) + 86400;
             if (strtotime($race['race_date']) == strtotime($edition_date)) {
 
@@ -392,13 +395,13 @@ class Event extends Frontend_Controller {
                 }
                 $return_arr['times']['start'] = date("Y-m-d H:i:s", $start_datetime);
 
-                // END TIME
+// END TIME
                 if (time_to_sec($prize_giving_time) > 0) {
                     $return_arr['times']['end'] = date("Y-m-d H:i:s", strtotime($edition_date) + time_to_sec($prize_giving_time));
                 }
             }
 
-            // FEES
+// FEES
             $fee_fields_to_check = ['race_fee_flat', 'race_fee_senior_licenced', 'race_fee_senior_unlicenced'];
             foreach ($fee_fields_to_check as $field) {
                 if ($race[$field] != 0) {
@@ -410,7 +413,7 @@ class Event extends Frontend_Controller {
                     }
                 }
             }
-            // LIST
+// LIST
             $return_arr['list'][] = [
                 'distance' => $race['race_distance'],
                 'type' => $race['racetype_name'],
@@ -427,7 +430,7 @@ class Event extends Frontend_Controller {
             "start" => "",
             "end" => ""
         ];
-        // START
+// START
         $start_datetime = strtotime($edition_date) + 86400;
         foreach ($race_list as $race) {
             if (strtotime($race['race_date']) > 0) {
@@ -439,7 +442,7 @@ class Event extends Frontend_Controller {
             }
         }
         $return_arr['start'] = date("Y-m-d H:i:s", $start_datetime);
-        // END
+// END
         if (time_to_sec($prize_giving_time) > 0) {
             $return_arr['end'] = date("Y-m-d H:i:s", strtotime($edition_date) + time_to_sec($prize_giving_time));
         }
@@ -453,7 +456,7 @@ class Event extends Frontend_Controller {
         ];
         foreach ($race_list as $race) {
             $fields_to_check = ['race_fee_flat', 'race_fee_senior_licenced', 'race_fee_senior_unlicenced'];
-            // check flat fee
+// check flat fee
             foreach ($fields_to_check as $field) {
                 if ($race[$field] != 0) {
                     if ($race[$field] < $return_arr['from']) {
@@ -478,7 +481,7 @@ class Event extends Frontend_Controller {
 
 //        $edition_data = $this->edition_model->get_edition_detail($edition_id);
 //        $race_list = $this->race_model->get_race_list(["where" => ["races.edition_id" => $edition_id]]);
-        // new way to pull data
+// new way to pull data
         $query_params = [
             "where" => ["edition_id" => $edition_id],
         ];
@@ -490,7 +493,7 @@ class Event extends Frontend_Controller {
         $edition_url = $edition_data['edition_url'];
         $address = $edition_data['edition_address'] . ", " . $edition_data['town_name'];
 
-        // dates
+// dates
         $date = $edition_data['edition_date'];
         $sdate = $edition_data['race_time_start'];
         if ($edition_data['edition_info_prizegizing'] != "00:00:00") {
@@ -524,7 +527,7 @@ class Event extends Frontend_Controller {
         $address = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
         $text = $edition_data['edition_name'];
 
-        // dates
+// dates
         $date = $edition_data['edition_date'];
         $time = "23:59:00";
         foreach ($race_list as $race) {
@@ -554,7 +557,7 @@ class Event extends Frontend_Controller {
 
         $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
 
-        // validation rules
+// validation rules
         $this->form_validation->set_rules('event_name', 'Event name', 'trim|required');
         $this->form_validation->set_rules('event_date', 'Event date', 'trim|required');
         $this->form_validation->set_rules('event_time', 'Event time', 'trim|required');
@@ -578,7 +581,7 @@ class Event extends Frontend_Controller {
             $this->load->view('event/add-listing', $this->data_to_views);
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
-            // set user_data from post
+// set user_data from post
             foreach ($this->input->post() as $field => $value) {
                 $email_data[$field] = $value;
             }
@@ -597,7 +600,7 @@ class Event extends Frontend_Controller {
         }
     }
 
-    // SEND EVENT EMAIL
+// SEND EVENT EMAIL
     private function send_event_add_email($email_data) {
         $data = [
             "to" => "info@roadrunning.co.za",
@@ -618,9 +621,9 @@ class Event extends Frontend_Controller {
             "from" => $email_data['user_email'],
             "from_name" => $email_data['user_name'] . " " . $email_data['user_surname'],
         ];
-        // send mail to organiser
+// send mail to organiser
 //        wts($data, 1);
-        // send mail to user
+// send mail to user
         $this->set_email($data);
 
         return true;
