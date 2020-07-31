@@ -46,7 +46,7 @@ class Race_model extends Admin_model {
         return false;
     }
 
-    public function get_race_dropdown($limit_results = true, $no_results=false) {
+    public function get_race_dropdown($limit_results = true, $no_results = false) {
         $this->db->select("races.race_id, race_name, race_distance, edition_name, event_name, racetype_abbr, edition_date");
         $this->db->from("races");
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
@@ -59,7 +59,7 @@ class Race_model extends Admin_model {
             $this->db->where("edition_date < ", date("Y-m-d", strtotime("+9 month")));
         }
         if ($no_results) {
-        $this->db->where("result_id", NULL);
+            $this->db->where("result_id", NULL);
         }
         $this->db->order_by('event_name');
         $this->db->order_by('edition_date', "DESC");
@@ -92,6 +92,9 @@ class Race_model extends Admin_model {
             $this->db->join('edition_asa_member', 'edition_id', 'left');
             $this->db->where('race_id', $id);
             $query = $this->db->get();
+
+//            echo $this->db->get_compiled_select();
+//            die();
 
             if ($query->num_rows() > 0) {
                 return $query->row_array();
@@ -352,17 +355,17 @@ class Race_model extends Admin_model {
         $this->db->join('timingproviders', 'timingprovider_id');
         $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
         // limit the list a little        
-        $this->db->where("edition_date > ", date("Y-m-d", strtotime("-".$how_far_back)));
+        $this->db->where("edition_date > ", date("Y-m-d", strtotime("-" . $how_far_back)));
         // from today
         $this->db->where("edition_date < ", date("Y-m-d 23:59:59"));
         $this->db->where("editions.edition_status", 1);
         $this->db->where("races.race_distance >= ", 10);
         $this->db->group_start();
-            $this->db->where("editions.edition_info_status", 10);
-            $this->db->or_group_start();
-                $this->db->where("editions.edition_info_status", 11);
-                $this->db->where("results.file_id", NULL);
-            $this->db->group_end();
+        $this->db->where("editions.edition_info_status", 10);
+        $this->db->or_group_start();
+        $this->db->where("editions.edition_info_status", 11);
+        $this->db->where("results.file_id", NULL);
+        $this->db->group_end();
         $this->db->group_end();
         $this->db->order_by('edition_date', "DESC");
         $this->db->order_by('race_distance', "DESC");

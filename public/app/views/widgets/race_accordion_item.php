@@ -7,27 +7,42 @@
                     <td style='width: 50%;'>Date</td>
                     <td colspan="2">
                         <?php
-                        if (strtotime($race['race_date']) != strtotime($edition_data['edition_date'])) {
-                            echo "<b class='text-danger'>" . fdateHuman($race['race_date']) . "</b>";
+                        // virtual race
+                        if ($edition_data['edition_status'] == 17) {
+                            echo fdateHuman($date_list[1][0]['date_start']);
+                            if ($date_list[1][0]['date_start']!=$date_list[1][0]['date_end']) {
+                                echo " - ".fdateHuman($date_list[1][0]['date_end']);
+                            }
+//                            wts($date_list);
                         } else {
-                            echo fdateHuman($race['race_date']);
+                            if (strtotime($race['race_date']) != strtotime($edition_data['edition_date'])) {
+                                echo "<b class='text-danger'>" . fdateHuman($race['race_date']) . "</b>";
+                            } else {
+                                echo fdateHuman($race['race_date']);
+                            }
                         }
                         ?>
                     </td>
                 </tr>
-                <tr>
-                    <td>Time</td>
-                    <td colspan="2">Start: <b><?= ftimeMil($race['race_time_start']); ?></b>
+                <?php
+                if ($edition_data['edition_status'] != 17) {
+                    ?>
+                    <tr>
+                        <td>Time</td>
+                        <td colspan="2">Start: <b><?= ftimeMil($race['race_time_start']); ?></b>
+                            <?php
+                            if ($race['race_time_end'] > 0) {
+                                ?>
+                                <br>Cut-off: <b><?= ftimeMil($race['race_time_end']); ?></b>
+                        </tr>
                         <?php
-                        if ($race['race_time_end'] > 0) {
-                            ?>
-                            <br>Cut-off: <b><?= ftimeMil($race['race_time_end']); ?></b>
+                    }
+                    ?>
+                    </td>
                     </tr>
                     <?php
                 }
                 ?>
-                </td>
-                </tr>
                 <tr>
                     <td>Distance</td>
                     <td colspan="2"><span class="badge badge-<?= $race['race_color']; ?>"><?= fraceDistance($race['race_distance']); ?></span></td>

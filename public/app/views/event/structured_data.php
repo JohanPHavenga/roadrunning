@@ -68,93 +68,93 @@ if (isset($file_list[1])) {
 ?>
 
 <script type="application/ld+json">
-{
-"@context": "http://schema.org",
-"@type": "SportsEvent",
-"name": "<?= $edition_data['edition_name']; ?>",
-"eventStatus": "https://schema.org/<?= $s_name; ?>",
-"startDate": "<?= $start_date; ?>",
-"endDate": "<?= $end_date; ?>",
-"eventAttendanceMode" : "<?= $e_attendance_mode; ?>",
-"location": { 
+    {
+    "@context": "http://schema.org",
+    "@type": "SportsEvent",
+    "name": "<?= $edition_data['edition_name']; ?>",
+    "eventStatus": "https://schema.org/<?= $s_name; ?>",
+    "startDate": "<?= $start_date; ?>",
+    "endDate": "<?= $end_date; ?>",
+    "eventAttendanceMode" : "<?= $e_attendance_mode; ?>",
+    "location": { 
     "@type": "<?= $loc_type; ?>",    
-<?php if ($edition_data['edition_status'] != 17) { ?>
-            "address": { 
-                "@type": "PostalAddress",
-                "streetAddress": "<?= $edition_data['edition_address_end']; ?>",
-                "addressLocality": "<?= $edition_data['town_name']; ?>",
-                "addressRegion": "WC",
-                "addressCountry": "ZA"
-                }
-<?php } else { ?>
-            "url" : "<?=base_url("event".$edition_data['edition_slug']);?>"
-<?php } ?>
-    },
-<?php if ($edition_data['club_id'] != 8) { ?>
-                            "performer": { 
-                            "@type" : "Organization",
-                            "name" : "<?= $edition_data['club_name']; ?>"
-    <?php if (isset($edition_data['club_url_list'][0])) { ?>
-                                                    ,"url" : "<?= $edition_data['club_url_list'][0]['url_name']; ?>"
+    <?php if ($edition_data['edition_status'] != 17) { ?>
+        "address": { 
+        "@type": "PostalAddress",
+        "streetAddress": "<?= $edition_data['edition_address_end']; ?>",
+        "addressLocality": "<?= $edition_data['town_name']; ?>",
+        "addressRegion": "WC",
+        "addressCountry": "ZA"
+        }
+    <?php } else { ?>
+        "url" : "<?= base_url("event" . $edition_data['edition_slug']); ?>"
     <?php } ?>
-                            },
-<?php } ?>
+    },
+    <?php if ($edition_data['club_id'] != 8) { ?>
+        "organizer": { 
+        "@type" : "Organization",
+        "name" : "<?= $edition_data['club_name']; ?>"
+        <?php if (isset($edition_data['club_url_list'][0])) { ?>
+            ,"url" : "<?= $edition_data['club_url_list'][0]['url_name']; ?>"
+        <?php } ?>
+        },
+    <?php } ?>
     "description": "<?= html_escape($description); ?>",    
     "image": "<?= $img_url; ?>",     
     "offers": [
 
-<?php
-foreach ($race_list as $race) {
-    // race name
-    if (!empty($race['race_name'])) {
-        $rn = $race['race_name'];
-    } else {
-        $rn = fraceDistance($race['race_distance']) . " " . $race['racetype_name'];
-    }
-    // race fee
-    if ($race['race_fee_flat'] > 0) {
-        $price = $race['race_fee_flat'];
-    } elseif ($race['race_fee_senior_licenced'] > 0) {
-        $price = $race['race_fee_senior_licenced'];
-    } else {
-        $price = 0;
-    }
-    // get date
-    if ($race['race_date'] > 0) {
-        $race_start_date = date("Y-m-d", strtotime($race['race_date']));
-    } else {
-        $race_start_date = $start_date;
-    }
-    ?>
-                            {
-                            "@type": "Offer",
-                            "description": "<?= $rn; ?>"
-    <?php if ($price > 0) { ?>
-                                                    ,"price": "<?= $price; ?>",
-                                                    "priceCurrency": "ZAR",
-        <?php
-        if ((isset($date_list[3])) && (isset($url_list[5]))) {
-            $url = $url_list[5][0]['url_name'];
-            ?>
-                                                                            "url": "<?= $url; ?>",
-                                                                            "validFrom": "<?= $valid_from_date; ?>",
-                                                                            "validThrough": "<?= $valid_to_date; ?>",
-            <?= $avail; ?>
-        <?php } else {
-            ?>
-                                                                            "availability": "http://schema.org/InStoreOnly"
-            <?php
+    <?php
+    foreach ($race_list as $race) {
+        // race name
+        if (!empty($race['race_name'])) {
+            $rn = $race['race_name'];
+        } else {
+            $rn = fraceDistance($race['race_distance']) . " " . $race['racetype_name'];
         }
-    }
-    if ($race === end($race_list)) {
-        echo "}";
-    } else {
-        echo "},";
-    }
-} // end foreach
-?>
+        // race fee
+        if ($race['race_fee_flat'] > 0) {
+            $price = $race['race_fee_flat'];
+        } elseif ($race['race_fee_senior_licenced'] > 0) {
+            $price = $race['race_fee_senior_licenced'];
+        } else {
+            $price = 0;
+        }
+        // get date
+        if ($race['race_date'] > 0) {
+            $race_start_date = date("Y-m-d", strtotime($race['race_date']));
+        } else {
+            $race_start_date = $start_date;
+        }
+        ?>
+        {
+        "@type": "Offer",
+        "description": "<?= $rn; ?>"
+        <?php if ($price > 0) { ?>
+            ,"price": "<?= $price; ?>",
+            "priceCurrency": "ZAR",
+            <?php
+            if ((isset($date_list[3])) && (isset($url_list[5]))) {
+                $url = $url_list[5][0]['url_name'];
+                ?>
+                "url": "<?= $url; ?>",
+                "validFrom": "<?= $valid_from_date; ?>",
+                "validThrough": "<?= $valid_to_date; ?>",
+                <?= $avail; ?>
+            <?php } else {
+                ?>
+                "availability": "http://schema.org/InStoreOnly"
+                <?php
+            }
+        }
+        if ($race === end($race_list)) {
+            echo "}";
+        } else {
+            echo "},";
+        }
+    } // end foreach
+    ?>
 
-]
+    ]
 
-}
+    }
 </script>

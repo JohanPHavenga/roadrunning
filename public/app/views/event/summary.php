@@ -85,8 +85,8 @@
                                     <?php
                                 }
                                 ?>
-                                <!--                                
-                                    <div class="product-rate">
+                                                               
+<!--                                    <div class="product-rate">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
@@ -96,7 +96,8 @@
                                     <div class="product-reviews"><a href="#">3 customer reviews</a>
                                     </div>
                                 -->
-                                <div class="seperator m-b-10"></div>
+                                <!--<div class="seperator m-b-10"></div>-->
+                                <div class="m-b-20"></div>
                                 <div id="race_badges">
                                     <?php
                                     foreach ($edition_data['race_summary']['list'] as $race) {
@@ -119,7 +120,7 @@
                                 </div>
                             </div>
                             <?php
-                            if ($edition_data['edition_status'] == 1) {
+                            if (($edition_data['edition_status'] == 1)||($edition_data['edition_status'] == 17)) {
                                 if (!$in_past) {
                                     ?>
                                     <div class="row">
