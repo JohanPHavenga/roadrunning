@@ -174,5 +174,47 @@ class Result_model extends Admin_model {
         }
         return false;
     }
+    
+    public function edition_no_results($from_date, $to_date, $info_status) {
+        // get editions without results
+        $this->db->select("editions.edition_id, edition_name, edition_date, edition_status, edition_info_status, asa_member_abbr, COUNT(result_id) AS result_count");
+        $this->db->from("editions");
+        $this->db->join('races', 'edition_id', 'LEFT');
+        $this->db->join('results', 'race_id', 'LEFT');
+        $this->db->join('edition_asa_member', 'edition_id', 'LEFT');
+        $this->db->join('asa_members', 'asa_member_id', 'LEFT');
+        $this->db->where('edition_info_status', $info_status);
+        $this->db->where('edition_date >=', $from_date);
+        $this->db->where('edition_date <=', $to_date);
+        $this->db->where_in('edition_status', [1,17]);
+        $this->db->group_by('edition_name, edition_date');
+        $this->db->having('result_count',0);
+        $this->db->order_by("edition_date", "DESC");        
+        
+//        echo $this->db->get_compiled_select();
+//        die();
+        
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']] = $row;                
+            }
+            return $data;
+        }
+        return false;
+        
+//        "SELECT 
+//        FROM editions
+//        LEFT JOIN races ON races.edition_id=editions.edition_id
+//        LEFT JOIN results ON results.race_id=races.race_id
+//        LEFT JOIN edition_asa_member ON editions.edition_id=edition_asa_member.edition_id
+//        LEFT JOIN asa_members ON asa_members.asa_member_id=edition_asa_member.asa_member_id
+//        WHERE edition_date <= '2020-07-31' AND edition_status IN (1,17) AND edition_info_status = 11
+//        GROUP BY edition_name, edition_date
+//        HAVING result_count = 0
+//        ORDER BY edition_date DESC";
+        
+    }
 
 }

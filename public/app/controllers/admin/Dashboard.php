@@ -202,22 +202,11 @@ class Dashboard extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
     
-    public function results_audit($year = 0) {
-        if (!is_numeric($year)) {
-            die("That is not a year");
-        }
-        if ($year > date("Y")) {
-            die("Year too big");
-        }
-        if ($year < 2016) {
-            die("Year too small");
-        }
-        $previous_year = $year - 1;
-
+    public function result_audit() {
         $this->load->library('table');
-        $this->load->model('admin/event_model');
+        $this->load->model('admin/result_model');
 
-        $this->data_to_header['title'] = "Data Audit";
+        $this->data_to_header['title'] = "Results Audit";
         $this->data_to_header['crumbs'] = [
             "Home" => "/admin",
             "Dashboard" => "/admin/dashboard",
@@ -240,17 +229,20 @@ class Dashboard extends Admin_Controller {
             "assets/admin/scripts/table-datatables-managed.js",
         );
 
-        $this->data_to_view['year'] = $year;
-        $event_info = $this->event_model->get_missing_editions($year);
-
-        foreach ($event_info as $event_id => $event) {
-            if (isset($event[$previous_year]) && (!isset($event[$year]))) {
-                $this->data_to_view['missing_editions'][$event_id] = $event;
-            }
-        }
+        $this->data_to_view['from_date']=$from_date="2016-11-12";
+        $this->data_to_view['to_date']=$to_date=date("Y-m-d");        
+        $info_status=11;
+        $this->data_to_view['info_status_name']=$this->result_model->get_status_name($info_status);
+        $this->data_to_view['status_list']=$this->result_model->get_status_list("info");
+        // get info
+        $this->data_to_view['edition_info'] = $this->result_model->edition_no_results($from_date,$to_date,$info_status);
+        
+//        wts($this->data_to_view['info_status_name']);
+//        wts($this->data_to_view['status_list']);
+//        wts($this->data_to_view['edition_info'],1);
 
         $this->load->view($this->header_url, $this->data_to_header);
-        $this->load->view("/admin/dashboard/audit", $this->data_to_view);
+        $this->load->view("/admin/dashboard/result_audit", $this->data_to_view);
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 

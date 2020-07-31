@@ -224,6 +224,19 @@ class Admin_model extends MY_model {
         }
         return false;
     }
+    
+    public function get_status_name($status_id) {
+        $this->db->select("status_name");
+        $this->db->from("status");
+        $this->db->where("status_id", $status_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $result = $query->result_array();
+            return $result[0]['status_name'];
+        }
+        return false;
+    }
 
     public function get_linked_to_dropdown($count = 6, $start = 0) {
         $this->db->select("*");

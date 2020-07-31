@@ -1341,8 +1341,8 @@ class Admin_Controller extends MY_Controller {
                         "icon" => "bulb",
                     ],
                     [
-                        "text" => "Results Audit",
-                        "url" => 'admin/dashboard/results_audit/',
+                        "text" => "Result Audit",
+                        "url" => 'admin/dashboard/result_audit/',
                         "icon" => "trophy",
                     ],
                     [
