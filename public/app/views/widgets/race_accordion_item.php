@@ -139,7 +139,7 @@
                 if ($edition_data['edition_status'] == 17) {
                     ?>
                     <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>" class="btn btn-light btn-sm">
-                    <i class="fa fa fa-stopwatch"></i> How to I track my run?</a>
+                    <i class="fa fa fa-stopwatch"></i> How do I track my run?</a>
                     <?php
                 }
                 ?>

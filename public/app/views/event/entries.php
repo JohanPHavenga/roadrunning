@@ -95,7 +95,7 @@
                                         echo "</b></li>";
                                     }
                                 } else {
-                                    echo "<li class='text-danger'><b>No entrires avaialble on race day</b>";
+                                    echo "<li class='text-danger'><b>No entries available on race day</b>";
                                     if ($edition_data['edition_entry_funrun_otd']) {
                                         echo " expect for the Fun Run";
                                     }
