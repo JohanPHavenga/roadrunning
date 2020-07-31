@@ -15,6 +15,11 @@ $this->load->view('templates/search_form');
                     <div class="races carousel" data-items="3" data-margin="20" data-dots="false">
                         <?php
                         foreach ($featured_events as $edition_id => $edition) {
+                            if ($edition['edition_status']==17) {
+                                $address="Virtual Race";
+                            } else {
+                                $address=$edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr'];
+                            }
                             ?>
                             <div class="race">
                                 <div class="race-image">
@@ -39,7 +44,7 @@ $this->load->view('templates/search_form');
                                 <div class="race-details">
                                     <p>
                                         <b>WHEN</b>: <?= fdateHumanFull($edition['edition_date'], true); ?> from <?= ftimeMil($edition['race_time_start']); ?><br>
-                                        <b>WHERE</b>: <?= $edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr']; ?><br>
+                                        <b>WHERE</b>: <?= $address; ?><br>
                                         <b>DISTANCES</b>: <?= implode(" | ", $edition['race_distance_arr']); ?><br>
                                     </p>
                                     <div class="float-left">

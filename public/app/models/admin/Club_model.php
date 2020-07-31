@@ -144,5 +144,16 @@ class Club_model extends Admin_model {
             return $this->db->trans_status();
         }
     }
+    
+    public function update_field($id, $field, $value) {
+        if (!($id)) {
+            return false;
+        } else {
+            $this->db->trans_start();
+            $this->db->update('clubs', [$field => $value, "updated_date" => date("Y-m-d H:i:s")], array('url_id' => $id));
+            $this->db->trans_complete();
+            return $this->db->trans_status();
+        }
+    }
 
 }

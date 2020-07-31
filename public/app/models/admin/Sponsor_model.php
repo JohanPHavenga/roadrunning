@@ -134,5 +134,16 @@ class Sponsor_model extends Admin_model {
 
         return $id;
     }
+    
+    public function update_field($id, $field, $value) {
+        if (!($id)) {
+            return false;
+        } else {
+            $this->db->trans_start();
+            $this->db->update('sponsors', [$field => $value, "updated_date" => date("Y-m-d H:i:s")], array('url_id' => $id));
+            $this->db->trans_complete();
+            return $this->db->trans_status();
+        }
+    }
 
 }

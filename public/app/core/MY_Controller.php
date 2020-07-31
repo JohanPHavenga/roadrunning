@@ -1336,9 +1336,14 @@ class Admin_Controller extends MY_Controller {
                         "icon" => "bar-chart",
                     ],
                     [
-                        "text" => "Audit",
+                        "text" => "Yearly Edition Audit",
                         "url" => 'admin/dashboard/audit/' . date("Y"),
                         "icon" => "bulb",
+                    ],
+                    [
+                        "text" => "Results Audit",
+                        "url" => 'admin/dashboard/results_audit/',
+                        "icon" => "trophy",
                     ],
                     [
                         "text" => "Search",

@@ -89,7 +89,7 @@
                                     }
                                     echo "</li>";
                                 } elseif (!empty($edition_data['edition_info_medals_text'])) {
-                                    echo "<li><b>HANDOUTS:</b> ".$edition_data['edition_info_medals_text'];
+                                    echo "<li><b>HANDOUTS:</b> " . $edition_data['edition_info_medals_text'];
                                 }
 
                                 // PRIZE-GIVING
@@ -134,26 +134,30 @@
                             <p>Do you want to get notified once information is released? Enter your email below or to the right to be added to the mailing list.</p>
                             <?php
                         }
-                        ?>
-                        <h3 class="text-uppercase">Map</h3>
-                        <iframe
-                            width="100%"
-                            height="350"
-                            frameborder="0" style="border:0; margin-bottom: 10px;"
-                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
-                        </iframe>
-                        <p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_address'] . "," . $edition_data['town_name']; ?>" class="btn btn-light">
-                                <i class="fa fa-map"></i> Get Directions</a>
-                            <?php
-                            // If not in the past
-                            if (!$in_past) {
-                                ?>
-                                <a href="<?= base_url("event/" . $slug . "/accommodation"); ?>" class="btn btn-light"><i class="fa fa-bed"></i> Find Accommodation</a>
-                                <?php
-                            }
+                        if ($edition_data['edition_status'] != 17) {
                             ?>
-                        </p>
+                            <h3 class="text-uppercase">Map</h3>
+                            <iframe
+                                width="100%"
+                                height="350"
+                                frameborder="0" style="border:0; margin-bottom: 10px;"
+                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
+                            </iframe>
+                            <p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=<?= $edition_data['edition_address'] . "," . $edition_data['town_name']; ?>" class="btn btn-light">
+                                    <i class="fa fa-map"></i> Get Directions</a>
+                                <?php
+                                // If not in the past
+                                if (!$in_past) {
+                                    ?>
+                                    <a href="<?= base_url("event/" . $slug . "/accommodation"); ?>" class="btn btn-light"><i class="fa fa-bed"></i> Find Accommodation</a>
+                                    <?php
+                                }
+                                ?>
+                            </p>
+                            <?php
+                        }
+                        ?>
                     </div>
 
                     <!-- end: Product additional tabs -->

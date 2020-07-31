@@ -10,8 +10,8 @@
                         // virtual race
                         if ($edition_data['edition_status'] == 17) {
                             echo fdateHuman($date_list[1][0]['date_start']);
-                            if ($date_list[1][0]['date_start']!=$date_list[1][0]['date_end']) {
-                                echo " - ".fdateHuman($date_list[1][0]['date_end']);
+                            if ($date_list[1][0]['date_start'] != $date_list[1][0]['date_end']) {
+                                echo " - " . fdateHuman($date_list[1][0]['date_end']);
                             }
 //                            wts($date_list);
                         } else {
@@ -135,6 +135,14 @@
 
                 <a href="<?= base_url("training-programs/" . url_title($race['race_name'])); ?>" class="btn btn-light btn-sm">
                     <i class="fa fa fa-running"></i> Training Programs</a>
+                <?php
+                if ($edition_data['edition_status'] == 17) {
+                    ?>
+                    <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>" class="btn btn-light btn-sm">
+                    <i class="fa fa fa-stopwatch"></i> How to I track my run?</a>
+                    <?php
+                }
+                ?>
             </div>
             <?php
         }

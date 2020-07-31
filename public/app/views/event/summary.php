@@ -51,7 +51,7 @@
 
                         <div class="col-lg-7">
                             <?php
-                            if (($edition_data['edition_status'] == 1)||($edition_data['edition_status'] == 17)) {
+                            if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
                                 echo $edition_data['edition_intro_detail'];
 
                                 if (isset($edition_data['sponsor_list'])) {
@@ -85,16 +85,16 @@
                                     <?php
                                 }
                                 ?>
-                                                               
-<!--                                    <div class="product-rate">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half"></i>
-                                    </div>
-                                    <div class="product-reviews"><a href="#">3 customer reviews</a>
-                                    </div>
+
+                                <!--                                    <div class="product-rate">
+                                                                        <i class="fa fa-star"></i>
+                                                                        <i class="fa fa-star"></i>
+                                                                        <i class="fa fa-star"></i>
+                                                                        <i class="fa fa-star"></i>
+                                                                        <i class="fa fa-star-half"></i>
+                                                                    </div>
+                                                                    <div class="product-reviews"><a href="#">3 customer reviews</a>
+                                                                    </div>
                                 -->
                                 <!--<div class="seperator m-b-10"></div>-->
                                 <div class="m-b-20"></div>
@@ -120,12 +120,18 @@
                                 </div>
                             </div>
                             <?php
-                            if (($edition_data['edition_status'] == 1)||($edition_data['edition_status'] == 17)) {
+                            if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
                                 if (!$in_past) {
                                     ?>
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <?php
+                                            if ($edition_data['edition_status'] == 17) {
+                                                ?>
+                                                <a class="btn btn-primary btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">How to I track my run?
+                                                    <i class="fa fa-arrow-right"></i></a>
+                                                <?php
+                                            }
                                             // BUTTONS
                                             if (!in_array(5, $edition_data['entrytype_list'])) {
                                                 switch ($online_entry_status) {
@@ -374,8 +380,6 @@
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">                 
                 <?php
-                
-
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Receive race notification";
                 $this->load->view('widgets/subscribe', $data_to_widget);
@@ -406,41 +410,41 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <?php
-                        // BUTTONS
-                        if (!in_array(5, $edition_data['entrytype_list'])) {
-                            ?>
+<?php
+// BUTTONS
+if (!in_array(5, $edition_data['entrytype_list'])) {
+    ?>
                             <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details</a>
                             <?php
                         }
                         ?>
                         <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info</a>
 
-                        <?php
-                        if (isset($flyer['edition'])) {
-                            ?>
+<?php
+if (isset($flyer['edition'])) {
+    ?>
                             <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
                                 <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
 
-                            <?php
-                        }
-                        if (isset($url_list[1])) {
-                            ?>
+    <?php
+}
+if (isset($url_list[1])) {
+    ?>
                             <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
                                 <i class="fa fa-link"></i> Race Website</a>
 
-                            <?php
-                        }
-                        ?>
+    <?php
+}
+?>
                     </div>
                 </div>
             </div>
 
             <div class="sidebar col-lg-3">
-                <?php
-                // MAP WIDGET
-                $this->load->view('widgets/map');
-                ?>
+<?php
+// MAP WIDGET
+$this->load->view('widgets/map');
+?>
             </div>
         </div>
     </div>
