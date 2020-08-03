@@ -9,6 +9,22 @@ class MY_Controller extends CI_Controller {
         parent::__construct();
         // make ini file content available 
         $this->ini_array = parse_ini_file("server_config.ini", true);
+
+        // keep last 5 URLs
+        if (!isset($_SESSION['last_5_urls'])) {
+            $_SESSION['last_5_urls'] = [current_url()];
+        } else {
+            if ($_SESSION['last_5_urls'][0] != current_url()) {
+                $skip_controllers = ["login", "logout", "register", "forgot-password", "404", "assets", "file", "favicon.ico"];
+                $url_bits = explode("/", uri_string());
+                if (!in_array($url_bits[0], $skip_controllers)) {
+                    array_unshift($_SESSION['last_5_urls'], current_url());
+                    if (count($_SESSION['last_5_urls']) > 5) {
+                        array_pop($_SESSION['last_5_urls']);
+                    }
+                }
+            }
+        }
     }
 
     public function set_email_body($body, $post_text = null) {
@@ -251,21 +267,7 @@ class Frontend_Controller extends MY_Controller {
     // HISTORY
     // ============================================================================================== 
     private function check_history() {
-        // keep last 5 URLs
-        if (!isset($_SESSION['last_5_urls'])) {
-            $_SESSION['last_5_urls'] = [current_url()];
-        } else {
-            if ($_SESSION['last_5_urls'][0] != current_url()) {
-                $skip_controllers = ["login", "logout", "register", "forgot-password", "404", "assets", "file", "favicon.ico"];
-                $url_bits = explode("/", uri_string());
-                if (!in_array($url_bits[0], $skip_controllers)) {
-                    array_unshift($_SESSION['last_5_urls'], current_url());
-                    if (count($_SESSION['last_5_urls']) > 5) {
-                        array_pop($_SESSION['last_5_urls']);
-                    }
-                }
-            }
-        }
+
         // check current session history
         if (!isset($_SESSION['history'])) {
             $_SESSION['history'] = [];
@@ -967,7 +969,7 @@ class Frontend_Controller extends MY_Controller {
                 $short_msg = "POSTPONED";
                 $state = "warning";
                 $icon = "minus-circle";
-                break;            
+                break;
             default:
                 switch ($edition_data['edition_info_status']) {
                     case 13:
