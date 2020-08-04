@@ -22,7 +22,7 @@
                             array_unshift($data_entry, $row_num + 1);
                             $this->table->add_row($data_entry);
                         }
-                        $this->table->add_row($columns);
+//                        $this->table->add_row($columns);
 
                         if (!isset($skip)) {
                             $skip = 0;
@@ -50,15 +50,6 @@
                         echo "<p>No data to show</p>";
                     }
                     ?>
-                </div>
-            </div>
-            <div class="form-group" id=preview">
-                <div class="row">
-                    <div class='col-md-12 col-sm-12'>
-                        <div class='btn-group' style="float: right">
-<?= fbutton($text = "Reload Data", $type = "submit", $status = "info", $size = NULL, $name = "reload", $value = "preview"); ?>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="row">
@@ -89,8 +80,9 @@
             <div class="row">
                 <div class='col-md-12 col-sm-12'>
                     <div class='btn-group' style="float: right">
-<?= fbutton($text = "Upload Results", $type = "submit", $status = "danger", $size = NULL, $name = "upload"); ?>
-<?= fbuttonLink($cancel_url, "Cancel", $status = "warning"); ?>
+                        <?= fbutton($text = "Reload Data", $type = "submit", $status = "info", $size = NULL, $name = "reload", $value = "preview"); ?>
+                        <?= fbutton($text = "Upload Results", $type = "submit", $status = "danger", $size = NULL, $name = "upload"); ?>
+                        <?= fbuttonLink($cancel_url, "Cancel", $status = "warning"); ?>
                     </div>
                 </div>
             </div>

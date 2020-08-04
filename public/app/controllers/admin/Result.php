@@ -22,8 +22,8 @@ class Result extends Admin_Controller {
     }
 
     public function search($search_string = null) {
-        $this->session->unset_userdata('edition_return_url');   
-        
+        $this->session->unset_userdata('edition_return_url');
+
         // add models+helpers
         $this->load->model('admin/race_model');
         $this->load->library('table');
@@ -127,7 +127,7 @@ class Result extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function create($action, $id = 0) {        
+    public function create($action, $id = 0) {
         // block add
         if ($action != "edit") {
             $this->session->set_flashdata('alert', "Can only edit results, not add them");
@@ -135,7 +135,7 @@ class Result extends Admin_Controller {
             redirect($this->return_url);
             die();
         }
-        
+
         // additional models
         $this->load->model('admin/race_model');
         $this->load->model('admin/userresult_model');
@@ -164,7 +164,7 @@ class Result extends Admin_Controller {
 
         if ($action == "edit") {
             $this->data_to_view['result_detail'] = $this->result_model->get_result_detail($id);
-            $result_id=$id;
+            $result_id = $id;
             $race_id = $this->data_to_view['result_detail']['race_id'];
             $this->data_to_view['user_result_list'] = $this->userresult_model->get_userresult_list(null, $result_id);
         } else {
@@ -174,7 +174,7 @@ class Result extends Admin_Controller {
             $this->data_to_view['result_detail']['race_id'] = 0;
             $this->data_to_view['result_detail']['result_time'] = 0;
         }
-        
+
         $this->data_to_view['race_detail'] = $this->race_model->get_race_detail($race_id);
         $this->data_to_view['race_id'] = $race_id;
         $this->data_to_view['result_id'] = $result_id;
@@ -188,7 +188,7 @@ class Result extends Admin_Controller {
         $this->data_to_header['crumbs'] = [
             "Home" => "/admin",
             "Results" => "/admin/result/view/" . $race_id,
-            ucfirst($action) . " #".$result_id => "",
+            ucfirst($action) . " #" . $result_id => "",
         ];
 
         // load correct view
@@ -253,7 +253,8 @@ class Result extends Admin_Controller {
         if ($this->session->has_userdata('edition_return_url')) {
             $this->return_url = $this->session->edition_return_url;
         } else {
-            $this->return_url = base_url("admin/result/search");;
+            $this->return_url = base_url("admin/result/search");
+            ;
         }
 
 //        wts($race_id,1);
@@ -351,6 +352,7 @@ class Result extends Admin_Controller {
             // add race detail to session
             $_SESSION['import']['race_id'] = $this->input->post('race_id');
             $_SESSION['import']['race'] = $this->race_model->get_race_detail($this->input->post('race_id'));
+            $_SESSION['import']['count'] = count($_SESSION['import']['result_data']);
             // set results flag 
             $set = $this->set_results_flag("race", $this->input->post('race_id'));
 
@@ -358,7 +360,7 @@ class Result extends Admin_Controller {
 //            wts($set);
 //            wts($inputFileName);
 //            wts($this->input->post());
-//            wts($_SESSION['import']['race']);
+//            wts($_SESSION['import']);
 //            die();
             redirect("/admin/result/import_confirm");
         }
@@ -367,7 +369,6 @@ class Result extends Admin_Controller {
     function import_confirm() {
         $page = "import_confirm";
         $this->load->library('table');
-        $skip_add = 1;
 
         // get results table fields
         $result_fields = $this->result_model->get_result_field_array();
@@ -376,8 +377,27 @@ class Result extends Admin_Controller {
             unset($result_fields[$unset_field]);
         }
 
+        // how many rows to skip
+        $skip_add = 1;
+        if ($this->input->post()) {
+            $this->data_to_view['skip'] = $this->input->post('skip') + $skip_add;
+        } else {
+            // get skip from 
+            foreach ($_SESSION['import']['result_data'] as $key => $row) {
+                if (is_numeric($row['A'])) {
+                    $skip = $key;
+                    $skip_display = $skip - 1;
+                    break;
+                }
+            }
+            $this->data_to_view['skip'] = $skip_display;
+        }
+        
+        $rows_to_display=$this->data_to_view['skip']+3;
+
+
         //set skip arr
-        for ($x = 1; $x <= 12; $x++) {
+        for ($x = 1; $x <= $rows_to_display; $x++) {
             $skip_arr[$x] = $x;
         }
 
@@ -385,12 +405,14 @@ class Result extends Admin_Controller {
         $this->data_to_view['skip_arr'] = $skip_arr;
         $this->data_to_view['result_fields'] = $this->add_exception_fields($this->result_model->get_result_field_dropdown());
         $this->data_to_view['columns'] = array_keys($_SESSION['import']['result_data'][1]);
-        $this->data_to_view['import_data'] = array_slice($_SESSION['import']['result_data'], 0, 12);
+        $this->data_to_view['import_data'] = array_slice($_SESSION['import']['result_data'], 0, $rows_to_display);
+
+//        wts($this->data_to_view, 1);
 
         $race = $_SESSION['import']['race'];
         $distance = str_pad(round($race['race_distance'], 0), 2, '0', STR_PAD_LEFT);
         $year = date('Y', strtotime($race['edition_date']));
-        $this->data_to_view['race_name'] = $race['event_name'] . " | " . $year . " | " . $distance . " km | " . $race['racetype_abbr'];
+        $this->data_to_view['race_name'] = $race['event_name'] . " | " . $year . " | " . $distance . " km | " . $race['racetype_abbr'] . " | #" . $_SESSION['import']['count'] . " results";
 
         // set input_data from either the post, or preload templates
         if ($this->input->post()) {
@@ -403,8 +425,10 @@ class Result extends Admin_Controller {
 //                    } else {
 //                        $input_data[$field] = $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column];
 //                    }
-                    if (!isset($input_data)) { $input_data=[]; }
-                    $input_data = $this->set_exception_fields($input_data, $field, $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column]);
+                    if (!isset($input_data)) {
+                        $input_data = [];
+                    }
+                    $input_data = $this->set_exception_fields($input_data, $field, $_SESSION['import']['result_data'][$this->data_to_view['skip']][$column]);
                 }
             }
             $this->data_to_view['input_data'] = $input_data;
@@ -418,19 +442,11 @@ class Result extends Admin_Controller {
                 die();
             }
         } else {
-            // get skip from 
-            foreach ($_SESSION['import']['result_data'] as $key => $row) {
-                if (is_numeric($row['A'])) {
-                    $skip = $key;
-                    $skip_display = $skip - 1;
-                    break;
-                }
-            }
+
             $pre_load = $this->pre_load_per_asa($_SESSION['import']['race']['asa_member_id'], $skip);
 
             $this->data_to_view['input_data'] = $pre_load['input'];
             $this->data_to_view['pre_load'] = $pre_load['pre'];
-            $this->data_to_view['skip'] = $skip_display;
         }
 
         if ($this->session->has_userdata('edition_return_url')) {

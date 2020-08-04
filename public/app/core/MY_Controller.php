@@ -57,7 +57,7 @@ $body
 <div style = "margin:20px 0;" > Copyright &copy;
 $year RoadRunningZA. All rights reserved.</div>
 $post_text
-<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/SnapCode_LAzMFdGZ.png' style='margin-bottom: 10px; width: 100px'></a><br>Please consider supporting my website via SnapScan to help keep the info flowing</p>
+<p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/SnapCode_LAzMFdGZ.png' width='100' style='margin-bottom: 10px; width: 100px'></a><br>Please consider supporting my website via SnapScan to help keep the info flowing</p>
 </div>
 </td></tr></tbody></table>
 </td></tr></tbody></table>
