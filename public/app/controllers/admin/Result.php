@@ -380,7 +380,7 @@ class Result extends Admin_Controller {
         // how many rows to skip
         $skip_add = 1;
         if ($this->input->post()) {
-            $this->data_to_view['skip'] = $this->input->post('skip') + $skip_add;
+            $this->data_to_view['skip'] = $skip_display = $this->input->post('skip') + $skip_add;
         } else {
             // get skip from 
             foreach ($_SESSION['import']['result_data'] as $key => $row) {
@@ -442,9 +442,7 @@ class Result extends Admin_Controller {
                 die();
             }
         } else {
-
             $pre_load = $this->pre_load_per_asa($_SESSION['import']['race']['asa_member_id'], $skip);
-
             $this->data_to_view['input_data'] = $pre_load['input'];
             $this->data_to_view['pre_load'] = $pre_load['pre'];
         }

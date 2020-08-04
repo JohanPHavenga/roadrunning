@@ -14,19 +14,21 @@
                 <div class='col-md-12 col-sm-12'>
                     <?php
                     if (!(empty($import_data))) {
+                        if (!isset($skip)) {
+                            $skip = 0;
+                        }
                         // create table
                         $this->table->set_template(ftable('result_import_table'));
                         array_unshift($columns, "#");
                         $this->table->set_heading($columns);
                         foreach ($import_data as $row_num => $data_entry) {
+                            if ($row_num<$skip-2) { $data_entry=[]; } // clear stuff above the column headings
                             array_unshift($data_entry, $row_num + 1);
                             $this->table->add_row($data_entry);
                         }
 //                        $this->table->add_row($columns);
 
-                        if (!isset($skip)) {
-                            $skip = 0;
-                        }
+
 
                         $form_fields = [
                             form_dropdown('skip', $skip_arr, set_value('skip', $skip), ["id" => 'skip', "class" => "form-control"]),
