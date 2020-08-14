@@ -466,13 +466,21 @@ class Frontend_Controller extends MY_Controller {
                 "priority" => 1,
                 "changefreq" => "daily",
                 "sub-menu" => [
+                    "virtual" => [
+                        "display" => "Virtual",
+                        "loc" => base_url("race/virtual"), //calendar
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
+                        "priority" => 1,
+                        "changefreq" => "daily",
+                        "badge" => "POPULAR",
+                    ],
                     "upcoming" => [
                         "display" => "Upcoming",
                         "loc" => base_url("race/upcoming"), //calendar
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
-                        "badge" => "POPULAR",
+//                        "badge" => "POPULAR",
                     ],
                     "featured" => [
                         "display" => "Featured",

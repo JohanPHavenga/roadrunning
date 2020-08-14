@@ -161,6 +161,7 @@
                                     <div class="row m-b-10">
                                         <div class="col-lg-12">
                                             <?php
+                                            // flyer
                                             if (isset($flyer['edition'])) {
                                                 ?>
                                                 <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
@@ -168,10 +169,19 @@
 
                                                 <?php
                                             }
+                                            // website link
                                             if (isset($url_list[1])) {
                                                 ?>
                                                 <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
                                                     <i class="fa fa-link"></i> Race Website</a>
+
+                                                <?php
+                                            }
+                                            // press release
+                                            if (isset($file_list[10])) {
+                                                ?>
+                                                <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-default">
+                                                    <i class="fa fa-file-pdf"></i> Official Press Release</a>
 
                                                 <?php
                                             }
@@ -209,14 +219,6 @@
                                     </div>
                                     <?php
                                 }
-                            } else {
-                                if (isset($file_list[10])) {
-                                    ?>
-                                    <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-default">
-                                        <i class="fa fa-file-pdf"></i> Official Press Release</a>
-
-                                    <?php
-                                }
                             }
                             ?>
                         </div>
@@ -226,27 +228,27 @@
                     <!-- ad box -->
                     <div class="row m-b-30">
                         <div class="col-lg-12">
-                            <?php
-                            // LANDSCAPE ADS WIDGET
-                            $this->load->view('widgets/horizontal_ad');
-                            ?>
+<?php
+// LANDSCAPE ADS WIDGET
+$this->load->view('widgets/horizontal_ad');
+?>
                         </div>
                     </div>
 
                     <div class="row m-b-20">
                         <div class="col-lg-12">
                             <div class="accordion accordion-shadow">
-                                <?php
-                                foreach ($race_list as $race_id => $race) {
-                                    $ac_data['race'] = $race;
-                                    $ac_data['active'] = '';
-                                    if ($race_id === array_key_first($race_list)) {
-                                        $ac_data['active'] = "ac-active";
-                                    }
+<?php
+foreach ($race_list as $race_id => $race) {
+    $ac_data['race'] = $race;
+    $ac_data['active'] = '';
+    if ($race_id === array_key_first($race_list)) {
+        $ac_data['active'] = "ac-active";
+    }
 
-                                    $this->load->view('widgets/race_accordion_item', $ac_data);
-                                }
-                                ?>
+    $this->load->view('widgets/race_accordion_item', $ac_data);
+}
+?>
                             </div>
                         </div>
                     </div>
@@ -260,35 +262,35 @@
                             <p>
                                 <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/contact"); ?>" class="btn btn-light">
                                     <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
-                                <?php
-                                if (!$in_past) {
-                                    ?>
+<?php
+if (!$in_past) {
+    ?>
                                     <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/accommodation"); ?>" class="btn btn-light">
                                         <i class="fa fa-bed"></i> Get Accommodation</a>
+    <?php
+}
+?>
+                            </p>
+                                <?php
+                                if ($edition_data['club_id'] != 8) {
+                                    ?>
+                                <p>This event is organised by the 
+                                <?php
+                                if (isset($edition_data['club_url_list'][0])) {
+                                    echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
+                                } else {
+                                    echo $edition_data['club_name'];
+                                }
+                                ?>
+                                </p>
                                     <?php
                                 }
                                 ?>
-                            </p>
-                            <?php
-                            if ($edition_data['club_id'] != 8) {
-                                ?>
-                                <p>This event is organised by the 
-                                    <?php
-                                    if (isset($edition_data['club_url_list'][0])) {
-                                        echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
-                                    } else {
-                                        echo $edition_data['club_name'];
-                                    }
-                                    ?>
-                                </p>
-                                <?php
-                            }
-                            ?>
                             <p class="contact_info">
                                 <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>"><?= $edition_data['user_email']; ?></a>
-                                <?php
-                                if ($edition_data['user_contact']) {
-                                    ?>
+<?php
+if ($edition_data['user_contact']) {
+    ?>
                                     <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
                                     <?php
                                 }
@@ -379,26 +381,26 @@
 
             <!-- Sidebar-->
             <div class="sidebar col-lg-3">                 
-                <?php
-                // SUBSCRIBE WIDGET
-                $data_to_widget['title'] = "Receive race notification";
-                $this->load->view('widgets/subscribe', $data_to_widget);
+<?php
+// SUBSCRIBE WIDGET
+$data_to_widget['title'] = "Receive race notification";
+$this->load->view('widgets/subscribe', $data_to_widget);
 
-                // ADD TO CALENDAR WIDGET
-                $this->load->view('widgets/add_calendar');
+// ADD TO CALENDAR WIDGET
+$this->load->view('widgets/add_calendar');
 
-                // TAGS WIDGET
-                $this->load->view('widgets/tags');
+// TAGS WIDGET
+$this->load->view('widgets/tags');
 
-                // ADS WIDGET
-                $this->load->view('widgets/side_ad');
+// ADS WIDGET
+$this->load->view('widgets/side_ad');
 
-                // RACE STATUS
+// RACE STATUS
 //                if ($edition_data['edition_status'] == 1) {
 //                    $this->load->view('widgets/race_status', $status_notice);
 //                    echo "<div class='m-b-30'></div>";
 //                }
-                ?>
+?>
             </div>
             <!-- end: Sidebar-->
         </div>

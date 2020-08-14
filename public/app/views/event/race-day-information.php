@@ -163,6 +163,44 @@
                     <!-- end: Product additional tabs -->
                 </div>
 
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?php
+                        if (isset($flyer['edition'])) {
+                            ?>
+                            <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-default">
+                                <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+                            <?php
+                        }
+                        if (isset($entry_form['edition'])) {
+                            ?>
+                            <a href="<?= $entry_form['edition']['url']; ?>" class="btn btn-light">
+                                <i class="fa fa-<?= $entry_form['edition']['icon']; ?>"></i> <?= $entry_form['edition']['text']; ?></a>
+
+                            <?php
+                        }
+                        // website link
+                        if (isset($url_list[1])) {
+                            ?>
+                            <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                                <i class="fa fa-link"></i> Race Website</a>
+
+                            <?php
+                        }
+                        // press release
+                        if (isset($file_list[10])) {
+                            ?>
+                            <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-light">
+                                <i class="fa fa-file-pdf"></i> Official Press Release</a>
+
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+
+
             </div>
             <!-- end: Content-->
 

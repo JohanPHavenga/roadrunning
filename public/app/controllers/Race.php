@@ -92,6 +92,38 @@ class Race extends Frontend_Controller {
         $this->load->view('templates/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
+    
+    public function virtual() {
+        $query_params = [
+            "where_in" => ["edition_status" => [17]],
+            "where" => ["edition_date >= " => date("Y-m-d H:i:s")],
+            "order_by" => ["edition_date" => "ASC"],
+        ];
+
+        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        if ($this->data_to_views['edition_list']) {
+            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            }
+        }
+        // check cookie vir listing preference.
+        if (get_cookie("listing_pref") == "grid") {
+            $view_to_load = 'race_grid';
+        } else {
+            $view_to_load = 'race_list';
+        }
+
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "50%";
+        $this->data_to_views['page_title'] = "Virtual Races in South Africa";
+        $this->data_to_views['meta_description'] = "List of upcoming virtual races in South Africa";
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+//        $this->load->view('templates/search_form');
+        $this->load->view('templates/' . $view_to_load, $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
 
     public function featured() {
         $query_params = [

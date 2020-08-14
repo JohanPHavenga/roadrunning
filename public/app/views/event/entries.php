@@ -32,25 +32,25 @@
                             <?php
                         } else {
                             if (
-                                    isset($edition_data['entrytype_list'][4]) &&            // entrytype for online entries
-                                    isset($url_list[5]) &&                                  // there is a url loaded for online entries
-                                    isset($date_list[3][0]['date_start']) &&                // online entries open date exists
+                                    isset($edition_data['entrytype_list'][4]) && // entrytype for online entries
+                                    isset($url_list[5]) && // there is a url loaded for online entries
+                                    isset($date_list[3][0]['date_start']) && // online entries open date exists
                                     (strtotime($date_list[3][0]['date_start']) < time())    // online entries date has passed
                             ) {
                                 // check if entries has closed
                                 if (strtotime($date_list[3][0]['date_end']) < time()) {
-                                    $btn_state="danger";
-                                    $btn_text="Online entries closed";
-                                    $icon="minus-circle";
+                                    $btn_state = "danger";
+                                    $btn_text = "Online entries closed";
+                                    $icon = "minus-circle";
                                 } else {
-                                    $btn_state="default";
-                                    $btn_text="Enter online";
-                                    $icon="arrow-right";
+                                    $btn_state = "default";
+                                    $btn_text = "Enter online";
+                                    $icon = "arrow-right";
                                 }
                                 ?>
                                 <p>
-                                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-<?=$btn_state;?> btn-creative btn-icon-holder btn-shadow btn-light-hover"><?=$btn_text;?>
-                                        <i class="fa fa-<?=$icon;?>"></i></a>
+                                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-<?= $btn_state; ?> btn-creative btn-icon-holder btn-shadow btn-light-hover"><?= $btn_text; ?>
+                                        <i class="fa fa-<?= $icon; ?>"></i></a>
                                 </p>
                                 <?php
                             }
@@ -61,7 +61,7 @@
                                 <?php
                                 // Online entries
                                 // check vir online entries
-                                if (isset($edition_data['entrytype_list'][4])) {                                   
+                                if (isset($edition_data['entrytype_list'][4])) {
                                     // if open date is not equal to the race date
                                     if (strtotime($date_list[3][0]['date_start']) != strtotime($edition_data['edition_date'])) {
                                         if (strtotime($date_list[3][0]['date_start']) > time()) {
@@ -201,7 +201,7 @@
                                 <ul>                               
                                     <?php
                                     // TSHIRT
-                                    if ($edition_data['edition_tshirt_amount'] > 0) {                                        
+                                    if ($edition_data['edition_tshirt_amount'] > 0) {
                                         if (!empty($edition_data['edition_tshirt_text'])) {
                                             echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
                                         } else {
@@ -229,6 +229,22 @@
                                     ?>
                                     <a href="<?= $entry_form['edition']['url']; ?>" class="btn btn-light">
                                         <i class="fa fa-<?= $entry_form['edition']['icon']; ?>"></i> <?= $entry_form['edition']['text']; ?></a>
+
+                                    <?php
+                                }
+                                // website link
+                                if (isset($url_list[1])) {
+                                    ?>
+                                    <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                                        <i class="fa fa-link"></i> Race Website</a>
+
+                                    <?php
+                                }
+                                // press release
+                                if (isset($file_list[10])) {
+                                    ?>
+                                    <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-light">
+                                        <i class="fa fa-file-pdf"></i> Official Press Release</a>
 
                                     <?php
                                 }

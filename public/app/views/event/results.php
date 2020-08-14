@@ -80,13 +80,14 @@
                                 <!-- end: Sidebar-->
                                 <?php
                                 break;
+
                             case 11;
+                                // loaded
                                 // add time provider info
                                 $this->load->view('widgets/timingprovider');
-                                // loaded
                                 if (isset($results['race'])) {
                                     ?>
-                                    <div class="content col-lg-12">
+                                    <div class="col-lg-12">
                                         <?php
                                         if ($result_list) {
                                             ?>
@@ -141,7 +142,7 @@
                                     </div>
                                     <?php
 //                            wts($results['race']);
-//                                        wts($result_list);
+//                            wts($result_list);
                                 } elseif (isset($results['edition'])) {
                                     // old school edition file loaded results
                                     ?>
