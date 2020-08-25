@@ -27,7 +27,7 @@ class Cron extends Frontend_Controller {
 
     public function daily() {
         // set to run at midnight
-        $this->history_summary();
+//        $this->history_summary();
         $this->history_purge();
         $this->update_event_info_status();
         $this->autoemails_closing_date();
@@ -187,13 +187,13 @@ class Cron extends Frontend_Controller {
         $this->load->model('history_model');
 
         // remove hisroty records older than a year
-        $num_del = $this->history_model->remove_old_history(date("Y-m-d", strtotime("-1 year")));
+        $log_data['runtime_count'] = $this->history_model->remove_old_history(date("Y-m-d", strtotime("-1 year")));
 
         // LOG RUNTIME DATA
         $log_data['end'] = $this->get_date();
         $this->log_runtime($log_data);
 
-        echo "History purge complete with <b>" . $num_del . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
+        echo "History purge complete with <b>" . $log_data['runtime_count'] . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
     }
 
     private function update_event_info_status() {
@@ -213,8 +213,10 @@ class Cron extends Frontend_Controller {
                 $this->edition_model->update_field($edition_id, "edition_info_status", 10);
                 echo "Updated " . $edition['edition_name'] . " to pending results status<br>";
             }
+            $log_data['runtime_count']=count($edition_list_to_update);
         } else {
             echo "No editions with info status verified in the past";
+            $log_data['runtime_count']=0;
         }
 
         // LOG RUNTIME DATA
@@ -251,6 +253,7 @@ class Cron extends Frontend_Controller {
             }
         }
 
+        $log_data['runtime_count']=$n;
         echo "$n Auto Emails Set: <b>" . date("Y-m-d H:i:s") . "</b>";
 
         // LOG RUNTIME DATA
@@ -266,13 +269,13 @@ class Cron extends Frontend_Controller {
         echo "<p><b>RUNTIME LOG PURGE</b></p>";
         $this->load->model('history_model');
 
-        $num_del = $this->history_model->runtime_log_cleanup(date("Y-m-d", strtotime("-1 year")));
+        $log_data['runtime_count'] = $this->history_model->runtime_log_cleanup(date("Y-m-d", strtotime("-1 year")));
 
         // LOG RUNTIME DATA
         $log_data['end'] = $this->get_date();
         $this->log_runtime($log_data);
 
-        echo "Runtime purge complete with <b>" . $num_del . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
+        echo "Runtime purge complete with <b>" . $log_data['runtime_count'] . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
     }
 
 }
