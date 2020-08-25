@@ -137,13 +137,13 @@ class History_model extends Frontend_model {
             return false;
         }
     }
-    
-    public function update_history_counts($url_count_data,$field) {
+
+    public function update_history_counts($url_count_data, $field) {
         $this->db->trans_start();
         foreach ($url_count_data as $edition_id => $count) {
-            $history_data=[$field => $count];
+            $history_data = [$field => $count];
             $this->db->update('historysum', $history_data, ['edition_id' => $edition_id]);
-        }        
+        }
         $this->db->trans_complete();
 
         // return true if transaction successfull
@@ -153,14 +153,14 @@ class History_model extends Frontend_model {
             return false;
         }
     }
-    
-    public function get_history_summary($query_params=[]) {
+
+    public function get_history_summary($query_params = []) {
 
         $this->db->select("*");
         $this->db->from("historysum");
-        foreach ($query_params as $operator=>$clause_arr) {
+        foreach ($query_params as $operator => $clause_arr) {
             if (is_array($clause_arr)) {
-                foreach ($clause_arr as $field=>$value) {
+                foreach ($clause_arr as $field => $value) {
                     $this->db->$operator($field, $value);
                 }
             } else {
@@ -177,6 +177,28 @@ class History_model extends Frontend_model {
             return $data;
         }
         return false;
+    }
+
+    public function remove_old_history($before_date) {
+        // get count for records older than date provided
+        $this->db->select("*");
+        $this->db->from("history");
+        $this->db->where('history_datevisited < ', $before_date);
+//        die($this->db->get_compiled_select());
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $record_count = $query->num_rows();
+        } else {
+            $record_count = 0;
+        }
+
+        // remove old records
+        $this->db->trans_start();
+        $this->db->where('history_datevisited < ', $before_date);
+        $this->db->delete('history');
+        $this->db->trans_complete();
+
+        return $record_count;
     }
 
 }

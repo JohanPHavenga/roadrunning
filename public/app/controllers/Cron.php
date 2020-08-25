@@ -28,8 +28,10 @@ class Cron extends Frontend_Controller {
     public function daily() {
         // set to run at midnight
         $this->history_summary();
+        $this->history_purge();
         $this->update_event_info_status();
         $this->autoemails_closing_date();
+        $this->runtime_log_purge();
     }
 
     // ========================================================================
@@ -175,6 +177,25 @@ class Cron extends Frontend_Controller {
         echo "History summary set: <b>" . date("Y-m-d H:i:s") . "</b>";
     }
 
+    private function history_purge() {
+        // removes history data older than a year
+        $log_data['runtime_jobname'] = __FUNCTION__;
+        $log_data['start'] = $this->get_date();
+
+        echo "<p><b>HISTORY PURGE</b></p>";
+        $this->load->model('edition_model');
+        $this->load->model('history_model');
+
+        // remove hisroty records older than a year
+        $num_del = $this->history_model->remove_old_history(date("Y-m-d", strtotime("-1 year")));
+
+        // LOG RUNTIME DATA
+        $log_data['end'] = $this->get_date();
+        $this->log_runtime($log_data);
+
+        echo "History purge complete with <b>" . $num_del . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
+    }
+
     private function update_event_info_status() {
         // script to move the event_info_status flag alog once an event has completed        
         $log_data['runtime_jobname'] = __FUNCTION__;
@@ -235,6 +256,23 @@ class Cron extends Frontend_Controller {
         // LOG RUNTIME DATA
         $log_data['end'] = $this->get_date();
         $this->log_runtime($log_data);
+    }
+
+    private function runtime_log_purge() {
+        // removes history data older than a year
+        $log_data['runtime_jobname'] = __FUNCTION__;
+        $log_data['start'] = $this->get_date();
+
+        echo "<p><b>RUNTIME LOG PURGE</b></p>";
+        $this->load->model('history_model');
+
+        $num_del = $this->history_model->runtime_log_cleanup(date("Y-m-d", strtotime("-1 year")));
+
+        // LOG RUNTIME DATA
+        $log_data['end'] = $this->get_date();
+        $this->log_runtime($log_data);
+
+        echo "Runtime purge complete with <b>" . $num_del . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
     }
 
 }
