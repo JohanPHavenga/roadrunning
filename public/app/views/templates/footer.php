@@ -116,7 +116,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
                     <div class="m-b-10 m-r-20" style="float: left;">
                         <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
-                            <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ.png"); ?>' /> 
+                            <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>' /> 
                         </a>
                     </div>
                     <p style=''>Consider supporting the wesbite via SnapScan</p>
@@ -192,10 +192,10 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 <a id="scrollTop"><i class="icon-chevron-up1"></i><i class="icon-chevron-up1"></i></a>
 
-<script src="<?= base_url('assets/js/jquery.js'); ?>"></script>
-<script src="<?= base_url('assets/js/plugins.js'); ?>"></script>
-<script src="<?= base_url('assets/js/functions.js'); ?>"></script>
-<script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous"></script>
+<script src="<?= base_url('assets/js/jquery.js'); ?>" defer></script>
+<script src="<?= base_url('assets/js/plugins.min.js'); ?>" defer></script>
+<script src="<?= base_url('assets/js/functions.min.js'); ?>" defer></script>
+<script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous" defer></script>
 
 <?php
 if (isset($scripts_to_load)) :

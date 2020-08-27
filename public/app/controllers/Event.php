@@ -22,10 +22,15 @@ class Event extends Frontend_Controller {
     }
 
     public function detail($slug, $url_params = []) {
+        
+        // TBR BENCHMARK
+//        $this->benchmark->mark('detail_start');
+        
         // as daar nie 'n edition_slug deurgestuur word nie
         if ($slug == "index") {
             redirect("/race-calendar");
         }
+
 
         // gebruik slug om ID te kry
         $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
@@ -56,7 +61,7 @@ class Event extends Frontend_Controller {
                     redirect($url, 'location', 301);
                 }
             }
-        }
+        }        
 
         // as die edition nie gevind is nie, of die status is Not Active
         if (!isset($edition_id) || ($edition_status == 2)) {
@@ -89,7 +94,8 @@ class Event extends Frontend_Controller {
         // check vir sub-page
         if ((empty($url_params)) || (!file_exists(APPPATH . "views/event/" . $url_params[0] . ".php"))) {
             $url_params[0] = "summary";
-        }
+        }        
+        
         $this->data_to_views['page_title_small'] = "less_padding"; // make all small banners for now
         $this->data_to_views['url_params'] = $url_params;
         // lists
@@ -98,6 +104,7 @@ class Event extends Frontend_Controller {
         $this->data_to_views['url_list'] = $url_list = $this->url_model->get_url_list("edition", $edition_id, true);
         $this->data_to_views['date_list'] = $this->date_model->get_date_list("edition", $edition_id, false, true);
         $this->data_to_views['tag_list'] = $tag_list = $this->tag_model->get_edition_tag_list($edition_id);
+        
         // extended edition info
         $this->data_to_views['edition_data']['race_summary'] = $this->get_set_race_suammry($this->data_to_views['race_list'], $edition_data['edition_date'], $edition_data['edition_info_prizegizing']);
         $this->data_to_views['edition_data']['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
@@ -228,17 +235,23 @@ class Event extends Frontend_Controller {
         }
 
 //        wts($this->data_to_views['route_maps'],true);
+        
+        
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/banner_event', $this->data_to_views);
         $this->load->view('templates/page_menu', $this->data_to_views);
         if ($this->data_to_views['edition_data']['edition_status'] == 17) {
-            $this->load->view('widgets/virtual_race_notice');            
+            $this->load->view('widgets/virtual_race_notice');
         }
         $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
         $this->load->view('event/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
+        
+        // TBR
+//        $this->benchmark->mark('detail_end');
+//        wts($this->benchmark->elapsed_time('detail_start','detail_end'),1);
     }
 
     function formulate_meta_description($edition_data) {

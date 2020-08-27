@@ -27,7 +27,7 @@ class Cron extends Frontend_Controller {
 
     public function daily() {
         // set to run at midnight
-//        $this->history_summary();
+        $this->history_summary();
         $this->history_purge();
         $this->update_event_info_status();
         $this->autoemails_closing_date();
