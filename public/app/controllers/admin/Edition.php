@@ -162,12 +162,16 @@ class Edition extends Admin_Controller {
             $this->data_to_view['url_list'] = $this->url_model->get_url_list("edition", $edition_id);
             $this->data_to_view['file_list'] = $this->file_model->get_file_list("edition", $edition_id);
             $this->data_to_view['file_list_by_type'] = $this->file_model->get_file_list("edition", $edition_id, true);
-//            wts($this->data_to_view['race_list'],1);
+//            wts($this->data_to_view['file_list_by_type'],1);
             if (!empty($this->data_to_view['race_list'])) {
                 foreach ($this->data_to_view['race_list'] as $race_id => $race) {
                     $this->data_to_view['race_list'][$race_id]['has_results'] = $this->result_model->result_exist_for_race($race_id);
                     $this->data_to_view['race_list'][$race_id]['file_list'] = $this->file_model->get_file_list("race", $race_id, true);
                 }
+            }
+            if(isset($this->data_to_view['file_list_by_type'][1][0])) {
+              $this->data_to_header["logo"]=$this->data_to_view['file_list_by_type'][1][0]["file_name"];
+              $this->data_to_header["slug"]=$this->data_to_view['edition_detail']['edition_slug'];
             }
             $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $edition_id;
             // set edition_return_url for races
