@@ -25,7 +25,8 @@
                     </td>
                 </tr>
                 <?php
-                if ($edition_data['edition_status'] != 17) {
+                // if virtual race, there needs to be a cut-off time to show time
+                if (($edition_data['edition_status'] != 17)||($race['race_time_end']>0)) {
                     ?>
                     <tr>
                         <td>Time</td>

@@ -216,7 +216,21 @@ if (!isset($title)) {
                 }
                 ?>
               </div>
+            </div>
 
+            <?php
+            if (isset($logo)) {
+              ?>
+              <div class="col-lg-2">
+                <img src="<?= base_url("file/edition/" . $slug . "/logo/" . $logo); ?>" style="height: 88px;"/>
+              </div>
+              <?php
+            }
+            ?>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-12">
               <?php
               // alert message on top of the page
               // set flashdata [alert|status]
@@ -239,16 +253,8 @@ if (!isset($title)) {
                 }
               }
               ?>
-
             </div>
-
-            <?php
-            if (isset($logo)) {
-              ?>
-              <div class="col-lg-2">
-                <img src="<?= base_url("file/edition/" . $slug . "/logo/". $logo);?>" style="height: 88px;"/>
-              </div>
-              <?php
-            }
-            ?>
           </div>
+
+
+
