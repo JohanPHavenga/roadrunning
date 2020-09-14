@@ -105,7 +105,7 @@
                   ?>
                 </div>
                 <div class="seperator m-t-10 m-b-10"></div>
-                <div class="col-lg-12"> 
+                <div class="col-lg-12">
                   <?php
                   // ASA MEMBERSHIP
                   if ($edition_data['asa_member_id'] > 0) {

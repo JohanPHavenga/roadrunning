@@ -448,8 +448,9 @@ class User extends Frontend_Controller {
         } else {
             $user_id = $this->user_model->get_user_id($this->input->post("user_email"));
             $user_data['user_email'] = $this->input->post("user_email");
-            $user_data['user_password'] = "";
-            $user_data['user_isconfirmed'] = false;
+            // commenting this out as then anyone can come and clear out your password
+//            $user_data['user_password'] = "";
+//            $user_data['user_isconfirmed'] = false;
             $user_data['user_confirm_guid'] = md5(uniqid(rand(), true));
             $user_data['user_guid_expire'] = date("Y-m-d H:i:s", strtotime($this->ini_array['register']['guid_valid']));
 
@@ -559,7 +560,6 @@ class User extends Frontend_Controller {
                 $url = base_url("user/confirm_email/" . $user_data['user_confirm_guid']);
                 $data = [
                     "to" => $user_data['user_email'],
-//                    "body" => "<h2>Welcome</h2><p>Hi " . $user_data['user_name'] . "<br>Please click on the link below to confirm your email address.</p><p><a href='$url'>$url</a></p>",
                     "subject" => "Registration on RoadRunning.co.za",
                     "body" => "<h2>Welcome</h2>"
                     . "<p>Hi " . $user_data['user_name']
@@ -567,8 +567,8 @@ class User extends Frontend_Controller {
                     . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a>."
                     . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
                     . "<p>If this was not you, you can safely ignore this email.</p>",
-                    "from" => "no-reply@roadrunning.co.za",
-                    "from_name" => "No-Reply@RoadRunning.co.za",
+                    "from" => "noreply@roadrunning.co.za",
+                    "from_name" => "noreply@roadrunning.co.za",
                 ];
                 break;
             case "forgot_password":
@@ -583,8 +583,8 @@ class User extends Frontend_Controller {
                     . "<p>Please click on the link below to confirm this was you, and set a new password:</p>"
                     . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
                     . "<p>If this was not you, you can safely ignore this email.</p>",
-                    "from" => "no-reply@roadrunning.co.za",
-                    "from_name" => "No-Reply@RoadRunning.co.za",
+                    "from" => "noreply@roadrunning.co.za",
+                    "from_name" => "noreply@roadrunning.co.za",
                 ];
                 break;
         }

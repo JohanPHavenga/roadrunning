@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Controller to run all cronjobs from
  * Functions for intra_day, daily
@@ -7,275 +6,278 @@
  */
 class Cron extends Frontend_Controller {
 
-    public function __construct() {
-        parent::__construct();
-        $this->load->model('edition_model');
-        $this->load->model('emailque_model');
-        $this->load->helper('date');
+  public function __construct() {
+    parent::__construct();
+    $this->load->model('edition_model');
+    $this->load->model('emailque_model');
+    $this->load->helper('date');
+    $this->output->set_content_type('text/plain', 'utf-8');
+  }
+
+  // ========================================================================
+  // FUNCTIONS TO CALL FROM CRONS
+  // ========================================================================
+
+  public function intra_day() {
+    // set to run every 5 min and continue until que empty
+    while ($this->have_mail_in_mailque()) {
+      $this->process_mail_que($quiet = true);
     }
+  }
 
-    // ========================================================================
-    // FUNCTIONS TO CALL FROM CRONS
-    // ========================================================================
+  public function daily() {
+    // set to run at midnight
+    $this->history_summary();
+    $this->history_purge();
+    $this->update_event_info_status();
+    $this->autoemails_closing_date();
+    $this->runtime_log_purge();
+  }
 
-    public function intra_day() {
-        // set to run every 5 min and continue until que empty
-        while ($this->have_mail_in_mailque()) {
-            $this->process_mail_que($quiet = true);
-        }
+  // ========================================================================
+  // LOGGING SCRIPTS
+  // ========================================================================
+
+  private function log_runtime($log_data) {
+    $log_data['runtime_start'] = $log_data['start']->format('Y-m-d\TH:i:s');
+    $log_data['runtime_end'] = $log_data['end']->format('Y-m-d\TH:i:s');
+    $log_data['runtime_duration'] = $log_data['start']->diff($log_data['end'])->format("%s");
+    unset($log_data['start']);
+    unset($log_data['end']);
+    $log = $this->edition_model->log_runtime($log_data);
+  }
+
+  private function get_date() {
+    return new DateTime();
+  }
+
+  // ========================================================================
+  // THE ACTUAL JOBS TO RUN
+  // ========================================================================
+
+  private function have_mail_in_mailque() {
+    // if anything is returned, return true
+    return $this->emailque_model->get_emailque_list(1, 5);
+  }
+
+  public function process_mail_que($quiet = false) {
+    // process the mail que and sends out emails
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+
+    if (!$quiet) {
+      echo "** PROCESS EMAIL QUE\n";
     }
-
-    public function daily() {
-        // set to run at midnight
-        $this->history_summary();
-        $this->history_purge();
-        $this->update_event_info_status();
-        $this->autoemails_closing_date();
-        $this->runtime_log_purge();
-    }
-
-    // ========================================================================
-    // LOGGING SCRIPTS
-    // ========================================================================
-
-    private function log_runtime($log_data) {
-        $log_data['runtime_start'] = $log_data['start']->format('Y-m-d\TH:i:s');
-        $log_data['runtime_end'] = $log_data['end']->format('Y-m-d\TH:i:s');
-        $log_data['runtime_duration'] = $log_data['start']->diff($log_data['end'])->format("%s");
-        unset($log_data['start']);
-        unset($log_data['end']);
-        $log = $this->edition_model->log_runtime($log_data);
-    }
-
-    private function get_date() {
-        return new DateTime();
-    }
-
-    // ========================================================================
-    // THE ACTUAL JOBS TO RUN
-    // ========================================================================  
-
-    private function have_mail_in_mailque() {
-        // if anything is returned, return true
-        return $this->emailque_model->get_emailque_list(1, 5);
-    }
-
-    private function process_mail_que($quiet = false) {
-        // process the mail que and sends out emails        
-        $log_data['runtime_jobname'] = __FUNCTION__;
-        $log_data['start'] = $this->get_date();
-
-        if (!$quiet) {
-            echo "<p><b>PROCESS EMAIL QUE</b></p>";
-        }
-        $this->load->model('emailque_model');
-
-        $mail_que = $this->emailque_model->get_emailque_list($this->ini_array['emailque']['que_size'], 5);
-        if ($mail_que) {
-            foreach ($mail_que as $mail_id => $mail_data) {
-                $mail_sent = $this->send_mail($mail_data);
+    $this->load->model('emailque_model');
+    $mail_que=[];
+    $mail_que = $this->emailque_model->get_emailque_list($this->ini_array['emailque']['que_size'], 5);
+    if ($mail_que) {
+      $log_data['runtime_count'] = count($mail_que);
+      foreach ($mail_que as $mail_id => $mail_data) {
+        $mail_sent = $this->send_mail($mail_data);
 //                $mail_sent=1;
-                if (!$quiet) {
-                    echo $mail_data['emailque_to_address'] . ": " . fyesNo($mail_sent) . "<br>";
-                }
-                if ($mail_sent) {
-                    $status_id = 6;
-                } else {
-                    $status_id = 7;
-                }
-                $this->emailque_model->set_emailque_status($mail_id, $status_id);
-            }
-            if (!$quiet) {
-                echo "<br>Mailqueue has processed <b>" . sizeof($mail_que) . "</b> mail(s): " . date("Y-m-d H:i:s");
-            }
-        } else {
-            if (!$quiet) {
-                echo "Nothing to process in mailqueue: " . date("Y-m-d H:i:s");
-            }
+        if (!$quiet) {
+          echo $mail_data['emailque_to_address'] . ": " . fyesNo($mail_sent) . "\n";
         }
-        // LOG RUNTIME DATA
-        $log_data['end'] = $this->get_date();
-        $this->log_runtime($log_data);
+        if ($mail_sent) {
+          $status_id = 6;
+        } else {
+          $status_id = 7;
+        }
+        $this->emailque_model->set_emailque_status($mail_id, $status_id);
+      }
+      if (!$quiet) {
+        echo "Mailqueue has processed " . sizeof($mail_que) . " mail(s): " . date("Y-m-d H:i:s")."\n\r";
+      }
+    } else {
+      if (!$quiet) {
+        echo "Nothing to process in mailqueue: " . date("Y-m-d H:i:s")."\n\r";
+      }
     }
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+  }
 
-    private function history_summary() {
-        // takes hisotry data collected in the history table, and summarizes it into a history_summary table
-        $log_data['runtime_jobname'] = __FUNCTION__;
-        $log_data['start'] = $this->get_date();
 
-        echo "<p><b>SET HISTORY SUMMARY</b></p>";
-        $this->load->model('edition_model');
-        $this->load->model('history_model');
+  private function history_summary() {
+    // takes hisotry data collected in the history table, and summarizes it into a history_summary table
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
 
-        // most visited events of a year
-        $history_list_year = $this->history_model->get_most_visited_url_list(date("Y-m-d H:i:s", strtotime("-1 year")));
+    echo "** SET HISTORY SUMMARY\n";
+    $this->load->model('edition_model');
+    $this->load->model('history_model');
+
+    // most visited events of a year
+    $history_list_year = $this->history_model->get_most_visited_url_list(date("Y-m-d H:i:s", strtotime("-1 year")));
 //        wts($history_list_year);
-        foreach ($history_list_year as $url) {
-            $url_sections = explode("/", $url['history_url']);
-            $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
+    foreach ($history_list_year as $url) {
+      $url_sections = explode("/", $url['history_url']);
+      $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
 
-            if (!isset($url_sections[5])) {
-                // tel al die edition sub-pages by mekaar om die count vir die edition te kry
-                if (isset($count_list_year[$edition_info['edition_id']])) {
-                    $count = $url['url_count'] + $count_list_year[$edition_info['edition_id']]['count'];
-                    $count_list_year[$edition_info['edition_id']]['count'] = $count;
-                } else {
-                    $count_list_year[$edition_info['edition_id']]['count'] = $url['url_count'];
-                    $count_list_year[$edition_info['edition_id']]['url'] = $url['history_url'];
-                    $count_list_year[$edition_info['edition_id']]['lastvisited'] = $url['lastvisited'];
-                    $edition_id_list[$edition_info['edition_id']] = $edition_info['edition_id'];
-                }
-            }
-        }
-        $query_params = [
-            "where_in" => ["editions.edition_id" => $edition_id_list],
-            "order_by" => ["edition_date" => "DESC"],
-        ];
-        $most_visited_events = $this->edition_model->get_edition_list($query_params);
-        $this->history_model->set_history_summary($most_visited_events, $count_list_year);
-
-        // get counts for the last month
-        $history_list_month = $this->history_model->get_most_visited_url_list(date("Y-m-d H:i:s", strtotime("-1 month")));
-        foreach ($history_list_month as $url) {
-            $url_sections = explode("/", $url['history_url']);
-            $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
-
-            // tel al die edition sub-pages by mekaar om die count vir die edition te kry
-            if (!isset($url_sections[5])) {
-                if (isset($count_list_month[$edition_info['edition_id']])) {
-                    $count = $url['url_count'] + $count_list_month[$edition_info['edition_id']];
-                } else {
-                    $count = $url['url_count'];
-                }
-                $count_list_month[$edition_info['edition_id']] = $count;
-            }
-        }
-        $this->history_model->update_history_counts($count_list_month, "historysum_countmonth");
-
-
-        // get counts for the last week
-        $history_list_week = $this->history_model->get_most_visited_url_list(date("Y-m-d H:i:s", strtotime("-1 week")));
-        foreach ($history_list_week as $url) {
-            $url_sections = explode("/", $url['history_url']);
-            $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
-            // tel al die edition sub-pages by mekaar om die count vir die edition te kry
-            if (!isset($url_sections[5])) {
-                if (isset($count_list_week[$edition_info['edition_id']])) {
-                    $count = $url['url_count'] + $count_list_week[$edition_info['edition_id']];
-                } else {
-                    $count = $url['url_count'];
-                }
-                $count_list_week[$edition_info['edition_id']] = $count;
-            }
-        }
-        $this->history_model->update_history_counts($count_list_week, "historysum_countweek");
-
-        // LOG RUNTIME DATA
-        $log_data['end'] = $this->get_date();
-        $this->log_runtime($log_data);
-
-        echo "History summary set: <b>" . date("Y-m-d H:i:s") . "</b>";
-    }
-
-    private function history_purge() {
-        // removes history data older than a year
-        $log_data['runtime_jobname'] = __FUNCTION__;
-        $log_data['start'] = $this->get_date();
-
-        echo "<p><b>HISTORY PURGE</b></p>";
-        $this->load->model('edition_model');
-        $this->load->model('history_model');
-
-        // remove hisroty records older than a year
-        $log_data['runtime_count'] = $this->history_model->remove_old_history(date("Y-m-d", strtotime("-1 year")));
-
-        // LOG RUNTIME DATA
-        $log_data['end'] = $this->get_date();
-        $this->log_runtime($log_data);
-
-        echo "History purge complete with <b>" . $log_data['runtime_count'] . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
-    }
-
-    private function update_event_info_status() {
-        // script to move the event_info_status flag alog once an event has completed        
-        $log_data['runtime_jobname'] = __FUNCTION__;
-        $log_data['start'] = $this->get_date();
-
-        echo "<p><b>UPDATE EVENT INFO STATUS</b></p>";
-
-        $query_params = [
-            "where" => ["edition_info_status" => 16, "edition_date <= " => date("Y-m-d H:i:s", strtotime("yesterday"))],
-        ];
-//        wts($query_params);
-        $edition_list_to_update = $this->edition_model->get_edition_list($query_params);
-        if ($edition_list_to_update) {
-            foreach ($edition_list_to_update as $edition_id => $edition) {
-                $this->edition_model->update_field($edition_id, "edition_info_status", 10);
-                echo "Updated " . $edition['edition_name'] . " to pending results status<br>";
-            }
-            $log_data['runtime_count']=count($edition_list_to_update);
+      if (!isset($url_sections[5])) {
+        // tel al die edition sub-pages by mekaar om die count vir die edition te kry
+        if (isset($count_list_year[$edition_info['edition_id']])) {
+          $count = $url['url_count'] + $count_list_year[$edition_info['edition_id']]['count'];
+          $count_list_year[$edition_info['edition_id']]['count'] = $count;
         } else {
-            echo "No editions with info status verified in the past";
-            $log_data['runtime_count']=0;
+          $count_list_year[$edition_info['edition_id']]['count'] = $url['url_count'];
+          $count_list_year[$edition_info['edition_id']]['url'] = $url['history_url'];
+          $count_list_year[$edition_info['edition_id']]['lastvisited'] = $url['lastvisited'];
+          $edition_id_list[$edition_info['edition_id']] = $edition_info['edition_id'];
         }
-
-        // LOG RUNTIME DATA
-        $log_data['end'] = $this->get_date();
-        $this->log_runtime($log_data);
+      }
     }
+    $query_params = [
+        "where_in" => ["editions.edition_id" => $edition_id_list],
+        "order_by" => ["edition_date" => "DESC"],
+    ];
+    $most_visited_events = $this->edition_model->get_edition_list($query_params);
+    $this->history_model->set_history_summary($most_visited_events, $count_list_year);
 
-    private function autoemails_closing_date() {
-        $log_data['runtime_jobname'] = __FUNCTION__;
-        $log_data['start'] = $this->get_date();
+    // get counts for the last month
+    $history_list_month = $this->history_model->get_most_visited_url_list(date("Y-m-d H:i:s", strtotime("-1 month")));
+    foreach ($history_list_month as $url) {
+      $url_sections = explode("/", $url['history_url']);
+      $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
 
-        echo "<p><b>AUTO EMAILS on CLOSING DATE</b></p>";
-
-        $this->load->model('edition_model');
-        $this->load->model('date_model');
-
-        $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4, 17]],
-            "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months"))],
-        ];
-        $edition_list = $this->date_model->add_dates($this->edition_model->get_edition_list($query_params));
-
-        $n = 0;
-        foreach ($edition_list as $edition_id => $edition) {
-            if (isset($edition['date_list'][3][0]['date_end'])) {
-                $online_close_date = strtotime($edition['date_list'][3][0]['date_end']);
-            } else {
-                $online_close_date = 0;
-            }
-            if (($online_close_date > time()) && ($online_close_date < strtotime("3 days"))) {
-                if ($this->auto_mailer(4, $edition_id)) {
-                    $n++;
-                }
-            }
+      // tel al die edition sub-pages by mekaar om die count vir die edition te kry
+      if (!isset($url_sections[5])) {
+        if (isset($count_list_month[$edition_info['edition_id']])) {
+          $count = $url['url_count'] + $count_list_month[$edition_info['edition_id']];
+        } else {
+          $count = $url['url_count'];
         }
+        $count_list_month[$edition_info['edition_id']] = $count;
+      }
+    }
+    $this->history_model->update_history_counts($count_list_month, "historysum_countmonth");
 
-        $log_data['runtime_count']=$n;
-        echo "$n Auto Emails Set: <b>" . date("Y-m-d H:i:s") . "</b>";
 
-        // LOG RUNTIME DATA
-        $log_data['end'] = $this->get_date();
-        $this->log_runtime($log_data);
+    // get counts for the last week
+    $history_list_week = $this->history_model->get_most_visited_url_list(date("Y-m-d H:i:s", strtotime("-1 week")));
+    foreach ($history_list_week as $url) {
+      $url_sections = explode("/", $url['history_url']);
+      $edition_info = $this->edition_model->get_edition_id_from_slug($url_sections[4]);
+      // tel al die edition sub-pages by mekaar om die count vir die edition te kry
+      if (!isset($url_sections[5])) {
+        if (isset($count_list_week[$edition_info['edition_id']])) {
+          $count = $url['url_count'] + $count_list_week[$edition_info['edition_id']];
+        } else {
+          $count = $url['url_count'];
+        }
+        $count_list_week[$edition_info['edition_id']] = $count;
+      }
+    }
+    $this->history_model->update_history_counts($count_list_week, "historysum_countweek");
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+
+    echo "History summary set: " . date("Y-m-d H:i:s") . "\n\r";
+  }
+
+  private function history_purge() {
+    // removes history data older than a year
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+
+    echo "** HISTORY PURGE\n";
+    $this->load->model('edition_model');
+    $this->load->model('history_model');
+
+    // remove hisroty records older than a year
+    $log_data['runtime_count'] = $this->history_model->remove_old_history(date("Y-m-d", strtotime("-1 year")));
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+
+    echo "History purge complete with " . $log_data['runtime_count'] . " records removed - " . date("Y-m-d H:i:s") . "\n\r";
+  }
+
+  private function update_event_info_status() {
+    // script to move the event_info_status flag alog once an event has completed        
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+
+    echo "** UPDATE EVENT INFO STATUS\n";
+
+    $query_params = [
+        "where" => ["edition_info_status" => 16, "edition_date <= " => date("Y-m-d H:i:s", strtotime("yesterday"))],
+    ];
+//        wts($query_params);
+    $edition_list_to_update = $this->edition_model->get_edition_list($query_params);
+    if ($edition_list_to_update) {
+      foreach ($edition_list_to_update as $edition_id => $edition) {
+        $this->edition_model->update_field($edition_id, "edition_info_status", 10);
+        echo "Updated " . $edition['edition_name'] . " to pending results status\n\r";
+      }
+      $log_data['runtime_count'] = count($edition_list_to_update);
+    } else {
+      echo "No editions with info status verified in the past\n\r";
+      $log_data['runtime_count'] = 0;
     }
 
-    private function runtime_log_purge() {
-        // removes history data older than a year
-        $log_data['runtime_jobname'] = __FUNCTION__;
-        $log_data['start'] = $this->get_date();
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+  }
 
-        echo "<p><b>RUNTIME LOG PURGE</b></p>";
-        $this->load->model('history_model');
+  private function autoemails_closing_date() {
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
 
-        $log_data['runtime_count'] = $this->history_model->runtime_log_cleanup(date("Y-m-d", strtotime("-1 year")));
+    echo "** AUTO EMAILS on CLOSING DATE\n";
 
-        // LOG RUNTIME DATA
-        $log_data['end'] = $this->get_date();
-        $this->log_runtime($log_data);
+    $this->load->model('edition_model');
+    $this->load->model('date_model');
 
-        echo "Runtime purge complete with <b>" . $log_data['runtime_count'] . "</b> records removed - <b> " . date("Y-m-d H:i:s") . "</b>";
+    $query_params = [
+        "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 4, 17]],
+        "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months"))],
+    ];
+    $edition_list = $this->date_model->add_dates($this->edition_model->get_edition_list($query_params));
+
+    $n = 0;
+    foreach ($edition_list as $edition_id => $edition) {
+      if (isset($edition['date_list'][3][0]['date_end'])) {
+        $online_close_date = strtotime($edition['date_list'][3][0]['date_end']);
+      } else {
+        $online_close_date = 0;
+      }
+      if (($online_close_date > time()) && ($online_close_date < strtotime("3 days"))) {
+        if ($this->auto_mailer(4, $edition_id)) {
+          $n++;
+        }
+      }
     }
+
+    $log_data['runtime_count'] = $n;
+    echo "$n Auto Emails Set: " . date("Y-m-d H:i:s") . "\n\r";
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+  }
+
+  private function runtime_log_purge() {
+    // removes history data older than a year
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+
+    echo "** RUNTIME LOG PURGE\n";
+    $this->load->model('history_model');
+
+    $log_data['runtime_count'] = $this->history_model->runtime_log_cleanup(date("Y-m-d", strtotime("-1 year")));
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+
+    echo "Runtime purge complete with " . $log_data['runtime_count'] . " records removed - " . date("Y-m-d H:i:s") . "\n\r";
+  }
 
 }
