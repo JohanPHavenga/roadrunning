@@ -363,6 +363,7 @@ class User extends Frontend_Controller {
         $this->data_to_views['meta_description'] = "Register as a new user for roadrunning.co.za";
         $this->data_to_views['form_url'] = '/register';
         $this->data_to_views['error_url'] = '/register';
+        $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
 
         // validation rules
         $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
@@ -380,6 +381,7 @@ class User extends Frontend_Controller {
                 )
         );
         $this->form_validation->set_rules('user_password_conf', 'Password Confirmation', 'trim|required|matches[user_password]');
+        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
@@ -404,6 +406,8 @@ class User extends Frontend_Controller {
             // add guid
             $user_data['user_confirm_guid'] = md5(uniqid(rand(), true));
             $user_data['user_guid_expire'] = date("Y-m-d H:i:s", strtotime($this->ini_array['register']['guid_valid']));
+            // remove g-recaptcha-response
+            unset($user_data['g-recaptcha-response']);
             // set params for model call
             $params = [
                 "action" => "add",

@@ -36,9 +36,9 @@
                             'class' => 'form-control',
                             'value' => set_value($field_name, fdateShort($date_detail[$field])),
                         ];
-                        echo '<div class="input-group date date-picker">';
+                        echo '<div class="input-group date date-picker"><span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span>';
                         echo form_input($form_input_array);
-                        echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
+                        echo '</div>';
                         ?>
                     </div>
                     <div class='col-sm-3 col-md-6'>
@@ -58,9 +58,9 @@
                         if (strtotime($date_detail[$field]) < $error_value) {
                             $form_input_array['class'] = $form_input_array['class'] . " danger";
                         }
-                        echo '<div class="input-group date date-picker">';
+                        echo '<div class="input-group date date-picker"><span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span>';
                         echo form_input($form_input_array);
-                        echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
+                        echo '</div>';
                         ?>
                     </div>
                 </div>

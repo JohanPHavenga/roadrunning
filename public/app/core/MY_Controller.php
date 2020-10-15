@@ -984,7 +984,7 @@ class Frontend_Controller extends MY_Controller {
                         $msg = "<strong>PLEASE NOTE</strong> - Dates and race times has <u>not yet been confirmed</u> by the race organisers";
                         $short_msg = "Dates not confirmed yet";
                         $state = "danger";
-                        $icon = "minus-circle";
+                        $icon = "info-circle";
                         break;
                     case 14:
                         $msg = "<b>INFO UNCONFIRMED</b> - Waiting for race information from the organisers";

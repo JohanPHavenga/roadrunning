@@ -182,8 +182,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 Please confirm that you did not hit the "<b>logout</b>" button by mistake.<br> Don't feel bad, it happens.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light btn-xs" data-dismiss="modal">My Bad</button>
-                <a class="btn btn-success btn-ok btn-xs" href="<?= base_url("logout"); ?>">Logout</a>
+                <button type="button" class="btn btn-light btn-md" data-dismiss="modal">My Bad</button>
+                <a class="btn btn-success btn-ok btn-md" href="<?= base_url("logout"); ?>">Logout</a>
             </div>
         </div>
     </div>

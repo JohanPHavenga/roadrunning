@@ -70,17 +70,25 @@ if (!isset($title)) {
           <div class="btn-group">
             <button type="button" class="btn btn-circle btn-outline red dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-plus"></i>&nbsp;
-              <span class="hidden-sm hidden-xs">Import&nbsp;</span>&nbsp;
+              <span class="hidden-sm hidden-xs"></span>&nbsp;
               <i class="fa fa-angle-down"></i>
             </button>
             <ul class="dropdown-menu" role="menu">
               <li>
+                <a href="<?= base_url('admin/event/create/add'); ?>">
+                  <i class="icon-rocket"></i> Add Event </a>
+              </li>
+              <li>
+                <a href="<?= base_url('admin/edition/create/add'); ?>">
+                  <i class="icon-calendar"></i> Add Edition </a>
+              </li>
+              <li>
                 <a href="<?= base_url('admin/result/import'); ?>">
-                  <i class="icon-trophy"></i> Result set </a>
+                  <i class="icon-trophy"></i> Upload Results </a>
               </li>
               <li>
                 <a href="<?= base_url('admin/import'); ?>">
-                  <i class="icon-info"></i> Event Information </a>
+                  <i class="icon-cloud-upload"></i> Event Import </a>
               </li>
               <!-- <li class="divider"> </li> -->
             </ul>
