@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3">
+        <file>
+            <url>app/views/user/register.php</url>
+            <bookmark id="3">
+                <name/>
+                <line>117</line>
+                <key/>
+            </bookmark>
+        </file>
         <file>
             <url>app/views/event/summary.php</url>
             <bookmark id="1">

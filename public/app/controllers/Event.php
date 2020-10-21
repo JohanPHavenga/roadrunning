@@ -271,7 +271,19 @@ class Event extends Frontend_Controller {
     if (isset($this->data_to_views['file_list'][4])) {
       $results['edition'][$n]['url'] = base_url("file/edition/" . $slug . "/results/" . $this->data_to_views['file_list'][4][0]['file_name']);
       $results['edition'][$n]['text'] = "Download results summary";
-      $results['edition'][$n]['icon'] = "file-excel";
+      switch (substr($this->data_to_views['file_list'][4][0]['file_name'], -3)) {
+        case "pdf":
+          $results['edition'][$n]['icon'] = "file-pdf";
+          break;
+        case "xls":
+        case "xlsx":
+        case "csv":
+          $results['edition'][$n]['icon'] = "file-excel";
+          break;
+        default:
+          $results['edition'][$n]['icon'] = "file-excel";
+          break;
+      }
       $n++;
     }
     if (isset($this->data_to_views['url_list'][4])) {
@@ -289,9 +301,21 @@ class Event extends Frontend_Controller {
       if (isset($race_file_list[4])) {
         $results['race'][$race['racetype_abbr']][$round_dist]['url'] = base_url("file/race/" . $slug . "/results/" . url_title($race['race_name']) . "/" . $race_file_list[4][0]['file_name']);
         $results['race'][$race['racetype_abbr']][$round_dist]['text'] = $race['race_name'] . " " . $race_file_list[4][0]['filetype_buttontext'];
-        $results['race'][$race['racetype_abbr']][$round_dist]['icon'] = "file-excel";
         $results['race'][$race['racetype_abbr']][$round_dist]['race_id'] = $race_id;
         $results['race'][$race['racetype_abbr']][$round_dist]['distance'] = $round_dist;
+        switch (substr($race_file_list[4][0]['file_name'], -3)) {
+          case "pdf":
+            $results['race'][$race['racetype_abbr']][$round_dist]['icon'] = "file-pdf";
+            break;
+          case "xls":
+          case "xlsx":
+          case "csv":
+            $results['race'][$race['racetype_abbr']][$round_dist]['icon'] = "file-excel";
+            break;
+          default:
+            $results['race'][$race['racetype_abbr']][$round_dist]['icon'] = "file-excel";
+            break;
+        }
         $n++;
       }
       if (isset($race_url_list[4])) {
