@@ -118,7 +118,7 @@
                       <?php
                     } else {
                       // old school race file load without data in the db
-                      wts($results);
+//                      wts($results);
                       ?>
                       <div class="content col-lg-12">
                         <div role="alert" class="m-t-10 m-b-20 alert alert-<?= $status_notice['state']; ?>">
