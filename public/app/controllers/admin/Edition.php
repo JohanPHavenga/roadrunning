@@ -494,7 +494,7 @@ class Edition extends Admin_Controller
 
     // create new edition data
     $name = substr($edition_detail['edition_name'], 0, -5);
-    $name = str_replace("Virtual ", "", $edition_detail['edition_name']);
+    $name = str_replace("Virtual ", "", $name); // remove virtual
     $year = substr($edition_detail['edition_name'], -4);
     $year++;
 
@@ -561,7 +561,8 @@ class Edition extends Admin_Controller
     }
 
     // CHECK TAGS
-    $this->set_tags($new_edition_id, $edition_detail, $race_list);
+    $edition_detail_new=$this->edition_model->get_edition_detail($new_edition_id);
+    $this->set_tags($new_edition_id, $edition_detail_new, $race_list);
 
     return $new_edition_id;
   }
