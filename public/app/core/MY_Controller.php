@@ -1356,15 +1356,20 @@ class Admin_Controller extends MY_Controller {
                         "icon" => "trophy",
                     ],
                     [
+                        "text" => "Bulk Copy",
+                        "url" => 'admin/edition/bulk_copy',
+                        "icon" => "share-alt",
+                    ],
+                    [
                         "text" => "Search",
                         "url" => 'admin/dashboard/search',
                         "icon" => "magnifier",
-                    ],
-                    [
-                        "text" => "Export Events",
-                        "url" => 'admin/event/export',
-                        "icon" => "arrow-down",
                     ]
+//                    [
+//                        "text" => "Export Events",
+//                        "url" => 'admin/event/export',
+//                        "icon" => "arrow-down",
+//                    ]
                 ],
             ],
             // Events

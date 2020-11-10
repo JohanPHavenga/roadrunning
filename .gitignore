@@ -1,2 +1,5 @@
 
 *.log
+*.sql
+/html
+/public_backup_20201103

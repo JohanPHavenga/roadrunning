@@ -324,6 +324,13 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                           $menu_html .= "<li><a href='" . $menu_item['loc'] . "'>" . $menu_item['display'] . "</a></li>";
                         }
                       }
+                      // IF LOGGED IN USER IS ADMIN
+                      if ($logged_in_user) {
+                        if (in_array(1, $logged_in_user['role_list'])) {
+                          $menu_html .= "<li><a href='" . base_url("mailer") . "'>Mailer</a></li>";
+                          $menu_html .= "<li><a href='" . base_url("admin") . "' target='_blank'>Admin Dashboard</a></li>";
+                        }
+                      }
                       ?>
                       <li class="dropdown <?= $i_cl; ?>">
                         <a href="/user"><?= $this->session->user['user_name']; ?></a>

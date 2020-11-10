@@ -210,6 +210,7 @@ class Main extends Frontend_Controller {
       } while (in_array($rand_img_num, $rand_img_num_arr));
     }
     
+    shuffle($return_arr);
 //    wts($return_arr,1);
 
     return ($return_arr);

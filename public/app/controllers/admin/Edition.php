@@ -272,7 +272,7 @@ class Edition extends Admin_Controller {
         $this->return_url = base_url("admin/race/create/add/" . $old_edition_id);
         $alert = "Your edition was successfully added. Use the form below to <b>add a race</b> to the edition";
       }
-      
+
       $this->session->set_flashdata(['alert' => $alert, 'status' => $status,]);
       redirect($this->return_url);
     }
@@ -438,6 +438,29 @@ class Edition extends Admin_Controller {
   // ==========================================================================================
   // MAKE A COPY OF AN OLD EDITION
   public function copy($old_edition_id) {
+
+    $new_edition_id = $this->single_copy($old_edition_id);
+
+    if ($new_edition_id) {
+      $alert = "Edition information has been successfully added";
+      $status = "success";
+      $return_url = base_url("admin/edition/create/edit/" . $new_edition_id);
+    } else {
+      $alert = "Error trying to add <b>" . $edition_data['edition_name'] . "</b> to the database";
+      $status = "danger";
+      $return_url = base_url("admin/dashboard");
+    }
+
+    $this->session->set_flashdata([
+        'alert' => $alert,
+        'status' => $status,
+    ]);
+
+    redirect($return_url);
+    die();
+  }
+
+  public function single_copy($old_edition_id) {
     $this->load->model('admin/user_model');
     $this->load->model('admin/event_model');
     $this->load->model('admin/race_model');
@@ -478,7 +501,7 @@ class Edition extends Admin_Controller {
     foreach ($race_list as $race_id => $race) {
       $race_data['race_distance'] = $race['race_distance'];
       $race_data['race_time_start'] = $race['race_time_start'];
-      $race_data['race_status'] = $race['race_status'];
+      $race_data['race_status'] = 1;
       $race_data['racetype_id'] = $race['racetype_id'];
       $race_data['edition_id'] = $new_edition_id;
       $this->race_model->set_race("add", NULL, $race_data, false);
@@ -518,23 +541,70 @@ class Edition extends Admin_Controller {
       }
     }
 
-    if ($new_edition_id) {
-      $alert = "Edition information has been successfully added";
-      $status = "success";
-      $return_url = base_url("admin/edition/create/edit/" . $new_edition_id);
-    } else {
-      $alert = "Error trying to add <b>" . $edition_data['edition_name'] . "</b> to the database";
-      $status = "danger";
-      $return_url = base_url("admin/dashboard");
+    return $new_edition_id;
+  }
+
+  public function bulk_copy() {
+    $this->data_to_header['title'] = "Bulk Copy Editions";
+    $this->data_to_view['form_url'] = "/admin/edition/bulk_copy";
+    $this->load->helper('form');
+    $this->load->library('table');
+
+    $this->data_to_view['time_period'] = $this->edition_model->get_timeperiod();
+
+
+    // kry start en end dates van die time period af
+    $year_to_copy_from = substr($this->input->post('time_period'), 0, 4);
+    $year_to_copy_to = $year_to_copy_from + 1;
+    $start_date = $this->input->post('time_period') . "-01 00:00:00";
+    $end_date = date("Y-m-t 23:59:59", strtotime($start_date));
+    // kry lys van editions wat gecopy moet word
+    $query_params = [
+        "where" => ["edition_date >" => $start_date, "edition_date <" => $end_date],
+        "order_by" => "edition_date",
+    ];
+    $edition_list = $this->edition_model->get_edition_list_new($query_params);
+    // merk die uit die lys wat nie gecopy moet word nie
+    foreach ($edition_list as $edition_id => $edition) {
+      $query_params = [
+          "where" => ["event_id" => $edition['event_id']],
+          "like" => ["edition_name" => $year_to_copy_to],
+      ];
+      $check_edition = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name"]);
+      if ($check_edition) {
+        $edition_list[$edition_id]['copy'] = false;
+      } else {
+        $edition_list[$edition_id]['copy'] = true;
+      }
     }
 
-    $this->session->set_flashdata([
-        'alert' => $alert,
-        'status' => $status,
-    ]);
+    $this->data_to_view['edition_list'] = $edition_list;
 
-    redirect($return_url);
-    die();
+    if (array_key_exists("btn_preview", $this->input->post())) {
+      $this->data_to_view['col_head'] = "Preview";
+      $this->data_to_view['col_body'] = "preview";
+    }
+
+    if (array_key_exists("btn_bulkcopy", $this->input->post())) {
+      $this->data_to_view['col_head'] = "Copy Results";
+      $this->data_to_view['col_body'] = "results";
+
+      $copy_count = 0;
+      foreach ($edition_list as $edition_id => $edition) {
+        if ($edition['copy']) {
+          if ($this->single_copy($edition_id)) {
+            $copy_count++;
+          }
+        }
+      }
+
+      $this->data_to_view['copy_count'] = $copy_count;
+    }
+
+    // load view
+    $this->load->view($this->header_url, $this->data_to_header);
+    $this->load->view("/admin/edition/bulk_copy", $this->data_to_view);
+    $this->load->view($this->footer_url, $this->data_to_footer);
   }
 
   private function get_new_date($old_date) {
