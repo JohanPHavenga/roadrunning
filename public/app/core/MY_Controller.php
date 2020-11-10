@@ -1747,6 +1747,7 @@ class Admin_Controller extends MY_Controller {
         foreach ($tagtype_list as $tagtype_id => $tagtype) {
             $tagtype_arr[$tagtype['tagtype_name']] = $tagtype_id;
         }
+        // wts($race_data,1);
         // SET TAGS
         // get race distance tags
         foreach ($race_data as $race_id => $race) {

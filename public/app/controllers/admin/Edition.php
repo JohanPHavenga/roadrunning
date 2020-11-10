@@ -1,17 +1,20 @@
 <?php
 
-class Edition extends Admin_Controller {
+class Edition extends Admin_Controller
+{
 
   private $return_url = "/admin/edition/view";
   private $create_url = "/admin/edition/create";
 
-  public function __construct() {
+  public function __construct()
+  {
     parent::__construct();
     $this->load->model('admin/edition_model');
     $this->load->model('admin/file_model');
   }
 
-  public function _remap($method, $params = array()) {
+  public function _remap($method, $params = array())
+  {
     if (method_exists($this, $method)) {
       return call_user_func_array(array($this, $method), $params);
     } else {
@@ -20,7 +23,8 @@ class Edition extends Admin_Controller {
   }
 
   // LIST VIEW
-  public function view() {
+  public function view()
+  {
     // load helpers / libraries
     $this->load->library('table');
     // unset dashboard return url session
@@ -32,35 +36,35 @@ class Edition extends Admin_Controller {
     $this->data_to_view['create_link'] = $this->create_url;
     $this->data_to_header['title'] = "List of Editions";
     $this->data_to_header['crumbs'] = [
-        "Home" => "/admin",
-        "Editions" => "/admin/edition",
-        "List" => "",
+      "Home" => "/admin",
+      "Editions" => "/admin/edition",
+      "List" => "",
     ];
 
     $this->data_to_header['page_action_list'] = [
-        [
-            "name" => "Add Edition",
-            "icon" => "calendar",
-            "uri" => "edition/create/add",
-        ],
+      [
+        "name" => "Add Edition",
+        "icon" => "calendar",
+        "uri" => "edition/create/add",
+      ],
     ];
 
     $this->data_to_view['url'] = $this->url_disect();
 
     $this->data_to_header['css_to_load'] = array(
-        "assets/admin/plugins/datatables/datatables.min.css",
-        "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+      "assets/admin/plugins/datatables/datatables.min.css",
+      "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
     );
 
     $this->data_to_footer['js_to_load'] = array(
-        "assets/admin/scripts/datatable.js",
-        "assets/admin/plugins/datatables/datatables.min.js",
-        "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
-        "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+      "assets/admin/scripts/datatable.js",
+      "assets/admin/plugins/datatables/datatables.min.js",
+      "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+      "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
     );
 
     $this->data_to_footer['scripts_to_load'] = array(
-        "assets/admin/scripts/table-datatables-managed.js",
+      "assets/admin/scripts/table-datatables-managed.js",
     );
 
     // load view
@@ -70,7 +74,8 @@ class Edition extends Admin_Controller {
   }
 
   // THE BIG CREATE METHOD - ADD and EDIT
-  public function create($action, $edition_id = 0) {
+  public function create($action, $edition_id = 0)
+  {
     if ($edition_id) {
       $this->data_to_view['delete_url'] = "/admin/edition/delete/" . $edition_id;
     }
@@ -107,30 +112,30 @@ class Edition extends Admin_Controller {
     $this->data_to_view['form_url'] = $this->create_url . "/" . $action;
 
     $this->data_to_header['css_to_load'] = array(
-        "assets/admin/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css",
-        "assets/admin/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css",
-        "assets/admin/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
-        "assets/admin/plugins/bootstrap-summernote/summernote.css",
-        "assets/admin/plugins/datatables/datatables.min.css",
-        "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+      "assets/admin/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css",
+      "assets/admin/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css",
+      "assets/admin/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
+      "assets/admin/plugins/bootstrap-summernote/summernote.css",
+      "assets/admin/plugins/datatables/datatables.min.css",
+      "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
     );
 
     $this->data_to_footer['js_to_load'] = array(
-        "assets/admin/plugins/moment.min.js",
-        "assets/admin/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
-        "assets/admin/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js",
-        "assets/admin/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
-        "assets/admin/plugins/bootstrap-summernote/summernote.min.js",
-        "assets/admin/scripts/datatable.js",
-        "assets/admin/plugins/datatables/datatables.min.js",
-        "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
-        "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+      "assets/admin/plugins/moment.min.js",
+      "assets/admin/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
+      "assets/admin/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js",
+      "assets/admin/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
+      "assets/admin/plugins/bootstrap-summernote/summernote.min.js",
+      "assets/admin/scripts/datatable.js",
+      "assets/admin/plugins/datatables/datatables.min.js",
+      "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+      "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
     );
 
     $this->data_to_footer['scripts_to_load'] = array(
-        "assets/admin/scripts/components-date-time-pickers.js",
-        "assets/admin/scripts/components-editors.js",
-        "assets/admin/scripts/table-datatables-managed.js",
+      "assets/admin/scripts/components-date-time-pickers.js",
+      "assets/admin/scripts/components-editors.js",
+      "assets/admin/scripts/table-datatables-managed.js",
     );
 
     // GET DATA TO SEND TO VIEW
@@ -147,10 +152,10 @@ class Edition extends Admin_Controller {
     $this->data_to_view['venue_dropdown'] = $this->venue_model->get_venue_dropdown();
     $this->data_to_view['timingprovider_dropdown'] = $this->timingprovider_model->get_timingprovider_dropdown();
     $this->data_to_view['admin_fee_dropdown'] = [
-        "" => "None",
-        "online" => "online",
-        "late" => "late",
-        "on the day" => "on the day",
+      "" => "None",
+      "online" => "online",
+      "late" => "late",
+      "on the day" => "on the day",
     ];
 
     if ($action == "edit") {
@@ -162,7 +167,7 @@ class Edition extends Admin_Controller {
       $this->data_to_view['url_list'] = $this->url_model->get_url_list("edition", $edition_id);
       $this->data_to_view['file_list'] = $this->file_model->get_file_list("edition", $edition_id);
       $this->data_to_view['file_list_by_type'] = $this->file_model->get_file_list("edition", $edition_id, true);
-//            wts($this->data_to_view['file_list_by_type'],1);
+      //            wts($this->data_to_view['file_list_by_type'],1);
       if (!empty($this->data_to_view['race_list'])) {
         foreach ($this->data_to_view['race_list'] as $race_id => $race) {
           $this->data_to_view['race_list'][$race_id]['has_results'] = $this->result_model->result_exist_for_race($race_id);
@@ -199,8 +204,12 @@ class Edition extends Admin_Controller {
     }
 
     // set validation rules
-    $this->form_validation->set_rules('edition_name', 'Edition Name', 'trim|required|min_length[5]|callback_name_check',
-            array('name_check' => 'Enter a valid year at the end of the Edition Name'));
+    $this->form_validation->set_rules(
+      'edition_name',
+      'Edition Name',
+      'trim|required|min_length[5]|callback_name_check',
+      array('name_check' => 'Enter a valid year at the end of the Edition Name')
+    );
     $this->form_validation->set_rules('event_id', 'Event', 'required|numeric|greater_than[0]', ["greater_than" => "Please select an event"]);
     $this->form_validation->set_rules('edition_status', 'Edition status', 'required');
     $this->form_validation->set_rules('edition_date', 'Edition date', 'required');
@@ -239,7 +248,7 @@ class Edition extends Admin_Controller {
         }
         // DATES checks
         $this->check_start_end_dates($old_edition_id, $new_edition_detail, $this->input->post('entrytype_id'), $this->input->post('regtype_id'));
-        // CEHCK TAGS
+        // CHECK TAGS
         $this->set_tags($old_edition_id, $new_edition_detail, $race_data);
 
         // AUTO MAILER for INFO VERIFIED
@@ -278,12 +287,14 @@ class Edition extends Admin_Controller {
     }
   }
 
-  public function race_status_update($race_id_arr, $status_id) {
+  public function race_status_update($race_id_arr, $status_id)
+  {
     $this->load->model('admin/race_model');
     return $this->race_model->update_race_status($race_id_arr, $status_id);
   }
 
-  private function set_races_from_edition($race_list_post, $race_list_current, $edition_info) {
+  private function set_races_from_edition($race_list_post, $race_list_current, $edition_info)
+  {
     $this->load->model('admin/race_model');
     foreach ($race_list_post as $race_id => $race) {
       $combine = array_merge($race_list_current[$race_id], $race);
@@ -295,7 +306,8 @@ class Edition extends Admin_Controller {
     return $return;
   }
 
-  private function set_dates_from_edition($date_list_post, $date_list_current, $edition_info) {
+  private function set_dates_from_edition($date_list_post, $date_list_current, $edition_info)
+  {
     $this->load->model('admin/date_model');
     foreach ($date_list_post as $date_id => $date_array) {
       // hierdie hieronder is slegs om datum te verander soos nodig na die post
@@ -340,7 +352,8 @@ class Edition extends Admin_Controller {
     }
   }
 
-  public function name_check($str) {
+  public function name_check($str)
+  {
     $year = substr($str, -4);
     $valid = true;
 
@@ -350,7 +363,8 @@ class Edition extends Admin_Controller {
     return $valid;
   }
 
-  private function check_start_end_dates($new_edition_id, $edition_details, $entrytype_list, $regtype_list) {
+  private function check_start_end_dates($new_edition_id, $edition_details, $entrytype_list, $regtype_list)
+  {
     $this->load->model('admin/date_model');
 
     $datetype_id_list = [1]; // edition start and end dates
@@ -387,18 +401,18 @@ class Edition extends Admin_Controller {
       $datetype_id_list[] = 8;
     }
 
-//    wts($datetype_id_list);
-//    wts($new_edition_id);
-//    wts($edition_details, 1);
+    //    wts($datetype_id_list);
+    //    wts($new_edition_id);
+    //    wts($edition_details, 1);
     // check if dates is loaded, else add
     foreach ($datetype_id_list as $datetype_id) {
       if (!$this->date_model->exists("edition", $new_edition_id, $datetype_id)) {
         $date_data = [
-            'date_start' => $edition_details['edition_date'],
-            'date_end' => $edition_details['edition_date'],
-            'datetype_id' => $datetype_id,
-            'date_linked_to' => "edition",
-            'linked_id' => $new_edition_id,
+          'date_start' => $edition_details['edition_date'],
+          'date_end' => $edition_details['edition_date'],
+          'datetype_id' => $datetype_id,
+          'date_linked_to' => "edition",
+          'linked_id' => $new_edition_id,
         ];
         $this->date_model->set_date("add", NULL, $date_data, false);
       }
@@ -406,9 +420,10 @@ class Edition extends Admin_Controller {
   }
 
   // DELETE EDITION
-  public function delete($edition_id = 0) {
+  public function delete($edition_id = 0)
+  {
 
-    if (($edition_id == 0) AND ( !is_int($edition_id))) {
+    if (($edition_id == 0) and (!is_int($edition_id))) {
       $this->session->set_flashdata('alert', 'Cannot delete record: ' . $edition_id);
       $this->session->set_flashdata('status', 'danger');
       redirect($this->return_url);
@@ -437,7 +452,8 @@ class Edition extends Admin_Controller {
   // EDITION COPY FUCNTIONS
   // ==========================================================================================
   // MAKE A COPY OF AN OLD EDITION
-  public function copy($old_edition_id) {
+  public function copy($old_edition_id)
+  {
 
     $new_edition_id = $this->single_copy($old_edition_id);
 
@@ -446,21 +462,22 @@ class Edition extends Admin_Controller {
       $status = "success";
       $return_url = base_url("admin/edition/create/edit/" . $new_edition_id);
     } else {
-      $alert = "Error trying to add <b>" . $edition_data['edition_name'] . "</b> to the database";
+      $alert = "Error trying to add <b>" . $this->edition_model->get_edition_name_from_id($old_edition_id) . "</b> to the database";
       $status = "danger";
       $return_url = base_url("admin/dashboard");
     }
 
     $this->session->set_flashdata([
-        'alert' => $alert,
-        'status' => $status,
+      'alert' => $alert,
+      'status' => $status,
     ]);
 
     redirect($return_url);
     die();
   }
 
-  public function single_copy($old_edition_id) {
+  public function single_copy($old_edition_id, $edition_info_status = 14)
+  {
     $this->load->model('admin/user_model');
     $this->load->model('admin/event_model');
     $this->load->model('admin/race_model');
@@ -477,13 +494,14 @@ class Edition extends Admin_Controller {
 
     // create new edition data
     $name = substr($edition_detail['edition_name'], 0, -5);
+    $name = str_replace("Virtual ", "", $edition_detail['edition_name']);
     $year = substr($edition_detail['edition_name'], -4);
     $year++;
 
     $edition_data['edition_name'] = $name . " " . $year;
     $edition_data['edition_slug'] = url_title($edition_data['edition_name']);
     $edition_data['edition_status'] = 1;
-    $edition_data['edition_info_status'] = 14;
+    $edition_data['edition_info_status'] = $edition_info_status;
     $edition_data['edition_date'] = $this->get_new_date($edition_detail['edition_date']);
 
     $edition_data['edition_address'] = $edition_detail['edition_address'];
@@ -499,6 +517,7 @@ class Edition extends Admin_Controller {
 
     // create new RACES
     foreach ($race_list as $race_id => $race) {
+      $race_data['race_name'] = $race['race_name'];
       $race_data['race_distance'] = $race['race_distance'];
       $race_data['race_time_start'] = $race['race_time_start'];
       $race_data['race_status'] = 1;
@@ -509,11 +528,11 @@ class Edition extends Admin_Controller {
 
     // create start and end DATES
     $date_data = [
-        'date_start' => $edition_data['edition_date'],
-        'date_end' => $edition_data['edition_date'],
-        'datetype_id' => 1,
-        'date_linked_to' => "edition",
-        'linked_id' => $new_edition_id,
+      'date_start' => $edition_data['edition_date'],
+      'date_end' => $edition_data['edition_date'],
+      'datetype_id' => 1,
+      'date_linked_to' => "edition",
+      'linked_id' => $new_edition_id,
     ];
     $this->date_model->set_date("add", NULL, $date_data, false);
 
@@ -541,10 +560,14 @@ class Edition extends Admin_Controller {
       }
     }
 
+    // CHECK TAGS
+    $this->set_tags($new_edition_id, $edition_detail, $race_list);
+
     return $new_edition_id;
   }
 
-  public function bulk_copy() {
+  public function bulk_copy()
+  {
     $this->data_to_header['title'] = "Bulk Copy Editions";
     $this->data_to_view['form_url'] = "/admin/edition/bulk_copy";
     $this->load->helper('form');
@@ -552,54 +575,56 @@ class Edition extends Admin_Controller {
 
     $this->data_to_view['time_period'] = $this->edition_model->get_timeperiod();
 
+    if ($this->input->post()) {
+      // kry start en end dates van die time period af
+      $year_to_copy_from = substr($this->input->post('time_period'), 0, 4);
+      $year_to_copy_to = $year_to_copy_from + 1;
 
-    // kry start en end dates van die time period af
-    $year_to_copy_from = substr($this->input->post('time_period'), 0, 4);
-    $year_to_copy_to = $year_to_copy_from + 1;
-    $start_date = $this->input->post('time_period') . "-01 00:00:00";
-    $end_date = date("Y-m-t 23:59:59", strtotime($start_date));
-    // kry lys van editions wat gecopy moet word
-    $query_params = [
+      $start_date = $this->input->post('time_period') . "-01 00:00:00";
+      $end_date = date("Y-m-t 23:59:59", strtotime($start_date));
+      // kry lys van editions wat gecopy moet word
+      $query_params = [
         "where" => ["edition_date >" => $start_date, "edition_date <" => $end_date],
         "order_by" => "edition_date",
-    ];
-    $edition_list = $this->edition_model->get_edition_list_new($query_params);
-    // merk die uit die lys wat nie gecopy moet word nie
-    foreach ($edition_list as $edition_id => $edition) {
-      $query_params = [
+      ];
+      $edition_list = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name","edition_status","event_id","edition_date","asa_member_abbr"]);
+      // merk die uit die lys wat nie gecopy moet word nie
+      foreach ($edition_list as $edition_id => $edition) {
+        $query_params = [
           "where" => ["event_id" => $edition['event_id']],
           "like" => ["edition_name" => $year_to_copy_to],
-      ];
-      $check_edition = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name"]);
-      if ($check_edition) {
-        $edition_list[$edition_id]['copy'] = false;
-      } else {
-        $edition_list[$edition_id]['copy'] = true;
-      }
-    }
-
-    $this->data_to_view['edition_list'] = $edition_list;
-
-    if (array_key_exists("btn_preview", $this->input->post())) {
-      $this->data_to_view['col_head'] = "Preview";
-      $this->data_to_view['col_body'] = "preview";
-    }
-
-    if (array_key_exists("btn_bulkcopy", $this->input->post())) {
-      $this->data_to_view['col_head'] = "Copy Results";
-      $this->data_to_view['col_body'] = "results";
-
-      $copy_count = 0;
-      foreach ($edition_list as $edition_id => $edition) {
-        if ($edition['copy']) {
-          if ($this->single_copy($edition_id)) {
-            $copy_count++;
-          }
+        ];
+        $check_edition_exists = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name"]);
+        if ($check_edition_exists) {
+          $edition_list[$edition_id]['copy'] = false;
+        } else {
+          $edition_list[$edition_id]['copy'] = true;
         }
       }
 
-      $this->data_to_view['copy_count'] = $copy_count;
-    }
+      $this->data_to_view['edition_list'] = $edition_list;
+
+      if (array_key_exists("btn_preview", $this->input->post())) {
+        $this->data_to_view['col_head'] = "Preview";
+        $this->data_to_view['col_body'] = "preview";
+      }
+
+      if (array_key_exists("btn_bulkcopy", $this->input->post())) {
+        $this->data_to_view['col_head'] = "Copy Results";
+        $this->data_to_view['col_body'] = "results";
+
+        $copy_count = 0;
+        foreach ($edition_list as $edition_id => $edition) {
+          if ($edition['copy']) {
+            if ($this->single_copy($edition_id, 13)) {
+              $copy_count++;
+            }
+          }
+        }
+
+        $this->data_to_view['copy_count'] = $copy_count;
+      }
+    } // if post
 
     // load view
     $this->load->view($this->header_url, $this->data_to_header);
@@ -607,7 +632,8 @@ class Edition extends Admin_Controller {
     $this->load->view($this->footer_url, $this->data_to_footer);
   }
 
-  private function get_new_date($old_date) {
+  private function get_new_date($old_date)
+  {
     $timestamp = strtotime("+1 years", strtotime($old_date));
     $year = date('Y', strtotime($old_date));
     $month = date('m', strtotime($old_date));
@@ -634,7 +660,8 @@ class Edition extends Admin_Controller {
   // TEMP FIX SCRIPTS
   // ==========================================================================================
   // temp method - fix wehere end-date is empty
-  function end_date_fix() {
+  function end_date_fix()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
@@ -653,7 +680,8 @@ class Edition extends Admin_Controller {
   }
 
   // temp method - fix wehere results status
-  function results_status_fix() {
+  function results_status_fix()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
@@ -675,7 +703,8 @@ class Edition extends Admin_Controller {
   }
 
   // temp method - fix wehere results status
-  function info_status_fix() {
+  function info_status_fix()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
@@ -683,7 +712,7 @@ class Edition extends Admin_Controller {
     $verified = 0;
     foreach ($edition_list as $new_edition_id => $edition) {
       // gee nuwe veld die resutls status value
-//            $this->edition_model->update_field($new_edition_id, "edition_info_status", $edition['edition_results_status']);
+      //            $this->edition_model->update_field($new_edition_id, "edition_info_status", $edition['edition_results_status']);
       // as event nog in die toekoms is, gee dit 'n status van Preliminary
       if ($edition['edition_date'] > date("Y-m-d H:i:s")) {
         $future++;
@@ -706,7 +735,8 @@ class Edition extends Admin_Controller {
   // TEMP DATA GENERATION SCRIPTS
   // ==========================================================================================
   // create slugs for all the editions
-  function generate_slugs() {
+  function generate_slugs()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
@@ -721,7 +751,8 @@ class Edition extends Admin_Controller {
   }
 
   // create slugs for all the editions
-  function generate_gps() {
+  function generate_gps()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
@@ -737,11 +768,12 @@ class Edition extends Admin_Controller {
   }
 
   // create tags on all races
-  function generate_tags() {
+  function generate_tags()
+  {
     $this->load->model('admin/edition_model');
     $this->load->model('admin/race_model');
     $query_params = [
-        "order_by" => ["edition_status" => "1"],
+      "order_by" => ["edition_status" => "1"],
     ];
     $edition_list = $this->edition_model->get_edition_list_new($query_params);
 
@@ -759,58 +791,59 @@ class Edition extends Admin_Controller {
   }
 
   // move edition dates to dates table
-  function move_edition_dates() {
+  function move_edition_dates()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $this->load->model('admin/date_model');
     $this->load->model('admin/datetype_model');
     $field_list = ["edition_id", "edition_name", "edition_date", "tbr_edition_date_end", "tbr_edition_entries_date_open", "tbr_edition_entries_date_close"];
     $query_params = [
-        "order_by" => ["edition_date" => "DESC"],
+      "order_by" => ["edition_date" => "DESC"],
     ];
     $edition_list = $this->edition_model->get_edition_list_new($query_params, $field_list);
     $date_list = $this->date_model->get_date_list("edition", 0, true);
 
     $counter = [];
     $date_fields_to_move = [
-        1 => [
-            "date_start" => "edition_date",
-            "date_end" => "edition_date",
-        ],
-        3 => [
-            "date_start" => "tbr_edition_entries_date_open",
-            "date_end" => "tbr_edition_entries_date_close",
-        ],
+      1 => [
+        "date_start" => "edition_date",
+        "date_end" => "edition_date",
+      ],
+      3 => [
+        "date_start" => "tbr_edition_entries_date_open",
+        "date_end" => "tbr_edition_entries_date_close",
+      ],
     ];
-//        wts($date_fields_to_move);
-//        wts($edition_list);
-//        die();
+    //        wts($date_fields_to_move);
+    //        wts($edition_list);
+    //        die();
     // run deur edition list
     foreach ($edition_list as $new_edition_id => $edition) {
       foreach ($date_fields_to_move as $datetype_id => $edition_field_array) {
-//                if ((!isset($date_list[$datetype_id][$new_edition_id])) && ($edition[$edition_field])) 
-//                if ($edition[$edition_field]) {
+        //                if ((!isset($date_list[$datetype_id][$new_edition_id])) && ($edition[$edition_field])) 
+        //                if ($edition[$edition_field]) {
 
         $date_data = array(
-            'datetype_id' => $datetype_id,
-            'date_linked_to' => "edition",
-            'linked_id' => $new_edition_id,
+          'datetype_id' => $datetype_id,
+          'date_linked_to' => "edition",
+          'linked_id' => $new_edition_id,
         );
         foreach ($edition_field_array as $des_field => $edition_field) {
           if (isset($edition[$edition_field])) {
             $date_data[$des_field] = $edition[$edition_field];
           }
         }
-//                wts($date_data);
-//                die();
+        //                wts($date_data);
+        //                die();
         if (isset($date_data['date_start'])) {
           $this->date_model->set_date("add", NULL, $date_data);
           if (!isset($counter[$edition_field])) {
             $counter[$edition_field] = 0;
           }
-          $counter[$edition_field] ++;
+          $counter[$edition_field]++;
         }
-//                }
+        //                }
       }
     }
 
@@ -824,13 +857,13 @@ class Edition extends Admin_Controller {
   }
 
   // move data from old edition_description field to new edition_general_detail 
-  function port_description() {
+  function port_description()
+  {
     // function to port old URLs from fields directly on Edition to URl table
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
     $n = 0;
-    foreach ($edition_list as $new_edition_id => $edition) {
-      ;
+    foreach ($edition_list as $new_edition_id => $edition) {;
       $this->edition_model->update_field($new_edition_id, "edition_general_detail", $edition['edition_description']);
       $n++;
     }
@@ -840,7 +873,8 @@ class Edition extends Admin_Controller {
   }
 
   // copy address data from start to end
-  function port_address() {
+  function port_address()
+  {
     $this->load->model('admin/edition_model');
     $edition_list = $this->edition_model->get_edition_list();
     $n = 0;
@@ -854,7 +888,8 @@ class Edition extends Admin_Controller {
   }
 
   // set registration & entry type
-  function set_entrytype_regtype_sponsor() {
+  function set_entrytype_regtype_sponsor()
+  {
     $this->load->model('admin/regtype_model');
     $this->load->model('admin/entrytype_model');
     $this->load->model('admin/sponsor_model');
@@ -892,16 +927,17 @@ class Edition extends Admin_Controller {
   }
 
   // LIST OF EDITION WITH NO RESULTS LOADED
-  public function no_result() {
+  public function no_result()
+  {
     // load helpers / libraries
     $this->load->library('table');
     // unset dashboard return url session
-//        $this->session->unset_userdata('dashboard_return_url');
+    //        $this->session->unset_userdata('dashboard_return_url');
     // editions with no results for the last year
     $query_params = [
-        "where_in" => ["edition_status" => [1, 17]],
-        "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-1 year"))],
-        "order_by" => ["editions.edition_date" => "ASC"],
+      "where_in" => ["edition_status" => [1, 17]],
+      "where" => ["edition_info_status" => 10, "edition_date >" => date("Y-m-d", strtotime("-1 year"))],
+      "order_by" => ["editions.edition_date" => "ASC"],
     ];
     $field_list = ["edition_id", "edition_name", "edition_status", "edition_slug", "edition_date", "edition_isfeatured", "event_name", "asa_member_name", "asa_member_abbr", "timingprovider_abbr"];
     $this->data_to_view['edition_data'] = $this->edition_model->get_edition_list_new($query_params, $field_list, false);
@@ -911,27 +947,27 @@ class Edition extends Admin_Controller {
     $this->data_to_view['create_link'] = $this->create_url;
     $this->data_to_header['title'] = "List of Editions with no Results Loaded";
     $this->data_to_header['crumbs'] = [
-        "Home" => "/admin",
-        "Editions" => "/admin/edition",
-        "No Results" => "",
+      "Home" => "/admin",
+      "Editions" => "/admin/edition",
+      "No Results" => "",
     ];
 
     $this->data_to_view['url'] = $this->url_disect();
 
     $this->data_to_header['css_to_load'] = array(
-        "assets/admin/plugins/datatables/datatables.min.css",
-        "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+      "assets/admin/plugins/datatables/datatables.min.css",
+      "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
     );
 
     $this->data_to_footer['js_to_load'] = array(
-        "assets/admin/scripts/datatable.js",
-        "assets/admin/plugins/datatables/datatables.min.js",
-        "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
-        "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+      "assets/admin/scripts/datatable.js",
+      "assets/admin/plugins/datatables/datatables.min.js",
+      "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+      "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
     );
 
     $this->data_to_footer['scripts_to_load'] = array(
-        "assets/admin/scripts/table-datatables-managed.js",
+      "assets/admin/scripts/table-datatables-managed.js",
     );
 
     // load view
@@ -939,5 +975,4 @@ class Edition extends Admin_Controller {
     $this->load->view("/admin/edition/no_results", $this->data_to_view);
     $this->load->view($this->footer_url, $this->data_to_footer);
   }
-
 }
