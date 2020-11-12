@@ -49,7 +49,7 @@
 
             <div class="col-lg-7">
               <?php
-              if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
+              // if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
                 echo $edition_data['edition_intro_detail'];
 
                 if (isset($edition_data['sponsor_list'])) {
@@ -63,7 +63,7 @@
                   }
                   echo "</p>";
                 }
-              }
+              // }
               ?>
 
               <div class="product-description">

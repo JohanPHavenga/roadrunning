@@ -7,7 +7,7 @@
         </div>
         <?php
         $this->load->view('widgets/race_meta');
-        ?>      
+        ?>
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
@@ -26,16 +26,16 @@
                     <div class="col-lg-12">
                         <?php
                         if ((strlen($edition_data['edition_entry_detail']) < 10) && (in_array(5, $edition_data['entrytype_list']))) {
-                            ?>
+                        ?>
                             <p class='text-info'><b>No details</b> regarding the entries for this race has been published yet.</p>
                             <p>Want to get notified once entries open? Enter your email below or to the right.</p>
                             <?php
                         } else {
                             if (
-                                    isset($edition_data['entrytype_list'][4]) && // entrytype for online entries
-                                    isset($url_list[5]) && // there is a url loaded for online entries
-                                    isset($date_list[3][0]['date_start']) && // online entries open date exists
-                                    (strtotime($date_list[3][0]['date_start']) < time())    // online entries date has passed
+                                isset($edition_data['entrytype_list'][4]) && // entrytype for online entries
+                                isset($url_list[5]) && // there is a url loaded for online entries
+                                isset($date_list[3][0]['date_start']) && // online entries open date exists
+                                (strtotime($date_list[3][0]['date_start']) < time())    // online entries date has passed
                             ) {
                                 // check if entries has closed
                                 if (strtotime($date_list[3][0]['date_end']) < time()) {
@@ -47,15 +47,15 @@
                                     $btn_text = "Enter online";
                                     $icon = "arrow-right";
                                 }
-                                ?>
+                            ?>
                                 <p>
                                     <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-<?= $btn_state; ?> btn-creative btn-icon-holder btn-shadow btn-light-hover"><?= $btn_text; ?>
                                         <i class="fa fa-<?= $icon; ?>"></i></a>
                                 </p>
-                                <?php
+                            <?php
                             }
-//                            echo "Now: ".time();
-//                            echo "<br>Close date: ".strtotime($date_list[3][0]['date_end']);
+                            //                            echo "Now: ".time();
+                            //                            echo "<br>Close date: ".strtotime($date_list[3][0]['date_end']);
                             ?>
                             <ul>
                                 <?php
@@ -88,7 +88,7 @@
                                     // check if time has been set
                                     if (strtotime($date_list[6][0]['date_start']) != strtotime($edition_data['edition_date'])) {
                                         echo "<li>Entries will be taken <span class='text-danger'><b>on the day</b></span> from <b>" .
-                                        ftimeMil($date_list[6][0]['date_start']);
+                                            ftimeMil($date_list[6][0]['date_start']);
                                         if (!time_is_midnight($date_list[6][0]['date_end'])) {
                                             echo " - " . ftimeMil($date_list[6][0]['date_end']);
                                         }
@@ -116,11 +116,10 @@
                                 // PRE entries
                                 if (isset($edition_data['entrytype_list'][3])) {
                                     // check if date is set, if closetime is not midnight and if venue is set
-                                    if
-                                    (
-                                            (strtotime($date_list[4][0]['date_start']) != strtotime($edition_data['edition_date'])) &&
-                                            (!time_is_midnight($date_list[4][0]['date_end'])) &&
-                                            (!empty($date_list[4][0]['venue_name']))
+                                    if (
+                                        (strtotime($date_list[4][0]['date_start']) != strtotime($edition_data['edition_date'])) &&
+                                        (!time_is_midnight($date_list[4][0]['date_end'])) &&
+                                        (!empty($date_list[4][0]['venue_name']))
                                     ) {
                                         echo "<li><b>Entries will be taken on:</b><ul>";
                                         foreach ($date_list[4] as $date) {
@@ -132,13 +131,13 @@
 
 
                                 // OTD entries for Fun Run
-//                                if ($edition_data['edition_entry_funrun_otd']) {
-//                                    foreach ($race_list as $race) {
-//                                        if ($race['race_distance'] < 10) {
-//                                            echo "<li>Entries for the " . $race['race_name'] . " will be taken on the day</li>";
-//                                        }
-//                                    }
-//                                }
+                                //                                if ($edition_data['edition_entry_funrun_otd']) {
+                                //                                    foreach ($race_list as $race) {
+                                //                                        if ($race['race_distance'] < 10) {
+                                //                                            echo "<li>Entries for the " . $race['race_name'] . " will be taken on the day</li>";
+                                //                                        }
+                                //                                    }
+                                //                                }
                                 // ENTRY LIMIT
                                 if (!empty($edition_data['edition_entry_limit'])) {
                                     echo "<li><strong>NOTE</strong> that the entry limit for this event is <u>" . $edition_data['edition_entry_limit'] . " entrants</u></li>";
@@ -157,8 +156,8 @@
                                 // BULK entries
                                 if ($edition_data['edition_entry_bulk']) {
                                     echo "<li>For bulk entries (5+) please contact the organisers: "
-                                    . "<a href='mailto:" . $edition_data['user_email'] . "?subject=Bulk entries for " . $edition_data['edition_name'] . "' class='link'>"
-                                    . $edition_data['user_email'] . "</a></li>";
+                                        . "<a href='mailto:" . $edition_data['user_email'] . "?subject=Bulk entries for " . $edition_data['edition_name'] . "' class='link'>"
+                                        . $edition_data['user_email'] . "</a></li>";
                                 }
 
                                 // Subsitutions
@@ -180,7 +179,7 @@
                                 }
                                 ?>
                             </ul>
-                            <?php
+                        <?php
                             // always show what is in the box
                             if (strlen($edition_data['edition_entry_detail']) > 10) {
                                 echo $edition_data['edition_entry_detail'];
@@ -188,17 +187,17 @@
                         }
                         ?>
                         <div class="row m-t-30">
-                            <div class="col-lg-12"> 
+                            <div class="col-lg-12">
                                 <?php
                                 if (isset($tshirt['edition'])) {
-                                    ?>
+                                ?>
                                     <a href="<?= $tshirt['edition']['url']; ?>" class="btn btn-light">
                                         <i class="fa fa-<?= $tshirt['edition']['icon']; ?>"></i> <?= $tshirt['edition']['text']; ?></a>
 
-                                    <?php
+                                <?php
                                 }
                                 ?>
-                                <ul>                               
+                                <ul>
                                     <?php
                                     // TSHIRT
                                     if ($edition_data['edition_tshirt_amount'] > 0) {
@@ -215,42 +214,85 @@
                             </div>
                         </div>
 
+                        <?php
+                        if (!in_array(3, $edition_data['regtype_list'])) {
+                        ?>
+                            <div class="row">
+                                <div class="col-md-12">                                    
+                                    <ul>
+                                        <?php
+                                        // OTD Reg
+                                        if (isset($edition_data['regtype_list'][1])) {
+                                            echo "<li>Registration & number collection will take place <b>on the day</b> from <b>" .
+                                                ftimeMil($date_list[9][0]['date_start']);
+                                            if (!time_is_midnight($date_list[9][0]['date_end'])) {
+                                                echo " - " . ftimeMil($date_list[9][0]['date_end']);
+                                            }
+                                            echo "</b></li>";
+                                        } else {
+                                            echo "<li class='red em'>No number collection on race day</li>";
+                                        }
+
+                                        // PRE Reg
+                                        if (isset($edition_data['regtype_list'][2])) {
+                                            echo "<li><b>Registration / Number collection will take place on:</b><ul>";
+                                            foreach ($date_list[10] as $date) {
+                                                echo "<li>" . fdateHumanFull($date['date_start'], true, true) . "-" . ftimeMil($date['date_end']) . " @ " . $date['venue_name'] . "</li>";
+                                            }
+                                            echo "</ul></li>";
+                                        }
+                                        ?>
+                                    </ul>
+                                    <?php
+                                    // always show what is in the box
+                                    if (strlen($edition_data['edition_reg_detail']) > 15) {
+                                        echo $edition_data['edition_reg_detail'];
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
+
                         <div class="row m-t-30">
                             <div class="col-lg-12">
                                 <?php
                                 if (isset($flyer['edition'])) {
-                                    ?>
+                                ?>
                                     <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-default">
                                         <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
 
-                                    <?php
+                                <?php
                                 }
                                 if (isset($entry_form['edition'])) {
-                                    ?>
+                                ?>
                                     <a href="<?= $entry_form['edition']['url']; ?>" class="btn btn-light">
                                         <i class="fa fa-<?= $entry_form['edition']['icon']; ?>"></i> <?= $entry_form['edition']['text']; ?></a>
 
-                                    <?php
+                                <?php
                                 }
                                 // website link
                                 if (isset($url_list[1])) {
-                                    ?>
+                                ?>
                                     <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
                                         <i class="fa fa-link"></i> Race Website</a>
 
-                                    <?php
+                                <?php
                                 }
                                 // press release
                                 if (isset($file_list[10])) {
-                                    ?>
+                                ?>
                                     <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-light">
                                         <i class="fa fa-file-pdf"></i> Official Press Release</a>
 
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </div>
                         </div>
+
+                        
 
                     </div>
 
@@ -261,7 +303,7 @@
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
+            <div class="sidebar col-lg-3">
                 <?php
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Add yourself to the race mailing list";
