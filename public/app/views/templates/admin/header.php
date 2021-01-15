@@ -99,7 +99,7 @@ if (!isset($title)) {
         <div class="page-top">
           <!-- BEGIN HEADER SEARCH BOX -->
           <!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
-          <form class="search-form search-form-expanded" action="<?= base_url('admin/dashboard/search/'); ?>" method="GET">
+          <form class="search-form search-form-expanded" action="<?= base_url('admin/dashboard/search'); ?>" method="GET">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Search..." name="query" autofocus onfocus="this.select();" value="<?= $this->input->get('query'); ?>">
               <span class="input-group-btn">

@@ -71,9 +71,15 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="<?= base_url('assets/favicon/ms-icon-144x144.png'); ?>">
     <meta name="theme-color" content="#ffffff">
+    
+    <!-- font preloads -->
+    <link rel="preload" href="<?= base_url('assets/webfonts/fa-brands-400.woff2');?>" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="<?= base_url('assets/webfonts/fa-regular-400.woff2');?>" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="<?= base_url('assets/webfonts/inspiro-icons.ttf?mxrs1k');?>" as="font" type="font/woff2" crossorigin="anonymous">
+
     <!-- auto ads -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
+    <script async>
       (adsbygoogle = window.adsbygoogle || []).push({
         google_ad_client: "ca-pub-8912238222537097",
         enable_page_level_ads: true
@@ -88,7 +94,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
   </head>
   <body>
     <!-- Analytics -->
-    <script>
+    <script async>
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {

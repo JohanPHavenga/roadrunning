@@ -80,10 +80,10 @@ class Search extends Frontend_Controller {
                 break;
             case '42':
                 $from_dist = 42.2;
-                $to_dist = 42.2;
+                $to_dist = 42.3;
                 break;
             case 'ultra':
-                $from_dist = 42.2;
+                $from_dist = 42.3;
                 $to_dist = 1000;
                 break;
             default:
@@ -101,6 +101,7 @@ class Search extends Frontend_Controller {
             case "any":
                 $from_date = date("2016-10-01 00:00:00");
                 $to_date = date("Y-m-d H:i:s", strtotime("1 year"));
+                $search_params['limit'] = 250;
                 break;
             case "weekend":
                 $from_date = date("Y-m-d 00:00:00");
@@ -117,10 +118,12 @@ class Search extends Frontend_Controller {
             case "plus_6m":
                 $from_date = date("Y-m-d 00:00:00");
                 $to_date = date("Y-m-d 23:59:59", strtotime("6 months"));
+                $search_params['limit'] = 250;
                 break;
             case "plus_1y":
                 $from_date = date("Y-m-d 00:00:00");
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
+                $search_params['limit'] = 250;
                 break;
             case "minus_6m":
                 $from_date = date("Y-m-d 00:00:00", strtotime("-6 months"));
@@ -129,6 +132,7 @@ class Search extends Frontend_Controller {
             default:
                 $from_date = date("Y-m-d 00:00:00", strtotime("-2 weeks"));
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
+                $search_params['limit'] = 250;
                 break;
         }
         $search_params['where']["edition_date >= "] = $from_date;
@@ -150,9 +154,10 @@ class Search extends Frontend_Controller {
         }
         $search_params['order_by']["edition_date"] = $sort;
         // LIMIT
-        $search_params['limit'] = 50;
+        // limit does not work properly. added limit to time case above
+        // $search_params['limit'] = 50;
 
-//        wts($search_params,true);
+    //    wts($search_params,true);
         // DO THE SEARCH
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params), $race_search_params);
         if (!empty($this->data_to_views['edition_list'])) {

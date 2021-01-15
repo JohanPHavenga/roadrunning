@@ -7,7 +7,7 @@
         </div>
         <?php
         $this->load->view('widgets/race_meta');
-        ?>      
+        ?>
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
@@ -124,11 +124,43 @@
                     <!-- end: Product additional tabs -->
                 </div>
 
+                <div class="heading-text heading-line m-t-50">
+                    <h4>Race Organisers info</h4>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <?php
+                        if ($edition_data['club_id'] != 8) {
+                        ?>
+                            <p>This event is organised by the
+                                <?php
+                                if (isset($edition_data['club_url_list'][0])) {
+                                    echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
+                                } else {
+                                    echo $edition_data['club_name'];
+                                }
+                                ?>
+                            </p>
+                        <?php
+                        }
+                        ?>
+                        <p class="contact_info">
+                        <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?=$edition_data['event_name'];?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
+                            <?php
+                            if ($edition_data['user_contact']) {
+                            ?>
+                                <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
+                            <?php
+                            }
+                            ?>
+                        </p>
+                    </div>
+                </div>
             </div>
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
+            <div class="sidebar col-lg-3">
                 <?php
                 // SUBSCRIBE WIDGET
                 $data_to_widget['title'] = "Receive race notification";

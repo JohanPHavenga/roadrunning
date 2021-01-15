@@ -20,7 +20,7 @@
             if (in_array($segs[0],$section['seg0'])) { $s.=" active open"; }
 
             echo "<li class='nav-item $s'>";
-                echo "<a href='".base_url().$section['url']."/' class='nav-link nav-toggle'>";
+                echo "<a href='".base_url().$section['url']."' class='nav-link nav-toggle'>";
                 if ($section['icon']) { echo "<i class='icon-".$section['icon']."'></i>"; }
                 echo "<span class='title'>$section[text]</span>";
             if (in_array($segs[0],$section['seg0'])) {
@@ -34,7 +34,7 @@
                         if ($page_key==0) { $s="start"; } else { $s=''; }
                         if (strpos($uri_string, $page['url']) !== false) { $s.=" active open"; }
                         echo "<li class='nav-item $s'>";
-                            echo "<a href='".base_url().$page['url']."/' class='nav-link'>";
+                            echo "<a href='".base_url().$page['url']."' class='nav-link'>";
                             if (@$page['icon']) { echo "<i class='icon-".$page['icon']."'></i> "; }
                             echo "<span class='title'>$page[text]</span>";
                         echo "</a></li>";

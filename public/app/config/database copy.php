@@ -97,10 +97,10 @@ $db['local'] = array(
 
 $db['server'] = array(
 	'dsn'	=> '',
-    'hostname' => 'sql14.cpt3.host-h.net',
-	'username' => 'coyote_web',
-	'password' => '2ncrM68fYIN3Wpr1hrAGCd5v',
-	'database' => 'coyote',
+        'hostname' => 'localhost',
+	'username' => 'roadrjsx_coyote',
+	'password' => 'gSX$Esn-z3;$', //WCpKeCL42JsCV327LR18
+	'database' => 'roadrjsx_coyote',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
