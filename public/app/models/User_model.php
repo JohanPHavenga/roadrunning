@@ -65,10 +65,10 @@ class User_model extends Frontend_model {
         $this->db->from("users");
         if (isset($att['role_id'])) {
             $this->db->join('user_role', 'user_id', 'left');
-            $this->db->where("role_id", $role_id);
+            $this->db->where("role_id", $att['role_id']);
         }
         if (isset($att['user_arr'])) {
-            $this->db->where_in("user_id", $user_arr);
+            $this->db->where_in("user_id", $att['user_arr']);
         }
         $this->db->order_by('user_name', 'user_surname');
         $query = $this->db->get();

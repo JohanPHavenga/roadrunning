@@ -107,7 +107,8 @@ class Frontend_model extends MY_model {
                 $data[$row['entrytype_id']] = $row['entrytype_id'];
             }
         } else {
-            $data = [$this->no_info_id];
+            //$data = [$this->no_info_id];
+            $data=false;
         }
         return $data;
     }

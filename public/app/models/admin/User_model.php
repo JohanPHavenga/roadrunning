@@ -1,13 +1,16 @@
 <?php
 
-class User_model extends Admin_model {
+class User_model extends Admin_model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    private function hash_pass($password) {
+    private function hash_pass($password)
+    {
         if ($password) {
             return sha1($password . "37");
         } else {
@@ -15,11 +18,13 @@ class User_model extends Admin_model {
         }
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all("users");
     }
 
-    public function get_user_id($email) {
+    public function get_user_id($email)
+    {
         $this->db->select("user_id");
         $this->db->from("users");
         $this->db->where('user_email', $email);
@@ -34,7 +39,8 @@ class User_model extends Admin_model {
         return false;
     }
 
-    public function get_user_list($limit = NULL, $start = NULL) {
+    public function get_user_list($limit = NULL, $start = NULL)
+    {
         if (isset($limit) && isset($start)) {
             $this->db->limit($limit, $start);
         }
@@ -54,7 +60,8 @@ class User_model extends Admin_model {
         return false;
     }
 
-    public function get_user_dropdown($role_id = NULL, $user_arr = []) {
+    public function get_user_dropdown($role_id = NULL, $user_arr = [])
+    {
         $this->db->select("user_id, user_name, user_surname");
         $this->db->from("users");
         if (isset($role_id)) {
@@ -68,7 +75,7 @@ class User_model extends Admin_model {
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-//            $data[] = "Please Select";
+            //            $data[] = "Please Select";
             foreach ($query->result_array() as $row) {
                 $data[$row['user_id']] = $row['user_name'] . " " . $row['user_surname'];
             }
@@ -78,7 +85,8 @@ class User_model extends Admin_model {
         return false;
     }
 
-    public function get_user_detail($id) {
+    public function get_user_detail($id)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -95,7 +103,8 @@ class User_model extends Admin_model {
         }
     }
 
-    public function get_user_name($id) {
+    public function get_user_name($id)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -111,9 +120,10 @@ class User_model extends Admin_model {
         }
     }
 
-    public function set_user($action, $user_id, $user_data = [], $debug = FALSE) {
+    public function set_user($action, $user_id, $user_data = [], $debug = FALSE)
+    {
         $role_arr = [];
-//        wts($user_data); die();
+        //        wts($user_data); die();
         // POSTED DATA
         if (empty($user_data)) {
             $user_data = array(
@@ -121,8 +131,8 @@ class User_model extends Admin_model {
                 'user_surname' => $this->input->post('user_surname'),
                 'user_email' => $this->input->post('user_email'),
                 'user_contact' => $this->int_phone($this->input->post('user_contact')),
-//                'user_username' => $this->input->post('user_username'),
-//                'user_password' => $this->hash_pass($this->input->post('user_password')),
+                //                'user_username' => $this->input->post('user_username'),
+                //                'user_password' => $this->hash_pass($this->input->post('user_password')),
                 'club_id' => $this->input->post('club_id'),
             );
             $role_arr = $this->input->post('role_id');
@@ -132,9 +142,9 @@ class User_model extends Admin_model {
                 $role_arr = $user_data['role_arr'];
                 unset($user_data['role_arr']);
             }
-//            if (isset($user_data['user_password'])) {
-//                $user_data['user_password'] = $this->hash_pass($user_data['user_password']);
-//            }
+            //            if (isset($user_data['user_password'])) {
+            //                $user_data['user_password'] = $this->hash_pass($user_data['user_password']);
+            //            }
         }
 
         $user_data['updated_date'] = date("Y-m-d H:i:s");
@@ -160,9 +170,9 @@ class User_model extends Admin_model {
                 // add updated date to both data arrays
                 $user_data['updated_date'] = date("Y-m-d H:i:s");
                 //check of password wat gepost is alreeds gehash is
-//                if (@$this->check_password($this->input->post('user_password'), $user_id)) {
-//                    unset($user_data['user_password']);
-//                }
+                //                if (@$this->check_password($this->input->post('user_password'), $user_id)) {
+                //                    unset($user_data['user_password']);
+                //                }
                 // start SQL transaction
                 $this->db->trans_start();
                 $this->db->update('users', $user_data, array('user_id' => $user_id));
@@ -194,7 +204,8 @@ class User_model extends Admin_model {
         }
     }
 
-    public function remove_user($id) {
+    public function remove_user($id)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -206,7 +217,8 @@ class User_model extends Admin_model {
         }
     }
 
-    public function check_login($login_type = "user") {
+    public function check_login($login_type = "user")
+    {
         $user_name = $this->input->post('user_username');
         $password = $this->input->post('user_password');
         $user_data = array(
@@ -220,7 +232,7 @@ class User_model extends Admin_model {
             $user_data["role_id"] = 1;
         }
         $this->db->where($user_data);
-//        echo $this->db->get_compiled_select();
+        //        echo $this->db->get_compiled_select();
         $query = $this->db->get();
 
 
@@ -238,59 +250,62 @@ class User_model extends Admin_model {
         return false;
     }
 
-//    public function check_login($login_type = "user") {
-//        $user_data = array(
-//            'user_username' => $this->input->post('user_username'),
-//            'user_password' => $this->hash_pass($this->input->post('user_password')),
-//        );
-//
-//        $this->db->select("users.user_id, user_name, user_surname, role_id");
-//        $this->db->from("users");
-//        if ($login_type == "admin") {
-//            $this->db->join("user_role", "users.user_id=user_role.user_id");
-//            $user_data["role_id"] = 1;
-//        }
-//        $this->db->where($user_data);
-//        $query = $this->db->get();
-//
-//        if ($query->num_rows() > 0) {
-//            return $query->row_array();
-//        } else {
-//            // nuwe metode
-//            $this->db->select('user_id,user_name,user_surname,user_email,user_password,user_contact');
-//            $this->db->from("users");
-//            $this->db->where('user_username', $this->input->post('user_username'));
-//            $query = $this->db->get();
-//
-//            // mag net een user kry
-//            if ($query->num_rows() == 1) {
-//                foreach ($query->result_array() as $row) {
-//                    if (password_verify($this->input->post('user_password'), $row['user_password'])) {
-//                        unset($row['user_password']);
-//                        return $row;
-//                    } else {
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-//        return false;
-//    }
+    //    public function check_login($login_type = "user") {
+    //        $user_data = array(
+    //            'user_username' => $this->input->post('user_username'),
+    //            'user_password' => $this->hash_pass($this->input->post('user_password')),
+    //        );
+    //
+    //        $this->db->select("users.user_id, user_name, user_surname, role_id");
+    //        $this->db->from("users");
+    //        if ($login_type == "admin") {
+    //            $this->db->join("user_role", "users.user_id=user_role.user_id");
+    //            $user_data["role_id"] = 1;
+    //        }
+    //        $this->db->where($user_data);
+    //        $query = $this->db->get();
+    //
+    //        if ($query->num_rows() > 0) {
+    //            return $query->row_array();
+    //        } else {
+    //            // nuwe metode
+    //            $this->db->select('user_id,user_name,user_surname,user_email,user_password,user_contact');
+    //            $this->db->from("users");
+    //            $this->db->where('user_username', $this->input->post('user_username'));
+    //            $query = $this->db->get();
+    //
+    //            // mag net een user kry
+    //            if ($query->num_rows() == 1) {
+    //                foreach ($query->result_array() as $row) {
+    //                    if (password_verify($this->input->post('user_password'), $row['user_password'])) {
+    //                        unset($row['user_password']);
+    //                        return $row;
+    //                    } else {
+    //                        return false;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        return false;
+    //    }
 
-    private function check_password($password, $id) {
+    private function check_password($password, $id)
+    {
         $this->db->where('user_password', $password);
         $this->db->where('user_id', $id);
         $this->db->from('users');
         return $this->db->count_all_results();
     }
 
-    public function export() {
+    public function export()
+    {
         $this->db->select("users.user_id, user_name, user_surname, user_username, club_id");
         $this->db->from("users");
         return $query = $this->db->get();
     }
 
-    private function int_phone($phone) {
+    private function int_phone($phone)
+    {
         if ($phone) {
             $phone = trim($phone);
             $phone = str_replace(" ", "", $phone);
@@ -300,8 +315,9 @@ class User_model extends Admin_model {
             return false;
         }
     }
-    
-    public function get_user_autocomplete_list() {
+
+    public function get_user_autocomplete_list()
+    {
 
         $this->db->select("*");
         $this->db->from("users");
@@ -310,11 +326,27 @@ class User_model extends Admin_model {
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $data[$row['user_id']] = $row['user_name']." ".$row['user_surname']." #".$row['user_id'];
+                $data[$row['user_id']] = $row['user_name'] . " " . $row['user_surname'] . " #" . $row['user_id'];
             }
             return $data;
         }
         return false;
     }
 
+    public function get_bot_users()    {
+
+        $this->db->select("users.user_id, user_name, user_surname");
+        $this->db->from("users");
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['user_id']]['id'] = $row['user_id'];
+                $data[$row['user_id']]['name'] = $row['user_name'];
+                $data[$row['user_id']]['surname'] = $row['user_surname'];
+            }
+            return $data;
+        }
+        return false;
+    }
 }

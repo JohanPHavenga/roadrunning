@@ -126,7 +126,7 @@ class Urltype extends Admin_Controller {
     public function delete($urltype_id) {
 
         if (($urltype_id == 0) AND ( !is_int($urltype_id))) {
-            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $id);
+            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $urltype_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
             die();
