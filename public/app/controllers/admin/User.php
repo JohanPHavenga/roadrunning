@@ -322,7 +322,7 @@ class User extends Admin_Controller
         $this->load->view($this->footer_url);
     }
 
-    public function cleanup()
+    public function cleanup($debug=1)
     {
         $user_detail = $this->user_model->get_bot_users();
 
@@ -335,8 +335,8 @@ class User extends Admin_Controller
             endif;
             preg_match_all('/[A-Z]/', $user['name'], $cap_matches, PREG_OFFSET_CAPTURE);
             if (
-                (count($cap_matches[0]) > 3) &&
-                (count($cap_matches[0]) - strlen(trim($user['name'])) < -2)
+                (count($cap_matches[0]) > 2) &&
+                (count($cap_matches[0]) - strlen(trim($user['name'])) < -1)
             ) {
                 $to_del[$user_id] = $user;
             }
@@ -347,8 +347,8 @@ class User extends Admin_Controller
             endif;
             preg_match_all('/[A-Z]/', $user['surname'], $cap_matches, PREG_OFFSET_CAPTURE);
             if (
-                (count($cap_matches[0]) > 3) &&
-                (count($cap_matches[0]) - strlen(trim($user['surname'])) < -2)
+                (count($cap_matches[0]) > 2) &&
+                (count($cap_matches[0]) - strlen(trim($user['surname'])) < -1)
             ) {
                 $to_del[$user_id] = $user;
             }
@@ -356,7 +356,7 @@ class User extends Admin_Controller
 
         // deletion
         if ($to_del) {
-            wts($to_del,1);
+            if ($debug) { wts($to_del,1); }
             foreach ($to_del as $user_id => $user) :
                 if ($this->user_model->remove_user($user_id)) {
                     echo $user['surname'] . "(#" . $user_id . ") has been removed";

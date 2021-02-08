@@ -3,9 +3,11 @@
 //------------------------------------------------------------------------------
 // CENTRAL MY CONTROLLER w. Admin and Frontend sections
 //------------------------------------------------------------------------------
-class MY_Controller extends CI_Controller {
+class MY_Controller extends CI_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         // make ini file content available 
         $this->ini_array = parse_ini_file("server_config.ini", true);
@@ -27,7 +29,8 @@ class MY_Controller extends CI_Controller {
         }
     }
 
-    public function set_email_body($body, $post_text = null) {
+    public function set_email_body($body, $post_text = null)
+    {
         $year = date("Y");
         $html = <<<EOT
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -67,7 +70,8 @@ EOT;
         return $html;
     }
 
-    private function has_auto_mail_been_send($emailtemplate_id, $edition_id) {
+    private function has_auto_mail_been_send($emailtemplate_id, $edition_id)
+    {
         $this->load->model('autoemail_model');
         if ($this->autoemail_model->exists($emailtemplate_id, $edition_id)) {
             return true;
@@ -76,7 +80,8 @@ EOT;
         }
     }
 
-    public function auto_mailer($emailtemplate_id = 0, $edition_id = 0) {
+    public function auto_mailer($emailtemplate_id = 0, $edition_id = 0)
+    {
         $this->load->model('autoemail_model');
         $this->load->model('edition_model');
         $this->load->model('admin/emailtemplate_model');
@@ -131,7 +136,8 @@ EOT;
         return true;
     }
 
-    public function chronologise_data($data_arr, $date_field) {
+    public function chronologise_data($data_arr, $date_field)
+    {
         $return_data = [];
         if ($data_arr) {
             foreach ($data_arr as $id => $row) {
@@ -146,19 +152,94 @@ EOT;
     }
 
     // get unsubscribe URL
-    public function formulate_unsubscribe_url($user_id, $linked_to, $linked_id) {
+    public function formulate_unsubscribe_url($user_id, $linked_to, $linked_id)
+    {
         $crypt = my_encrypt($user_id . "|" . $linked_to . "|" . $linked_id);
         $url = base_url("user/unsubscribe/" . $crypt);
         return $url;
     }
 
-    public function int_phone($phone) {
+
+    public function send_mail($data)
+    {
+        $this->load->library('email');
+
+        $config['mailtype'] = 'html';
+        $config['smtp_host'] = $this->ini_array['email']['smtp_server'];
+        $config['smtp_port'] = $this->ini_array['email']['smtp_port'];
+        $config['smtp_crypto'] = $this->ini_array['email']['smtp_crypto'];
+        $config['charset'] = $this->ini_array['email']['email_charset'];
+        $config['useragent'] = $this->ini_array['email']['useragent'];
+        $this->email->initialize($config);
+
+        $this->email->from($data['emailque_from_address'], $data['emailque_from_name']);
+        $this->email->to($data['emailque_to_address'], $data['emailque_to_name']);
+        if ($data['emailque_cc_address']) {
+            $this->email->cc($data['emailque_cc_address']);
+        }
+        if ($data['emailque_bcc_address']) {
+            $bcc_arr[$data['emailque_bcc_address']] = $data['emailque_bcc_address'];
+        }
+        $bcc_arr[$this->ini_array['email']['bcc_address']] = $this->ini_array['email']['bcc_address'];
+        $this->email->bcc($bcc_arr);
+        $this->email->subject($data['emailque_subject']);
+        $this->email->message($data['emailque_body']);
+
+        //        wts($data);
+        //        wts($this->email,1);
+
+        $send = $this->email->send();
+
+        return $send;
+    }
+
+    // ====================================================
+    // MAILER STUFF TO CALL FROM INTERNAL FUNCTIONS - returns true/false
+    // ====================================================
+
+    public function poke_mail_que()
+    {
+        while ($this->have_mail_in_que()) {
+            $this->process_poke_que();
+        }
+        return true;
+    }
+    public function have_mail_in_que()
+    {
+        $this->load->model('emailque_model');
+        return $this->emailque_model->get_emailque_list(1, 5);
+    }
+    public function process_poke_que()
+    {
+        $this->load->model('emailque_model');
+        $mail_que = [];
+        $mail_que = $this->emailque_model->get_emailque_list($this->ini_array['emailque']['que_size'], 5);
+        
+        if ($mail_que) {
+            foreach ($mail_que as $mail_id => $mail_data) {
+                $mail_sent = $this->send_mail($mail_data);  
+                if ($mail_sent) {
+                    $status_id = 6;
+                } else {
+                    $status_id = 7;
+                }
+                $this->emailque_model->set_emailque_status($mail_id, $status_id);
+            }
+        } 
+        return true;
+    }
+
+    // =========================================================
+
+    public function int_phone($phone)
+    {
         $p_replace = str_replace("-", "", str_replace(" ", "", str_replace("  ", "", trim($phone))));
         return preg_replace('/^(?:\+?27|0)?/', '+27', $p_replace);
     }
 
     // API CALL
-    public function url_get_contents($Url) {
+    public function url_get_contents($Url)
+    {
         if (!function_exists('curl_init')) {
             die('CURL is not installed!');
         }
@@ -173,7 +254,8 @@ EOT;
     // ==============================================================================================
     // SESSION CHECKS
     // ==============================================================================================  
-    public function check_if_user_is_logged_in($type = "web") {
+    public function check_if_user_is_logged_in($type = "web")
+    {
         // check of user ingelog is. set view variable to user
         if (isset($_SESSION['user']['logged_in'])) {
             if ($type == "admin") {
@@ -191,7 +273,8 @@ EOT;
         }
     }
 
-    public function check_value_refresh() {
+    public function check_value_refresh()
+    {
         // check if data was last retrieved a day ago or more, then unsets data to be retrieved again
         if ((!$this->session->has_userdata('session_value_refresh')) || ($this->session->session_value_refresh < strtotime($this->ini_array['session']['static_values_expiry']))) {
             $this->session->set_userdata("session_value_refresh", time());
@@ -200,13 +283,13 @@ EOT;
             return false;
         }
     }
-
 }
 
 //------------------------------------------------------------------------------
 //  FRONT END CONTROLLER
 //------------------------------------------------------------------------------
-class Frontend_Controller extends MY_Controller {
+class Frontend_Controller extends MY_Controller
+{
 
     public $data_to_views = [];
     public $header_url = "/templates/header";
@@ -216,7 +299,8 @@ class Frontend_Controller extends MY_Controller {
     public $logged_in_user = [];
     public $crumb_arr = [];
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         // doen checks en set session vars
         $this->data_to_views['logged_in_user'] = $this->logged_in_user = $this->check_if_user_is_logged_in();
@@ -254,7 +338,8 @@ class Frontend_Controller extends MY_Controller {
         $this->data_to_views['new_page_count'] = $new_count;
     }
 
-    public function show_my_404($msg, $status) {
+    public function show_my_404($msg, $status)
+    {
         //Using 'location' not work well on some windows systems
         $this->session->set_flashdata([
             'alert' => $msg,
@@ -266,7 +351,8 @@ class Frontend_Controller extends MY_Controller {
     // ==============================================================================================
     // HISTORY
     // ============================================================================================== 
-    private function check_history() {
+    private function check_history()
+    {
 
         // check current session history
         if (!isset($_SESSION['history'])) {
@@ -308,7 +394,8 @@ class Frontend_Controller extends MY_Controller {
         return $_SESSION['history'];
     }
 
-    private function segment_exclusion_list($uri_string) {
+    private function segment_exclusion_list($uri_string)
+    {
         $seg = explode("/", $uri_string);
         if ((in_array($uri_string, $this->ini_array['history']['exclusion'])) || (in_array($seg[0] . "/*", $this->ini_array['history']['exclusion']))) {
             return true;
@@ -317,7 +404,8 @@ class Frontend_Controller extends MY_Controller {
         }
     }
 
-    private function history_purge() {
+    private function history_purge()
+    {
         foreach ($_SESSION['history'] as $timestamp => $url) {
             if ($timestamp < strtotime($this->ini_array['history']['purge_period'])) {
                 unset($_SESSION['history'][$timestamp]);
@@ -325,7 +413,8 @@ class Frontend_Controller extends MY_Controller {
         }
     }
 
-    private function get_most_viewed_pages() {
+    private function get_most_viewed_pages()
+    {
         $this->load->model('history_model');
         $query_params = [
             "order_by" => ["historysum_countweek" => "DESC"],
@@ -334,7 +423,8 @@ class Frontend_Controller extends MY_Controller {
         return $this->history_model->get_history_summary($query_params);
     }
 
-    private function get_most_searched() {
+    private function get_most_searched()
+    {
         $this->load->model('history_model');
         $query_params = [
             "where" => ["updated_date >" => date('Y-m-d', strtotime("1 month ago"))],
@@ -347,7 +437,8 @@ class Frontend_Controller extends MY_Controller {
     // ==============================================================================================
     // CENTRAL MAIL FUNCTIONS
     // ==============================================================================================
-    public function set_email($data, $post_text = null) {
+    public function set_email($data, $post_text = null)
+    {
         // THIS FUNCTION ONLY TAKES EMAIL FIELDS AND ADD THEM TO THE EMAIL QUE TABLE
         // load emailque_model
         $this->load->model('emailque_model');
@@ -384,47 +475,18 @@ class Frontend_Controller extends MY_Controller {
                 "data" => $emailque_data,
                 "id" => false,
             ];
-//            echo $emailque_data['emailque_body'];
-//            die();
+            //            echo $emailque_data['emailque_body'];
+            //            die();
             return $this->emailque_model->set_emailque($params);
         } else {
             die("Missing required fields to send email: MY_Controller->send_mail");
         }
     }
 
-    public function send_mail($data) {
-        $this->load->library('email');
 
-        $config['mailtype'] = 'html';
-        $config['smtp_host'] = $this->ini_array['email']['smtp_server'];
-        $config['smtp_port'] = $this->ini_array['email']['smtp_port'];
-        $config['smtp_crypto'] = $this->ini_array['email']['smtp_crypto'];
-        $config['charset'] = $this->ini_array['email']['email_charset'];
-        $config['useragent'] = $this->ini_array['email']['useragent'];
-        $this->email->initialize($config);
 
-        $this->email->from($data['emailque_from_address'], $data['emailque_from_name']);
-        $this->email->to($data['emailque_to_address'], $data['emailque_to_name']);
-        if ($data['emailque_cc_address']) {
-            $this->email->cc($data['emailque_cc_address']);
-        }
-        if ($data['emailque_bcc_address']) {
-            $bcc_arr[$data['emailque_bcc_address']] = $data['emailque_bcc_address'];
-        }
-        $bcc_arr[$this->ini_array['email']['bcc_address']] = $this->ini_array['email']['bcc_address'];
-        $this->email->bcc($bcc_arr);
-        $this->email->subject($data['emailque_subject']);
-        $this->email->message($data['emailque_body']);
-
-//        wts($data);
-//        wts($this->email,1);
-
-        $send = $this->email->send();
-
-        return $send;
-    }
-
-    public function recaptcha($str = "") {
+    public function recaptcha($str = "")
+    {
         $google_url = "https://www.google.com/recaptcha/api/siteverify";
         $secret = '6LcxdoYUAAAAAFphXeYMlOL2w5ysa9ovdOdCLJyP';
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -450,7 +512,8 @@ class Frontend_Controller extends MY_Controller {
     // SITEMAP / MENU INFO
     // ==============================================================================================
 
-    public function get_static_pages() {
+    public function get_static_pages()
+    {
         $static_pages = [
             "home" => [
                 "display" => "Home",
@@ -480,7 +543,7 @@ class Frontend_Controller extends MY_Controller {
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
-//                        "badge" => "POPULAR",
+                        //                        "badge" => "POPULAR",
                     ],
                     "featured" => [
                         "display" => "Featured",
@@ -676,20 +739,21 @@ class Frontend_Controller extends MY_Controller {
                 "priority" => 0.2,
                 "changefreq" => "yearly",
             ],
-//            "disclaimer" => [
-//                "display" => "Disclaimer",
-//                "loc" => base_url("disclaimer"),
-//                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
-//                "priority" => 0.2,
-//                "changefreq" => "yearly",
-//            ],
+            //            "disclaimer" => [
+            //                "display" => "Disclaimer",
+            //                "loc" => base_url("disclaimer"),
+            //                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
+            //                "priority" => 0.2,
+            //                "changefreq" => "yearly",
+            //            ],
         ];
 
         $this->session->set_userdata("static_pages", $static_pages);
         return $static_pages;
     }
 
-    public function get_province_pages() {
+    public function get_province_pages()
+    {
         $this->load->model('event_model');
         // get province list from event model to only return those provinces that is in use
         $province_list = $this->event_model->get_province_list();
@@ -706,7 +770,8 @@ class Frontend_Controller extends MY_Controller {
         return $p_arr;
     }
 
-    public function get_region_pages() {
+    public function get_region_pages()
+    {
         $this->load->model('event_model');
         $region_list = $this->event_model->get_region_list();
 
@@ -722,12 +787,14 @@ class Frontend_Controller extends MY_Controller {
         return $r_arr;
     }
 
-    public function get_web_data() {
+    public function get_web_data()
+    {
         $this->load->model('webdata_model');
         return $this->webdata_model->get_webdata();
     }
 
-    public function get_date_list() {
+    public function get_date_list()
+    {
         $dates_to_fetch = [
             "1 month ago",
             "today",
@@ -735,7 +802,7 @@ class Frontend_Controller extends MY_Controller {
             "+2 month",
             "+3 month",
             "+4 month",
-//            "+5 month",
+            //            "+5 month",
         ];
         foreach ($dates_to_fetch as $strtotime) {
             $date_list[date("Y", strtotime($strtotime))][date("m", strtotime($strtotime))] = date("F Y", strtotime($strtotime));
@@ -746,7 +813,8 @@ class Frontend_Controller extends MY_Controller {
     // ==============================================================================================
     // EVENT PAGE MENU
     // ==============================================================================================
-    public function get_event_menu($slug, $event_id, $edition_id, $in_past) {
+    public function get_event_menu($slug, $event_id, $edition_id, $in_past)
+    {
 
         $menu_arr = [
             "summary" => [
@@ -846,9 +914,9 @@ class Frontend_Controller extends MY_Controller {
         }
 
         // check for route maps
-//        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
-//            unset($menu_arr['route_maps']);
-//        }
+        //        if ((!isset($this->data_to_views['url_list'][8])) && (!isset($this->data_to_views['file_list'][7]))) {
+        //            unset($menu_arr['route_maps']);
+        //        }
         // to use later
         unset($menu_arr['more']['sub_menu']['sponsors']);
         unset($menu_arr['more']['sub_menu']['club']);
@@ -856,7 +924,8 @@ class Frontend_Controller extends MY_Controller {
         return $menu_arr;
     }
 
-    public function get_event_history($event_id, $edition_id) {
+    public function get_event_history($event_id, $edition_id)
+    {
         $this->load->model('edition_model');
         $return = [];
         // get list of editions linked to this event
@@ -897,7 +966,8 @@ class Frontend_Controller extends MY_Controller {
     // ==============================================================================================
     // USER PAGE MENU
     // ==============================================================================================
-    public function get_user_menu() {
+    public function get_user_menu()
+    {
 
         $menu_arr = [
             "dashboard" => [
@@ -943,11 +1013,11 @@ class Frontend_Controller extends MY_Controller {
     // CENTRAL FUNCTIONS
     // ==============================================================================================
 
-    public function formulate_status_notice($edition_data) {
-        $return = [];
-        ;
-//        echo $event_detail['edition_status'];
-//        die();
+    public function formulate_status_notice($edition_data)
+    {
+        $return = [];;
+        //        echo $event_detail['edition_status'];
+        //        die();
         switch ($edition_data['edition_status']) {
             case 2:
                 $msg = "<b>This event is set to DRAFT mode.</b> All detail has not yet been confirmed";
@@ -973,7 +1043,7 @@ class Frontend_Controller extends MY_Controller {
                     $email = '';
                 }
                 $msg = "<strong>This event has been POSTPONED until further notice.</strong> Please contact the event organisers for more detail on: <a href='mailto:$email' title='Email organisers'>$email</a><br>"
-                        . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
+                    . "Please consider <b><a href='#subscribe'>subscribing</a></b> to the event below to receive an email once a new date is set";
                 $short_msg = "POSTPONED";
                 $state = "warning";
                 $icon = "minus-circle";
@@ -1034,7 +1104,8 @@ class Frontend_Controller extends MY_Controller {
         return $return;
     }
 
-    public function set_crumbs() {
+    public function set_crumbs()
+    {
         // setup auto crumbs from URI
         $segs = $this->uri->segment_array();
         $crumb_uri = substr(base_url(), 0, -1);
@@ -1069,7 +1140,8 @@ class Frontend_Controller extends MY_Controller {
         return $crumbs;
     }
 
-    public function subscribe_user($user_data, $linked_to, $linked_id) {
+    public function subscribe_user($user_data, $linked_to, $linked_id)
+    {
         // this function will add a user to a subscription        
         $this->load->model('user_model');
         $this->load->model('role_model');
@@ -1085,7 +1157,7 @@ class Frontend_Controller extends MY_Controller {
                 "role_arr" => [2],
             ];
             $user_id = $this->user_model->set_user($params);
-//            $user_id = $this->user_model->set_user("add", 0, $user_data, true);
+            //            $user_id = $this->user_model->set_user("add", 0, $user_data, true);
         } else {
             // check if role 2 exist
             $role_list = $this->role_model->get_role_list_per_user($user_id);
@@ -1138,7 +1210,8 @@ class Frontend_Controller extends MY_Controller {
         ]);
     }
 
-    private function set_subscribe_confirmation_email($usersub_data) {
+    private function set_subscribe_confirmation_email($usersub_data)
+    {
         $this->load->model('user_model');
         $this->load->model('emailque_model');
         $this->load->model('edition_model');
@@ -1182,13 +1255,13 @@ class Frontend_Controller extends MY_Controller {
         $mail_id = $this->set_email($data, $post_text);
         return $mail_id;
     }
-
 }
 
 //------------------------------------------------------------------------------
 //  ADMIN CONTROLLER
 //------------------------------------------------------------------------------
-class Admin_Controller extends MY_Controller {
+class Admin_Controller extends MY_Controller
+{
 
     public $data_to_header = [];
     public $data_to_view = [];
@@ -1200,7 +1273,8 @@ class Admin_Controller extends MY_Controller {
     public $logout_url = "/login/logout";
     public $upload_path = "./uploads/admin/";
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
 
         // Check login, load back end dependencies
@@ -1247,7 +1321,8 @@ class Admin_Controller extends MY_Controller {
         $this->data_to_header['menu_array'] = $this->set_admin_menu_array();
     }
 
-    function url_disect() {
+    function url_disect()
+    {
         $url_info = [];
         $url_info["base_url"] = base_url();
         $url_info["url_string"] = uri_string();
@@ -1256,16 +1331,18 @@ class Admin_Controller extends MY_Controller {
         return $url_info;
     }
 
-    function csv_handler($file_path) {
+    function csv_handler($file_path)
+    {
         $csv = array_map('str_getcsv', file($file_path));
-        array_walk($csv, function(&$a) use ($csv) {
+        array_walk($csv, function (&$a) use ($csv) {
             $a = array_combine($csv[0], $a);
         });
         array_shift($csv);
         return $csv;
     }
 
-    function csv_flat_table_import($file_data) {
+    function csv_flat_table_import($file_data)
+    {
         foreach ($file_data as $entity) {
             //reset($entity);
 
@@ -1294,7 +1371,8 @@ class Admin_Controller extends MY_Controller {
     }
 
     //CHECK AND CREATE UPLOAD FOLDER
-    public function check_upload_folder($linked_to, $id) {
+    public function check_upload_folder($linked_to, $id)
+    {
         $upload_path = "./uploads/" . $linked_to . "/" . $id;
         if (!file_exists($upload_path)) {
             if (!mkdir($upload_path, 0777, true)) {
@@ -1304,7 +1382,8 @@ class Admin_Controller extends MY_Controller {
         return $upload_path;
     }
 
-    public function set_results_flag($linked_to, $id) {
+    public function set_results_flag($linked_to, $id)
+    {
         $this->load->model('admin/url_model');
         $this->load->model('admin/file_model');
         $this->load->model('admin/race_model');
@@ -1331,7 +1410,8 @@ class Admin_Controller extends MY_Controller {
         }
     }
 
-    function set_admin_menu_array() {
+    function set_admin_menu_array()
+    {
         return [
             // Dashboard
             [
@@ -1365,11 +1445,11 @@ class Admin_Controller extends MY_Controller {
                         "url" => 'admin/dashboard/search',
                         "icon" => "magnifier",
                     ]
-//                    [
-//                        "text" => "Export Events",
-//                        "url" => 'admin/event/export',
-//                        "icon" => "arrow-down",
-//                    ]
+                    //                    [
+                    //                        "text" => "Export Events",
+                    //                        "url" => 'admin/event/export',
+                    //                        "icon" => "arrow-down",
+                    //                    ]
                 ],
             ],
             // Events
@@ -1635,27 +1715,33 @@ class Admin_Controller extends MY_Controller {
         ];
     }
 
-    function get_event_field_list() {
+    function get_event_field_list()
+    {
         return ['event_id', 'event_name', 'town_id'];
     }
 
-    function get_edition_field_list() {
+    function get_edition_field_list()
+    {
         return ['edition_id', 'edition_name', 'edition_date', 'latitude_num', 'longitude_num', 'edition_url', 'edition_address'];
     }
 
-    function get_race_field_list() {
+    function get_race_field_list()
+    {
         return ['race_id', 'race_name', 'race_distance', 'race_time_start', 'racetype_id'];
     }
 
-    function get_contact_field_list() {
+    function get_contact_field_list()
+    {
         return ['user_id', 'user_name', 'user_surname', 'user_email'];
     }
 
-    function get_asa_member_field_list() {
+    function get_asa_member_field_list()
+    {
         return ['asa_member_id'];
     }
 
-    public function get_race_name_from_status($race_name, $race_distance, $racetype_name, $race_status) {
+    public function get_race_name_from_status($race_name, $race_distance, $racetype_name, $race_status)
+    {
         // set return as race_name
         $return_name = $race_name;
         // check for empty
@@ -1693,7 +1779,8 @@ class Admin_Controller extends MY_Controller {
         return $return_name;
     }
 
-    public function race_fill_blanks($race_data, $edition_info) {
+    public function race_fill_blanks($race_data, $edition_info)
+    {
         $this->load->model('admin/asareg_model');
         $this->load->model('admin/asafee_model');
         $this->load->model('admin/racetype_model');
@@ -1739,7 +1826,8 @@ class Admin_Controller extends MY_Controller {
         return $race_data;
     }
 
-    public function set_tags($edition_id, $edition_data, $race_data) {
+    public function set_tags($edition_id, $edition_data, $race_data)
+    {
         $this->load->model('admin/tag_model');
         $this->load->model('admin/tagtype_model');
 
@@ -1787,19 +1875,18 @@ class Admin_Controller extends MY_Controller {
                         'tag_status' => 1,
                     ];
                     $tag_id = $this->tag_model->set_tag("add", 0, $data);
-                    $stats['new_tag'] ++;
+                    $stats['new_tag']++;
                 }
                 // ADD TAG
                 $this->tag_model->set_edition_tag($edition_id, $tag_id);
-                $stats['edition_tag_link'] ++;
+                $stats['edition_tag_link']++;
             }
         }
-//        wts($tagtype_arr);
-//        wts($tags);
-//        echo $edition_id;
-//        wts($race_data);
-//        wts($edition_data, true);
-        return($stats);
+        //        wts($tagtype_arr);
+        //        wts($tags);
+        //        echo $edition_id;
+        //        wts($race_data);
+        //        wts($edition_data, true);
+        return ($stats);
     }
-
 }

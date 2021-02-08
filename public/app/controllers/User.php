@@ -419,7 +419,8 @@ class User extends Frontend_Controller {
             ];
             $user_id = $this->user_model->set_user($params);
             if ($user_id) {
-                $mail_id = $this->send_confirmation_email($user_data);
+                $mail_id = $this->send_confirmation_email($user_data);      
+                $this->poke_mail_que();
                 $this->data_to_views['conf_type'] = "register";
                 $this->data_to_views['mail_id'] = $mail_id;
                 $this->data_to_views['email'] = $this->input->post('user_email');
@@ -463,7 +464,8 @@ class User extends Frontend_Controller {
 
             $update_user = $this->user_model->update_user_field($user_data, $user_id);
             if ($update_user) {
-                $mail_id = $this->send_confirmation_email($user_data, "forgot_password");
+                $mail_id = $this->send_confirmation_email($user_data, "forgot_password");      
+                $this->poke_mail_que();
                 $this->data_to_views['conf_type'] = "forgot_password";
                 $this->data_to_views['mail_id'] = $mail_id;
                 $this->data_to_views['email'] = $this->input->post('user_email');
