@@ -585,7 +585,7 @@ class Edition extends Admin_Controller
       $end_date = date("Y-m-t 23:59:59", strtotime($start_date));
       // kry lys van editions wat gecopy moet word
       $query_params = [
-        "where" => ["edition_date >" => $start_date, "edition_date <" => $end_date],
+        "where" => ["edition_date >=" => $start_date, "edition_date <=" => $end_date],
         "order_by" => "edition_date",
       ];
       $edition_list = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name","edition_status","event_id","edition_date","asa_member_abbr"]);

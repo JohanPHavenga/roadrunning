@@ -285,9 +285,12 @@ class User extends Frontend_Controller {
                 $success = $this->subscribe_user($user_info, $type, $linked_to_id);
                 redirect($return_url);
             } else {
+                $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
+                
                 $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
                 $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
                 $this->form_validation->set_rules('user_email', 'Email', 'trim|required|valid_email');
+                $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
 
                 // load correct view
                 if ($this->form_validation->run() === FALSE) {

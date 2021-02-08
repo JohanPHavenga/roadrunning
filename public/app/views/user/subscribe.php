@@ -3,15 +3,19 @@
         <div class="row">
             <!-- Content-->
             <div class="content col-lg-9">
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <i class="fa fa-info-circle"></i> <b>Almost there!</b>  Seems you are new here. Please enter your name and surname below to be added to the mailing list.
 
-                </div>
                 <?php
                 if (validation_errors()) {
-//                    echo "<div class='alert alert-danger' role='alert'><strong><i class='fa fa-exclamation-circle'></i> Validation Error</strong>";
-//                    echo validation_errors();
-//                    echo "</div>";
+                    echo "<div class='alert alert-danger' role='alert'><strong><i class='fa fa-exclamation-circle'></i> Validation Error</strong>";
+                    echo validation_errors();
+                    echo "</div>";
+                } else {
+                ?>
+                    <div class="alert alert-info alert-dismissible" role="alert">
+                        <i class="fa fa-info-circle"></i> <b>Almost there!</b> Seems you are new here. Please enter your name and surname below to be added to the mailing list.
+
+                    </div>
+                <?php
                 }
                 ?>
                 <div class="m-t-30">
@@ -61,6 +65,9 @@
                             ?>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12 g-recaptcha" data-sitekey="6LcxdoYUAAAAAADszn1zvLq3C9UFfwnafqzMWYoV"></div>
+                    </div>
                     <?php
                     $data = array(
                         'id' => 'form-submit',
@@ -71,13 +78,6 @@
 
                     echo form_button($data);
                     echo "<a href='$cancel_url' class='btn btn-light'><i class='fa fa-minus-circle'></i>&nbsp;Cancel</a>";
-                    $data = array(
-                        'id' => 'form-clear',
-                        'type' => 'reset',
-                        'content' => '<i class="fa fa-eraser"></i>&nbsp;Clear',
-                        'class' => 'btn btn-light',
-                    );
-                    echo form_button($data);
                     echo form_close();
                     ?>
                 </div>
@@ -85,7 +85,7 @@
             <!-- end: Content-->
 
             <!-- Sidebar-->
-            <div class="sidebar col-lg-3">  
+            <div class="sidebar col-lg-3">
                 <?php
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
