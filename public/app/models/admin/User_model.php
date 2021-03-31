@@ -349,4 +349,45 @@ class User_model extends Admin_model
         }
         return false;
     }
+
+    
+    
+    public function get_edition_links($user_id) {
+        $this->db->select("edition_id, edition_name, edition_date, edition_slug");
+        $this->db->from("users");
+        $this->db->join('edition_user', 'user_id');
+        $this->db->join('editions', 'edition_id');
+        $this->db->where('user_id', $user_id);        
+        $this->db->order_by('edition_date', "DESC");
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function user_search($ss) {
+        $this->db->select("users.*, club_name, roles.role_id, role_name");
+        $this->db->from("users");
+        $this->db->join('clubs', 'club_id');
+        $this->db->join('user_role', 'user_id');
+        $this->db->join('roles', 'role_id');
+        $this->db->or_where("user_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("user_surname LIKE '%" . addslashes($ss) . "%'");
+        $this->db->order_by('user_name', 'user_surname');
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['user_id']] = $row;
+                $data[$row['user_id']]['role_arr'][$row['role_id']] = $row['role_name'];
+            }
+            return $data;
+        }
+        return false;
+    }
 }

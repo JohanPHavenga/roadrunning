@@ -4,7 +4,7 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase"><?= ucfirst($action);?> entry</span>
+                    <span class="caption-subject font-dark bold uppercase"><?= ucfirst($action);?> User</span>
                 </div>
             </div>
             <div class="portlet-body">
@@ -103,5 +103,58 @@
             ?>
             </div>
         </div>
-    </div>
+        
+    <?php
+    if ($action == "edit") {
+        ?>
+        <div class="col-md-6">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-edit font-dark"></i>
+                        <span class="caption-subject font-dark bold uppercase">More information</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-group">
+                        <?= form_label('Edition Links', 'updated_date'); ?>
+                        <?php
+                            if ($edition_links) {
+                                echo "<ul>";
+                                foreach ($edition_links as $edition) {
+                                    echo "<li><b>".fdateShort($edition['edition_date'])."</b>: <a target='_blank' href='".base_url("admin/edition/create/edit/".$edition['edition_id'])."'>".$edition['edition_name']."</a></li>";
+                                }
+                                echo "</ul>";
+                            } else {
+                                echo "<p>No edition links</p>";
+                            }
+                        ?>
+                    </div>
+                    <?php
+                    //  DATES Created + Updated
+                    echo "<div class='form-group'>";
+                    echo form_label('Date Created', 'created_date');
+                    echo form_input([
+                        'value' => set_value('created_date', $user_detail['created_date']),
+                        'class' => 'form-control input-medium',
+                        'disabled' => ''
+                    ]);
+
+                    echo "</div>";
+                    echo "<div class='form-group'>";
+                    echo form_label('Date Updated', 'updated_date');
+                    echo form_input([
+                        'value' => set_value('updated_date', $user_detail['updated_date']),
+                        'class' => 'form-control input-medium',
+                        'disabled' => ''
+                    ]);
+
+                    echo "</div>";
+                    ?>
+                </div>
+            </div>        
+        </div>
+        <?php
+    }
+    ?>
 </div>

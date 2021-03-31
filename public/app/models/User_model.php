@@ -267,6 +267,5 @@ class User_model extends Frontend_model {
         $this->db->from('users');
         return $this->db->count_all_results();
     }
-    
 
 }

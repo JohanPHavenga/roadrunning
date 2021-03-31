@@ -24,7 +24,7 @@ $this->load->view('templates/search_form');
                             <div class="race">
                                 <div class="race-image">
                                     <a href='<?= $edition['edition_url']; ?>'>
-                                        <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>"></a>
+                                        <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>" loading="lazy"></a>
                                     <div class="race-title"><?= $edition['edition_name']; ?></div>
                                     <?php
                                     // soek vir online entries

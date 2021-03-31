@@ -235,7 +235,7 @@
 
                                         // PRE Reg
                                         if (isset($edition_data['regtype_list'][2])) {
-                                            echo "<li><b>Registration / Number collection will take place on:</b><ul>";
+                                            echo "<li><b>Race pack collection will take place on:</b><ul>";
                                             foreach ($date_list[10] as $date) {
                                                 echo "<li>" . fdateHumanFull($date['date_start'], true, true) . "-" . ftimeMil($date['date_end']) . " @ " . $date['venue_name'] . "</li>";
                                             }

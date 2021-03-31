@@ -1,6 +1,11 @@
 /*
     CUSTOM CSS RULES
 */
+#slider .lazy {
+    background-image: none !important;
+    background-color: #F1F1FA !important;
+ }
+
 .modal-strip {
     background-color: #111;
     font-size: 1.3em;

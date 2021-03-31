@@ -5,12 +5,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase">Town Search</span>
+                    <span class="caption-subject font-dark bold uppercase">User Search</span>
                 </div>
                 <div class="col-md-6">
-                    <form class="search-form search-form-expanded" action="<?= base_url('admin/town/search/'); ?>" method="GET" style="margin-top: -9px;">
-                        <div class="input-group ">
-                            <input type="text" class="form-control" placeholder="Search..." name="t_query" autofocus onfocus="this.select();" value="<?= $this->input->get('t_query'); ?>">
+                    <form class="search-form search-form-expanded" action="<?= base_url('admin/user/search/'); ?>" method="GET" style="margin-top: -9px;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search..." name="u_query" autofocus onfocus="this.select();" value="<?= $this->input->get('u_query'); ?>">
                             <span class="input-group-btn">
                                 <a href="javascript:;" class="btn submit">
                                     <i class="icon-magnifier"></i>
@@ -36,23 +36,23 @@
 //                                    die();
                         $action_array = [
                             [
-                                "url" => "/admin/town/create/edit/" . $data_entry['town_id'],
+                                "url" => "/admin/user/create/edit/" . $data_entry['user_id'],
                                 "text" => "Edit",
                                 "icon" => "icon-pencil",
                             ],
                             [
-                                "url" => "/admin/town/delete/" . $data_entry['town_id'],
+                                "url" => "/admin/user/delete/" . $data_entry['user_id'],
                                 "text" => "Delete",
                                 "icon" => "icon-ban",
                                 "confirmation_text" => "<b>Are you sure?</b>",
                             ],
                         ];
-
-                        $row['id'] = $data_entry['town_id'];
-                        $row['name'] = $data_entry['town_name'];
-                        $row['province'] = $data_entry['province_name'];
-                        $row['region'] = $data_entry['region_name'];
-                        $row['area'] = $data_entry['area_name'];
+                        $edit_url=base_url('admin/user/create/edit/'.$data_entry['user_id']);
+                        $row['id'] = $data_entry['user_id'];
+                        $row['name'] = "<a href=" . $edit_url . " title='Edit Edition'>" . $data_entry['user_name']."</a>";
+                        $row['surname'] = $data_entry['user_surname'];
+                        $row['email'] = $data_entry['user_email'];
+                        $row['roles'] = implode(", ",$data_entry['role_arr']);
                         $row['actions'] = fbuttonActionGroup($action_array);
                         $this->table->add_row($row);
                     }
@@ -72,7 +72,7 @@
         <?php
         // add button
         if (@$create_link) {
-            echo fbuttonLink($create_link . "/add", "Add Town", "primary");
+            echo fbuttonLink($create_link . "/add", "Add user", "primary");
         }
         ?>
     </div>

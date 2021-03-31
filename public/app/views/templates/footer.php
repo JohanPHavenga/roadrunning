@@ -45,7 +45,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
               <li><a href='<?= $this->session->static_pages['about']['loc']; ?>'><?= $this->session->static_pages['about']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $this->session->static_pages['contact']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['add-listing']['loc']; ?>'><?= $this->session->static_pages['add-listing']['display']; ?></a></li>
-              <li><a href='<?= $this->session->static_pages['search']['loc']; ?>'><?= $this->session->static_pages['search']['display']; ?></a></li>                           
+              <li><a href='<?= $this->session->static_pages['search']['loc']; ?>'><?= $this->session->static_pages['search']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['contact']['sub-menu']['support']['loc']; ?>'><?= $this->session->static_pages['contact']['sub-menu']['support']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['sitemap']['loc']; ?>'><?= $this->session->static_pages['sitemap']['display']; ?></a></li>
               <!--<li><a href='<?= base_url('old'); ?>'>Back to old site</a></li>-->
@@ -108,7 +108,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 <!--<input name="widget-subscribe-form-email">-->
                 <span class="input-group-btn">
                   <button type="submit" id="widget-subscribe-submit-button" class="btn"><i class="fa fa-paper-plane"></i></button>
-                </span> </div>
+                </span>
+              </div>
             </form>
           </div>
           <!-- end: Footer widget area 5 -->
@@ -116,7 +117,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
           <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
           <div class="m-b-10 m-r-20" style="float: left;">
             <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
-              <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>' />
+              <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>'  loading="lazy" />
             </a>
           </div>
           <p style=''>Consider supporting the wesbite via SnapScan</p>
@@ -160,7 +161,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 echo "| <a href='" . base_url("admin") . "'>Admin Dashboard</a> ";
               }
             }
-//                        wts($logged_in_user);
+            //                        wts($logged_in_user);
             ?>
           </div>
         </div>
@@ -199,7 +200,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 <?php
 if (isset($scripts_to_load)) :
-  foreach ($scripts_to_load as $row):
+  foreach ($scripts_to_load as $row) :
     if (substr($row, 0, 4) == "http") {
       $js_link = $row;
     } else {
@@ -213,16 +214,16 @@ endif;
 
 
 <script>
-<?php
-foreach ($this->session->most_searched as $search_id => $search) {
+  <?php
+  foreach ($this->session->most_searched as $search_id => $search) {
   ?>
-    $('#search_<?= $search_id; ?>').click(function () {
+    $('#search_<?= $search_id; ?>').click(function() {
       $('#main_search').val('<?= $search['search_term']; ?>');
       $("#main_search_form").submit();
     });
   <?php
-}
-?>
+  }
+  ?>
 </script>
 
 <!-- START: AD BLOCK CHECK -->
@@ -240,18 +241,72 @@ foreach ($this->session->most_searched as $search_id => $search) {
   </div>
 </div>
 <script src="/ads.js" type="text/javascript"></script>
-<script type="text/javascript">//
+<script type="text/javascript">
+  //
   if (!document.getElementById('advertensieblok')) {
     document.getElementById('ad-block-notification').style.display = 'block';
   }
-//</script>
+  //
+</script>
 <!-- END: AD BLOCK CHECK -->
+
+<!-- lazy laoding -->
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    var lazyloadImages;
+
+    if ("IntersectionObserver" in window) {
+      lazyloadImages = document.querySelectorAll(".lazy");
+      var imageObserver = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var image = entry.target;
+            image.classList.remove("lazy");
+            imageObserver.unobserve(image);
+          }
+        });
+      });
+
+      lazyloadImages.forEach(function(image) {
+        imageObserver.observe(image);
+      });
+    } else {
+      var lazyloadThrottleTimeout;
+      lazyloadImages = document.querySelectorAll(".lazy");
+
+      function lazyload() {
+        if (lazyloadThrottleTimeout) {
+          clearTimeout(lazyloadThrottleTimeout);
+        }
+
+        lazyloadThrottleTimeout = setTimeout(function() {
+          var scrollTop = window.pageYOffset;
+          lazyloadImages.forEach(function(img) {
+            if (img.offsetTop < (window.innerHeight + scrollTop)) {
+              img.src = img.dataset.src;
+              img.classList.remove('lazy');
+            }
+          });
+          if (lazyloadImages.length == 0) {
+            document.removeEventListener("scroll", lazyload);
+            window.removeEventListener("resize", lazyload);
+            window.removeEventListener("orientationChange", lazyload);
+          }
+        }, 20);
+      }
+
+      document.addEventListener("scroll", lazyload);
+      window.addEventListener("resize", lazyload);
+      window.addEventListener("orientationChange", lazyload);
+    }
+  })
+</script>
 
 <?php
 if ($this->ini_array['enviroment']['server'] != "production") {
-//if (($logged_in_user) && (in_array(1, $logged_in_user['role_list'])) && (isset($_GET['debug']))) {
-//    wts($this->session->most_viewed_pages);
-  ?>
+  //if (($logged_in_user) && (in_array(1, $logged_in_user['role_list'])) && (isset($_GET['debug']))) {
+  //    wts($this->session->most_viewed_pages);
+?>
   <h4 class="text-uppercase">Environment info</h4>
   <p>
     <?php
@@ -264,16 +319,19 @@ if ($this->ini_array['enviroment']['server'] != "production") {
   <?php wts($new_page_count); ?>
 
   <h4 class="text-uppercase">User info</h4>
-  <?php //wts($logged_in_user); ?>
+  <?php //wts($logged_in_user); 
+  ?>
 
   <h4 class="text-uppercase">SESSION</h4>
-  <?php //wts($_SESSION); ?>
+  <?php //wts($_SESSION); 
+  ?>
 
   <h4 class="text-uppercase">COOKIE</h4>
-  <?php
+<?php
   wts($_COOKIE);
   wts($rr_cookie);
 }
 ?>
 </body>
+
 </html>

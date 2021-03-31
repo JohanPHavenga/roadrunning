@@ -16,11 +16,65 @@ class User extends Admin_Controller
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         } else {
-            $this->view($params);
+            $this->search();
         }
     }
 
+    public function search()
+    {
+        $page = "search";
+        $this->data_to_header['title'] = "User Search";
 
+        $this->load->library('table');
+        $this->load->model('admin/user_model');
+        $this->data_to_view['create_link'] = $this->create_url;
+
+        $this->data_to_header['crumbs'] = [
+            "Home" => "/admin",
+            "Users" => "/admin/user/search",
+            "Search" => "",
+        ];
+
+        $this->data_to_header['page_action_list'] = [
+            [
+                "name" => "Add User",
+                "icon" => "users",
+                "uri" => "user/create/add",
+            ],
+        ];
+
+        if ($this->input->get('u_query')) {
+            $this->data_to_view['search_results'] = $this->user_model->user_search($this->input->get('u_query'));
+            $this->data_to_view['msg'] = "<p>We could <b>not find</b> any user matching your search.<br>Please try again.</p>";
+        } else {
+            $this->data_to_view['msg'] = "<p>Please use the <b>search box</b> above to seach for a user.</p>";
+        }
+
+            //    wts($this->data_to_view['search_results']);
+            //    die();
+
+        $this->data_to_view['heading'] = ["ID", "Name", "Surname", "Email", "Roles", "Actions"];
+
+        $this->data_to_header['css_to_load'] = array(
+            "assets/admin/plugins/datatables/datatables.min.css",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+        );
+
+        $this->data_to_footer['js_to_load'] = array(
+            "assets/admin/scripts/datatable.js",
+            "assets/admin/plugins/datatables/datatables.min.js",
+            "assets/admin/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+            "assets/admin/plugins/bootstrap-confirmation/bootstrap-confirmation.js",
+        );
+
+        $this->data_to_footer['scripts_to_load'] = array(
+            "assets/admin/scripts/table-datatables-managed.js",
+        );
+
+        $this->load->view($this->header_url, $this->data_to_header);
+        $this->load->view("/admin/user/search", $this->data_to_view);
+        $this->load->view($this->footer_url, $this->data_to_footer);
+    }
 
     public function import($submit = NULL)
     {
@@ -184,6 +238,7 @@ class User extends Admin_Controller
             $this->data_to_view['user_detail'] = $this->user_model->get_user_detail($id);
             $this->data_to_view['user_detail']['role_id'] = $this->role_model->get_role_list_per_user($id);
             $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $id;
+            $this->data_to_view['edition_links'] = $this->user_model->get_edition_links($id);
         }
         // set default sponsor
         if (empty($this->data_to_view['user_detail']['club_id'])) {
@@ -322,7 +377,7 @@ class User extends Admin_Controller
         $this->load->view($this->footer_url);
     }
 
-    public function cleanup($debug=1)
+    public function cleanup($debug = 1)
     {
         $user_detail = $this->user_model->get_bot_users();
 
@@ -356,7 +411,9 @@ class User extends Admin_Controller
 
         // deletion
         if ($to_del) {
-            if ($debug) { wts($to_del,1); }
+            if ($debug) {
+                wts($to_del, 1);
+            }
             foreach ($to_del as $user_id => $user) :
                 if ($this->user_model->remove_user($user_id)) {
                     echo $user['surname'] . "(#" . $user_id . ") has been removed";

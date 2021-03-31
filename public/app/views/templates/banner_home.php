@@ -2,7 +2,7 @@
     <?php
     foreach ($quote_arr as $quote_id => $quote) {
         ?>
-        <div class="slide background-overlay-<?= $quote_id; ?>" style="background-image:url('<?= $quote['img_url']; ?>')">
+        <div class="lazy slide background-overlay-<?= $quote_id; ?>" style="background-image:url('<?= $quote['img_url']; ?>')">
             <div class="container">
                 <div class="slide-captions d-none d-md-block">
                     <h2 class="text-sm no-margin"><?= $quote['quote']; ?></h2>

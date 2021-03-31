@@ -14,7 +14,7 @@ switch ($edition_data['timingprovider_id']) {
             <div class="col-lg-5 col-sm-5">
                 <p class="text-center">
                     <a href="<?=$url;?>" title="View results on FinishTime site">
-                        <img src="/assets/img/ChampionChipAfrica_Logo.png" alt="FinishTime Logo" style="width: 80%;"/>
+                        <img src="/assets/img/FinishTime_Logo.png" alt="FinishTime Logo" style="width: 80%;"/>
                     </a>
                 </p>
             </div>
