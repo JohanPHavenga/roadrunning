@@ -378,6 +378,7 @@ class User_model extends Admin_model
         $this->db->join('roles', 'role_id');
         $this->db->or_where("user_name LIKE '%" . addslashes($ss) . "%'");
         $this->db->or_where("user_surname LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("user_email LIKE '%" . addslashes($ss) . "%'");
         $this->db->order_by('user_name', 'user_surname');
         $query = $this->db->get();
 

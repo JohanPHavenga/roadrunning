@@ -265,7 +265,7 @@ class Emailmerge extends Admin_Controller {
                         $run_merge = $this->merge($return_id, true);
                         $this->return_url = base_url("admin/emailmerge/create/edit/" . $return_id);
                         $alert = $run_merge['alert'];
-                        $msg = $run_alert['status'];
+                        $msg = $run_merge['status'];
                         break;
                     case "test_html":
                         $run_merge = $this->merge($return_id, true, true);
@@ -273,7 +273,7 @@ class Emailmerge extends Admin_Controller {
                     case "merge":
                         $run_merge = $this->merge($return_id);
                         $alert = $run_merge['alert'];
-                        $msg = $run_alert['status'];
+                        $msg = $run_merge['status'];
                         break;
                 }
             } else {

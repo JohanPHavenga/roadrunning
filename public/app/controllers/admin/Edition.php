@@ -439,7 +439,7 @@ class Edition extends Admin_Controller
       $msg = "Edition has successfully been deleted: " . $edition_detail['edition_name'];
       $status = "success";
     } else {
-      $msg = "Error in deleting the record:'.$edition_id";
+      $msg = "Error in deleting the record: $edition_id";
       $status = "danger";
     }
 
