@@ -10,16 +10,19 @@
                     <div class="ac-item">
                         <h5 class="ac-title">
                             <i class="fa fa-question-circle" aria-hidden="true"></i>
-                            How to virtual races work?
+                            How do virtual races work?
                         </h5>
                         <div class="ac-content">
-                            <p>They all work a little differently from one another, but the basics are mostly the same:<br>
-                            You enter a race distance online. Then you run the distance you entered in the date range 
-                            required on your own route.<br>
-                            You time yourself and send proof of the run in to the organisers.<br>
-                            You generally have a few days in which you need to run the race distance in one go.<br>
-                            And that is it. Most have a medal they courier to you, but please check individual race 
-                            pages for more information.</p>
+                            <p>They all work a little differently from one another, but the basics are mostly the same:</p>
+                            <ul style="padding-left: 20px;">
+                                <li>You enter a race distance online.</li>
+                                <li>Then you run the distance you entered in the date range required on your own route.</li>
+                                <li>You time yourself and send proof of the run in to the organisers.</li>
+                                <li>You generally have a few days in which you need to run the race distance in one go.</li>
+                            </ul>
+                            <p>And that is it. Most have a medal they courier to you, but please check individual race 
+                            pages for more information.
+                            </p>
                         </div>
                     </div>
                     <div class="ac-item">
