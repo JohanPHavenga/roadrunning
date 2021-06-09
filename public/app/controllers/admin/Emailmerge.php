@@ -104,6 +104,7 @@ class Emailmerge extends Admin_Controller {
         $this->data_to_view['linked_to_dropdown'] = $this->emailmerge_model->get_linked_to_dropdown(8);
         $this->data_to_view['linked_to_list'] = $this->emailmerge_model->get_linked_to_list(8);
         $this->data_to_view['status_dropdown'] = $this->emailmerge_model->get_status_list("main");
+        $this->data_to_view['info_status_dropdown'] = $this->emailmerge_model->get_status_list("info");
 
         // unset linked to we are not using for now
         $unset_arr = [1, 3, 4, 5, 6];
@@ -133,6 +134,7 @@ class Emailmerge extends Admin_Controller {
             $this->load->view("/admin/emailmerge/wizard", $this->data_to_view);
             $this->load->view($this->footer_url, $this->data_to_footer);
         } else {
+            // wts($this->input->post(),1);
             // SET merge
             if ($this->input->post('emailtemplate_id') > 0) {
                 $emailtemplate = $this->emailtemplate_model->get_emailtemplate_detail($this->input->post('emailtemplate_id'));
@@ -148,6 +150,9 @@ class Emailmerge extends Admin_Controller {
                 $query_params = [
                     "where" => [
                         "edition_status" => $this->input->post('status'),
+                    ],
+                    "where_in" => [
+                        "edition_info_status" => $this->input->post('info_status'),
                     ],
                     "order_by" => ["editions.edition_date" => "ASC"],
                 ];

@@ -53,7 +53,7 @@ echo form_open($form_url);
                     } else {
                         $h_id = @$usersubscription_detail['linked_id'];
                     }
-                    ?>
+                ?>
                     <div class='form-group <?= $h_class; ?>'>
                         <div class="row">
                             <div class='col-md-12 linked_to_type'>
@@ -70,7 +70,7 @@ echo form_open($form_url);
                             </div>
                         </div>
                     </div>
-                    <?php
+                <?php
                 }
                 ?>
                 <div class="form-group hidden-date-range">
@@ -104,16 +104,29 @@ echo form_open($form_url);
                             ?>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group hidden-date-range">
                     <div class="row">
                         <div class='col-md-4'>
                             <?php
-                            echo form_label("Status","status");
+                            echo form_label("Status", "status");
                             $dropdown_data = [
                                 "id" => "status",
                                 "class" => "form-control input-small",
                                 "required" => "required"
                             ];
                             echo form_dropdown("status", $status_dropdown, "status", $dropdown_data);
+                            ?>
+                        </div>
+                        <div class='col-md-4'>
+                            <?php
+                            echo form_label("InfoStatus", "info_status");
+                            $dropdown_data = [
+                                "id" => "info_status",
+                                "class" => "form-control input-small",
+                            ];
+                            echo form_multiselect("info_status[]", $info_status_dropdown, "info_status", $dropdown_data);
                             ?>
                         </div>
                     </div>
@@ -132,7 +145,7 @@ echo form_open($form_url);
 
     <?php
     if ($action == "edit") {
-        ?>
+    ?>
         <div class="col-md-6">
             <div class="portlet light">
                 <div class="portlet-title">
@@ -164,9 +177,9 @@ echo form_open($form_url);
                     echo "</div>";
                     ?>
                 </div>
-            </div>        
+            </div>
         </div>
-        <?php
+    <?php
     }
     ?>
 </div>
