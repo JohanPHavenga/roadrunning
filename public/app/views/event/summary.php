@@ -6,20 +6,7 @@
           <span class="fa fa-<?= $status_notice['icon']; ?> text-<?= $status_notice['state']; ?>" data-toggle="tooltip" data-placement="right" title="" data-original-title="<?= $status_notice['short_msg']; ?>"></span>
         </h2>
       </div>
-      <div class="col-lg-2 post-meta-share">
-        <!--                <a class="btn btn-xs btn-slide btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?= current_url(); ?>">
-              <i class="fab fa-facebook-f"></i>
-              <span>Facebook</span>
-          </a>
-          <a class="btn btn-xs btn-slide btn-twitter" href="https://twitter.com/share?ref_src=twsrc%5Etfw" data-width="100" style="width: 28px;">
-              <i class="fab fa-twitter"></i>
-              <span>Twitter</span>
-          </a>
-          <a class="btn btn-xs btn-slide btn-googleplus" href="mailto:" data-width="80">
-              <i class="far fa-envelope"></i>
-              <span>Mail</span>
-          </a>-->
-      </div>
+
     </div>
     <?php $this->load->view('widgets/race_meta'); ?>
     <div class="row m-t-40">
@@ -183,6 +170,14 @@
 
                       <?php
                       }
+                      // facebook
+                      if (isset($url_list[6])) {
+                        ?>
+                          <a href="<?= $url_list['6'][0]['url_name']; ?>" class="btn btn-default btn-icon-holder" target="_blank">
+                            Facebook<i class="fa fa-facebook"></i></a>
+  
+                        <?php
+                        }
                       ?>
                     </div>
                   </div>
@@ -285,7 +280,7 @@
               }
               ?>
               <p class="contact_info">
-                <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?=$edition_data['event_name'];?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
+                <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?= $edition_data['event_name']; ?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
                 <?php
                 if ($edition_data['user_contact']) {
                 ?>
@@ -380,6 +375,7 @@
       <!-- Sidebar-->
       <div class="sidebar col-lg-3">
         <?php
+
         // SUBSCRIBE WIDGET
         $data_to_widget['title'] = "Receive race notification";
         $this->load->view('widgets/subscribe', $data_to_widget);
