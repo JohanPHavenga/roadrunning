@@ -15,6 +15,7 @@ $this->load->view('templates/search_form');
                     <div class="races carousel" data-items="3" data-margin="20" data-dots="false">
                         <?php
                         foreach ($featured_events as $edition_id => $edition) {
+                            // wts($edition);
                             if ($edition['edition_status']==17) {
                                 $address="Virtual Race";
                             } else {

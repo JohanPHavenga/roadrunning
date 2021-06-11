@@ -117,6 +117,8 @@ class Tag_model extends Frontend_model {
     public function get_edition_tag_list($edition_id = null) {
         if (!$edition_id) {
             return false;
+        } else {
+            $data=[];
         }
         $this->db->select("tag_id, tag_name, tagtype_name");
         $this->db->from("edition_tag");

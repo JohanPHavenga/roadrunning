@@ -11,6 +11,7 @@ class Edition_model extends Frontend_model {
         $this->db->select("edition_id, edition_name, edition_status");
         $this->db->from("editions");
         $this->db->where("edition_slug", $edition_slug);
+        $this->db->where("edition_status !=", 2); // added this to enable routing for Spar virtual challenge
         $editions_query = $this->db->get();
 
         // CHECK Editions_Past vir as die naam van die edition verander
@@ -297,7 +298,7 @@ class Edition_model extends Frontend_model {
             }
             return $data;
         } else {
-            return false;
+            return [];
         }
     }
 

@@ -108,7 +108,7 @@ class Frontend_model extends MY_model {
             }
         } else {
             //$data = [$this->no_info_id];
-            $data=false;
+            $data=[];
         }
         return $data;
     }

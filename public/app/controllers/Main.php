@@ -216,16 +216,16 @@ class Main extends Frontend_Controller {
     return ($return_arr);
   }
 
-  function m_pdf() {
+//   function m_pdf() {
 
-    $mpdf = new mPDF();
+//     $mpdf = new mPDF();
 
-// Write some HTML code:
+// // Write some HTML code:
 
-    $mpdf->WriteHTML('Hello World');
+//     $mpdf->WriteHTML('Hello World');
 
-// Output a PDF file directly to the browser
-    $mpdf->Output();
-  }
+// // Output a PDF file directly to the browser
+//     $mpdf->Output();
+//   }
 
 }
