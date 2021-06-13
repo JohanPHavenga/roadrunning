@@ -27,7 +27,7 @@
                     echo form_input([
                         'name' => 'edition_name_past',
                         'id' => 'edition_name_past',
-                        'value' => set_value('edition_name_past', $edition_detail['edition_name']),
+                        'value' => set_value('edition_name_past', $edition_detail['edition_name'], false),
                         'type' => 'hidden',
                     ]);
                     ?>

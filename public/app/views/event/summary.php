@@ -172,12 +172,12 @@
                       }
                       // facebook
                       if (isset($url_list[6])) {
-                        ?>
-                          <a href="<?= $url_list['6'][0]['url_name']; ?>" class="btn btn-default btn-icon-holder" target="_blank">
-                            Facebook<i class="fa fa-facebook"></i></a>
-  
-                        <?php
-                        }
+                      ?>
+                        <a href="<?= $url_list['6'][0]['url_name']; ?>" class="btn btn-default btn-icon-holder" target="_blank">
+                          Facebook<i class="fa fa-facebook"></i></a>
+
+                      <?php
+                      }
                       ?>
                     </div>
                   </div>
@@ -439,7 +439,10 @@
       <div class="sidebar col-lg-3">
         <?php
         // MAP WIDGET
-        $this->load->view('widgets/map');
+        // if not virtual
+        if ($edition_data['edition_status'] != 17) {
+          $this->load->view('widgets/map');
+        }
         ?>
       </div>
     </div>
