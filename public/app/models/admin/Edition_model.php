@@ -545,7 +545,6 @@ class Edition_model extends Admin_model {
 
 
                     // check of die naam van die edition verander het, indien wel, skryf na editions_past
-
                     if ($this->input->post('edition_name_past') != $this->input->post('edition_name')) {
                         $this->db->trans_start();
                         $this->db->insert('editions_past', [
