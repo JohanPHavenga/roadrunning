@@ -20,7 +20,7 @@ class Main extends Frontend_Controller {
     $query_params = [
         "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 17]],
         "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1],
-        "limit" => "5",
+        "limit" => "10",
     ];
     $this->data_to_views['featured_events'] = $this->race_model->add_race_info($this->date_model->add_dates($this->edition_model->get_edition_list($query_params)));
 //        wts($this->data_to_views['featured_events'],1);
@@ -33,6 +33,7 @@ class Main extends Frontend_Controller {
     $upcoming_events = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
     $this->data_to_views['upcoming_events'] = $this->chronologise_data($upcoming_events, "edition_date");
 //        wts($this->data_to_views['upcoming_events'],true);
+
     // last edited
     $query_params = [
         "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 9, 17]],
@@ -40,7 +41,7 @@ class Main extends Frontend_Controller {
         "order_by" => ["editions.updated_date" => "DESC"],
         "limit" => 10,
     ];
-    $this->data_to_views['last_edited_events'] = $this->edition_model->get_edition_list($query_params);
+    $this->data_to_views['last_edited_events'] = $this->race_model->add_race_info($this->date_model->add_dates($this->edition_model->get_edition_list($query_params)));
 
     // history summary
     $query_params = [

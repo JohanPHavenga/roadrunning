@@ -11,17 +11,17 @@ $this->load->view('templates/search_form');
             <div class="col-lg-12">
                 <?php
                 if ($featured_events) {
-                    ?>
-                    <div class="races carousel" data-items="3" data-margin="20" data-dots="false">
+                ?>
+                    <div class="races carousel" data-items="4" data-margin="15" data-dots="true">
                         <?php
                         foreach ($featured_events as $edition_id => $edition) {
                             // wts($edition);
-                            if ($edition['edition_status']==17) {
-                                $address="Virtual Race";
+                            if ($edition['edition_status'] == 17) {
+                                $address = "Virtual Race";
                             } else {
-                                $address=$edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr'];
+                                $address = $edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr'];
                             }
-                            ?>
+                        ?>
                             <div class="race">
                                 <div class="race-image">
                                     <a href='<?= $edition['edition_url']; ?>'>
@@ -30,14 +30,16 @@ $this->load->view('templates/search_form');
                                     <?php
                                     // soek vir online entries
                                     if ((array_key_exists(4, $edition['entrytype_list'])) && (array_key_exists(3, $edition['date_list']))) {
-                                        if (strtotime($edition['date_list'][3][0]['date_end']) > time()) {
-                                            ?>
-                                            <span class="race-badge">Entry <br>Open</span>
+                                        if (strtotime($edition['date_list'][3][0]['date_start']) < time()) {
+                                            if (strtotime($edition['date_list'][3][0]['date_end']) > time()) {
+                                    ?>
+                                                <span class="race-badge">Entry <br>Open</span>
                                             <?php
-                                        } else {
+                                            } else {
                                             ?>
-                                            <span class="race-badge">Entry <br>Close</span>
-                                            <?php
+                                                <span class="race-badge">Entry <br>Close</span>
+                                    <?php
+                                            }
                                         }
                                     }
                                     ?>
@@ -53,16 +55,16 @@ $this->load->view('templates/search_form');
                                     </div>
                                 </div>
                             </div>
-                            <?php
+                        <?php
                         }
                         ?>
                     </div>
-                    <?php
+                <?php
                 } else {
-                    ?>
+                ?>
                     <p>There are no featured races in the <a href="<?= base_url("region/switch"); ?>">regions you have selected</a>. We are in the process of loading more races across the country. Please check again later.
-                        <?php
-                    }
+                    <?php
+                }
                     ?>
             </div>
         </div>
@@ -73,7 +75,7 @@ $this->load->view('templates/search_form');
     <div class="container">
         <div class="heading-text heading-section text-center">
             <h2>WHAT WE DO</h2>
-            <span class="lead">Our mission is to list running events in a standard way, on a modern multi-platform capable website. 
+            <span class="lead">Our mission is to list running events in a standard way, on a modern multi-platform capable website.
                 Giving the user an easy way to find and compare races and allow for easy entry via the various 3rd party entry portals.</span>
         </div>
         <div class="row body">
@@ -122,7 +124,7 @@ $this->load->view('templates/search_form');
         <div class="row">
             <?php
             if ($upcoming_events) {
-                ?>
+            ?>
                 <div class="col-lg-7">
                     <div class="heading-text heading-section">
                         <h2>Upcoming</h2>
@@ -141,12 +143,12 @@ $this->load->view('templates/search_form');
                                             $act = "active";
                                             $lock = true;
                                         }
-                                        ?>
+                            ?>
                                         <li class="nav-item">
                                             <a href="#day<?= $day; ?>" class="nav-link <?= $act; ?>" data-toggle="tab" aria-selected="true">
                                                 <strong><?= date("l", $unix); ?></strong> <br><?= date("Y.m.d", $unix); ?></a>
                                         </li>
-                                        <?php
+                            <?php
                                     }
                                 }
                             }
@@ -163,11 +165,11 @@ $this->load->view('templates/search_form');
                                             $act = "active";
                                             $lock = true;
                                         }
-                                        ?>
+                            ?>
                                         <div id="day<?= $day; ?>" class="tab-pane fade show <?= $act; ?>">
                                             <?php
                                             foreach ($edition_list as $edition_id => $edition) {
-                                                ?>
+                                            ?>
                                                 <a href="<?= $edition['edition_url']; ?>">
                                                     <div class="p-10 border-bottom">
                                                         <span>
@@ -182,11 +184,11 @@ $this->load->view('templates/search_form');
                                                         <p class="m-b-0"><?= $edition['town_name'] . ", " . $edition['province_abbr']; ?><br><?= implode(" | ", $edition['race_distance_arr']); ?></p>
                                                     </div>
                                                 </a>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </div>
-                                        <?php
+                            <?php
                                     }
                                 }
                             }
@@ -197,7 +199,7 @@ $this->load->view('templates/search_form');
                         <a href="<?= base_url('race/upcoming'); ?>" class="btn btn-colored">Show more</a>
                     </div>
                 </div>
-                <?php
+            <?php
             }
             ?>
             <div class="col-lg-5">
@@ -309,6 +311,75 @@ $this->load->view('templates/search_form');
     </div>
 </section>
 
+<section style="padding-top: 30px;" class="background-grey" id="last_updated">
+    <div class="container">
+        <div class="heading-text heading-section text-center">
+            <h2>LAST UPDATED</h2>
+        </div>
+        <div class="row body">
+            <div class="col-lg-12">
+                <?php
+                if ($last_edited_events) {
+                ?>
+                    <div class="races carousel" data-items="4" data-margin="15" data-dots="true">
+                        <?php
+                        foreach ($last_edited_events as $edition_id => $edition) {
+                            // wts($edition);
+                            if ($edition['edition_status'] == 17) {
+                                $address = "Virtual Race";
+                            } else {
+                                $address = $edition['edition_address'] . ", " . $edition['town_name'] . ", " . $edition['province_abbr'];
+                            }
+                        ?>
+                            <div class="race">
+                                <div class="race-image">
+                                    <a href='<?= $edition['edition_url']; ?>'>
+                                        <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>" loading="lazy"></a>
+                                    <div class="race-title"><?= $edition['edition_name']; ?></div>
+                                    <?php
+                                    // soek vir online entries
+                                    if ((array_key_exists(4, $edition['entrytype_list'])) && (array_key_exists(3, $edition['date_list']))) {
+                                        if (strtotime($edition['date_list'][3][0]['date_start']) < time()) {
+                                            if (strtotime($edition['date_list'][3][0]['date_end']) > time()) {
+                                    ?>
+                                                <span class="race-badge">Entry <br>Open</span>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <span class="race-badge">Entry <br>Close</span>
+                                    <?php
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                                <div class="race-details">
+                                    <p>
+                                        <b>UPDATED</b>: <?= fdateLong($edition['updated_date'], true); ?><br>
+                                        <b>RACE DATE</b>: <?= fdateHumanFull($edition['edition_date'], true); ?><br>
+                                        <b>LOCATION</b>: <?= $address; ?><br>
+                                    </p>
+                                    <div class="float-left">
+                                        <a href="<?= $edition['edition_url']; ?>" class="btn btn-colored">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                <?php
+                } else {
+                ?>
+                    <p>There are no featured races in the <a href="<?= base_url("region/switch"); ?>">regions you have selected</a>. We are in the process of loading more races across the country. Please check again later.
+                    <?php
+                }
+                    ?>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="call-to-action p-t-50 p-b-50 mb-0 call-to-action-dark">
     <div class="container">
         <div class="row">
@@ -317,7 +388,7 @@ $this->load->view('templates/search_form');
                     Join our growing <span>Newsletter</span> subscriber base
                 </h3>
                 <p>
-                    You will be kept up to date of any general news as well as receive a monthly update of results loaded, 
+                    You will be kept up to date of any general news as well as receive a monthly update of results loaded,
                     plus a list of upcoming events over the next two months in your selected region(s).
                 </p>
             </div>
@@ -352,7 +423,7 @@ $this->load->view('templates/search_form');
     <div class="container">
         <div class="heading-text heading-section text-center">
             <h2>CHOOSE YOUR REGION</h2>
-            <span class="lead">To customise the experience for you we have introduces regions. 
+            <span class="lead">To customise the experience for you we have introduces regions.
                 Once set it will show only information from the region(s) you have selected.
                 This will allow for a more customised, focused view for you regarding races in your area.
             </span>

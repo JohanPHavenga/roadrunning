@@ -11,7 +11,7 @@
                 echo form_input([
                     'name' => 'query',
                     'id' => 'query',
-                    'value' => set_value('query'),
+                    'value' => set_value('query', "", false),
                     'class' => 'form-control',
                     'placeholder' => 'Not required',
                     'autofocus' => '',
