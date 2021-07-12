@@ -121,7 +121,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
               <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>'  loading="lazy" />
             </a>
           </div>
-          <p style=''>Consider supporting the wesbite via SnapScan</p>
+          <p>Consider supporting the wesbite via SnapScan</p>
         </div>
       </div>
     </div>
