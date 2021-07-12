@@ -641,7 +641,7 @@ class Edition extends Admin_Controller
     $day = date('d', strtotime($old_date));
     $year++;
     // set exception list where dates should not move
-    $exception_list = ["0101", "0321", "0427", "0501", "0616", "0809", "0924", "1216", "1226", "1231"];
+    $exception_list = ["0101", "0321", "0427", "0501", "0616", "0618", "0809", "0924", "1216", "1226", "1231"];
     if (!in_array($month . $day, $exception_list)) {
       // check for leap year
       if (date('L', strtotime("$year-01-01"))) {

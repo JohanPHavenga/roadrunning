@@ -278,7 +278,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 <nav style="margin-right: 10px;">
                   <ul>
                     <?php
-                    $white_list = ["races", "results", "faq", "about", "contact"];
+                    $white_list = ["races", "results", "resources", "about", "contact"];
                     foreach ($this->session->static_pages as $key => $page) {
                       $i_cl = $d_cl = null;
                       if (!in_array($key, $white_list)) {

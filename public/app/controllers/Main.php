@@ -154,12 +154,12 @@ class Main extends Frontend_Controller {
     switch (strtolower(urldecode($race_name))) {
       case "marathon":
         $t_prog_text = "Marathon Training Program";
-        $t_prog_link = "https://coachparry.com/marathon-training-roadmap/?ref=9";
+        $t_prog_link = "https://coachparry.com/marathon-training-roadmap/?via=roadrunningza";
         break;
       case "half-marathon":
       case "half marathon":
         $t_prog_text = "Half-Marathon Training Program";
-        $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?ref=9";
+        $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?via=roadrunningza";
         break;
       case "10km":
       case "10km road":
@@ -167,11 +167,11 @@ class Main extends Frontend_Controller {
       case "10km-run":
       case "10km run":
         $t_prog_text = "10K Training Program";
-        $t_prog_link = "https://coachparry.com/10k-training-roadmap/?ref=9";
+        $t_prog_link = "https://coachparry.com/10k-training-roadmap/?via=roadrunningza";
         break;
       default:
         $t_prog_text = "Training Program";
-        $t_prog_link = "https://coachparry.com/join-coach-parry/?ref=9";
+        $t_prog_link = "https://coachparry.com/join-coach-parry/?via=roadrunningza";
         break;
     }
 
