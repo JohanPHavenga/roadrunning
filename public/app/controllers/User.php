@@ -277,7 +277,7 @@ class User extends Frontend_Controller {
 //        wts($edition_data, true);
         // check vir valid email
         if (valid_email($this->input->post("user_email"))) {
-            set_cookie("sub_email", $this->input->post("user_email"), 7200);
+            set_cookie("sub_email", $this->input->post("user_email"), 172800);
             $user_id = $this->user_model->get_user_id($this->input->post("user_email"));
 
             if ($user_id) {

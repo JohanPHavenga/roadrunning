@@ -452,7 +452,7 @@ $config['global_xss_filtering'] = TRUE;
 $config['csrf_protection'] = FALSE;
 $config['csrf_token_name'] = 'csrf_token_rr_coyote';
 $config['csrf_cookie_name'] = 'csrf_cookie_rr_coyote';
-$config['csrf_expire'] = 7200;
+$config['csrf_expire'] = 172800;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array();
 

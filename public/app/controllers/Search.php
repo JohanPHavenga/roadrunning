@@ -96,7 +96,7 @@ class Search extends Frontend_Controller {
 
 
         // WHEN
-        set_cookie("search_when_pref", $this->input->post("when"), 7200);
+        set_cookie("search_when_pref", $this->input->post("when"), 172800);
         switch ($this->input->post("when")) {
             case "any":
                 $from_date = date("2016-10-01 00:00:00");
@@ -140,7 +140,7 @@ class Search extends Frontend_Controller {
 
 
         // SHOW AS
-        set_cookie("listing_pref", $this->input->post("show"), 7200);
+        set_cookie("listing_pref", $this->input->post("show"), 172800);
         if ($this->input->post("show") == "grid") {
             $view_to_load = 'race_grid';
         } else {
@@ -249,7 +249,7 @@ class Search extends Frontend_Controller {
 //        wts($race_search_params);
 //        wts($search_params, true);
         // SHOW AS 
-        set_cookie("listing_pref", $this->input->post("show"), 7200);
+        set_cookie("listing_pref", $this->input->post("show"), 172800);
         if ($this->input->post("show") == "grid") {
             $view_to_load = 'race_grid';
         } else {

@@ -107,6 +107,19 @@ class Contact extends Frontend_Controller
         return true;
     }
 
+    function contains($needles, $haystack)
+    {
+        $return = false;
+        foreach ($needles as $needle) {
+            if (preg_match("/\b(" . $needle . ")\b/", $haystack)) {
+                $return = true;
+            }
+        }
+        return $return;
+    }
+
+
+
     public function event($slug = "")
     {
         $this->load->model('edition_model');
@@ -147,8 +160,12 @@ class Contact extends Frontend_Controller
             $this->load->view($this->footer_url, $this->data_to_views);
         } else {
             // find spam using the string STOLEN IMAGE
-            $pos = strpos($this->input->post("user_message"), "stolen image");
-            if ($pos === false) {                
+            // $pos = strpos($this->input->post("user_message"), "stolen image");
+
+            $spam = array('stolen image', 'firebasestorage.googleapis.com');
+            $i = $this->contains($spam, $this->input->post("user_message"));          
+
+            if ($i === false) {
                 // set user_data from post
                 foreach ($this->input->post() as $field => $value) {
                     $email_data[$field] = $value;
@@ -156,7 +173,7 @@ class Contact extends Frontend_Controller
                 $this->send_event_email($email_data, $this->data_to_views['edition_data']);
             } else {
                 // silent fail
-            }            
+            }
 
             $this->session->set_flashdata([
                 'alert' => "Your email has been send to the organisers",
