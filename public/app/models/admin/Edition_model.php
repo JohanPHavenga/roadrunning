@@ -375,7 +375,6 @@ class Edition_model extends Admin_model {
 
     public function set_edition($action, $edition_id, $edition_data = [], $debug = false) {
 
-        // POSTED DATA        
         if (empty($edition_data)) {
             // get field array from editions table and loop through the fields to see if post field is set
             $field_array = $this->get_edition_field_array();
@@ -397,6 +396,8 @@ class Edition_model extends Admin_model {
             }
             // add slug
             $edition_data['edition_slug'] = url_title($this->input->post('edition_name'));
+            // round GPS
+            $edition_data['edition_gps'] = $this->trim_gps($edition_data['edition_gps']);
 
             // edition sponsor
             $edition_sponsor_data = ["edition_id" => $edition_id, "sponsor_id" => $this->input->post('sponsor_id')];
@@ -568,6 +569,14 @@ class Edition_model extends Admin_model {
                 return false;
             }
         }
+    }
+
+    private function trim_gps($gps) {
+        $round=7;
+        $lat_long=explode(",", $gps);
+        $lat=round($lat_long[0],$round);
+        $long=round($lat_long[1],$round);
+        return $lat.",".$long;
     }
 
     public function update_field($e_id, $field, $value) {
