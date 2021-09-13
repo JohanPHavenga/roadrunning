@@ -41,7 +41,11 @@ class Cron extends Frontend_Controller {
   private function log_runtime($log_data) {
     $log_data['runtime_start'] = $log_data['start']->format('Y-m-d\TH:i:s');
     $log_data['runtime_end'] = $log_data['end']->format('Y-m-d\TH:i:s');
-    $log_data['runtime_duration'] = $log_data['start']->diff($log_data['end'])->format("%s");
+    // $log_data['runtime_duration'] = $log_data['start']->diff($log_data['end'])->format("%s");
+
+    $log_data['runtime_duration'] = $log_data['start']->diff($log_data['end'])->format("%h:%i:%s");
+
+    // wts($log_data,1);
     unset($log_data['start']);
     unset($log_data['end']);
     $log = $this->edition_model->log_runtime($log_data);

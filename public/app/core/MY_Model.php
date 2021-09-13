@@ -181,13 +181,7 @@ class Frontend_model extends MY_model {
         $this->db->select("*");
         $this->db->from("runtimes");
         $this->db->where('runtime_end < ', $before_date);
-//        die($this->db->get_compiled_select());
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            $record_count = $query->num_rows();
-        } else {
-            $record_count = 0;
-        }
+        $record_count=$this->db->count_all_results();
 
         // remove old records
         $this->db->trans_start();

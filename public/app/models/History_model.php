@@ -184,13 +184,7 @@ class History_model extends Frontend_model {
         $this->db->select("*");
         $this->db->from("history");
         $this->db->where('history_datevisited < ', $before_date);
-//        die($this->db->get_compiled_select());
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            $record_count = $query->num_rows();
-        } else {
-            $record_count = 0;
-        }
+        $record_count=$this->db->count_all_results();
 
         // remove old records
         $this->db->trans_start();
