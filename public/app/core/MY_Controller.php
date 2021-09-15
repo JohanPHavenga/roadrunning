@@ -214,10 +214,10 @@ EOT;
         $this->load->model('emailque_model');
         $mail_que = [];
         $mail_que = $this->emailque_model->get_emailque_list($this->ini_array['emailque']['que_size'], 5);
-        
+
         if ($mail_que) {
             foreach ($mail_que as $mail_id => $mail_data) {
-                $mail_sent = $this->send_mail($mail_data);  
+                $mail_sent = $this->send_mail($mail_data);
                 if ($mail_sent) {
                     $status_id = 6;
                 } else {
@@ -225,7 +225,7 @@ EOT;
                 }
                 $this->emailque_model->set_emailque_status($mail_id, $status_id);
             }
-        } 
+        }
         return true;
     }
 
@@ -377,15 +377,23 @@ class Frontend_Controller extends MY_Controller
             if (!$this->segment_exclusion_list(uri_string())) {
                 // check if url has already been counted today for this session. If not add to DB
                 $this->load->model('history_model');
+                // $this->load->model('edition_model');
                 $history_exists = $this->history_model->check_history($session_token, current_url());
                 if (!$history_exists) {
                     $history_data = [
                         "history_session_id" => $session_token,
                         "history_url" => current_url(),
                     ];
+                    // if edition page, add the edition ID to the history table to make the summary easier
+                    $url_sections = explode("/", current_url());
+                    if ($url_sections[3]=="event") {;
+                        $history_data['history_baseurl']=base_url()."event/".$url_sections[4];
+                    }
+                    
                     if (isset($_SESSION['user']['user_id'])) {
                         $history_data['user_id'] = $_SESSION['user']['user_id'];
                     }
+                    // wts($history_data);
                     // set DB
                     $this->history_model->set_history($history_data);
                 }
@@ -572,7 +580,7 @@ class Frontend_Controller extends MY_Controller
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 0.8,
                         "changefreq" => "daily",
-                    ],                    
+                    ],
                     "parkrun" => [
                         "display" => "parkrun",
                         "loc" => base_url("race/parkrun"),
