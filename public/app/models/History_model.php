@@ -38,7 +38,7 @@ class History_model extends Frontend_model
         // allow for user_id or session_id
         $this->db->select("*");
         $this->db->from("history");
-        $this->db->order_by('history_datevisited');
+        $this->db->order_by('history_datevisited', 'DESC');
         if ($field) {
             $this->db->where($field, $value);
         }
@@ -137,7 +137,7 @@ class History_model extends Frontend_model
         $this->db->order_by("url_count", "DESC");
         $this->db->order_by("history_datevisited", "DESC");
 
-        // die($this->db->get_compiled_select());
+        die($this->db->get_compiled_select());
         $query = $this->db->get();
         return $query->result_array();
     }

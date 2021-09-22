@@ -161,7 +161,7 @@ class Race extends Frontend_Controller {
         $this->load->model('history_model');
         $this->data_to_views['edition_list'] = [];
         $query_params = [
-            "where_in" => ["region_id" => $this->session->region_selection,],
+            // "where_in" => ["region_id" => $this->session->region_selection,],
             "order_by" => ["historysum_countmonth" => "DESC"],
             "limit" => "10",
         ];

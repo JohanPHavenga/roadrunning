@@ -36,7 +36,9 @@ class Cron extends Frontend_Controller
     $this->update_event_info_status();
     $this->autoemails_closing_date();
     $this->runtime_log_purge();
-    $this->history_summary();
+    $this->add_baseurl(1500);
+    // removed to own stand-alone script
+    // $this->history_summary();
   }
 
   // ========================================================================
@@ -382,5 +384,43 @@ class Cron extends Frontend_Controller
     $this->log_runtime($log_data);
 
     echo "Runtime purge complete with " . $log_data['runtime_count'] . " records removed - " . date("Y-m-d H:i:s") . "\n\r";
+  }
+
+  /// TEMP ENTRY
+  private function add_baseurl($limit = 1000)
+  {
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+    echo "** ADD BASEURL \n";
+    echo "Start timestamp: " . date("Y-m-d H:i:s") . "\n";
+    $history_list = $this->history_model->get_history_list_limit("history_control", 0, $limit);
+    $n = 0;
+    foreach ($history_list as $history_item) {
+      /// TO DO
+      $url_sections = explode("/", $history_item->history_url);
+      if (!isset($url_sections[4])) {
+        $url_sections[4] = '';
+      }
+      // wts($url_sections);
+      $secion_4_exclusions = ["add", "ics"];
+      $history_data = [
+        "history_control" => 1
+      ];
+      if (($url_sections[3] == "event") && (!in_array($url_sections[4], $secion_4_exclusions))) {
+        $history_base_url = base_url("event/" . $url_sections[4]);
+        $history_data["history_baseurl"] = $history_base_url;
+        $n++;
+      }
+      $this->history_model->update_history($history_data, $history_item->history_id);
+    }
+    $control_count = $this->history_model->get_history_control_count();
+
+    $log_data['runtime_count'] = $control_count;
+    echo "$n / $limit BASEURLs Set: " . date("Y-m-d H:i:s") . "\n";
+    echo "$control_count records remain \n\r";
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
   }
 }

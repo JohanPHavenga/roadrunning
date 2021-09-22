@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5 center no-padding">
-                <h3>Login</h3>
+                <h3>LOGIN</h3>
                 <?php
                 if (validation_errors()) {
                     echo "<div class='alert alert-danger m-b-20' role='alert'><h5><i class='fa fa-exclamation-circle'></i> OOPS. Something went wrong!</h5>";
@@ -19,7 +19,7 @@
                         'id' => 'user_email',
                         'placeholder' => 'Email address',
                         'value' => set_value('user_email', $this->session->flashdata('email')),
-                        'class' => 'form-control',
+                        'class' => 'form-control w-75',
                         'type' => 'email',
                         'required' => '',
                         'autofocus' => '',
@@ -33,7 +33,7 @@
                         'name' => 'user_password',
                         'id' => 'user_password',
                         'type' => 'password',
-                        'class' => 'form-control',
+                        'class' => 'form-control w-75',
                         'placeholder' => 'Password',
                         'required' => '',
                         'autocomplete' => 'off',

@@ -45,7 +45,7 @@ class Main extends Frontend_Controller {
 
     // history summary
     $query_params = [
-        "where_in" => ["region_id" => $this->session->region_selection,],
+        // "where_in" => ["region_id" => $this->session->region_selection,],
         "order_by" => ["historysum_countmonth" => "DESC"],
         "limit" => "10",
     ];
