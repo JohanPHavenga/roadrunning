@@ -19,15 +19,16 @@ class Search extends Frontend_Controller {
 
         // Get correct search paramaters from post
         // QUERY
-        if ($this->input->post("query")) {
+        if ($this->input->post_get("query")) {
             $search_params['group_start'] = "";
-            $search_params['like']["edition_name"] = $this->input->post("query");
-            $search_params['or_like']["event_name"] = $this->input->post("query");
-            $search_params['or_like']["town_name"] = $this->input->post("query");
-            $search_params['or_like']["province_name"] = $this->input->post("query");
+            $search_params['like']["edition_name"] = $this->input->post_get("query");
+            $search_params['or_like']["event_name"] = $this->input->post_get("query");
+            $search_params['or_like']["town_name"] = $this->input->post_get("query");
+            $search_params['or_like']["province_name"] = $this->input->post_get("query");
+            $search_params['or_where']["province_abbr"] = $this->input->post_get("query");
             $search_params['group_end'] = "";
 
-            $this->edition_model->log_search($this->input->post("query"));
+            $this->edition_model->log_search($this->input->post_get("query"));
         }
         // WHERE
         if ($this->input->post("where") !== NULL) {

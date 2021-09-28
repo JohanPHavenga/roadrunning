@@ -141,9 +141,9 @@ button.btn:hover {
     color: #fff;
 }
 
-a:not(.btn):hover, a:not(.btn):focus, a:not(.btn):active {    
+/* a:not(.btn):hover, a:not(.btn):focus, a:not(.btn):active {    
     color: #26B8F3;
-}
+} */
 a.btn:not([href]):not([tabindex]):hover, a.btn:not([href]):not([tabindex]):focus, a.btn:not([href]):not([tabindex]):not(:disabled):not(.disabled):active, a.btn:not([href]):not([tabindex]):not(:disabled):not(.disabled).active, .btn:hover, .btn:focus, .btn:not(:disabled):not(.disabled):active, .btn:not(:disabled):not(.disabled).active {
     background-color: #26B8F3;
     border-color: #26B8F3;
@@ -165,7 +165,12 @@ a.btn:not([href]):not([tabindex]):hover, a.btn:not([href]):not([tabindex]):focus
 {
     background-color: #26B8F3;
 }
-.content .btn:hover {
+.btn:hover, 
+.btn-outline:hover,.btn .btn-outline:hover,
+.btn-light:hover, .btn .btn-light:hover,
+.btn.btn-light:hover,
+.btn.btn-light:not(.btn-outline):not(.btn-icon-holder):hover
+{
     background-color: #F36126;
     border-color: #F36126;
     text-decoration: none;
@@ -186,7 +191,10 @@ a.btn:not([href]):not([tabindex])::after, .btn::after,
     background-color: #181818;
 }
 
-a:hover {    
+a:hover,
+.page-menu.inverted nav > ul > li.active > a,
+.page-menu.inverted nav > ul > li:hover > a
+{    
     color: #26B8F3;
 }
 

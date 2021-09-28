@@ -191,7 +191,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                   <h3>Popular searches</h3>
                   <?php
                   foreach ($this->session->most_searched as $search_id => $search) {
-                    echo "<p><a href='#' id='search_" . $search_id . "'>" . $search['search_term'] . " </a></p>";
+                    echo "<p><a href='".base_url('search')."?query=".$search['search_term']."' id='search_" . $search_id . "'>" . $search['search_term'] . " </a></p>";
                   }
                   ?>
                 </div>
