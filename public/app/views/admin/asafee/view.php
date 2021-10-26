@@ -13,7 +13,7 @@
                 <?php
                 if (!(empty($asafee_data))) {
                     // create table
-                    $this->table->set_template(ftable('list_table'));
+                    $this->table->set_template(ftable('asa_fee_table'));
                     $this->table->set_heading($heading);
                     foreach ($asafee_data as $id => $data_entry) {
 
@@ -22,6 +22,11 @@
                                 "url" => "/admin/asafee/create/edit/" . $data_entry['asa_fee_id'],
                                 "text" => "Edit",
                                 "icon" => "icon-pencil",
+                            ],
+                            [
+                                "url" => "/admin/asafee/copy/" . $data_entry['asa_fee_id'],
+                                "text" => "Copy",
+                                "icon" => "icon-share-alt",
                             ],
                             [
                                 "url" => "/admin/asafee/delete/" . $data_entry['asa_fee_id'],

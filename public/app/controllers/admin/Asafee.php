@@ -141,36 +141,74 @@ class Asafee extends Admin_Controller {
         }
     }
 
-    public function delete($confirm = false) {
-
-        $id = $this->encryption->decrypt($this->input->post('asa_fee_id'));
-
-        if ($id == 0) {
-            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $id);
+    public function delete($asa_fee_id = 0) {
+        $this->load->model('admin/asamember_model');
+        if (($asa_fee_id == 0) AND ( !is_int($asa_fee_id))) {
+            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $asa_fee_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
             die();
         }
 
-        if ($confirm == 'confirm') {
-            $db_del = $this->asafee_model->remove_asafee($id);
-            if ($db_del) {
-                $msg = "ASA Regulation has been deleted";
-                $status = "success";
-            } else {
-                $msg = "Error committing to the database ID:'.$id";
-                $status = "danger";
-            }
+        // get detail for nice delete message
+        $asafee_detail = $this->asafee_model->get_asafee_detail($asa_fee_id);
+        $asamember_detail = $this->asamember_model->get_asamember_detail($asafee_detail['asa_member_id']);
+        // wts($asamember_detail,1);
+        // delete record
+        $db_del = $this->asafee_model->remove_asafee($asa_fee_id);
 
-            $this->session->set_flashdata('alert', $msg);
-            $this->session->set_flashdata('status', $status);
-            redirect($this->return_url);
+        if ($db_del) {
+            $msg = "Temp license fee structure has successfully been removed for <b>" . $asamember_detail['asa_member_abbr']."</b>";
+            $status = "success";
         } else {
-            $this->session->set_flashdata('alert', 'Cannot delete record');
-            $this->session->set_flashdata('status', 'danger');
-            redirect($this->return_url);
-            die();
+            $msg = "Error in deleting the record:'.$asa_fee_id";
+            $status = "danger";
         }
+
+        $this->session->set_flashdata('alert', $msg);
+        $this->session->set_flashdata('status', $status);
+        redirect($this->return_url);
+
+    }
+
+    public function copy($old_id) {
+
+        $this->load->model('admin/asamember_model');
+        // get data
+        $asafee_detail = $this->asafee_model->get_asafee_detail($old_id);
+        $asamember_detail = $this->asamember_model->get_asamember_detail($asafee_detail['asa_member_id']);
+
+        // wts($asafee_detail);
+        // wts($asamember_detail);
+        
+        $asafee_data=$asafee_detail;
+        $asafee_data['asa_fee_year']=$asafee_detail['asa_fee_year']+1;
+        // unset fields not needed
+        unset($asafee_data['asa_fee_id']);
+        unset($asafee_data['created_date']);
+        unset($asafee_data['updated_date']);
+
+        // wts($asafee_data,1);
+
+        $new_id = $this->asafee_model->set_asafee("add", NULL, $asafee_data);
+
+        if ($new_id) {
+            $alert = "ASA fee structure for <b>".$asamember_detail['asa_member_abbr']."</b> has been copied to ". $asafee_data['asa_fee_year'];
+            $status = "success";
+            $return_url = base_url("admin/asafee/view");
+        } else {
+            $alert = "Error trying to add a copy of <b>" . $asamember_detail['asa_member_abbr'] . "</b> fee structure";
+            $status = "danger";
+            $return_url = base_url("admin/asafee/view");
+        }
+
+        $this->session->set_flashdata([
+            'alert' => $alert,
+            'status' => $status,
+        ]);
+
+        redirect($return_url);
+        die();
     }
 
 }
