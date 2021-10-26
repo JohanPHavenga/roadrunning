@@ -220,6 +220,9 @@ class Edition extends Admin_Controller
     $this->form_validation->set_rules('regtype_id[]', 'Registration Type', 'required');
     $this->form_validation->set_rules('user_id', 'Contact Person', 'required|numeric|greater_than[0]', ["greater_than" => "Please select a Contact Person"]);
 
+
+// wts($this->data_to_view,1);
+
     // load correct view
     if ($this->form_validation->run() === FALSE) {
       $this->data_to_view['return_url'] = $this->return_url;

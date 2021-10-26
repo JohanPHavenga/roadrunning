@@ -1,4 +1,3 @@
-
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
@@ -36,7 +35,7 @@
                     <?php
                     // EVENT INPUT ON ADD
                     if ($action == "add") {
-                        ?>
+                    ?>
                         <div class='row'>
                             <div class='col-sm-12'>
                                 <div class='form-group'>
@@ -48,7 +47,7 @@
                                 </div>
                             </div>
                         </div>
-                        <?php
+                    <?php
                     }
                     ?>
                     <div class='row'>
@@ -80,12 +79,12 @@
                             'value' => set_value('event_id', $edition_detail['event_id']),
                             'type' => 'hidden',
                         ]);
-                        ?>
+                    ?>
                         <p class='help-block'><b>Town:</b> <?= $edition_detail['town_name']; ?></p>
                         <p class='help-block'> <b>Club:</b> <?= $edition_detail['club_name']; ?></p>
                         <p class='help-block'><b>Slug:</b> <a href='<?= base_url('/event/' . $edition_detail['edition_slug']); ?>' title='Preview' target='_blank'>
                                 <?= $edition_detail['edition_slug']; ?></a></p>
-                        <?php
+                    <?php
                     }
                     ?>
                 </div>
@@ -160,7 +159,7 @@
         <!-- CONTACT / ASA -->
         <div class="form-group">
             <div class="row">
-                <div class='col-sm-4'>
+                <div class='col-sm-6'>
                     <?php
                     echo form_label('Contact Person <span class="compulsary">*</span>', 'user_id');
                     echo form_dropdown('user_id', $contact_dropdown, set_value('user_id', $edition_detail['user_id']), ["id" => "user_id", "class" => "form-control"]);
@@ -174,6 +173,17 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <div class="row">
+                <div class='col-sm-12'>
+                    <p>
+                        <?= "Email: <a href='mailto:".$edition_detail['user_email']."'>".$edition_detail['user_email']."</a>";?>
+                        <?= " Contact: ".$edition_detail['user_contact']; ?>
+
+                </p>
+                </div>
+            </div>
+        </div>
 
         <!-- SPONSORS / ENTRY TYPES / REG TYPES -->
         <div class="form-group">
@@ -181,22 +191,34 @@
                 <div class='col-sm-5'>
                     <?php
                     echo form_label('Sponsor <span class="compulsary">*</span>', 'sponsor_id');
-                    echo form_multiselect('sponsor_id[]', $sponsor_dropdown, set_value('sponsor_id', $sponsor_list),
-                            ["id" => "sponsor_id", "class" => "form-control", "size" => 5]);
+                    echo form_multiselect(
+                        'sponsor_id[]',
+                        $sponsor_dropdown,
+                        set_value('sponsor_id', $sponsor_list),
+                        ["id" => "sponsor_id", "class" => "form-control", "size" => 5]
+                    );
                     ?>
                 </div>
                 <div class='col-sm-3'>
                     <?php
                     echo form_label('Entry Types', 'entry_types');
-                    echo form_multiselect('entrytype_id[]', $entrytype_dropdown, set_value('entrytype_id', $entrytype_list),
-                            ["id" => "entrytype_id", "class" => "form-control", "size" => 5]);
+                    echo form_multiselect(
+                        'entrytype_id[]',
+                        $entrytype_dropdown,
+                        set_value('entrytype_id', $entrytype_list),
+                        ["id" => "entrytype_id", "class" => "form-control", "size" => 5]
+                    );
                     ?>
                 </div>
                 <div class='col-sm-4'>
                     <?php
                     echo form_label('Registration Types', 'reg_types');
-                    echo form_multiselect('regtype_id[]', $regtype_dropdown, set_value('regtype_id', $regtype_list),
-                            ["id" => "regtype_id", "class" => "form-control", "size" => 3]);
+                    echo form_multiselect(
+                        'regtype_id[]',
+                        $regtype_dropdown,
+                        set_value('regtype_id', $regtype_list),
+                        ["id" => "regtype_id", "class" => "form-control", "size" => 3]
+                    );
                     ?>
                 </div>
             </div>
@@ -216,11 +238,11 @@
                         'value' => set_value('edition_address', $edition_detail['edition_address'], false),
                         'class' => 'form-control',
                     ]);
-//                            echo form_textarea([
-//                                'name' => 'edition_address',
-//                                'id' => 'edition_address',
-//                                'value' => set_value('edition_address', $edition_detail['edition_address'], false),
-//                            ]);
+                    //                            echo form_textarea([
+                    //                                'name' => 'edition_address',
+                    //                                'id' => 'edition_address',
+                    //                                'value' => set_value('edition_address', $edition_detail['edition_address'], false),
+                    //                            ]);
                     ?>
                 </div>
                 <div class="form-group">
@@ -233,11 +255,11 @@
                         'value' => set_value('edition_address_end', $edition_detail['edition_address_end'], false),
                         'class' => 'form-control',
                     ]);
-//                            echo form_textarea([
-//                                'name' => 'edition_address_end',
-//                                'id' => 'edition_address_end',
-//                                'value' => set_value('edition_address_end', $edition_detail['edition_address_end'], false),
-//                            ]);
+                    //                            echo form_textarea([
+                    //                                'name' => 'edition_address_end',
+                    //                                'id' => 'edition_address_end',
+                    //                                'value' => set_value('edition_address_end', $edition_detail['edition_address_end'], false),
+                    //                            ]);
                     ?>
                 </div>
                 <div class="form-group">
@@ -251,14 +273,10 @@
                 <?php
                 if ($action == "edit") {
                     $address_nospaces = url_title($edition_detail['edition_address_end'] . ", " . $edition_detail['town_name'] . ", ZA");
-                    ?>
-                    <iframe
-                        width="100%"
-                        height="250"
-                        frameborder="0" style="border:1"
-                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
+                ?>
+                    <iframe width="100%" height="250" frameborder="0" style="border:1" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
                     </iframe>
-                    <?php
+                <?php
                 }
                 ?>
             </div>
@@ -276,8 +294,10 @@
                     ]);
                     ?>
                 </div>
-            </div>           
+            </div>
         </div>
 
-    </div> <!--close portlet body -->
-</div> <!--close portlet -->
+    </div>
+    <!--close portlet body -->
+</div>
+<!--close portlet -->

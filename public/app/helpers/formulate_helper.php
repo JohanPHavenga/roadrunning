@@ -4,7 +4,8 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-function fyesNo($bool) {
+function fyesNo($bool)
+{
     if ($bool) {
         return "Yes";
     } else {
@@ -12,22 +13,26 @@ function fyesNo($bool) {
     }
 }
 
-function fraceDistance($distance) {
+function fraceDistance($distance)
+{
     return floatval($distance) . "km";
 }
 
-function fdisplayCurrency($amount, $des = 0) {
+function fdisplayCurrency($amount, $des = 0)
+{
     return "R" . number_format($amount, $des, '.', '');
 }
 
-function int_phone($phone) {
+function int_phone($phone)
+{
     $phone = trim($phone);
     $phone = str_replace(" ", "", $phone);
     $phone = str_replace("-", "", $phone);
     return preg_replace('/^(?:\+?27|0)?/', '+27', $phone);
 }
 
-function fphone($phone) {
+function fphone($phone)
+{
     $phone = int_phone($phone);
 
     $int_code = substr($phone, 0, 3);
@@ -44,7 +49,8 @@ function fphone($phone) {
 // DATES
 // =================================
 
-function fdateMonth($date) {
+function fdateMonth($date)
+{
     if ($date) {
         return date("F", strtotime($date));
     } else {
@@ -52,11 +58,13 @@ function fdateMonth($date) {
     }
 }
 
-function fdateDay($date) {
+function fdateDay($date)
+{
     return date("d", strtotime($date));
 }
 
-function fdateShort($date = null) {
+function fdateShort($date = null)
+{
     if (empty($date)) {
         return date("Y-m-d");
     } else {
@@ -64,15 +72,18 @@ function fdateShort($date = null) {
     }
 }
 
-function fdateHuman($date) {
+function fdateHuman($date)
+{
     return date("D j M", strtotime($date));
 }
 
-function fdateHumanShort($date) {
+function fdateHumanShort($date)
+{
     return date("d M", strtotime($date));
 }
 
-function fdateHumanFull($date, $show_dotw = false, $show_time = false) {
+function fdateHumanFull($date, $show_dotw = false, $show_time = false)
+{
     $date_str = "j F Y";
     if ($show_dotw) {
         $date_str = "l, " . $date_str;
@@ -85,7 +96,8 @@ function fdateHumanFull($date, $show_dotw = false, $show_time = false) {
     return date($date_str, strtotime($date));
 }
 
-function fdateEntries($date) {
+function fdateEntries($date)
+{
     $post_text = '';
     $date_str = "l, j F";
     if (time_is_almost_midnight($date)) {
@@ -96,7 +108,8 @@ function fdateEntries($date) {
     return date($date_str, strtotime($date)) . $post_text;
 }
 
-function fdateLong($date = null, $show_sec = true) {
+function fdateLong($date = null, $show_sec = true)
+{
     if ($date) {
         if ($show_sec) {
             return date("Y-m-d H:i:s", strtotime($date));
@@ -108,31 +121,37 @@ function fdateLong($date = null, $show_sec = true) {
     }
 }
 
-function fdateYear($date) {
+function fdateYear($date)
+{
     return date("Y", strtotime($date));
 }
 
-function ftimeSort($time, $show_sec=false) {
+function ftimeSort($time, $show_sec = false)
+{
     if ($show_sec) {
-        return date("H:i:s", strtotime($time));        
+        return date("H:i:s", strtotime($time));
     } else {
         return date("H:i", strtotime($time));
     }
 }
 
-function ftimeMil($time) {
+function ftimeMil($time)
+{
     return date("H\hi", strtotime($time));
 }
 
-function fdateToCal($timestamp) {
+function fdateToCal($timestamp)
+{
     return date('Ymd\THis', $timestamp);
 }
 
-function fdateStructured($timestamp) {
+function fdateStructured($timestamp)
+{
     return date('Y-m-d\TH:i:s' . '+02:00', strtotime($timestamp));
 }
 
-function fdateTitle($date) {
+function fdateTitle($date)
+{
     return date("D, d M Y", strtotime($date));
 }
 
@@ -140,7 +159,8 @@ function fdateTitle($date) {
 // ADDED FOR ADMIN
 // =======================================
 
-function ftable($id = "", $is_newsletter = false) {
+function ftable($id = "", $is_newsletter = false)
+{
     $template = array('table_open' => '<table class="table table-striped table-bordered table-hover order-column" id="' . $id . '">');
     if ($is_newsletter) {
         $template = array(
@@ -152,7 +172,8 @@ function ftable($id = "", $is_newsletter = false) {
     return $template;
 }
 
-function flable($text = "", $status = "default", $size = NULL) {
+function flable($text = "", $status = "default", $size = NULL)
+{
     if ($size) {
         $l_size = "label-" . $size;
     } else {
@@ -161,7 +182,8 @@ function flable($text = "", $status = "default", $size = NULL) {
     return "<span class='label $l_size label-$status'> $text </span>";
 }
 
-function flableStatus($status_num) {
+function flableStatus($status_num)
+{
     switch ($status_num) {
         case 1:
             $text = "Active";
@@ -187,6 +209,34 @@ function flableStatus($status_num) {
             $text = "Postponed";
             $status = "warning";
             break;
+        case 10:
+            $text = "Pending Results";
+            $status = "warning";
+            break;
+        case 11:
+            $text = "Results Loaded";
+            $status = "success";
+            break;
+        case 12:
+            $text = "Results Not Expected";
+            $status = "dark";
+            break;
+        case 13:
+            $text = "Unconfirmed";
+            $status = "danger";
+            break;
+        case 14:
+            $text = "Preliminary";
+            $status = "default";
+            break;
+        case 15:
+            $text = "Confirmed";
+            $status = "warning";
+            break;
+        case 16:
+            $text = "Verified";
+            $status = "success";
+            break;
         case 17:
             $text = "Virtual";
             $status = "primary";
@@ -200,11 +250,13 @@ function flableStatus($status_num) {
     return flable($text, $status, "sm");
 }
 
-function fLink($url, $text) {
+function fLink($url, $text)
+{
     return "<a href='$url'>$text</a>";
 }
 
-function fbutton($text = "Submit", $type = "submit", $status = "default", $size = NULL, $name = "", $value = "") {
+function fbutton($text = "Submit", $type = "submit", $status = "default", $size = NULL, $name = "", $value = "")
+{
     // status: default|primary|success|warning|danger|link
     // size: lg|sm|xs
 
@@ -216,7 +268,8 @@ function fbutton($text = "Submit", $type = "submit", $status = "default", $size 
     return "<button type='$type' name='$name' class='btn btn-$status $btn_size' value='$value'>$text</button>";
 }
 
-function fbuttonSave($params) {
+function fbuttonSave($params)
+{
     // status: default|primary|success|warning|danger|link
     // size: lg|sm|xs
 
@@ -244,7 +297,8 @@ function fbuttonSave($params) {
     return "<button type='$type' name='save-btn' class='btn btn-$status $btn_size' value='$value' $dt>" . @$params['text'] . "</button>";
 }
 
-function fbuttonLinkGroup($action_array) {
+function fbuttonLinkGroup($action_array)
+{
     $html = "<div class='btn-group'>";
     foreach ($action_array as $text => $link) {
         if ($text == "Delete") {
@@ -259,7 +313,8 @@ function fbuttonLinkGroup($action_array) {
     return $html;
 }
 
-function fbuttonLink($url, $text, $status = "default", $size = NULL, $extra = NULL) {
+function fbuttonLink($url, $text, $status = "default", $size = NULL, $extra = NULL)
+{
     // status: default|primary|success|warning|danger|link
     // size: lg|sm|xs
     if ($size) {
@@ -270,7 +325,8 @@ function fbuttonLink($url, $text, $status = "default", $size = NULL, $extra = NU
     return "<a href='$url' class='btn btn-$status $btn_size' role='button' $extra>$text</a>";
 }
 
-function fbuttonActionGroup2($action_array) {
+function fbuttonActionGroup2($action_array)
+{
     $html = "<div class='btn-group'>";
     foreach ($action_array as $action_item) {
         // confirmation
@@ -291,7 +347,8 @@ function fbuttonActionGroup2($action_array) {
     return $html;
 }
 
-function fbuttonActionGroup($action_array) {
+function fbuttonActionGroup($action_array)
+{
     $html = "<div class='btn-group'>";
     $html .= "<button class='btn btn-xs default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false'> Actions <i class='fa fa-angle-down'></i></button>";
     $html .= "<ul class='dropdown-menu pull-right' role='menu'>";

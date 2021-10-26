@@ -11,7 +11,7 @@
                 <?php
                 if (@$search_results) {
                     $this->table->set_template(ftable('search_table'));
-                    $this->table->set_heading(["ID", "Edition Name", "Status", "Edition Date", "Races", "Event Name", "Actions"]);
+                    $this->table->set_heading(["Edition Name", "Status", "Info Status", "Edition Date", "Races", "Actions"]);
                     foreach ($search_results as $edition_id => $data_entry) {
                         $edit_url = "/admin/edition/create/edit/" . $edition_id;
                         $action_array = [
@@ -36,9 +36,9 @@
                             ];
                         }
 
-                        $row['id'] = $edition_id;
                         $row['name'] = "<a href=" . $edit_url . " title='Edit Edition'>" . $data_entry['edition_name'] . "</a>";
                         $row['status'] = flableStatus($data_entry['status_id']);
+                        $row['info_status'] = flableStatus($data_entry['info_status_id']);
                         $row['date'] = fdateShort($data_entry['edition_date']);
                         foreach ($data_entry['races'] as $race_id => $race) {
                             if (!isset($row['race_list'])) {
@@ -51,7 +51,6 @@
                             }
                             $row['race_list'] .= flable(fraceDistance($race['distance']), $status, "sm") . "&nbsp;";
                         }
-                        $row['event'] = $data_entry['event_name'];
                         $row['actions'] = fbuttonActionGroup($action_array);
                         $this->table->add_row($row);
                         unset($row);

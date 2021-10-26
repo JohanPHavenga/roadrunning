@@ -312,8 +312,8 @@ class Dashboard extends Admin_Controller {
             $this->data_to_view['msg'] = "Please use the <b>search box</b> above to seach for a race.";
         }
 
-//        wts($this->data_to_view['search_results']);
-//        die();
+    //    wts($this->data_to_view['search_results'],1);
+       
 
         $this->data_to_header['css_to_load'] = array(
             "assets/admin/plugins/datatables/datatables.min.css",

@@ -640,10 +640,12 @@ class Event_model extends Admin_model {
 
         $data = [];
 
-        $this->db->select("editions.edition_id, edition_name, edition_date, event_name, edition_status, status_name, race_id, race_distance");
+        $this->db->select("editions.edition_id, edition_name, edition_date, event_name, edition_status, edition_info_status, 
+        main_status.status_name as main_status_name, info_status.status_name as info_status_name, race_id, race_distance");
         $this->db->from("events");
         $this->db->join('editions', 'editions.event_id = events.event_id');
-        $this->db->join('status', 'editions.edition_status = status.status_id');
+        $this->db->join('`status` `main_status`', 'editions.edition_status = main_status.status_id');
+        $this->db->join('`status` `info_status`', 'editions.edition_info_status = info_status.status_id');
         $this->db->join('races', 'races.edition_id = editions.edition_id');
         $this->db->join('towns', 'towns.town_id = events.town_id');
         $this->db->join('racetypes', 'races.racetype_id = racetypes.racetype_id', 'left outer');
@@ -655,9 +657,10 @@ class Event_model extends Admin_model {
         $this->db->order_by("edition_date", "DESC");
         $this->db->order_by("race_distance", "DESC");
 
+        // wts($this->db->get_compiled_select(),1);
+
         $query = $this->db->get();
-//            echo $this->db->get_compiled_select();
-//            die();
+          
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
@@ -665,7 +668,9 @@ class Event_model extends Admin_model {
                 $data[$row['edition_id']]['edition_date'] = $row['edition_date'];
                 $data[$row['edition_id']]['event_name'] = $row['event_name'];
                 $data[$row['edition_id']]['status_id'] = $row['edition_status'];
-                $data[$row['edition_id']]['status_name'] = $row['status_name'];
+                $data[$row['edition_id']]['main_status_name'] = $row['main_status_name'];
+                $data[$row['edition_id']]['info_status_id'] = $row['edition_info_status'];
+                $data[$row['edition_id']]['info_status_name'] = $row['info_status_name'];
                 $data[$row['edition_id']]['races'][$row['race_id']]['distance'] = $row['race_distance'];
                 $data[$row['edition_id']]['races'][$row['race_id']]['color'] = $this->get_race_color($row['race_distance']);
             }
