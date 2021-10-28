@@ -29,12 +29,12 @@
                             ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <h3 class="text-uppercase">Number Collection</h3>
+                                    <h3 class="text-uppercase">Registration / Number Collection</h3>
                                     <ul>
                                         <?php
                                         // OTD Reg
                                         if (isset($edition_data['regtype_list'][1])) {
-                                            echo "<li>Registration & number collection will take place <b>on the day</b> from <b>" .
+                                            echo "<li>Registration will take place <b>on the day</b> from <b>" .
                                             ftimeMil($date_list[9][0]['date_start']);
                                             if (!time_is_midnight($date_list[9][0]['date_end'])) {
                                                 echo " - " . ftimeMil($date_list[9][0]['date_end']);
@@ -56,7 +56,7 @@
                                     </ul>
                                     <?php
                                     // always show what is in the box
-                                    if (strlen($edition_data['edition_reg_detail']) > 15) {
+                                    if (strlen($edition_data['edition_reg_detail']) > 10) {
                                         echo $edition_data['edition_reg_detail'];
                                     }
                                     ?>

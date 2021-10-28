@@ -54,14 +54,14 @@ class Mailer extends Admin_Controller {
 
     public function info_mail_body($edition_info) {
         $body = "<p>Hello</p>";
-        $body .= "<p>I run a listing website aiming to list all road running events in the country called "
+        $body .= "<p>We run a listing website aiming to list all road running events in the country called "
                 . "<a href='https://www.roadrunning.co.za'>RoadRunning.co.za</a>. Some basic information regarding your event, the <b>" 
-                . substr($edition_info['edition_name'], 0, -5) . "</b> has already been loaded on my site. Please see the preliminary listing here:";
+                . substr($edition_info['edition_name'], 0, -5) . "</b> has already been loaded on the site. Please see the preliminary listing here:";
 
         $body .= "<p><a href='http://www.roadrunning.co.za/event/" . $edition_info['edition_slug'] . "'>"
                 . "www.roadrunning.co.za/event/" . $edition_info['edition_slug'] . "</a></p>";
 
-        $body .= "<p>Do you have any additional information available for me to add to the listing?<br>"
+        $body .= "<p>Do you have any additional information available to add to the listing?<br>"
                 . "<b>Here are some examples of the information I am looking for:</b></p>";
         $body .= "<ul><li>Entry fees</li><li>Race start times</li><li>How to enter? (on-the-day,  online etc.)</li><li>Will medals be handed out?</li><li>Route Map</li></ul>";
 

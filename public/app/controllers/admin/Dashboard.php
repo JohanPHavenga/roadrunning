@@ -93,7 +93,7 @@ class Dashboard extends Admin_Controller {
                 "where" => ["edition_date >=" => date("Y-m-d"), "edition_date <" => date("Y-m-d", strtotime("2 months")), "edition_remove_audit" => 0],
                 "order_by" => ["editions.edition_date" => "ASC"],
             ];
-            $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured", "edition_info_email_sent",
+            $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_status","edition_info_status","edition_isfeatured", "edition_info_email_sent",
                 "asa_member_name", "asa_member_abbr", "user_email", "timingprovider_abbr"];
             $this->data_to_view['event_list_unconfirmed'] = $this->chronologise_data($this->edition_model->get_edition_list_new($query_params, $field_list, false), "edition_date");
 

@@ -379,11 +379,11 @@ var TableDatatablesManaged = (function () {
 			],
 			bStateSave: true,
 			columnDefs: [
-				{ searchable: false, targets: [-1] },
+				{ searchable: false, targets: [-1, -2] },
 				{ responsivePriority: 1, targets: 0 },
-				{ responsivePriority: 2, targets: -1 },
-				{ responsivePriority: 3, targets: 1 },
-				{ responsivePriority: 4, targets: 2 },
+				{ responsivePriority: 2, targets: 1 },
+				{ responsivePriority: 3, targets: -2 },
+				{ responsivePriority: 4, targets: -1 },
 				{ type: "date", targets: [0] },
 			],
 		});

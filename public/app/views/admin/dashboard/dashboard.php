@@ -4,7 +4,7 @@
         foreach ($dashboard_stats_list as $stat) {
             ?>
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="dashboard-stat2 ">
+                <div class="dashboard-stat2">
                     <div class="display">
                         <div class="number">
                             <h3 class="font-<?= $stat['font-color']; ?>">
@@ -29,7 +29,7 @@
 
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-xl-7 col-lg-12 col-md-12">
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
@@ -41,7 +41,7 @@
                 <?php
                 // create table
                 $this->table->set_template(ftable('unconfirmed_date_table'));
-                $this->table->set_heading(["Date", "Race", "ASA", "Time", "Mail?"]);
+                $this->table->set_heading(["Date", "Race", "ASA", "Info-Status", "Mail"]);
                 foreach ($event_list_unconfirmed as $year => $year_list) {
                     foreach ($year_list as $month => $month_list) {
 //                        $cell = array('data' => "<b>$month</b>", 'colspan' => 5);
@@ -58,11 +58,13 @@
                                 } else {
                                     $row['name'] = $url;
                                 }
+                                $row['name'] .= ' <a href="https://www.google.com/search?q='.urlencode(strtolower($edition['edition_name'])).'" target="_blank" class="btn btn-xs red"><i class="fa fa-search"></i></a>';
 
                                 // column 3
                                 $row['asa_member'] = "<span title='" . $edition['asa_member_name'] . "'>" . $edition['asa_member_abbr'] . "</span>";
                                 // column 4
-                                $row['timingprovider'] = $edition['timingprovider_abbr'];
+                                //$row['timingprovider'] = $edition['timingprovider_abbr'];
+                                $row['status'] = flableStatus($edition['edition_info_status']);
 
                                 // column 5
                                 $email_link = '/admin/mailer/info_mail/' . $edition['edition_id'];
@@ -74,7 +76,7 @@
                                     }
                                 } else {
                                     $row['info_email'] = '<a class="btn btn-xs red" title="Add contact to event to send email"><i class="fa fa-user"></i> No contact</a>';
-                                }
+                                }                                
                                 $this->table->add_row($row);
                                 unset($row);
                             }
@@ -87,7 +89,7 @@
         </div>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-xl-5 col-lg-12 col-md-12">
 
         <div class="portlet light">
             <div class="portlet-title">
