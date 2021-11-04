@@ -1,17 +1,21 @@
 <?php
 
-class Usersubscription_model extends Admin_model {
+class Usersubscription_model extends Admin_model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all("usersubscriptions");
     }
 
-    public function exists($user_id, $linked_to, $linked_id) {
+    public function exists($user_id, $linked_to, $linked_id)
+    {
         $this->db->select("*");
         $this->db->from("usersubscriptions");
         $this->db->where('user_id', $user_id);
@@ -24,7 +28,50 @@ class Usersubscription_model extends Admin_model {
         return false;
     }
 
-    public function get_usersubscription_list($linked_to = NULL, $linked_id = 0) {
+    public function search($ss)
+    {
+        $this->db->select("usersubscriptions.*, users.user_name, users.user_surname, users.user_email");
+        $this->db->from("usersubscriptions");
+        $this->db->join('users', 'user_id', 'left');
+        $this->db->or_where("user_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("user_surname LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("user_email LIKE '%" . addslashes($ss) . "%'");
+        $this->db->order_by('user_name', 'user_surname');
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function search_edition($ss)
+    {
+        $this->db->select("usersubscriptions.*, edition_name AS linked_name, users.user_name, users.user_surname, users.user_email");
+        $this->db->from("usersubscriptions");
+        $this->db->join('users', 'user_id', 'left');
+        $this->db->join('editions', 'editions.edition_id=usersubscriptions.linked_id');
+        $this->db->where("linked_to", "edition");
+        $this->db->where("edition_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->order_by('user_name', 'user_surname');
+        // wts($this->db->get_compiled_select(), 1);
+        $query = $this->db->get();
+
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function get_usersubscription_list($linked_to = NULL, $linked_id = 0)
+    {
 
         $this->db->select("*");
         $this->db->from("usersubscriptions");
@@ -33,8 +80,8 @@ class Usersubscription_model extends Admin_model {
             $this->db->where('linked_to', $linked_to);
             $this->db->where('linked_id', $linked_id);
         }
-//        echo $this->db->get_compiled_select();
-//        die();        
+        //        echo $this->db->get_compiled_select();
+        //        die();        
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -46,7 +93,8 @@ class Usersubscription_model extends Admin_model {
         return false;
     }
 
-    public function get_usersubscription_detail($id, $linked_to = NULL, $linked_id = 0) {
+    public function get_usersubscription_detail($id, $linked_to = NULL, $linked_id = 0)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -66,7 +114,8 @@ class Usersubscription_model extends Admin_model {
         }
     }
 
-    public function set_usersubscription($action, $usersubscription_data = [], $debug = false) {
+    public function set_usersubscription($action, $usersubscription_data = [], $debug = false)
+    {
 
         // POSTED DATA
         if (empty($usersubscription_data)) {
@@ -108,7 +157,8 @@ class Usersubscription_model extends Admin_model {
         }
     }
 
-    public function remove_usersubscription($user_id, $linked_to, $linked_id) {
+    public function remove_usersubscription($user_id, $linked_to, $linked_id)
+    {
         if (!($user_id)) {
             return false;
         } else {
@@ -119,7 +169,8 @@ class Usersubscription_model extends Admin_model {
         }
     }
 
-    public function check_usersubscription_exists($user_id, $linked_to, $linked_id) {
+    public function check_usersubscription_exists($user_id, $linked_to, $linked_id)
+    {
         $this->db->select("*");
         $this->db->from("usersubscriptions");
         $this->db->where('linked_to', $linked_to);
@@ -133,5 +184,4 @@ class Usersubscription_model extends Admin_model {
             return false;
         }
     }
-
 }

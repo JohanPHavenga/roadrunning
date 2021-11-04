@@ -1668,8 +1668,8 @@ class Admin_Controller extends MY_Controller
                 "seg0" => ['user', 'usersubscription'],
                 "submenu" => [
                     [
-                        "text" => "List users",
-                        "url" => 'admin/user',
+                        "text" => "Search users",
+                        "url" => 'admin/user/search',
                         "icon" => "users",
                     ],
                     [

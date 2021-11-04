@@ -58,7 +58,7 @@ class Dashboard extends Admin_Controller {
                     "text" => "Draft Email Merges",
                     "number" => $merge_count,
                     "font-color" => "red-haze",
-                    "icon" => "icon-mail",
+                    "icon" => "icon-envelope",
                     "uri" => "/admin/emailmerge/view",
                 ],
                 [
