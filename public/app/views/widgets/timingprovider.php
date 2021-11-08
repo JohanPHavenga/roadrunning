@@ -45,6 +45,24 @@ switch ($edition_data['timingprovider_id']) {
             </div>
         </div>
         <?php
+    case 4:
+        ?>
+        <div class="content row">
+            <div class="col-lg-5 col-sm-5">
+                <p class="text-center">
+                    <a href="<?=$url;?>" title="View results on ProTime site">
+                        <img src="/assets/img/Protime-Logo.png" alt="ProTime Logo" style="width: 80%;"/>
+                    </a>
+                </p>
+            </div>
+
+            <div class="col-lg-7 col-sm-7">
+                <h5>Official time keeping done by <a href="<?=$url;?>" title="View results on ProTime site">
+                    <?= $edition_data['timingprovider_name']; ?></a></h5>
+                <p style="font-size: 0.9em;">Click on their logo to view the official results on their site</p>
+            </div>
+        </div>
+        <?php
         break;
     default:
         break;

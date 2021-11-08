@@ -160,7 +160,7 @@ class Search extends Frontend_Controller {
 
     //    wts($search_params,true);
         // DO THE SEARCH
-        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, 1), $race_search_params);
+        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
         if (!empty($this->data_to_views['edition_list'])) {
             foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);

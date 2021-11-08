@@ -194,7 +194,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
 
 <a id="scrollTop"><i class="icon-chevron-up1"></i><i class="icon-chevron-up1"></i></a>
 
-<script src="<?= base_url('assets/js/jquery.js'); ?>" defer></script>
+<script src="<?= base_url('assets/js/jquery.js'); ?>"></script>
 <script src="<?= base_url('assets/js/plugins.min.js'); ?>" defer></script>
 <script src="<?= base_url('assets/js/functions.min.js'); ?>" defer></script>
 <script src="<?= base_url('assets/js/fa.js'); ?>" crossorigin="anonymous" defer></script>

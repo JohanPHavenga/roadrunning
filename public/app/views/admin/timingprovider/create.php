@@ -10,7 +10,7 @@
             </div>
             <div class="portlet-body">
                 <div class="row">
-                    <div class='col-md-6'>
+                    <div class='col-md-7'>
                         <div class='form-group'>
                             <?php
                             echo form_label('Name', 'timingprovider_name');
@@ -38,7 +38,20 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class='col-md-6'>
+                    <div class='col-md-9'>
+                        <div class='form-group'>
+                            <?php
+                            echo form_label('URL', 'timingprovider_url');
+                            echo form_input([
+                                'name' => 'timingprovider_url',
+                                'id' => 'timingprovider_url',
+                                'value' => set_value('timingprovider_url', $timingprovider_detail['timingprovider_url']),
+                                'class' => 'form-control',
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <div class='col-md-3'>
                         <div class='form-group'>
                             <?php
                             echo form_label('Status', 'timingprovider_status');

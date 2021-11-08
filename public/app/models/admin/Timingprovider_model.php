@@ -72,6 +72,7 @@ class Timingprovider_model extends Admin_model {
             'timingprovider_name' => $this->input->post('timingprovider_name'),
             'timingprovider_abbr' => $this->input->post('timingprovider_abbr'),
             'timingprovider_status' => $this->input->post('timingprovider_status'),
+            'timingprovider_url' => $this->input->post('timingprovider_url'),
         );
 
         switch ($action) {
