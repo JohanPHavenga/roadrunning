@@ -131,7 +131,7 @@ class Timingprovider extends Admin_Controller {
     public function delete($timingprovider_id) {
 
         if (($timingprovider_id == 0) AND ( !is_int($timingprovider_id))) {
-            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $id);
+            $this->session->set_flashdata('alert', 'Cannot delete record: ' . $timingprovider_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
             die();
