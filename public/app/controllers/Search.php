@@ -122,7 +122,7 @@ class Search extends Frontend_Controller {
                 $search_params['limit'] = 250;
                 break;
             case "plus_1y":
-                $from_date = date("Y-m-d 00:00:00");
+                $from_date = date("Y-m-d 00:00:00", strtotime("-2 weeks"));
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
                 $search_params['limit'] = 250;
                 break;

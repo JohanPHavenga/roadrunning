@@ -5,10 +5,7 @@
             <div class="content col-lg-9">
                 <h3 class="text-uppercase"><?= $page_title; ?></h3>
                 <p>These terms and conditions outline the rules and regulations for the use of RoadRunning.co.za's Website.</p>
-                <p><b>RoadRunning.co.za</b> is located at:<br> 
-                <address>
-                    13 Basalt Street<br>Bellville<br>Cape Town<br> 7530
-                </address></p>
+                
                 <p>By accessing this website we assume you accept these terms and conditions in full. Do not continue to use RoadRunning.co.za's website 
                     if you do not accept all of the terms and conditions stated on this page.</p>
                 <p>The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice

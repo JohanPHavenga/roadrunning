@@ -123,6 +123,11 @@ class Event extends Frontend_Controller {
     $this->data_to_views['address'] = $edition_data['edition_address_end'] . ", " . $edition_data['town_name'];
     $this->data_to_views['address_nospaces'] = url_title($this->data_to_views['address'] . ", ZA");
     $this->data_to_views['page_menu'] = $this->get_event_menu($slug, $edition_data['event_id'], $edition_id, $this->data_to_views['in_past']);
+    // add running mann list to page menu is exists
+    if (isset($this->data_to_views['url_list'][10])) {
+      $this->data_to_views['page_menu']['more']['sub_menu']['running_mann']['display']=$this->data_to_views['url_list'][10][0]['urltype_buttontext']." &nbsp;<i class='fa fa-external-link-alt'></i>";
+      $this->data_to_views['page_menu']['more']['sub_menu']['running_mann']['loc']=$this->data_to_views['url_list'][10][0]['url_name'];
+    }
     $this->data_to_views['status_notice'] = $this->formulate_status_notice($edition_data);
     $this->data_to_views['race_status_name'] = $this->edition_model->get_status_name($edition_data['edition_info_status']);
     // Online entries open?

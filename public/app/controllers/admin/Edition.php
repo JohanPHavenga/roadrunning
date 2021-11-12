@@ -489,11 +489,13 @@ class Edition extends Admin_Controller
     $this->load->model('admin/entrytype_model');
     $this->load->model('admin/asamember_model');
     $this->load->model('admin/file_model');
+    $this->load->model('admin/url_model');
 
     // get data
     $race_list = $this->race_model->get_race_list($old_edition_id);
     $edition_detail = $this->edition_model->get_edition_detail($old_edition_id);
     $file_list = $this->file_model->get_file_list("edition", $old_edition_id, true);
+    $url_list = $this->url_model->get_url_list("edition", $old_edition_id, true);
 
     // create new edition data
     $name = substr($edition_detail['edition_name'], 0, -5);
@@ -560,6 +562,19 @@ class Edition extends Admin_Controller
           }
         }
         copy($src, $dest);
+      }
+    }
+
+    // copy URLs over
+    $urltypes_to_copy = [1, 6, 8, 10]; // 1=website; 6=facebook; 8=routemap; 10=running mann
+    foreach ($urltypes_to_copy as $urltype_id) {
+      // edition files
+      if (isset($url_list[$urltype_id])) {
+        $url_data = $url_list[$urltype_id][0];
+        $url_data['linked_id'] = $new_edition_id;
+        $to_remove = ['url_id', 'created_date', 'updated_date', 'urltype_name', 'urltype_helptext', 'urltype_buttontext'];
+        $url_data_to_set = array_diff_key($url_data, array_flip($to_remove));
+        $url_id = $this->url_model->set_url("add", "", $url_data_to_set, 0);
       }
     }
 

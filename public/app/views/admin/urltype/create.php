@@ -11,7 +11,7 @@
             <div class="portlet-body">
                 <div class='form-group'>
                     <div class='row'>
-                        <div class='col-sm-3'>
+                        <div class='col-sm-6'>
                             <?php
                             echo form_label('Name', 'urltype_name');
                             echo form_input([

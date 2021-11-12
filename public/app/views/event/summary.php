@@ -158,7 +158,7 @@
                       if (isset($url_list[1])) {
                       ?>
                         <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
-                          <i class="fa fa-link"></i> Race Website</a>
+                          <i class="fa fa-external-link-alt"></i> Race Website</a>
 
                       <?php
                       }
@@ -246,6 +246,60 @@
             </div>
           </div>
 
+          <!-- more race info -->
+          <div class="heading-text heading-line m-t-30">
+            <h4>More race information</h4>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <?php
+              if (isset($flyer['edition'])) {
+              ?>
+                <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                  <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+              <?php
+              }
+              if (isset($url_list[1])) {
+              ?>
+                <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                  <i class="fa fa-external-link-alt"></i> Race <?= $url_list['1'][0]['urltype_buttontext']; ?></a>
+
+              <?php
+              }
+              ?>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <?php
+              // BUTTONS
+              if (!in_array(5, $edition_data['entrytype_list'])) {
+              ?>
+                <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details</a>
+              <?php
+              }
+              ?>
+              <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info</a>
+
+            </div>
+          </div>
+          <?php
+          // running mann link
+          if (isset($url_list[10])) {
+          ?>
+            <div class="row">
+              <div class="col-lg-12">
+                <a href="<?= $url_list['10'][0]['url_name']; ?>" class="btn btn-light" title="<?= $url_list['10'][0]['urltype_helptext']; ?>">
+                <i class="fa fa-external-link-alt"></i> <i class="fa fa-running"></i> <?= $url_list['10'][0]['urltype_buttontext']; ?></a>
+              </div>
+            </div>
+          <?php
+          }
+          ?>
+
+
+          <!-- race organisers info -->
           <div class="heading-text heading-line m-t-50">
             <h4>Race Organisers info</h4>
           </div>
@@ -292,81 +346,71 @@
             </div>
           </div>
 
+          <!-- <div class="heading-text heading-line text-center m-t-30">
+            <h4>Event Reviews</h4>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="comments" id="comments">
+                <div class="comment-list">
+                  <div class="comment" id="comment-1">
+                    <div class="image"><img alt="" src="images/blog/author.jpg" class="avatar"></div>
+                    <div class="text">
+                      <div class="product-rate">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half"></i>
+                      </div>
+                      <h5 class="name">John Doe</h5>
+                      <span class="comment_date">Posted at 15:32, 06 December</span>
+                      <a class="comment-reply-link" href="#">2019 edition</a>
+                      <div class="text_holder">
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment" id="comment-1-1">
+                    <div class="image"><img alt="" src="images/blog/author2.jpg" class="avatar"></div>
+                    <div class="text">
+                      <div class="product-rate">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                      </div>
+                      <h5 class="name">John Doe</h5>
+                      <span class="comment_date">Posted at 15:32h, 06 December</span>
+                      <a class="comment-reply-link" href="#">Reply</a>
+                      <div class="text_holder">
+                        <p>It is a long established fact that a reader will be distracted by the readable content.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment" id="comment-1-2">
+                    <div class="image"><img alt="" src="images/blog/author3.jpg" class="avatar"></div>
+                    <div class="text">
+                      <div class="product-rate">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half"></i>
+                      </div>
+                      <h5 class="name">John Doe</h5>
+                      <span class="comment_date">Posted at 15:32h, 06 December</span>
+                      <a class="comment-reply-link" href="#">Reply</a>
+                      <div class="text_holder">
+                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div> 
+          </div>-->
 
 
-
-          <!--                    <div class="heading-text heading-line text-center m-t-30">
-                                  <h4>Event Reviews</h4>
-                              </div>
-                              <div class="row">
-                                  <div class="col-lg-12">
-                                      <div class="comments" id="comments">
-                                          <div class="comment-list">
-                                               Comment 
-                                              <div class="comment" id="comment-1">
-                                                  <div class="image"><img alt="" src="images/blog/author.jpg" class="avatar"></div>
-                                                  <div class="text">
-                                                      <div class="product-rate">
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star-half"></i>
-                                                      </div>
-                                                      <h5 class="name">John Doe</h5>
-                                                      <span class="comment_date">Posted at 15:32, 06 December</span>
-                                                      <a class="comment-reply-link" href="#">2019 edition</a>
-                                                      <div class="text_holder">
-                                                          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                               end: Comment 
-                                               Comment 
-                                              <div class="comment" id="comment-1-1">
-                                                  <div class="image"><img alt="" src="images/blog/author2.jpg" class="avatar"></div>
-                                                  <div class="text">
-                                                      <div class="product-rate">
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                      </div>
-                                                      <h5 class="name">John Doe</h5>
-                                                      <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                                      <a class="comment-reply-link" href="#">Reply</a>
-                                                      <div class="text_holder">
-                                                          <p>It is a long established fact that a reader will be distracted by the readable content.</p>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                               end: Comment 
-                                               Comment 
-                                              <div class="comment" id="comment-1-2">
-                                                  <div class="image"><img alt="" src="images/blog/author3.jpg" class="avatar"></div>
-                                                  <div class="text">
-                                                      <div class="product-rate">
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star"></i>
-                                                          <i class="fa fa-star-half"></i>
-                                                      </div>
-                                                      <h5 class="name">John Doe</h5>
-                                                      <span class="comment_date">Posted at 15:32h, 06 December</span>
-                                                      <a class="comment-reply-link" href="#">Reply</a>
-                                                      <div class="text_holder">
-                                                          <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour.</p>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                               end: Comment 
-          
-                                          </div>
-                                      </div>
-                                  </div>
-          
-          
-                              </div>-->
-          <!-- end: Product additional tabs -->
         </div>
 
       </div>
@@ -389,11 +433,17 @@
         // ADS WIDGET
         $this->load->view('widgets/side_ad');
 
+        // MAP WIDGET
+        // if not virtual
+        if ($edition_data['edition_status'] != 17) {
+          $this->load->view('widgets/map');
+        }
+
         // RACE STATUS
-        //                if ($edition_data['edition_status'] == 1) {
-        //                    $this->load->view('widgets/race_status', $status_notice);
-        //                    echo "<div class='m-b-30'></div>";
-        //                }
+        // if ($edition_data['edition_status'] == 1) {
+        //     $this->load->view('widgets/race_status', $status_notice);
+        //     echo "<div class='m-b-30'></div>";
+        // }
         ?>
       </div>
       <!-- end: Sidebar-->
@@ -401,49 +451,11 @@
 
     <div class="row">
       <div class="content col-lg-9">
-        <div class="heading-text heading-line m-t-30">
-          <h4>More race information</h4>
-        </div>
-        <div class="row">
-          <div class="col-lg-12">
-            <?php
-            // BUTTONS
-            if (!in_array(5, $edition_data['entrytype_list'])) {
-            ?>
-              <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details</a>
-            <?php
-            }
-            ?>
-            <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info</a>
 
-            <?php
-            if (isset($flyer['edition'])) {
-            ?>
-              <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
-                <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
-
-            <?php
-            }
-            if (isset($url_list[1])) {
-            ?>
-              <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
-                <i class="fa fa-link"></i> Race Website</a>
-
-            <?php
-            }
-            ?>
-          </div>
-        </div>
       </div>
 
       <div class="sidebar col-lg-3">
-        <?php
-        // MAP WIDGET
-        // if not virtual
-        if ($edition_data['edition_status'] != 17) {
-          $this->load->view('widgets/map');
-        }
-        ?>
+
       </div>
     </div>
   </div>

@@ -653,7 +653,7 @@ class Frontend_Controller extends MY_Controller
                 "changefreq" => "yearly",
                 "sub-menu" => [
                     "contact-us" => [
-                        "display" => "Contact Me",
+                        "display" => "Contact Us",
                         "loc" => base_url("contact"),
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
                         "priority" => 0.8,

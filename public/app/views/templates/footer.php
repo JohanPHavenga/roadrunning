@@ -41,10 +41,19 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
           <div class="widget">
             <h4>PAGES</h4>
             <ul class="list">
-            <li><a href='<?= $this->session->static_pages['resources']['sub-menu']['training']['loc']; ?>'><?= $this->session->static_pages['resources']['sub-menu']['training']['display']; ?></a></li>
-              <li><a href='<?= $this->session->static_pages['resources']['sub-menu']['faq']['loc']; ?>'><?= $this->session->static_pages['resources']['sub-menu']['faq']['display']; ?></a></li>              
+              <li><a href='<?= $this->session->static_pages['resources']['sub-menu']['training']['loc']; ?>'><?= $this->session->static_pages['resources']['sub-menu']['training']['display']; ?></a></li>
+              <li><a href='<?= $this->session->static_pages['resources']['sub-menu']['faq']['loc']; ?>'><?= $this->session->static_pages['resources']['sub-menu']['faq']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['about']['loc']; ?>'><?= $this->session->static_pages['about']['display']; ?></a></li>
-              <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $this->session->static_pages['contact']['display']; ?></a></li>
+              <?php
+              $url_bits = explode("/", uri_string());
+              if ($url_bits[0] == "event") {
+                echo "<li><a href='" . base_url("event/" . $slug . "/contact") . "'>Contact Organisers</a></li>";
+                $contact_disp="Contact Web Admin";
+              } else {
+                $contact_disp="Contact Us";
+              }
+              ?>
+              <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $contact_disp; ?></a></li>
               <li><a href='<?= $this->session->static_pages['add-listing']['loc']; ?>'><?= $this->session->static_pages['add-listing']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['search']['loc']; ?>'><?= $this->session->static_pages['search']['display']; ?></a></li>
               <li><a href='<?= $this->session->static_pages['contact']['sub-menu']['support']['loc']; ?>'><?= $this->session->static_pages['contact']['sub-menu']['support']['display']; ?></a></li>
@@ -118,7 +127,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
           <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
           <div class="m-b-10 m-r-20" style="float: left;">
             <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
-              <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>'  loading="lazy" />
+              <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>' loading="lazy" />
             </a>
           </div>
           <p>Consider supporting the wesbite via SnapScan</p>

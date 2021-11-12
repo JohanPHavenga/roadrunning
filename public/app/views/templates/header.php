@@ -303,7 +303,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                         foreach ($page['sub-menu'] as $sub_page) {
                           // exception for race contact
                           $url_bits = explode("/", uri_string());
-                          if (($url_bits[0] == "event") && ($sub_page['display'] == "Contact Me")) {
+                          if (($url_bits[0] == "event") && ($sub_page['display'] == "Contact Us")) {
                             echo "<li><a href='" . base_url("event/" . $slug . "/contact") . "'>Contact Organisers</a></li>";
                             $sub_page['display'] = "Contact Web Admin";
                           }

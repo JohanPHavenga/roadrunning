@@ -29,7 +29,7 @@ class Url_model extends Frontend_model {
 
     public function get_url_list($linked_to = NULL, $linked_id = 0, $by_urltype = false) {
 
-        $this->db->select("urls.*, urltype_name");
+        $this->db->select("urls.*, urltypes.*");
         $this->db->join("urltypes", "urltype_id");
         $this->db->from("urls");
         if ($linked_id > 0) {
