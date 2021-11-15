@@ -80,8 +80,8 @@ class Race extends Frontend_Controller {
         } else {
             $view_to_load = 'race_list';
         }
-        $this->data_to_views['banner_img'] = "run_11";
-        $this->data_to_views['banner_pos'] = "40%";
+        $this->data_to_views['banner_img'] = "run_16";
+        $this->data_to_views['banner_pos'] = "55%";
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -240,8 +240,8 @@ class Race extends Frontend_Controller {
         }
 //        wts($this->data_to_views['edition_list'],true);
 
-        $this->data_to_views['banner_img'] = "run_08";
-        $this->data_to_views['banner_pos'] = "30%";
+        $this->data_to_views['banner_img'] = "run_14";
+        $this->data_to_views['banner_pos'] = "50%";
         $this->data_to_views['page_title'] = "Race Results";
         $this->data_to_views['meta_description'] = "List of results for running races over the past 2 months in your selected regions";
         $this->load->view($this->header_url, $this->data_to_views);

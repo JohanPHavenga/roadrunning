@@ -54,6 +54,7 @@ class Main extends Frontend_Controller {
 
     // QUOTES for banner
     $this->data_to_views['quote_arr'] = $this->get_quote_data(4);
+    // wts($this->data_to_views['quote_arr'],1);
 
 //        $this->data_to_views['featured_events'] = $this->chronologise_data($this->data_to_views['featured_events'], "edition_date");
 

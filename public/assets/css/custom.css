@@ -6,6 +6,16 @@
     background-color: #F1F1FA !important;
  }
 
+ .inspiro-slider .slide-captions {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+ }
+ .inspiro-slider .slide-captions h2 {
+     font-size: 50px;
+     width: 90%;
+ }
+
 .modal-strip {
     background-color: #111;
     font-size: 1.3em;
