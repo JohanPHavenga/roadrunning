@@ -58,7 +58,9 @@ $body
 <div style = "border-top: 2px solid #E5E5E5;color:#111111;font-family:Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;font-size:11px;line-height:14px;margin:30px 0;">
 <div style = "margin:20px 0;"><a href='https://www.roadrunning.co.za/' title='Go to RoadRunningZA'><img alt = "RoadRunningZA" width = "110" height = "22" src = "https://www.roadrunning.co.za/img/logo-vec-22.png" /></a></div>
 <div style = "margin:20px 0;" > Copyright &copy;
-$year RoadRunningZA. All rights reserved.</div>
+$year RoadRunningZA. All rights reserved.<br>
+Note that RoadRunning.co.za does not have any affiliation with the race organisers. <u><a href='https://www.roadrunning.co.za/disclaimer' title='Go to RoadRunningZA'>Full disclaimer</a></u>
+</div>
 $post_text
 <p><a href='https://pos.snapscan.io/qr/LAzMFdGZ'><img src='https://www.roadrunning.co.za/assets/img/SnapCode_LAzMFdGZ.png' width='100' style='margin-bottom: 10px; width: 100px'></a><br>Please consider supporting my website via SnapScan to help keep the info flowing</p>
 </div>
@@ -171,7 +173,7 @@ EOT;
         $config['charset'] = $this->ini_array['email']['email_charset'];
         $config['useragent'] = $this->ini_array['email']['useragent'];
         $config['smtp_user'] = $this->ini_array['email']['smtp_user'];
-        $config['smtp_pass'] = $this->ini_array['email']['smtp_pass'];        
+        $config['smtp_pass'] = $this->ini_array['email']['smtp_pass'];
 
         $this->email->initialize($config);
 
@@ -389,10 +391,10 @@ class Frontend_Controller extends MY_Controller
                     ];
                     // if edition page, add the edition ID to the history table to make the summary easier
                     $url_sections = explode("/", current_url());
-                    if ($url_sections[3]=="event") {;
-                        $history_data['history_baseurl']=base_url()."event/".$url_sections[4];
+                    if ($url_sections[3] == "event") {;
+                        $history_data['history_baseurl'] = base_url() . "event/" . $url_sections[4];
                     }
-                    
+
                     if (isset($_SESSION['user']['user_id'])) {
                         $history_data['user_id'] = $_SESSION['user']['user_id'];
                     }
@@ -759,13 +761,13 @@ class Frontend_Controller extends MY_Controller
                 "priority" => 0.2,
                 "changefreq" => "yearly",
             ],
-            //            "disclaimer" => [
-            //                "display" => "Disclaimer",
-            //                "loc" => base_url("disclaimer"),
-            //                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
-            //                "priority" => 0.2,
-            //                "changefreq" => "yearly",
-            //            ],
+            "disclaimer" => [
+                "display" => "Disclaimer",
+                "loc" => base_url("disclaimer"),
+                "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-1 year")),
+                "priority" => 0.2,
+                "changefreq" => "yearly",
+            ],
         ];
 
         $this->session->set_userdata("static_pages", $static_pages);

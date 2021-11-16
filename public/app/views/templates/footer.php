@@ -48,9 +48,9 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
               $url_bits = explode("/", uri_string());
               if ($url_bits[0] == "event") {
                 echo "<li><a href='" . base_url("event/" . $slug . "/contact") . "'>Contact Organisers</a></li>";
-                $contact_disp="Contact Web Admin";
+                $contact_disp = "Contact Web Admin";
               } else {
-                $contact_disp="Contact Us";
+                $contact_disp = "Contact Us";
               }
               ?>
               <li><a href='<?= $this->session->static_pages['contact']['loc']; ?>'><?= $contact_disp; ?></a></li>
@@ -153,7 +153,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <div class="col-lg-9 text-right">
           <div class="copyright-text">&copy; <?= date("Y"); ?> RoadRunning.co.za. All Rights Reserved.
             <?php
-            $white_list = ["terms", "sitemap"];
+            $white_list = ["terms", "disclaimer", "sitemap"];
             foreach ($this->session->static_pages as $key => $page) {
               if (!in_array($key, $white_list)) {
                 continue;

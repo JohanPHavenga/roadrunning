@@ -71,6 +71,7 @@ $route['faq'] = 'main/faq';
 $route["faq/(.*)"] = 'main/faq/$1';
 $route['newsletter'] = 'main/newsletter';
 $route['terms-conditions'] = 'main/terms_conditions';
+$route['disclaimer'] = 'main/disclaimer';
 $route['version'] = 'main/site_version';
 $route['training-programs'] = 'main/training_programs';
 $route["training-programs/(.*)"] = 'main/training_programs/$1';
