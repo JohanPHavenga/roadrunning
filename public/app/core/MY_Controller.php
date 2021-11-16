@@ -170,6 +170,9 @@ EOT;
         $config['smtp_crypto'] = $this->ini_array['email']['smtp_crypto'];
         $config['charset'] = $this->ini_array['email']['email_charset'];
         $config['useragent'] = $this->ini_array['email']['useragent'];
+        $config['smtp_user'] = $this->ini_array['email']['smtp_user'];
+        $config['smtp_pass'] = $this->ini_array['email']['smtp_pass'];        
+
         $this->email->initialize($config);
 
         $this->email->from($data['emailque_from_address'], $data['emailque_from_name']);
