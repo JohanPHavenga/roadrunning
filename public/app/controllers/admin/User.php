@@ -50,8 +50,8 @@ class User extends Admin_Controller
             $this->data_to_view['msg'] = "<p>Please use the <b>search box</b> above to seach for a user.</p>";
         }
 
-            //    wts($this->data_to_view['search_results']);
-            //    die();
+        //    wts($this->data_to_view['search_results']);
+        //    die();
 
         $this->data_to_view['heading'] = ["ID", "Name", "Surname", "Email", "Roles", "Actions"];
 
@@ -160,13 +160,27 @@ class User extends Admin_Controller
     }
 
 
-    public function view()
+    public function view($viewtype)
     {
         // load helpers / libraries
         $this->load->library('table');
 
-        $this->data_to_view["user_data"] = $this->user_model->get_user_list();
-        $this->data_to_view['heading'] = ["ID", "User Name", "User Surname", "User Email", "Club Name", "Actions"];
+        $params = [];
+        switch ($viewtype) {
+            case "registered":
+                $params['order_by'] = "lastlogin_date DESC";
+                $params['where'][] = "user_isconfirmed=1";
+                $params['where'][] = "lastlogin_date IS NOT NULL";
+                break;
+            case "lastlogin":
+                $date=date("Y-m-d",strtotime("-3 months"));
+                $params['order_by'] = "lastlogin_date DESC";
+                $params['where'][] = "lastlogin_date > '$date'";
+                break;
+        }
+
+        $this->data_to_view["user_data"] = $this->user_model->get_user_list($params);
+        $this->data_to_view['heading'] = ["Last Login Date", "User", "Email", "Last Login From", "Actions"];
 
         $this->data_to_view['create_link'] = $this->create_url;
         $this->data_to_header['title'] = "List of Users";

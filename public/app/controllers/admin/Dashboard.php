@@ -39,12 +39,15 @@ class Dashboard extends Admin_Controller {
             $this->load->model('admin/race_model');
             $this->load->model('admin/date_model');
             $this->load->model('admin/emailmerge_model');
+            $this->load->model('admin/user_model');
 
             $history_count = $this->history_model->record_count();
             $event_count = $this->event_model->record_count();
             $edition_count = $this->edition_model->record_count();
 //            $race_count = $this->race_model->record_count();
             $merge_count = $this->emailmerge_model->count_draft();
+            $reg_user_count = $this->user_model->count_reg_users();
+            $login_count = $this->user_model->count_login("-3 months");
 
             $this->data_to_view['dashboard_stats_list'] = [
                 [
@@ -62,18 +65,18 @@ class Dashboard extends Admin_Controller {
                     "uri" => "/admin/emailmerge/view",
                 ],
                 [
-                    "text" => "Number of Events",
-                    "number" => $event_count,
+                    "text" => "Registered Users",
+                    "number" => $reg_user_count,
                     "font-color" => "green-sharp",
-                    "icon" => "icon-rocket",
-                    "uri" => "/admin/event/view",
+                    "icon" => "icon-users",
+                    "uri" => "/admin/user/view/registered",
                 ],
                 [
-                    "text" => "Number of Editions",
-                    "number" => $edition_count,
+                    "text" => "Logins past 3 months",
+                    "number" => $login_count,
                     "font-color" => "blue-sharp",
-                    "icon" => "icon-calendar",
-                    "uri" => "/admin/edition/view",
+                    "icon" => "icon-login",
+                    "uri" => "/admin/user/view/lastlogin",
                 ],
                     //font-purple-soft
             ];

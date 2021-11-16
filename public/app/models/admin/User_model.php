@@ -39,16 +39,21 @@ class User_model extends Admin_model
         return false;
     }
 
-    public function get_user_list($limit = NULL, $start = NULL)
+    public function get_user_list($params=[])
     {
-        if (isset($limit) && isset($start)) {
-            $this->db->limit($limit, $start);
-        }
-
-        $this->db->select("users.*, club_name");
+        $this->db->select("users.*");
         $this->db->from("users");
-        $this->db->join('clubs', 'club_id');
-        $this->db->order_by('user_name', 'user_surname');
+        if (isset($params['where'])) {
+            foreach ($params['where'] as $where) {
+                $this->db->where($where);
+            }
+        }
+        if (isset($params['order_by'])) {
+            $this->db->order_by($params['order_by']);
+        } else {            
+            $this->db->order_by('user_name', 'user_surname');
+        }
+        // wts($this->db->get_compiled_select(),1);
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -142,9 +147,6 @@ class User_model extends Admin_model
                 $role_arr = $user_data['role_arr'];
                 unset($user_data['role_arr']);
             }
-            //            if (isset($user_data['user_password'])) {
-            //                $user_data['user_password'] = $this->hash_pass($user_data['user_password']);
-            //            }
         }
 
         $user_data['updated_date'] = date("Y-m-d H:i:s");
@@ -390,5 +392,26 @@ class User_model extends Admin_model
             return $data;
         }
         return false;
+    }
+
+    public function count_reg_users() {
+        $this->db->select("users.*,");
+        $this->db->from("users");
+        $this->db->where("lastlogin_date IS NOT NULL");
+        $this->db->where("user_isconfirmed", 1);
+        $query = $this->db->get();
+
+        return $query->num_rows();
+    }
+
+    public function count_login($from) {
+        $fromdate=date("Y-m-d",strtotime($from));
+        $this->db->select("user_id");
+        $this->db->from("users");
+        $this->db->where("lastlogin_date IS NOT NULL");
+        $this->db->where("lastlogin_date > ", $fromdate);
+        $query = $this->db->get();
+
+        return $query->num_rows();
     }
 }

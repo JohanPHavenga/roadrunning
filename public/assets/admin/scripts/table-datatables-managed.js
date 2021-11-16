@@ -55,10 +55,10 @@ var TableDatatablesManaged = (function () {
 		var table = $("#users_table");
 		table.dataTable({
 			order: [[0, "desc"]],
-			responsive: true,
+			responsive: false,
 			columnDefs: [
-				{ orderable: false, targets: [5] },
-				{ searchable: false, targets: [5] },
+				{ orderable: false, targets: [4] },
+				{ searchable: false, targets: [4] },
 				{ responsivePriority: 1, targets: 0 },
 				{ responsivePriority: 2, targets: -1 },
 				{ responsivePriority: 3, targets: 3 },

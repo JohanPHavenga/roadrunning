@@ -1,8 +1,10 @@
 <?php
 
-class Login extends Frontend_Controller {
+class Login extends Frontend_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('user_model');
         $this->load->model('role_model');
@@ -10,7 +12,8 @@ class Login extends Frontend_Controller {
         $this->load->model('region_model');
     }
 
-    public function logout($confirm = false) {
+    public function logout($confirm = false)
+    {
         $this->session->unset_userdata('user');
         $this->session->set_flashdata([
             'alert' => "Buckle your seat belt Dorothy, cause Kansas is going bye-bye. Also, you have been succesfully logged out of roadrunning.co.za",
@@ -19,7 +22,8 @@ class Login extends Frontend_Controller {
         redirect("/login");
     }
 
-    public function destroy($confirm = false) {
+    public function destroy($confirm = false)
+    {
         // testing function
         $this->session->sess_destroy();
         delete_cookie("session_token");
@@ -27,7 +31,8 @@ class Login extends Frontend_Controller {
         redirect("/logout/confirm");
     }
 
-    public function userlogin($test = false) {
+    public function userlogin($test = false)
+    {
         $this->data_to_views['page_title'] = "Login";
         $this->data_to_views['meta_description'] = "Log into RoadRunning.co.za";
         $this->data_to_views['form_url'] = base_url('login/userlogin/submit');
@@ -43,11 +48,14 @@ class Login extends Frontend_Controller {
         }
 
         // validation rules
-        $this->form_validation->set_rules('user_email', 'Email', 'required|valid_email',
-                [
-                    "required" => "Enter your email address to log in",
-                    "valid_email" => "Please enter a valid email address",
-                ]
+        $this->form_validation->set_rules(
+            'user_email',
+            'Email',
+            'required|valid_email',
+            [
+                "required" => "Enter your email address to log in",
+                "valid_email" => "Please enter a valid email address",
+            ]
         );
         $this->form_validation->set_rules('user_password', 'Password', 'required', ["required" => "Please enter your password"]);
 
@@ -95,7 +103,8 @@ class Login extends Frontend_Controller {
     //  Actual LOGIN
     // ================================================================================================
 
-    public function log_in_user($user_data, $role_arr, $debug = true) {
+    public function log_in_user($user_data, $role_arr, $debug = true)
+    {
         // set db user again
         $user_data['lastlogin_date'] = fdateLong();
         $user_data['updated_date'] = fdateLong();
@@ -128,10 +137,10 @@ class Login extends Frontend_Controller {
         // redirect to last valid page visited. Driven by last 5 urls saved in History module
         if (isset($_SESSION['last_5_urls'])) {
             if (
-                    (strpos($_SESSION['last_5_urls'][0], "confirm_email") !== false) ||
-                    (strpos($_SESSION['last_5_urls'][0], "reset_password") !== false) ||
-                    (strpos($_SESSION['last_5_urls'][0], "forgot_password") !== false) ||
-                    (strpos($_SESSION['last_5_urls'][0], "register") !== false)
+                (strpos($_SESSION['last_5_urls'][0], "confirm_email") !== false) ||
+                (strpos($_SESSION['last_5_urls'][0], "reset_password") !== false) ||
+                (strpos($_SESSION['last_5_urls'][0], "forgot_password") !== false) ||
+                (strpos($_SESSION['last_5_urls'][0], "register") !== false)
             ) {
                 redirect(base_url('user'));
                 die();
@@ -149,7 +158,8 @@ class Login extends Frontend_Controller {
     //  GOOGLE LOGIN
     // ================================================================================================
 
-    function glogin() {
+    function glogin()
+    {
         //Create Client Request to access Google API        
         $client = new Google_Client();
         $client->setApplicationName("RoadRunningZA");
@@ -167,7 +177,8 @@ class Login extends Frontend_Controller {
         header('Location: ' . $authUrl);
     }
 
-    function gcallback() {
+    function gcallback()
+    {
         //Create Client Request to access Google API
         $client = new Google_Client();
         $client->setApplicationName("RoadRunningZA");
@@ -187,10 +198,11 @@ class Login extends Frontend_Controller {
         $user = $service->userinfo->get(); //get user info 
         // check if user already exists in DB. Else create
         $user_id = $this->user_model->exists($user->email);
+
         if (!$user_id) {
             $user_data = [
-                "user_name" => "TeST",
-                "user_surname" => "TeST",
+                "user_name" => $user->given_name,
+                "user_surname" => $user->family_name,
                 "user_email" => $user->email,
             ];
             $role_arr = [2];
@@ -201,7 +213,7 @@ class Login extends Frontend_Controller {
             ];
             $user_id = $this->user_model->set_user($params);
         } else {
-            $role_arr = $this->role_model->get_role_list_per_user($user_id);
+            $role_arr = $this->role_model->get_role_list_per_user($user_id);           
         }
         // get user data from DB
         $user_data = $this->user_model->get_user_detail($user_id);
@@ -213,16 +225,14 @@ class Login extends Frontend_Controller {
         unset($user_data['club_name']);
 
         // ADD GOOGLE DATA HERE
-        if (empty($user_data['user_name'])) {
-            $user_data['user_name'] = $user->givenName;
-        }
-        if (empty($user_data['user_surname'])) {
-            $user_data['user_surname'] = $user->familyName;
-        }
+        // overwrite with data from google always
+        $user_data['user_name'] = $user->givenName;
+        $user_data['user_surname'] = $user->familyName;        
         $user_data['user_gender'] = $user->gender;
         $user_data['user_locale'] = $user->locale;
         $user_data['user_picture'] = $user->picture;
         $user_data['user_link'] = $user->link;
+        $user_data['user_isconfirmed'] = 1;
         $user_data['lastlogin_from'] = "google";
 
         $this->log_in_user($user_data, $role_arr);
@@ -232,8 +242,9 @@ class Login extends Frontend_Controller {
     //  FACEBOOK LOGIN
     // ================================================================================================
 
-    function fblogin() {
-//        ini_set('display_errors', 1);
+    function fblogin()
+    {
+        //        ini_set('display_errors', 1);
         $fb = new Facebook\Facebook([
             'app_id' => $_SESSION['web_data']['facebook']['app_id'],
             'app_secret' => $_SESSION['web_data']['facebook']['app_secret'],
@@ -242,16 +253,17 @@ class Login extends Frontend_Controller {
 
         $helper = $fb->getRedirectLoginHelper();
 
-//        $permissions = ['email', 'user_location', 'user_birthday', 'publish_actions'];
+        //        $permissions = ['email', 'user_location', 'user_birthday', 'publish_actions'];
         $permissions = ['email'];
-// For more permissions like user location etc you need to send your application for review
+        // For more permissions like user location etc you need to send your application for review
 
         $loginUrl = $helper->getLoginUrl(base_url('login/fbcallback'), $permissions);
 
         header("location: " . $loginUrl);
     }
 
-    function fbcallback() {
+    function fbcallback()
+    {
 
         $fb = new Facebook\Facebook([
             'app_id' => $_SESSION['web_data']['facebook']['app_id'],
@@ -293,25 +305,25 @@ class Login extends Frontend_Controller {
         // User Information Retrival begins................................................
         $me = $response->getGraphUser();
 
-//        $location = $me->getProperty('location');
-//        echo "Full Name: " . $me->getProperty('name') . "<br>";
-//        echo "First Name: " . $me->getProperty('first_name') . "<br>";
-//        echo "Last Name: " . $me->getProperty('last_name') . "<br>";
-//        echo "Gender: " . $me->getProperty('gender') . "<br>";
-//        echo "Email: " . $me->getProperty('email') . "<br>";
-//        echo "location: " . $location['name'] . "<br>";
-//        echo "Birthday: " . $me->getProperty('birthday')->format('d/m/Y') . "<br>";
-//        echo "Facebook ID: <a href='https://www.facebook.com/" . $me->getProperty('id') . "' target='_blank'>" . $me->getProperty('id') . "</a>" . "<br>";
-//        $profileid = $me->getProperty('id');
-//        echo "</br><img src='http://graph.facebook.com/$profileid/picture?type=normal'> ";
-//        echo "</br></br>Access Token : </br>" . $accessToken;        
-//        die();
+        //        $location = $me->getProperty('location');
+        //        echo "Full Name: " . $me->getProperty('name') . "<br>";
+        //        echo "First Name: " . $me->getProperty('first_name') . "<br>";
+        //        echo "Last Name: " . $me->getProperty('last_name') . "<br>";
+        //        echo "Gender: " . $me->getProperty('gender') . "<br>";
+        //        echo "Email: " . $me->getProperty('email') . "<br>";
+        //        echo "location: " . $location['name'] . "<br>";
+        //        echo "Birthday: " . $me->getProperty('birthday')->format('d/m/Y') . "<br>";
+        //        echo "Facebook ID: <a href='https://www.facebook.com/" . $me->getProperty('id') . "' target='_blank'>" . $me->getProperty('id') . "</a>" . "<br>";
+        //        $profileid = $me->getProperty('id');
+        //        echo "</br><img src='http://graph.facebook.com/$profileid/picture?type=normal'> ";
+        //        echo "</br></br>Access Token : </br>" . $accessToken;        
+        //        die();
 
         $user_id = $this->user_model->exists($me->getProperty('email'));
         if (!$user_id) {
             $user_data = [
-                "user_name" => "TeST",
-                "user_surname" => "TeST",
+                "user_name" => $me->getProperty('first_name'),
+                "user_surname" => $me->getProperty('last_name'),
                 "user_email" => $me->getProperty('email'),
             ];
             $role_arr = [2];
@@ -334,17 +346,14 @@ class Login extends Frontend_Controller {
         unset($user_data['club_name']);
 
         // ADD FACEBOOK DATA HERE
-        if (empty($user_data['user_name'])) {
-            $user_data['user_name'] = $me->getProperty('first_name');
-        }
-        if (empty($user_data['user_surname'])) {
-            $user_data['user_surname'] = $me->getProperty('last_name');
-        }
+        $user_data['user_name'] = $me->getProperty('first_name');
+        $user_data['user_surname'] = $me->getProperty('last_name');
+
         $user_data['user_gender'] = $me->getProperty('gender');
         $user_data['user_locale'] = $me->getProperty('location');
+        $user_data['user_isconfirmed'] = 1;
         $user_data['lastlogin_from'] = "facebook";
 
         $this->log_in_user($user_data, $role_arr);
     }
-
 }

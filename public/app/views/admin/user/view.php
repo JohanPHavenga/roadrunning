@@ -34,19 +34,20 @@
                             ];
                         
         
-                        $row['id']=$data_entry['user_id'];                  
+                        // $row['id']=$data_entry['user_id'];                  
                         $row['user_name']=$data_entry['user_name'];
                         $row['user_surname']=$data_entry['user_surname'];
                         $row['user_email']=$data_entry['user_email'];
-                        $row['club_name']=$data_entry['club_name'];
+                        $row['last_login_date']=$data_entry['lastlogin_date'];
+                        $row['last_login_from']=$data_entry['lastlogin_from'];
                         $row['actions']= fbuttonActionGroup($action_array);
                         
                         $this->table->add_row(
-                                $row['id'], 
-                                $row['user_name'], 
-                                $row['user_surname'],
+                                // $row['id'], 
+                                $row['last_login_date'],
+                                $row['user_name']." ". $row['user_surname'], 
                                 $row['user_email'],
-                                $row['club_name'],
+                                $row['last_login_from'],
                                 $row['actions']
                                 );
 //                        $this->table->add_row($row);

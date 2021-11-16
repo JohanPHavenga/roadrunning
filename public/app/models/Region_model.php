@@ -150,7 +150,8 @@ class Region_model extends Frontend_model {
     }
 
     // USER_REGION functions
-    public function get_user_region($user_id) {
+    public function get_user_region($user_id)
+    {
         $this->db->select("region_id");
         $this->db->from("user_region");
         $this->db->where(["user_id" => $user_id]);
@@ -161,8 +162,15 @@ class Region_model extends Frontend_model {
                 $data[] = $row['region_id'];
             }
             return $data;
+        } else {
+            $this->db->select("region_id");
+            $this->db->from("region");
+            $query = $this->db->get();
+            foreach ($query->result_array() as $row) {
+                $data[] = $row['region_id'];
+            }
+            return $data;
         }
-        return false;
     }
 
     public function set_user_region($user_id, $region_arr) {
