@@ -1,6 +1,6 @@
 <?= form_open($form_url); ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-9">
         <div class="portlet light">
             <div class="portlet-title">
                 <div class="caption">
@@ -284,7 +284,7 @@
     <?php
     if ($action == "edit") {
         ?>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="portlet light">
                 <div class="portlet-title">
                     <div class="caption">
@@ -299,7 +299,7 @@
                     echo form_label('Date Created', 'created_date');
                     echo form_input([
                         'value' => set_value('created_date', $race_detail['created_date']),
-                        'class' => 'form-control input-medium',
+                        'class' => 'form-control',
                         'disabled' => ''
                     ]);
 
@@ -308,7 +308,7 @@
                     echo form_label('Date Updated', 'updated_date');
                     echo form_input([
                         'value' => set_value('updated_date', $race_detail['updated_date']),
-                        'class' => 'form-control input-medium',
+                        'class' => 'form-control',
                         'disabled' => ''
                     ]);
 

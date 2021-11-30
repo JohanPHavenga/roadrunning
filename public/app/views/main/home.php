@@ -319,6 +319,7 @@ $this->load->view('templates/search_form');
         <div class="row body">
             <div class="col-lg-12">
                 <?php
+                // wts($last_edited_events,1);
                 if ($last_edited_events) {
                 ?>
                     <div class="races carousel" data-items="4" data-margin="15" data-dots="true">
@@ -337,8 +338,14 @@ $this->load->view('templates/search_form');
                                         <img src="<?= $edition['img_url']; ?>" alt="<?= $edition['edition_name']; ?>" loading="lazy"></a>
                                     <div class="race-title"><?= $edition['edition_name']; ?></div>
                                     <?php
+                                    // check vir cancelled 
+                                    if ($edition['edition_status']==3) {
+                                        ?>
+                                        <span class="race-badge" style="width: 75px; height: 70px; padding-top: 28px;">Cancelled</span>
+                                        <?php
+                                    } 
                                     // soek vir online entries
-                                    if ((array_key_exists(4, $edition['entrytype_list'])) && (array_key_exists(3, $edition['date_list']))) {
+                                    elseif ((array_key_exists(4, $edition['entrytype_list'])) && (array_key_exists(3, $edition['date_list']))) {
                                         if (strtotime($edition['date_list'][3][0]['date_start']) < time()) {
                                             if (strtotime($edition['date_list'][3][0]['date_end']) > time()) {
                                     ?>
