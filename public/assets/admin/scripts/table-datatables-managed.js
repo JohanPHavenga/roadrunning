@@ -21,12 +21,12 @@ var TableDatatablesManaged = (function () {
 	var initEditionsTable = function () {
 		var table = $("#editions_table");
 		table.dataTable({
-			order: [[4, "desc"]],
+			order: [[0, "desc"]],
 			responsive: true,
 			bStateSave: true,
 			columnDefs: [
-				{ orderable: false, targets: [6] },
-				{ searchable: false, targets: [6] },
+				{ orderable: false, targets: [-1] },
+				{ searchable: false, targets: [-1] },
 				{ responsivePriority: 1, targets: 0 },
 				{ responsivePriority: 2, targets: -1 },
 				{ responsivePriority: 3, targets: 1 },

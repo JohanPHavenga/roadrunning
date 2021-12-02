@@ -31,7 +31,7 @@ class Edition extends Admin_Controller
     $this->session->unset_userdata('dashboard_return_url');
 
     $this->data_to_view["edition_data"] = $this->edition_model->get_edition_list();
-    $this->data_to_view['heading'] = ["ID", "Edition Name", "Status", "Info Status", "Affiliation", "Edition Date", "Event Name", "Actions"];
+    $this->data_to_view['heading'] = ["Edition Date", "Edition Name", "Status", "Info Status", "Affiliation", "Event Name", "Actions"];
 
     $this->data_to_view['create_link'] = $this->create_url;
     $this->data_to_header['title'] = "List of Editions";
