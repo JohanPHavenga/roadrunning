@@ -42,6 +42,7 @@
                         $row['id'] = $data_entry['edition_id'];
                         $row['name'] = "<a href=" . $edit_url . " title='Edit Edition'>" . $data_entry['edition_name'] . "</a>";
                         $row['status'] = flableStatus($data_entry['edition_status']);
+                        $row['info_status'] = flableStatus($data_entry['edition_info_status']);
                         $row['affiliation'] = $data_entry['asa_member_abbr'];
                         $row['date'] = fdateShort($data_entry['edition_date']);
                         $row['event'] = $data_entry['event_name'];
