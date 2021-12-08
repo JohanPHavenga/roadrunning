@@ -197,7 +197,7 @@ class Edition extends Admin_Controller
       $this->data_to_view['edition_detail']['user_id'] = 60;
       $this->data_to_view['edition_detail']['edition_asa_member'] = '';
       $this->data_to_view['edition_detail']['edition_info_prizegizing'] = "00:00";
-      $this->data_to_view['edition_detail']['edition_date'] = fdateShort();
+      $this->data_to_view['edition_detail']['edition_date'] = false;
       if (isset($edition_id)) {
         $this->data_to_view['edition_detail']['event_id'] = $edition_id;
       }
@@ -211,7 +211,7 @@ class Edition extends Admin_Controller
       array('name_check' => 'Enter a valid year at the end of the Edition Name')
     );
     $this->form_validation->set_rules('event_id', 'Event', 'required|numeric|greater_than[0]', ["greater_than" => "Please select an event"]);
-    $this->form_validation->set_rules('edition_status', 'Edition status', 'required');
+    $this->form_validation->set_rules('edition_status', 'Edition status', 'required|greater_than[0]', ["greater_than" => "Please select a Status"]);
     $this->form_validation->set_rules('edition_date', 'Edition date', 'required');
     $this->form_validation->set_rules('edition_address', 'Edition Address', 'required');
     $this->form_validation->set_rules('edition_gps', 'GPS', 'trim|required');

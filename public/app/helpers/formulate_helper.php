@@ -13,9 +13,21 @@ function fyesNo($bool)
     }
 }
 
-function fraceDistance($distance)
+function fraceDistance($distance,$small=false)
 {
-    return floatval($distance) . "km";
+    if ($distance == 1.6) {
+        $dist="1";
+        $denom="mile";
+    } else {
+        $dist=floatval($distance);
+        $denom="km";
+    }
+
+    if ($small) {
+        return $dist."<small>".$denom."</small>";
+    } else {
+        return $dist.$denom;
+    }
 }
 
 function fdisplayCurrency($amount, $des = 0)

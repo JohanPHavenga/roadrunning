@@ -86,7 +86,7 @@
                 <div id="race_badges">
                   <?php
                   foreach ($edition_data['race_summary']['list'] as $race) {
-                    echo '<h3><a href="' . base_url('event/' . $slug . '/distances/' . url_title($race['name'])) . '"><span class="badge badge-' . $race['color'] . '">' . floatval($race['distance']) . '<small>km</small><br>'
+                    echo '<h3><a href="' . base_url('event/' . $slug . '/distances/' . url_title($race['name'])) . '"><span class="badge badge-' . $race['color'] . '">' . fraceDistance($race['distance'],true).'<br>'
                       . '<small>' . $race['type'] . '</small></span></a></h3>';
                   }
                   ?>

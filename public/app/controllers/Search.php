@@ -101,7 +101,7 @@ class Search extends Frontend_Controller {
         switch ($this->input->post("when")) {
             case "any":
                 $from_date = date("2016-10-01 00:00:00");
-                $to_date = date("Y-m-d H:i:s", strtotime("1 year"));
+                $to_date = date("Y-m-d H:i:s", strtotime("2 years"));
                 $search_params['limit'] = 250;
                 break;
             case "weekend":

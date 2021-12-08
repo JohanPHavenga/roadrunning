@@ -4,9 +4,15 @@
             <i class="icon-edit font-dark"></i>
             <span class="caption-subject font-dark bold uppercase"><?= ucfirst($action); ?> Edition</span>
         </div>
-        <div class='btn-group pull-right'>
-            <?= fbutton("Apply", "submit", "primary", NULL, "save_only"); ?>
-        </div>
+        <?php
+        if ($action == "edit") {
+        ?>
+            <div class='btn-group pull-right'>
+                <?= fbutton("Apply", "submit", "primary", NULL, "save_only"); ?>
+            </div>
+        <?php
+        }
+        ?>
     </div>
     <div class="portlet-body">
 
@@ -30,66 +36,108 @@
                         'type' => 'hidden',
                     ]);
                     ?>
-                    <p class='help-block' style='font-style: italic;'> Remember the <b>year</b> at the end</p>
 
+                    <p class='help-block' style='font-style: italic;'> Remember the <b>year</b> at the end<br>
                     <?php
-                    // EVENT INPUT ON ADD
-                    if ($action == "add") {
+                    if ($action == "edit") {
                     ?>
-                        <div class='row'>
-                            <div class='col-sm-12'>
-                                <div class='form-group'>
-                                    <?php
-                                    echo form_label('Part of Event <span class="compulsary">*</span>', 'event_id');
-                                    echo form_dropdown('event_id', $event_dropdown, set_value('event_id', $edition_detail['event_id']), ["id" => "event_id", "class" => "form-control input-xlarge"]);
-                                    echo form_input(['name' => 'edition_status', 'value' => set_value('edition_status', 1), 'type' => 'hidden',]);
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
+                        <b>Slug:</b> <a href='<?= base_url('/event/' . $edition_detail['edition_slug']); ?>' title='Preview' target='_blank'>
+                                <?= $edition_detail['edition_slug']; ?></a>
                     <?php
                     }
                     ?>
-                    <div class='row'>
-                        <div class='col-sm-12 col-md-12 col-lg-6'>
-                            <?php
-                            // EDITION STATUS    
-                            echo form_label('Edition Status <span class="compulsary">*</span>', 'edition_status');
-                            echo form_dropdown('edition_status', $status_dropdown, set_value('edition_status', $edition_detail['edition_status']), ["id" => "edition_status", "class" => "form-control"]);
-                            ?>
-                        </div>
-                        <div class='col-sm-12 col-md-12 col-lg-6'>
-                            <?php
-                            echo form_label('Info Status <span class="compulsary">*</span>', 'edition_info_status');
-                            echo form_dropdown('edition_info_status', $info_status_dropdown, set_value('edition_info_status', $edition_detail['edition_info_status']), ["id" => "edition_info_status", "class" => "form-control"]);
-                            ?>
-                        </div>
-                    </div>
-                    <?php
-                    ?>
+                    </p>
                 </div>
-                <div class='col-sm-5'>
-                    <?php
-                    if ($action == "edit") {
+                <?php
+                if ($action == "edit") {
+                ?>
+                    <div class='col-sm-12 col-md-5'>
+                        <?php
                         echo form_label('', 'event_id');
-                        echo "<p class='help-block'><b>Event:</b>" . $edition_detail['event_name'] . " (<a href='" . $event_edit_url . "'>Edit</a>)</p>";
+                        echo "<p class='help-block'><b>Event:</b> " . $edition_detail['event_name'] . " (<a href='" . $event_edit_url . "'>Edit</a>)</p>";
                         echo form_input([
                             'name' => 'event_id',
                             'id' => 'event_id',
                             'value' => set_value('event_id', $edition_detail['event_id']),
                             'type' => 'hidden',
                         ]);
-                    ?>
+                        ?>
                         <p class='help-block'><b>Town:</b> <?= $edition_detail['town_name']; ?></p>
                         <p class='help-block'> <b>Club:</b> <?= $edition_detail['club_name']; ?></p>
-                        <p class='help-block'><b>Slug:</b> <a href='<?= base_url('/event/' . $edition_detail['edition_slug']); ?>' title='Preview' target='_blank'>
-                                <?= $edition_detail['edition_slug']; ?></a></p>
+
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+
+        <?php
+        // EVENT INPUT ON ADD
+        if ($action == "add") {
+        ?>
+            <div class='form-group'>
+                <div class='row'>
+                    <div class='col-sm-12'>
+                        <?php
+                        echo form_label('Part of Event <span class="compulsary">*</span>', 'event_id');
+                        echo form_dropdown('event_id', $event_dropdown, set_value('event_id', $edition_detail['event_id']), ["id" => "event_id", "class" => "form-control input-xlarge"]);
+                        echo form_input(['name' => 'edition_status', 'value' => set_value('edition_status', 1), 'type' => 'hidden',]);
+                        ?>
+                    </div>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+        <div class='form-group'>
+            <div class='row'>
+                <div class='col-sm-12 col-md-12 col-lg-5'>
                     <?php
-                    }
+                    // EDITION STATUS    
+                    echo form_label('Status <span class="compulsary">*</span>', 'edition_status');
+                    echo form_dropdown('edition_status', $status_dropdown, set_value('edition_status', $edition_detail['edition_status']), ["id" => "edition_status", "class" => "form-control"]);
+                    ?>
+                </div>
+                <div class='col-sm-12 col-md-12 col-lg-5'>
+                    <?php
+                    echo form_label('Info Status <span class="compulsary">*</span>', 'edition_info_status');
+                    echo form_dropdown('edition_info_status', $info_status_dropdown, set_value('edition_info_status', $edition_detail['edition_info_status']), ["id" => "edition_info_status", "class" => "form-control"]);
                     ?>
                 </div>
             </div>
         </div>
+        <div class='form-group'>
+            <div class='row'>
+                <div class='col-sm-12 col-md-12 col-lg-5'>
+                    <?php
+                    echo form_label('Edition Date <span class="compulsary">*</span>', 'edition_date');
+                    echo '<div class="input-group date date-picker">';
+                    $edition_date_settings = [
+                        'name' => 'edition_date',
+                        'id' => 'edition_date',
+                        'class' => 'form-control',
+                    ];
+
+                    if ($edition_detail['edition_date']) {
+                        $edition_date_settings['value'] = set_value('edition_date', fdateShort($edition_detail['edition_date']));
+                    } else {
+                        $edition_date_settings['value'] = set_value('edition_date', '');
+                    }
+                    //'value' => set_value('edition_date', fdateShort($edition_detail['edition_date'])),
+                    echo form_input($edition_date_settings);
+                    echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
+                    ?>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-5">
+                    <?php
+                    echo form_label('Timing Provider', 'timingprovider_id');
+                    echo form_dropdown('timingprovider_id', $timingprovider_dropdown, set_value('timingprovider_id', $edition_detail['timingprovider_id']), ["id" => "timingprovider_id", "class" => "form-control"]);
+                    ?>
+                </div>
+            </div>
+        </div>
+
 
         <!-- FLAGS -->
         <div class="form-group">
@@ -125,35 +173,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- DATE & GPS -->
-            <div class="row">
-                <div class='col-sm-4'>
-                    <?php
-                    echo form_label('Edition Date <span class="compulsary">*</span>', 'edition_date');
-                    echo '<div class="input-group date date-picker">';
-                    echo form_input([
-                        'name' => 'edition_date',
-                        'id' => 'edition_date',
-                        'value' => set_value('edition_date', fdateShort($edition_detail['edition_date'])),
-                        'class' => 'form-control',
-                    ]);
-                    echo '<span class="input-group-btn"><button class="btn default" type="button"><i class="fa fa-calendar"></i></button></span></div>';
-                    ?>
-                </div>
-                <div class='col-sm-8'>
-                    <?php
-                    echo form_label('GPS <span class="compulsary">*</span>', 'edition_gps');
-                    echo form_input([
-                        'name' => 'edition_gps',
-                        'id' => 'edition_gps',
-                        'value' => set_value('edition_gps', $edition_detail['edition_gps']),
-                        'class' => 'form-control',
-                    ]);
-                    ?>
-                    <!--<p class='help-block' style='font-style: italic;'> Ex: -33.844204,19.015049 </p>-->
-                </div>
-            </div>
         </div>
 
         <!-- CONTACT / ASA -->
@@ -173,33 +192,30 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
+        <?php
+        if ($action == "edit") {
+        ?>
             <div class="row">
                 <div class='col-sm-12'>
                     <p>
-                        <?= "Email: <a href='mailto:".$edition_detail['user_email']."'>".$edition_detail['user_email']."</a>";?>
-                        <?= " Contact: ".$edition_detail['user_contact']; ?>
+                        <?= "Contact email: <a href='mailto:" . $edition_detail['user_email'] . "'>" . $edition_detail['user_email'] . "</a>"; ?>
+                        <?php
+                        if ($edition_detail['user_contact']) {
+                            echo " Contact: " . $edition_detail['user_contact'];
+                        }
+                        ?>
 
-                </p>
+                    </p>
                 </div>
             </div>
-        </div>
+        <?php
+        }
+        ?>
 
-        <!-- SPONSORS / ENTRY TYPES / REG TYPES -->
+        <!--  ENTRY TYPES / REG TYPES -->
         <div class="form-group">
             <div class="row">
-                <div class='col-sm-5'>
-                    <?php
-                    echo form_label('Sponsor <span class="compulsary">*</span>', 'sponsor_id');
-                    echo form_multiselect(
-                        'sponsor_id[]',
-                        $sponsor_dropdown,
-                        set_value('sponsor_id', $sponsor_list),
-                        ["id" => "sponsor_id", "class" => "form-control", "size" => 5]
-                    );
-                    ?>
-                </div>
-                <div class='col-sm-3'>
+                <div class='col-sm-12 col-md-12 col-lg-6'>
                     <?php
                     echo form_label('Entry Types', 'entry_types');
                     echo form_multiselect(
@@ -210,7 +226,7 @@
                     );
                     ?>
                 </div>
-                <div class='col-sm-4'>
+                <div class='col-sm-12 col-md-12 col-lg-6'>
                     <?php
                     echo form_label('Registration Types', 'reg_types');
                     echo form_multiselect(
@@ -238,11 +254,6 @@
                         'value' => set_value('edition_address', $edition_detail['edition_address'], false),
                         'class' => 'form-control',
                     ]);
-                    //                            echo form_textarea([
-                    //                                'name' => 'edition_address',
-                    //                                'id' => 'edition_address',
-                    //                                'value' => set_value('edition_address', $edition_detail['edition_address'], false),
-                    //                            ]);
                     ?>
                 </div>
                 <div class="form-group">
@@ -255,32 +266,52 @@
                         'value' => set_value('edition_address_end', $edition_detail['edition_address_end'], false),
                         'class' => 'form-control',
                     ]);
-                    //                            echo form_textarea([
-                    //                                'name' => 'edition_address_end',
-                    //                                'id' => 'edition_address_end',
-                    //                                'value' => set_value('edition_address_end', $edition_detail['edition_address_end'], false),
-                    //                            ]);
-                    ?>
-                </div>
-                <div class="form-group">
-                    <?php
-                    echo form_label('Timing Provider', 'timingprovider_id');
-                    echo form_dropdown('timingprovider_id', $timingprovider_dropdown, set_value('timingprovider_id', $edition_detail['timingprovider_id']), ["id" => "timingprovider_id", "class" => "form-control"]);
                     ?>
                 </div>
             </div>
+
             <div class='col-sm-6'>
                 <?php
                 if ($action == "edit") {
                     $address_nospaces = url_title($edition_detail['edition_address_end'] . ", " . $edition_detail['town_name'] . ", ZA");
                 ?>
-                    <iframe width="100%" height="250" frameborder="0" style="border:1" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
+                    <iframe width="100%" height="160" frameborder="0" style="border:1" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
                     </iframe>
                 <?php
                 }
                 ?>
             </div>
         </div>
+        <div class="form-group">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <?php
+                    echo form_label('GPS <span class="compulsary">*</span>', 'edition_gps');
+                    echo form_input([
+                        'name' => 'edition_gps',
+                        'id' => 'edition_gps',
+                        'value' => set_value('edition_gps', $edition_detail['edition_gps']),
+                        'class' => 'form-control',
+                    ]);
+                    ?>
+                    <!--<p class='help-block' style='font-style: italic;'> Ex: -33.844204,19.015049 </p>-->
+                </div>
+                <div class='col-sm-5'>
+                    <?php
+                    echo form_label('Sponsor <span class="compulsary">*</span>', 'sponsor_id');
+
+                    // echo form_dropdown('sponsor_id', $sponsor_dropdown, set_value('sponsor_id', $sponsor_list), ["id" => "sponsor_id", "class" => "form-control"]);
+                    echo form_multiselect(
+                        'sponsor_id[]',
+                        $sponsor_dropdown,
+                        set_value('sponsor_id', $sponsor_list),
+                        ["id" => "sponsor_id", "class" => "form-control", "size" => 1]
+                    );
+                    ?>
+                </div>
+            </div>
+        </div>
+
         <div class='form-group'>
             <div class="row">
                 <div class='col-sm-12'>

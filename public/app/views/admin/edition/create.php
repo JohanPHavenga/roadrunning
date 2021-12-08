@@ -44,8 +44,10 @@ if ($action == "edit") {
 <div class="row">
   <div class="col-md-12">
     <div class='btn-group' style='padding-bottom: 20px;'>
-      <?php
+      <?php      
+      if ($action == "edit") {      
       echo fbutton($text = "Apply", $type = "submit", $status = "primary", NULL, "save_only");
+      }
       echo fbutton($text = "Save", $type = "submit", $status = "success");
       ?>
     </div>
