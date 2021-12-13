@@ -11,6 +11,26 @@ class Club_model extends Admin_model {
         return $this->db->count_all("clubs");
     }
 
+    public function club_search($ss) {
+        $this->db->select("clubs.*, town_name, province_name");
+        $this->db->from("clubs");
+        $this->db->join('towns', 'town_id', 'left');
+        $this->db->join('provinces', 'province_id', 'left');
+        $this->db->or_where("club_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("town_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->order_by('club_name');
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['club_id']] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+
     public function get_club_id($club_name, $create = []) {
         $this->db->select("club_id");
         $this->db->from("clubs");
