@@ -175,6 +175,14 @@ a.btn:not([href]):not([tabindex]):hover, a.btn:not([href]):not([tabindex]):focus
 {
     background-color: #26B8F3;
 }
+
+
+a:hover span {
+    color: #fff;
+    text-decoration: none;
+}
+
+
 .btn:hover, 
 .btn-outline:hover,.btn .btn-outline:hover,
 .btn-light:hover, .btn .btn-light:hover,
@@ -208,10 +216,6 @@ a:hover,
     color: #26B8F3;
 }
 
-a:hover span {
-    color: #26B8F3;
-    text-decoration: underline;
-}
 
 #mainMenu nav > ul > li .dropdown-menu > li > a:hover span {
     color: #fff;

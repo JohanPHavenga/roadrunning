@@ -200,6 +200,18 @@ class Main extends Frontend_Controller {
     $this->load->view($this->footer_url, $this->data_to_views);
   }
 
+  public function friends() {
+    $this->data_to_views['banner_img'] = "run_14";
+    $this->data_to_views['banner_pos'] = "40%";
+    $this->data_to_views['page_title'] = "Friends";
+    $this->data_to_views['meta_description'] = "Links to some other awesome people in the running community";
+    $this->load->view($this->header_url, $this->data_to_views);
+    $this->load->view($this->banner_url, $this->data_to_views);
+    $this->load->view($this->notice_url, $this->data_to_views);
+    $this->load->view('main/friends', $this->data_to_views);
+    $this->load->view($this->footer_url, $this->data_to_views);
+  }
+
   private function get_quote_data($count) {
     $this->load->model('quote_model');
     $this->load->helper('file');

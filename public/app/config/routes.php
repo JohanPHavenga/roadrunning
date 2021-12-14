@@ -75,6 +75,7 @@ $route['disclaimer'] = 'main/disclaimer';
 $route['version'] = 'main/site_version';
 $route['training-programs'] = 'main/training_programs';
 $route["training-programs/(.*)"] = 'main/training_programs/$1';
+$route['friends'] = 'main/friends';
 $route['support'] = 'main/support';
 $route['user/donate'] = 'main/support';
 //$route['search'] = 'main/search';
