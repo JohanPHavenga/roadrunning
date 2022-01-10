@@ -234,6 +234,7 @@ class Event extends Frontend_Controller
 
 
     $this->data_to_views['route_maps'] = $this->get_routemap_arr($slug);
+    $this->data_to_views['route_profile'] = $this->get_routeprofile_arr($slug);
     $this->data_to_views['tshirt'] = $this->get_tshirt_arr($slug);
 
     if ((isset($this->data_to_views['url_list'][2])) || (isset($this->data_to_views['file_list'][2]))) {
@@ -384,6 +385,37 @@ class Event extends Frontend_Controller
     }
 
     return $route_maps;
+  }
+
+  private function get_routeprofile_arr($slug)
+  {
+    $route_profile = [];
+    if (isset($this->data_to_views['file_list'][12])) {
+      $route_profile['edition']['url'] = base_url("file/edition/" . $slug . "/route profile/" . $this->data_to_views['file_list'][12][0]['file_name']);
+      $route_profile['edition']['text'] = "Download route profile";
+      $route_profile['edition']['icon'] = "file-image";
+    } elseif (isset($this->data_to_views['url_list'][12])) {
+      $route_profile['edition']['url'] = $this->data_to_views['url_list'][12][0]['url_name'];
+      $route_profile['edition']['text'] = "View Route Profile";
+      $route_profile['edition']['icon'] = "external-link-alt";
+    }
+
+    // get race file and url lists
+    foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+      $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
+      $race_url_list = $this->url_model->get_url_list("race", $race_id, true);
+      if (isset($race_file_list[12])) {
+        $route_profile['race'][$race_id]['url'] = base_url("file/race/" . $slug . "/route profile/" . url_title($race['race_name']) . "/" . $race_file_list[12][0]['file_name']);
+        $route_profile['race'][$race_id]['text'] = $race['race_name'] . " " . $race_file_list[12][0]['filetype_buttontext'];
+        $route_profile['race'][$race_id]['icon'] = "file-image";
+      } elseif (isset($race_url_list[12])) {
+        $route_profile['race'][$race_id]['url'] = $race_url_list[12][0]['url_name'];
+        $route_profile['race'][$race_id]['text'] = $race['race_name'] . " Route Profile";
+        $route_profile['race'][$race_id]['icon'] = "external-link-alt";
+      }
+    }
+
+    return $route_profile;
   }
 
   private function get_flyer_arr($slug)
