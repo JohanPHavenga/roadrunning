@@ -17,6 +17,8 @@
                     on their website to ask questions or advise. </p>
                 <p>Coach Parry himself, the <u>Official Coaching Partner</u> for the <b>Comrades, Soweto Marathon & Om die Dam Ultra</b> will
                     be on hand to provide answers and give advise.</p>
+                <p><a href="<?= $coach_parry_link; ?>" class="btn btn-default"><i class="fa fa-running"></i> <?= $page_title; ?>s</a></p>
+                
                 <h4 class="text-uppercase">Training Webinars</h4>
                 <ul>
                     <li><a href="http://coachparry.com/faster-beyond-50-masterclass?via=roadrunningza">The Faster Beyond 50 Masterclass</a></li>

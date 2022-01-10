@@ -162,17 +162,17 @@ class Main extends Frontend_Controller {
   }
 
   public function training_programs($race_name = null) {
-    $this->data_to_views['banner_img'] = "run_05";
+    $this->data_to_views['banner_img'] = "run_15";
     $this->data_to_views['banner_pos'] = "40%";
 
     switch (strtolower(urldecode($race_name))) {
       case "marathon":
-        $t_prog_text = "Marathon Training Program";
+        $t_prog_text = "View Marathon Training Program";
         $t_prog_link = "https://coachparry.com/marathon-training-roadmap/?via=roadrunningza";
         break;
       case "half-marathon":
       case "half marathon":
-        $t_prog_text = "Half-Marathon Training Program";
+        $t_prog_text = "View Half-Marathon Training Program";
         $t_prog_link = "https://coachparry.com/half-marathon-training-roadmap/?via=roadrunningza";
         break;
       case "10km":
@@ -180,11 +180,11 @@ class Main extends Frontend_Controller {
       case "10km-road":
       case "10km-run":
       case "10km run":
-        $t_prog_text = "10K Training Program";
+        $t_prog_text = "View 10K Training Program";
         $t_prog_link = "https://coachparry.com/10k-training-roadmap/?via=roadrunningza";
         break;
       default:
-        $t_prog_text = "Training Program";
+        $t_prog_text = "View Training Program";
         $t_prog_link = "https://coachparry.com/join-coach-parry/?via=roadrunningza";
         break;
     }
