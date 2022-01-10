@@ -98,6 +98,11 @@ class Search extends Frontend_Controller {
 
         // WHEN
         set_cookie("search_when_pref", $this->input->post("when"), 172800);
+        if ($this->input->post_get("query")) {
+            $from_date = date("Y-m-d 00:00:00", strtotime("-2 weeks"));
+        } else {
+            $from_date = date("Y-m-d 00:00:00");
+        }
         switch ($this->input->post("when")) {
             case "any":
                 $from_date = date("2016-10-01 00:00:00");
@@ -105,24 +110,19 @@ class Search extends Frontend_Controller {
                 $search_params['limit'] = 250;
                 break;
             case "weekend":
-                $from_date = date("Y-m-d 00:00:00");
                 $to_date = date("Y-m-d 23:59:59", strtotime("next sunday"));
                 break;
             case "plus_30d":
-                $from_date = date("Y-m-d 00:00:00");
                 $to_date = date("Y-m-d 23:59:59", strtotime("30 days"));
                 break;
             case "plus_3m":
-                $from_date = date("Y-m-d 00:00:00");
                 $to_date = date("Y-m-d 23:59:59", strtotime("3 months"));
                 break;
             case "plus_6m":
-                $from_date = date("Y-m-d 00:00:00");
                 $to_date = date("Y-m-d 23:59:59", strtotime("6 months"));
                 $search_params['limit'] = 250;
                 break;
             case "plus_1y":
-                $from_date = date("Y-m-d 00:00:00", strtotime("-2 weeks"));
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
                 $search_params['limit'] = 250;
                 break;
@@ -131,7 +131,6 @@ class Search extends Frontend_Controller {
                 $to_date = date("Y-m-d 23:59:59");
                 break;
             default:
-                $from_date = date("Y-m-d 00:00:00", strtotime("-2 weeks"));
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
                 $search_params['limit'] = 250;
                 break;
