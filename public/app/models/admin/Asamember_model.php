@@ -18,6 +18,7 @@ class Asamember_model extends Admin_model {
             if ($show_only_active) {
                 $this->db->where("asa_member_status",1);
             }
+            $this->db->order_by("asa_member_name");
             $query = $this->db->get();
 
             if ($query->num_rows() > 0) {

@@ -18,19 +18,50 @@ class Edition extends Admin_Controller
     if (method_exists($this, $method)) {
       return call_user_func_array(array($this, $method), $params);
     } else {
-      $this->view($params);
+      $this->asa_options($params);
     }
   }
 
   // LIST VIEW
-  public function view()
+  public function asa_options()
+  {
+    $this->load->model('admin/asamember_model');
+    $this->data_to_view["asa_list"] = $this->asamember_model->get_asamember_list(1);
+    $this->data_to_header['title'] = "Choose ASA Member";
+    $this->data_to_header['crumbs'] = [
+      "Home" => "/admin",
+      "Editions" => "/admin/edition",
+      "List" => "",
+    ];
+
+    // load view
+    $this->load->view($this->header_url, $this->data_to_header);
+    $this->load->view("/admin/edition/asamember_option", $this->data_to_view);
+    $this->load->view($this->footer_url, $this->data_to_footer);
+  }
+
+  // LIST VIEW
+  public function view($asa_member_abbr = "",$timeframe="")
   {
     // load helpers / libraries
     $this->load->library('table');
     // unset dashboard return url session
     $this->session->unset_userdata('dashboard_return_url');
+    // set query params
+    $query_params = ["order_by" => "edition_date"];
+    if ($asa_member_abbr) {
+      $query_params["where"] = ["asa_member_abbr" => $asa_member_abbr];
+    }
+    if ($timeframe) {
+      $timeframe=-abs($timeframe);
+      $query_params["where"]["edition_date >"] = date("Y-m-d",strtotime($timeframe));
+    }
 
-    $this->data_to_view["edition_data"] = $this->edition_model->get_edition_list();
+    // wts($query_params,1);
+    
+    $field_list=["edition_id, edition_name", "edition_status", "event_id", "edition_date", "edition_info_status", "event_name", "asa_member_abbr"];
+    $this->data_to_view["edition_data"] = $this->edition_model->get_edition_list_new($query_params, $field_list);
+
     $this->data_to_view['heading'] = ["Edition Date", "Edition Name", "Status", "Info Status", "Affiliation", "Event Name", "Actions"];
 
     $this->data_to_view['create_link'] = $this->create_url;
@@ -221,7 +252,7 @@ class Edition extends Admin_Controller
     $this->form_validation->set_rules('user_id', 'Contact Person', 'required|numeric|greater_than[0]', ["greater_than" => "Please select a Contact Person"]);
 
 
-// wts($this->data_to_view,1);
+    // wts($this->data_to_view,1);
 
     // load correct view
     if ($this->form_validation->run() === FALSE) {
@@ -579,7 +610,7 @@ class Edition extends Admin_Controller
     }
 
     // CHECK TAGS
-    $edition_detail_new=$this->edition_model->get_edition_detail($new_edition_id);
+    $edition_detail_new = $this->edition_model->get_edition_detail($new_edition_id);
     $this->set_tags($new_edition_id, $edition_detail_new, $race_list);
 
     return $new_edition_id;
@@ -606,7 +637,7 @@ class Edition extends Admin_Controller
         "where" => ["edition_date >=" => $start_date, "edition_date <=" => $end_date],
         "order_by" => "edition_date",
       ];
-      $edition_list = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name","edition_status","event_id","edition_date","asa_member_abbr"]);
+      $edition_list = $this->edition_model->get_edition_list_new($query_params, ["edition_id, edition_name", "edition_status", "event_id", "edition_date", "asa_member_abbr"]);
       // merk die uit die lys wat nie gecopy moet word nie
       foreach ($edition_list as $edition_id => $edition) {
         $query_params = [
