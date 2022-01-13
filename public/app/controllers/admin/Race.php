@@ -209,8 +209,8 @@ class Race extends Admin_Controller {
 //            wts($race_data);
 //            wts($edition_info);
 //            die();
-      // set auto values
 
+      // set auto values
       $id = $this->race_model->set_race($action, $id, $race_data, false);
       if ($id) {
         $alert = "Race has been updated";

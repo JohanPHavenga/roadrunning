@@ -1814,7 +1814,7 @@ class Admin_Controller extends MY_Controller
         $this->load->model('admin/asafee_model');
         $this->load->model('admin/racetype_model');
 
-        // check for emtpy race_name 
+        // check for empty race_name 
         if (empty($race_data['race_name'])) {
             if (!isset($race_data['racetype_name'])) {
                 $racetype_data = $this->racetype_model->get_racetype_detail($race_data['racetype_id']);
@@ -1833,21 +1833,24 @@ class Admin_Controller extends MY_Controller
             $race_data['race_minimum_age'] = $asareg_list[$asareg_id]['asa_reg_minimum_age'];
         }
 
+        // wts($race_data,1);
         // check senior fees
-        if (isset($race_data['race_fee_senior_licenced'])) {
-            if (($race_data['race_fee_senior_licenced'] > 0) && ($race_data['race_fee_senior_unlicenced'] == 0)) {
+        if ($race_data['race_fee_flat']==0) {
+            if (isset($race_data['race_fee_senior_licenced'])) {
+                if (($race_data['race_fee_senior_licenced'] > 0) && ($race_data['race_fee_senior_unlicenced'] == 0)) {
 
-                $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance']);
-                if ($licence_fee > 0) {
-                    $race_data['race_fee_senior_unlicenced'] = $race_data['race_fee_senior_licenced'] + $licence_fee;
+                    $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance']);
+                    if ($licence_fee > 0) {
+                        $race_data['race_fee_senior_unlicenced'] = $race_data['race_fee_senior_licenced'] + $licence_fee;
+                    }
                 }
-            }
 
-            // check junior fees
-            if (($race_data['race_fee_junior_licenced'] > 0) && ($race_data['race_fee_junior_unlicenced'] == 0)) {
-                $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance'], "asa_fee_jnr");
-                if ($licence_fee > 0) {
-                    $race_data['race_fee_junior_unlicenced'] = $race_data['race_fee_junior_licenced'] + $licence_fee;
+                // check junior fees
+                if (($race_data['race_fee_junior_licenced'] > 0) && ($race_data['race_fee_junior_unlicenced'] == 0)) {
+                    $licence_fee = $this->asafee_model->get_asafee_from_distance($edition_info['edition_asa_member'], fdateYear($edition_info['edition_date']), $race_data['race_distance'], "asa_fee_jnr");
+                    if ($licence_fee > 0) {
+                        $race_data['race_fee_junior_unlicenced'] = $race_data['race_fee_junior_licenced'] + $licence_fee;
+                    }
                 }
             }
         }
