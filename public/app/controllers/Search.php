@@ -1,16 +1,19 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Search extends Frontend_Controller {
+class Search extends Frontend_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('edition_model');
         $this->load->model('race_model');
     }
 
-    public function index() {
+    public function index()
+    {
 
         $this->load->model('admin/result_model');
 
@@ -96,6 +99,26 @@ class Search extends Frontend_Controller {
         $race_search_params['where']['race_distance <'] = $to_dist;
 
 
+        // STATUS
+        switch ($this->input->post("status")) {
+            case 'active':
+                $search_params['where_in']['edition_status'] = [1, 17];
+                break;
+            case 'confirmed':
+                $search_params['where_in']['edition_status'] = [1, 17];
+                $search_params['where_in']['edition_info_status'] = [14, 15, 16];
+                break;
+            case 'verified':
+                $search_params['where_in']['edition_status'] = [1, 17];
+                $search_params['where']['edition_info_status'] = 16;
+                break;
+
+            default:
+
+                break;
+        }
+
+
         // WHEN
         set_cookie("search_when_pref", $this->input->post("when"), 172800);
         if ($this->input->post_get("query")) {
@@ -157,7 +180,7 @@ class Search extends Frontend_Controller {
         // limit does not work properly. added limit to time case above
         // $search_params['limit'] = 50;
 
-    //    wts($search_params,true);
+        //    wts($search_params,true);
         // DO THE SEARCH
         $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
         if (!empty($this->data_to_views['edition_list'])) {
@@ -175,10 +198,10 @@ class Search extends Frontend_Controller {
             }
         }
 
-//        echo $view_to_load;
-//        wts($this->input->post());
-//        wts($search_params, true);
-//        wts($this->data_to_views['edition_list'], true);
+        //        echo $view_to_load;
+        //        wts($this->input->post());
+        //        wts($search_params, true);
+        //        wts($this->data_to_views['edition_list'], true);
 
         $this->data_to_views['page_title'] = "Search";
         $this->load->view($this->header_url, $this->data_to_views);
@@ -188,7 +211,8 @@ class Search extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function tag($tag_type, $query) {
+    public function tag($tag_type, $query)
+    {
 
         $search_params['where']["edition_date >= "] = date("Y-m-d 00:00:00");
         $search_params['where']["edition_date <= "] = date("Y-m-d 23:59:59", strtotime("1 year"));
@@ -243,11 +267,11 @@ class Search extends Frontend_Controller {
             }
         }
 
-//        echo $view_to_load;
-//        wts($this->input->post());
-//        wts($this->data_to_views['edition_list']);
-//        wts($race_search_params);
-//        wts($search_params, true);
+        //        echo $view_to_load;
+        //        wts($this->input->post());
+        //        wts($this->data_to_views['edition_list']);
+        //        wts($race_search_params);
+        //        wts($search_params, true);
         // SHOW AS 
         set_cookie("listing_pref", $this->input->post("show"), 172800);
         if ($this->input->post("show") == "grid") {
@@ -264,5 +288,4 @@ class Search extends Frontend_Controller {
         $this->load->view('templates/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-
 }

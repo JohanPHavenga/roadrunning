@@ -19,7 +19,7 @@
                 ]);
                 ?>
             </div>
-            <div class="col-lg-2 col-6">
+            <div class="col-lg-1 col-3">
                 <?php
                 echo form_label('Distance', 'distance');
                 $dist_options = array(
@@ -33,6 +33,18 @@
                     'ultra' => 'Ultra Marathon',
                 );
                 echo form_dropdown('distance', $dist_options, set_value('distance'), ["id" => "distance"]);
+                ?>
+            </div>
+            <div class="col-lg-1 col-3">
+                <?php
+                echo form_label('Status', 'status');
+                $status_options = array(
+                    'all' => 'All',
+                    'active' => 'Active',
+                    'confirmed' => 'Confirmed',
+                    'verified' => 'Verified',                    
+                );
+                echo form_dropdown('status', $status_options, set_value('status'), ["id" => "status"]);
                 ?>
             </div>
             <div class="col-lg-2 col-6">
@@ -57,7 +69,7 @@
                 ?>
             </div>
 
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-2 col-6">
                 <?php
                 echo form_label('Where', 'where');
                 $loc_options = array(
