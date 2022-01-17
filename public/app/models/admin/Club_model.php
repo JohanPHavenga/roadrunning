@@ -103,6 +103,26 @@ class Club_model extends Admin_model {
         }
     }
 
+    public function get_club_races($club_id) {
+        if (!($club_id)) {
+            return false;
+        } else {
+            $this->db->select("events.*");
+            $this->db->from("organising_club");
+            $this->db->join('events', 'event_id', 'left');
+            $this->db->where('club_id', $club_id);
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row) {
+                    $data[$row['event_id']] = $row;
+                }
+                return $data;
+            }
+            return false;
+        }
+    }
+
     public function set_club($action, $club_id, $club_data=[]) {
         if (empty($club_data)) {
             $club_data = array(

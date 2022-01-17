@@ -117,9 +117,9 @@
                 </div>
                 <div class="portlet-body">
                     <div class="form-group">
-                        <?= form_label('Edition Links', 'updated_date'); ?>
                         <?php
                             if ($edition_links) {
+                                echo form_label('Edition Links', 'edition_links');
                                 echo "<ul>";
                                 foreach ($edition_links as $edition) {
                                     echo "<li><b>".fdateShort($edition['edition_date'])."</b>: <a target='_blank' href='".base_url("admin/edition/create/edit/".$edition['edition_id'])."'>".$edition['edition_name']."</a></li>";

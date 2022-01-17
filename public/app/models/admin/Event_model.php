@@ -616,11 +616,12 @@ class Event_model extends Admin_model {
         return $data;
     }
 
-    public function get_edition_list($event_id) {
+    public function get_edition_list($event_id, $newest=false) {
         $this->db->select("edition_id, edition_name, edition_date, edition_status, edition_slug");
         $this->db->from("editions");
         $this->db->where("event_id", $event_id);
         $this->db->where("edition_status", 1);
+        $this->db->order_by("edition_date");
 
         $query = $this->db->get();
 
@@ -631,7 +632,11 @@ class Event_model extends Admin_model {
                 $edition_url_name = encode_edition_name($data[$row['edition_id']]['edition_name']);
                 $data[$row['edition_id']]['edition_url'] = "/event/" . $row['edition_slug'];
             }
-            return $data;
+            if ($newest) {
+                return $data[array_key_first($data)];
+            }  else {
+                return $data;
+            }
         }
         return false;
     }

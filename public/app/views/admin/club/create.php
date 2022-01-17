@@ -72,4 +72,58 @@
             </div>
         </div>
     </div>
+    <?php
+    if ($action == "edit") {
+        // wts($club_detail);
+        ?>
+        <div class="col-md-6">
+            <div class="portlet light">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-edit font-dark"></i>
+                        <span class="caption-subject font-dark bold uppercase">More information</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-group">
+                        <?php
+                            if ($club_detail['event_list']) {
+                                echo form_label('Event Links', 'event_link');
+                                echo "<ul>";
+                                foreach ($club_detail['event_list'] as $event_id=>$event) {
+                                    echo "<li><b>".fdateShort($event['latest_edition']['edition_date'])."</b>: <a target='_blank' href='".base_url("admin/edition/create/edit/".$event['latest_edition']['edition_id'])."'>".$event['latest_edition']['edition_name']."</a></li>";
+                                }
+                                echo "</ul>";
+                            } else {
+                                echo "<p>No edition links</p>";
+                            }
+                        ?>
+                    </div>
+                    <?php
+                    //  DATES Created + Updated
+                    echo "<div class='form-group'>";
+                    echo form_label('Date Created', 'created_date');
+                    echo form_input([
+                        'value' => set_value('created_date', $club_detail['created_date']),
+                        'class' => 'form-control input-medium',
+                        'disabled' => ''
+                    ]);
+
+                    echo "</div>";
+                    echo "<div class='form-group'>";
+                    echo form_label('Date Updated', 'updated_date');
+                    echo form_input([
+                        'value' => set_value('updated_date', $club_detail['updated_date']),
+                        'class' => 'form-control input-medium',
+                        'disabled' => ''
+                    ]);
+
+                    echo "</div>";
+                    ?>
+                </div>
+            </div>        
+        </div>
+        <?php
+    }
+    ?>
 </div>

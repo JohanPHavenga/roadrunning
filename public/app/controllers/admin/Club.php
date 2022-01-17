@@ -135,6 +135,7 @@ class Club extends Admin_Controller
         // additional models
         $this->load->model('admin/town_model');
         $this->load->model('admin/sponsor_model');
+        $this->load->model('admin/event_model');
 
         // load helpers / libraries
         $this->load->helper('form');
@@ -165,6 +166,10 @@ class Club extends Admin_Controller
 
         if ($action == "edit") {
             $this->data_to_view['club_detail'] = $this->club_model->get_club_detail($id);
+            $this->data_to_view['club_detail']['event_list'] = $this->club_model->get_club_races($id);
+            foreach ($this->data_to_view['club_detail']['event_list'] as $event_id=>$event) {                
+                $this->data_to_view['club_detail']['event_list'][$event_id]['latest_edition']=$this->event_model->get_edition_list($event_id, true);
+            }
             $this->data_to_view['form_url'] = $this->create_url . "/" . $action . "/" . $id;
         } else {
             $this->data_to_view['club_detail']['club_status'] = 1;
