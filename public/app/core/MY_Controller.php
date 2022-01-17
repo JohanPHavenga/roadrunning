@@ -1092,7 +1092,7 @@ class Frontend_Controller extends MY_Controller
                         $icon = "info-circle";
                         break;
                     case 15:
-                        $msg = "<b>INFO INCOMPLETE</b> - All information loaded has been confirmed as correct, but listing is not complete";
+                        $msg = "<b>EVENT CONFIRMED</b> - Information loaded has been confirmed as correct. Waiting for complete information set from the organisers";
                         $short_msg = "Listing almost complete";
                         $state = "info";
                         $icon = "info-circle";
