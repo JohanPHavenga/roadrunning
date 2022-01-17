@@ -124,13 +124,19 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
           </div>
           <!-- end: Footer widget area 5 -->
 
-          <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
-          <div class="m-b-10 m-r-20" style="float: left;">
-            <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
-              <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>' loading="lazy" />
-            </a>
-          </div>
-          <p>Consider supporting the wesbite via SnapScan</p>
+          <?php
+          if ($url_bits[0] != "event") {
+          ?>
+            <p><span class='badge badge-info' style='font-size: 1.2em;'>SnapScan</span></p>
+            <div class="m-b-10 m-r-20" style="float: left;">
+              <a href="https://pos.snapscan.io/qr/LAzMFdGZ">
+                <img style='width: 100px;' src='<?= base_url("assets/img/SnapCode_LAzMFdGZ_100.webp"); ?>' loading="lazy" />
+              </a>
+            </div>
+            <p>Consider supporting the wesbite via SnapScan</p>
+          <?php
+          }
+          ?>
         </div>
       </div>
     </div>

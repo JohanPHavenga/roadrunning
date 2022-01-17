@@ -621,7 +621,7 @@ class Event_model extends Admin_model {
         $this->db->from("editions");
         $this->db->where("event_id", $event_id);
         $this->db->where("edition_status", 1);
-        $this->db->order_by("edition_date");
+        $this->db->order_by("edition_date", "DESC");
 
         $query = $this->db->get();
 
