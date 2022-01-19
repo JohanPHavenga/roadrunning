@@ -86,7 +86,7 @@ class Dashboard extends Admin_Controller {
                 'only_active' => 1,
                 'info_status' => [13, 14, 15],
                 'date_from' => date("Y-m-d"),
-                'date_to' => date("Y-m-d", strtotime("+3 months")),
+                'date_to' => date("Y-m-d", strtotime("+3 months"))
             ];
             $this->data_to_view['event_list_unconfirmed'] = $this->event_model->get_event_list_summary("date_range", $params);
 
@@ -99,6 +99,9 @@ class Dashboard extends Admin_Controller {
             $field_list = ["edition_id", "edition_name", "edition_slug", "edition_date", "edition_status","edition_info_status","edition_isfeatured", "edition_info_email_sent",
                 "asa_member_name", "asa_member_abbr", "user_email", "timingprovider_abbr"];
             $this->data_to_view['event_list_unconfirmed'] = $this->chronologise_data($this->edition_model->get_edition_list_new($query_params, $field_list, false), "edition_date");
+
+
+            // wts($this->data_to_view['event_list_unconfirmed'], 1);
 
             // no results
             $query_params = [

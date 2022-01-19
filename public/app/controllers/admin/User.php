@@ -44,7 +44,7 @@ class User extends Admin_Controller
         ];
 
         if ($this->input->get('u_query')) {
-            $this->data_to_view['search_results'] = $this->user_model->user_search($this->input->get('u_query'));
+            $this->data_to_view['search_results'] = $this->user_model->user_search(trim($this->input->get('u_query')));
             $this->data_to_view['msg'] = "<p>We could <b>not find</b> any user matching your search.<br>Please try again.</p>";
         } else {
             $this->data_to_view['msg'] = "<p>Please use the <b>search box</b> above to seach for a user.</p>";
@@ -262,7 +262,7 @@ class User extends Admin_Controller
         // set validation rules
         $this->form_validation->set_rules('user_name', 'Name', 'required');
         $this->form_validation->set_rules('user_surname', 'Surame', 'required');
-        $this->form_validation->set_rules('user_email', 'Email', 'valid_email');
+        $this->form_validation->set_rules('user_email', 'Email', 'trim|valid_email');
         $this->form_validation->set_rules('club_id', 'Club', 'required|numeric|greater_than[0]', ["greater_than" => "Please select a club for the user"]);
         $this->form_validation->set_rules('role_id[]', 'Role', 'required');
 

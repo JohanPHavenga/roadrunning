@@ -147,7 +147,8 @@ EOT;
                 $month = date("F", strtotime($row[$date_field]));
                 $day = date("d", strtotime($row[$date_field]));
 
-                $return_data[$year][$month][$day][$id] = $row;
+                $return_data[$year][$month][$day][$row['edition_slug']] = $row;
+                ksort($return_data[$year][$month][$day]);
             }
         }
         return $return_data;
