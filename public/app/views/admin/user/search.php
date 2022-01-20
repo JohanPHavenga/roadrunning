@@ -1,24 +1,20 @@
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption">
-            <div class="row">
-                <div class="col-md-7">
-                    <i class="icon-edit font-dark"></i>
-                    <span class="caption-subject font-dark bold uppercase"><?=$title;?></span>
+            <i class="icon-edit font-dark"></i>
+            <span class="caption-subject font-dark bold uppercase"><?= $title; ?></span>
+        </div>
+        <div style="margin: 10px 0 0 150px;">
+            <form class="search-form search-form-inline" action="<?= base_url('admin/user/search/'); ?>" method="GET" style="margin-top: -9px;">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search..." name="u_query" value="<?= $this->input->get('u_query'); ?>">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary submit">
+                            <i class="icon-magnifier"></i>
+                        </button>
+                    </span>
                 </div>
-                <div class="col-md-5">
-                    <form class="search-form search-form-inline" action="<?= base_url('admin/user/search/'); ?>" method="GET" style="margin-top: -9px;">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search..." name="u_query" value="<?= $this->input->get('u_query'); ?>">
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary submit">
-                                    <i class="icon-magnifier"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <div class="portlet-body">
