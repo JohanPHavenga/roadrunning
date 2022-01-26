@@ -33,6 +33,7 @@ class Cron extends Frontend_Controller
   {
     // set to run at midnight
     $this->history_purge();
+    $this->emailque_purge();
     $this->update_event_info_status();
     $this->autoemails_closing_date();
     $this->runtime_log_purge();
@@ -299,6 +300,25 @@ class Cron extends Frontend_Controller
     $this->log_runtime($log_data);
 
     echo "History purge complete with " . $log_data['runtime_count'] . " records removed - " . date("Y-m-d H:i:s") . "\n\r";
+  }
+
+  private function emailque_purge()
+  {
+    // removes emailque data older than a year
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+
+    echo "** EMAILQUE PURGE\n";
+    $this->load->model('emailque_model');
+
+    // remove hisroty records older than a year
+    $log_data['runtime_count'] = $this->emailque_model->remove_old_emails(date("Y-m-d", strtotime("-1 year")));
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+
+    echo "EmailQue purge complete with " . $log_data['runtime_count'] . " records removed - " . date("Y-m-d H:i:s") . "\n\r";
   }
 
   private function update_event_info_status()

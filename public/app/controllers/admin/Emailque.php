@@ -1,17 +1,20 @@
 <?php
 
-class Emailque extends Admin_Controller {
+class Emailque extends Admin_Controller
+{
 
     private $return_url = "/admin/emailque/view";
     private $create_url = "/admin/emailque/create";
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('admin/emailque_model');
         $this->ini_array = parse_ini_file("server_config.ini", true);
     }
 
-    public function _remap($method, $params = array()) {
+    public function _remap($method, $params = array())
+    {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         } else {
@@ -19,14 +22,15 @@ class Emailque extends Admin_Controller {
         }
     }
 
-    public function view($status_id = 4) {
+    public function view($status_id = 4, $top = 1000)
+    {
         // load helpers / libraries
         $this->load->library('table');
 
         $this->return_url = "/admin/emailque/view/" . $status_id;
 
         $this->data_to_view["emailque_status"] = $this->emailque_model->get_emailstatus_name($status_id);
-        $this->data_to_view["emailque_data"] = $this->emailque_model->get_emailque_list(0, $status_id);
+        $this->data_to_view["emailque_data"] = $this->emailque_model->get_emailque_list($top, $status_id);
         $this->data_to_view['heading'] = ["ID", "Subject", "To Address", "To Name", "Updated", "Actions"];
 
         if ($status_id == 4) {
@@ -44,7 +48,7 @@ class Emailque extends Admin_Controller {
         $this->data_to_header['crumbs'] = [
             "Home" => "/admin",
             "Email Module" => "/admin/emailque",
-            $this->data_to_view["emailque_status"]." Emails" => "",
+            $this->data_to_view["emailque_status"] . " Emails" => "",
         ];
 
         // set $action array in controller instead of view
@@ -58,7 +62,7 @@ class Emailque extends Admin_Controller {
                         "icon" => "icon-pencil",
                     ],
                     [
-                        "url" => "/admin/emailque/delete/" . $data_entry['emailque_id']."/".$data_entry['emailque_status'],
+                        "url" => "/admin/emailque/delete/" . $data_entry['emailque_id'] . "/" . $data_entry['emailque_status'],
                         "text" => "Delete",
                         "icon" => "icon-close",
                         "confirmation_text" => "<b>Are you sure?</b>",
@@ -120,7 +124,8 @@ class Emailque extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function create($action, $id = 0) {
+    public function create($action, $id = 0)
+    {
         // load helpers / libraries
         $this->load->helper('form');
         $this->load->library('form_validation');
@@ -200,11 +205,12 @@ class Emailque extends Admin_Controller {
         }
     }
 
-    public function delete($emailque_id=0,$status_id=4) {
+    public function delete($emailque_id = 0, $status_id = 4)
+    {
 
-        $this->return_url=$this->return_url."/".$status_id;
-        
-        if (($emailque_id == 0) AND ( !is_int($emailque_id))) {
+        $this->return_url = $this->return_url . "/" . $status_id;
+
+        if (($emailque_id == 0) and (!is_int($emailque_id))) {
             $this->session->set_flashdata('alert', 'Cannot delete record: ' . $emailque_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
@@ -230,7 +236,8 @@ class Emailque extends Admin_Controller {
     }
 
     // change status with URL call
-    public function status($emailque_id, $emailque_status, $return_status) {
+    public function status($emailque_id, $emailque_status, $return_status)
+    {
         $range = [4, 5, 6, 7];
         $valid_id = $this->emailque_model->check_id($emailque_id);
         if ((in_array($emailque_status, $range)) && ($valid_id)) {
@@ -256,7 +263,8 @@ class Emailque extends Admin_Controller {
     }
 
     // resend email by copy
-    public function resend($emailque_id) {
+    public function resend($emailque_id)
+    {
         $new_id = $this->emailque_model->copy_email($emailque_id);
         $status_update = $this->emailque_model->set_emailque_status($new_id, 4);
         if ($status_update) {
@@ -273,5 +281,4 @@ class Emailque extends Admin_Controller {
         $this->session->set_flashdata('status', $status);
         redirect($this->return_url);
     }
-
 }

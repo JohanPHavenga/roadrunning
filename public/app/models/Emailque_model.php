@@ -146,4 +146,21 @@ class Emailque_model extends Frontend_model {
         }
     }
 
+    public function remove_old_emails($before_date)
+    {
+        // get count for records older than date provided
+        $this->db->select("emailque_id");
+        $this->db->from("emailques");
+        $this->db->where('updated_date < ', $before_date);
+        $record_count = $this->db->count_all_results();
+
+        // remove old records
+        $this->db->trans_start();
+        $this->db->where('updated_date < ', $before_date);
+        $this->db->delete('emailques');
+        $this->db->trans_complete();
+
+        return $record_count;
+    }
+
 }
