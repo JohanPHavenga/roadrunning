@@ -108,6 +108,26 @@ class User_model extends Admin_model
         }
     }
 
+    public function get_user_detail_bulk($user_id_arr)
+    {
+        if (!($user_id_arr)) {
+            return false;
+        } else {
+            $this->db->select("user_id, user_name, user_surname, user_email");
+            $this->db->from("users");
+            $this->db->where_in('user_id', $user_id_arr);
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result_array() as $row) {
+                    $data[$row['user_id']] = $row;
+                }
+                return $data;
+            }
+            return false;
+        }
+    }
+
     public function get_user_name($id)
     {
         if (!($id)) {

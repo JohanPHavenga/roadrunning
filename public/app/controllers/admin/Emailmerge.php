@@ -1,17 +1,20 @@
 <?php
 
-class Emailmerge extends Admin_Controller {
+class Emailmerge extends Admin_Controller
+{
 
     private $return_url = "/admin/emailmerge/view";
     private $create_url = "/admin/emailmerge/create";
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('admin/emailmerge_model');
         $this->ini_array = parse_ini_file("server_config.ini", true);
     }
 
-    public function _remap($method, $params = array()) {
+    public function _remap($method, $params = array())
+    {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         } else {
@@ -19,7 +22,8 @@ class Emailmerge extends Admin_Controller {
         }
     }
 
-    public function view() {
+    public function view()
+    {
         // load helpers / libraries
         $this->load->library('table');
         $this->data_to_view['heading'] = ["ID", "Subject", "Status", "Count", "Updated", "Actions"];
@@ -64,7 +68,8 @@ class Emailmerge extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function wizard() {
+    public function wizard()
+    {
         // load helpers / libraries
         $this->load->helper('form');
         $this->load->library('form_validation');
@@ -160,12 +165,12 @@ class Emailmerge extends Admin_Controller {
                     $query_params["where"]["edition_date >="] = $this->input->post('date_from');
                     $query_params["where"]["edition_date <="] = $this->input->post('date_to');
                 }
-                
+
                 // need to put this in the session to allow for the fill of merege varibles - to find he correct editions from user IDs
                 $_SESSION['temp']['emailmerge']['dates']['from'] = $this->input->post('date_from');
                 $_SESSION['temp']['emailmerge']['dates']['to'] = $this->input->post('date_to');
                 $_SESSION['temp']['emailmerge']['edition_status'] = $this->input->post('status');
-//                wts($query_params);
+                //                wts($query_params);
 
                 $user_arr = $this->edition_model->get_edition_user_list($query_params);
             } else {
@@ -190,16 +195,17 @@ class Emailmerge extends Admin_Controller {
             );
             $emailmerge_id = $this->emailmerge_model->set_emailmerge("add", 0, $merge_data);
 
-//            wts($_POST);
-//            wts($emailtemplate);
-//            wts($user_list);
-//            wts($merge_data, 1);
+            //            wts($_POST);
+            //            wts($emailtemplate);
+            //            wts($user_list);
+            //            wts($merge_data, 1);
 
             redirect($this->create_url . "/edit/" . $emailmerge_id);
         }
     }
 
-    public function create($action, $id = 0) {
+    public function create($action, $id = 0)
+    {
         // load helpers / libraries
         $this->load->helper('form');
         $this->load->library('form_validation');
@@ -223,8 +229,11 @@ class Emailmerge extends Admin_Controller {
         if ($action == "edit") {
             $this->data_to_view['emailmerge_detail'] = $this->emailmerge_model->get_emailmerge_detail($id);
             $user_arr = explode(",", $this->data_to_view['emailmerge_detail']['emailmerge_recipients']);
-//            $this->data_to_view['user_dropdown'] = $this->user_model->get_user_dropdown(NULL, $user_arr);
-            $this->data_to_view['user_dropdown'] = $this->user_model->get_user_dropdown();
+            $this->data_to_view['recipient_count'] = count($user_arr);
+            // $this->data_to_view['recipient_count'] = substr_count($emailmerge_detail['emailmerge_recipients'],",");
+
+            //            $this->data_to_view['user_dropdown'] = $this->user_model->get_user_dropdown(NULL, $user_arr);
+            // $this->data_to_view['user_dropdown'] = $this->user_model->get_user_dropdown();
         } else {
             die("please use wizard");
         }
@@ -237,8 +246,8 @@ class Emailmerge extends Admin_Controller {
         // set validation rules
         $this->form_validation->set_rules('emailmerge_subject', 'Subject', 'required');
         $this->form_validation->set_rules('emailmerge_body', 'Body', 'required');
-        $this->form_validation->set_rules('emailmerge_recipients[]', 'Recipients', 'required',
-                array('required' => 'You need to select at least one recipient'));
+        // $this->form_validation->set_rules('emailmerge_recipients[]', 'Recipients', 'required',
+        //         array('required' => 'You need to select at least one recipient'));
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {
@@ -247,13 +256,13 @@ class Emailmerge extends Admin_Controller {
             $this->load->view($this->create_url, $this->data_to_view);
             $this->load->view($this->footer_url, $this->data_to_footer);
         } else {
-            $recipient_arr = $this->input->post('emailmerge_recipients');
-            asort($recipient_arr);
-            $recipient_str = implode(",", $recipient_arr);
+            // $recipient_arr = $this->input->post('emailmerge_recipients');
+            // asort($recipient_arr);
+            // $recipient_str = implode(",", $recipient_arr);
             $data = array(
                 'emailmerge_subject' => $this->input->post('emailmerge_subject'),
                 'emailmerge_body' => $this->input->post('emailmerge_body'),
-                'emailmerge_recipients' => $recipient_str,
+                // 'emailmerge_recipients' => $recipient_str,
             );
             $return_id = $this->emailmerge_model->set_emailmerge($action, $id, $data);
 
@@ -294,9 +303,10 @@ class Emailmerge extends Admin_Controller {
         }
     }
 
-    public function delete($emailmerge_id = 0) {
+    public function delete($emailmerge_id = 0)
+    {
 
-        if (($emailmerge_id == 0) AND ( !is_int($emailmerge_id))) {
+        if (($emailmerge_id == 0) and (!is_int($emailmerge_id))) {
             $this->session->set_flashdata('alert', 'Cannot delete record: ' . $emailmerge_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
@@ -321,7 +331,8 @@ class Emailmerge extends Admin_Controller {
         redirect($this->return_url);
     }
 
-    public function fetch_newsletter_data() {
+    public function fetch_newsletter_data()
+    {
 
         $this->load->model('admin/url_model');
         $this->load->model('admin/event_model');
@@ -350,7 +361,8 @@ class Emailmerge extends Admin_Controller {
         return $new_newsletter_data;
     }
 
-    public function formulate_newsletter_table($newsletter_data, $period, $is_newsletter = false) {
+    public function formulate_newsletter_table($newsletter_data, $period, $is_newsletter = false)
+    {
         $this->load->library('table');
         $this->load->model('admin/date_model');
         $date_list = $this->date_model->get_date_list("edition", 0, true);
@@ -383,7 +395,7 @@ class Emailmerge extends Admin_Controller {
                                 } else {
                                     $row['results'] = "No";
                                 }
-//                                $row['results'] = fyesNo($edition['edition_results_isloaded']);
+                                //                                $row['results'] = fyesNo($edition['edition_results_isloaded']);
                                 break;
                             case "future":
                                 if ($edition['edition_info_status'] == 16) {
@@ -396,8 +408,8 @@ class Emailmerge extends Admin_Controller {
                                 } else {
                                     $row['entries'] = "No";
                                 }
-//                                $row['info'] = fyesNo($edition['edition_info_isconfirmed']);
-//                                $row['entries'] = fyesNo($edition['edition_online_entry']);
+                                //                                $row['info'] = fyesNo($edition['edition_info_isconfirmed']);
+                                //                                $row['entries'] = fyesNo($edition['edition_online_entry']);
                                 break;
                         }
 
@@ -410,7 +422,8 @@ class Emailmerge extends Admin_Controller {
         return $this->table->generate();
     }
 
-    public function fill_variables($text, $data_arr) {
+    public function fill_variables($text, $data_arr)
+    {
         // to replace %name% with name in data_arr etc.
         $newsletter_data = $this->fetch_newsletter_data();
         $trans = array(
@@ -430,7 +443,8 @@ class Emailmerge extends Admin_Controller {
         return strtr($text, $trans);
     }
 
-    private function set_email_html($text, $merge_data) {
+    private function set_email_html($text, $merge_data)
+    {
         $post_text = "<p>This email was sent to " . $merge_data['email'];
         if (isset($merge_data['unsubscribe_url'])) {
             $url = $merge_data['unsubscribe_url'];
@@ -442,7 +456,9 @@ class Emailmerge extends Admin_Controller {
         return $html_body;
     }
 
-    public function get_merge_data($user_id, $linked_to, $linked_id) {
+
+    public function get_merge_data($user_id, $linked_to, $linked_id)
+    {
         $this->load->model('admin/user_model');
         $user_data = $this->user_model->get_user_detail($user_id);
         $unsubscribe_url = $this->formulate_unsubscribe_url($user_id, $linked_to, $linked_id);
@@ -485,15 +501,15 @@ class Emailmerge extends Admin_Controller {
                         "users.user_id" => $merge_data['id'],
                     ],
                     "order_by" => ["editions.edition_date" => "ASC"],
-                ];   
-//                wts($merge_data);
-//                wts($query_params);
-//                wts($_SESSION['temp']['emailmerge']['dates']);
+                ];
+                //                wts($merge_data);
+                //                wts($query_params);
+                //                wts($_SESSION['temp']['emailmerge']['dates']);
                 $user_arr = $this->edition_model->get_edition_user_list($query_params);
-                $merge_data['edition_name']=$user_arr[$merge_data['id']]["edition_name"];
-                $merge_data['edition_date']=fdateHumanFull($user_arr[$merge_data['id']]["edition_date"],true);
+                $merge_data['edition_name'] = $user_arr[$merge_data['id']]["edition_name"];
+                $merge_data['edition_date'] = fdateHumanFull($user_arr[$merge_data['id']]["edition_date"], true);
                 unset($merge_data['unsubscribe_url']);
-//                wts($user_arr,1);
+                //                wts($user_arr,1);
                 break;
             default:
                 die("linked to not defined");
@@ -502,40 +518,125 @@ class Emailmerge extends Admin_Controller {
         return $merge_data;
     }
 
-    public function merge($emailmerge_id, $test = false, $stop = false) {
+    public function replace_variables($body_text, $user_data)
+    {
+        foreach ($user_data as $field => $value) {
+            if (strpos($body_text, "%$field%")) {
+                $body_text = str_replace("%$field%", $value, $body_text);
+            }
+        }
+        return $body_text;
+    }
+
+    public function get_merge_data_edition($edition_id)
+    {
+
+        $this->load->model('admin/edition_model');
+        $this->load->model('admin/date_model');
+        $edition_detail = $this->edition_model->get_edition_detail_lite($edition_id);
+        $date_list = $this->date_model->get_date_list('edition', $edition_id, false, true);
+        $merge_data['edition_name'] = $edition_detail['edition_name'];
+        $merge_data['event_name'] = $edition_detail['event_name'];
+        $merge_data['event_date'] = fdateHumanFull($edition_detail['edition_date'], true);
+        $merge_data['town_name'] = $edition_detail['town_name'];
+        $url = $this->edition_model->get_edition_url_from_id($edition_id);
+        $merge_data['event_url'] = $url['edition_url'];
+        if (isset($date_list[3])) {
+            $merge_data['entries_close'] = fdateHumanFull($date_list[3][0]['date_end'], true, true);
+        }
+
+        return $merge_data;
+    }
+
+    public function get_merge_data_bulk_user($user_id_array, $edition_info, $emailmerge_data)
+    {
+        $this->load->model('admin/user_model');
+        $user_data = $this->user_model->get_user_detail_bulk($user_id_array);
+        // set main return array
+        foreach ($user_data as $user_id => $user) {
+            $unsubscribe_url = $this->formulate_unsubscribe_url($user_id, $emailmerge_data['emailmerge_linked_to'], $emailmerge_data['linked_id']);
+            $merge_data_user = array(
+                'id' => $user_id,
+                'name' => $user['user_name'],
+                'surname' => $user['user_surname'],
+                'email' => $user['user_email'],
+                'unsubscribe_url' => $unsubscribe_url,
+            );
+            $merge_data[$user_id] = $merge_data_user + $edition_info;
+            // add emailque info
+            $body_text = $this->replace_variables($emailmerge_data['emailmerge_body'], $merge_data[$user_id]);
+            $merge_data[$user_id]['emailque_data'] = array(
+                'emailque_subject' => $emailmerge_data['emailmerge_subject'],
+                'emailque_to_address' => $merge_data[$user_id]['email'],
+                'emailque_to_name' => $merge_data[$user_id]['name'] . " " . $merge_data[$user_id]['surname'],
+                'emailque_body' => $this->set_email_html($body_text, $merge_data[$user_id]),
+                'emailque_status' => 5,
+                'emailque_from_address' => $this->ini_array['email']['from_address'],
+                'emailque_from_name' => $this->ini_array['email']['from_name'],
+            );
+
+            // wts($emailmerge_data);
+            // wts($merge_data[$user_id], 1);
+            // wts($emailque_data,1);
+        }
+
+
+        return $merge_data;
+    }
+
+    public function merge($emailmerge_id, $test = false, $stop = false)
+    {
 
         // load user model
         $this->load->model('admin/emailque_model');
         // get the data
         $emailmerge_data = $this->emailmerge_model->get_emailmerge_detail($emailmerge_id);
+
         // get recipient list        
         if ($test) {
             $recipient_list = [60]; // 60 = info@roadrunning.co.za
         } else {
             $recipient_list = explode(",", $emailmerge_data['emailmerge_recipients']);
         }
-        // loop through recipients
-        foreach ($recipient_list as $user_id) {
-            $merge_data = $this->get_merge_data($user_id, $emailmerge_data['emailmerge_linked_to'], $emailmerge_data['linked_id']);
-            $body_text = $this->fill_variables($emailmerge_data['emailmerge_body'], $merge_data);
-            $emailque_data = array(
-                'emailque_subject' => $emailmerge_data['emailmerge_subject'],
-                'emailque_to_address' => $merge_data['email'],
-                'emailque_to_name' => $merge_data['name'] . " " . $merge_data['surname'],
-                'emailque_body' => $this->set_email_html($body_text, $merge_data),
-                'emailque_status' => 5,
-                'emailque_from_address' => $this->ini_array['email']['from_address'],
-                'emailque_from_name' => $this->ini_array['email']['from_name'],
-            );
+
+        // NEW MORE SLEEK VERSION FOR EDITION 2022-01-26
+        if ($emailmerge_data['emailmerge_linked_to'] == "edition") {
+            $merge_data_edition = $this->get_merge_data_edition($emailmerge_data['linked_id']);
+            $merge_data = $this->get_merge_data_bulk_user($recipient_list, $merge_data_edition,  $emailmerge_data);
+
+            // wts($merge_data);
 
             if ($stop) {
-                wts($emailque_data['emailque_body'], 1);
+                wts($merge_data['60']['emailque_data']['emailque_body'], 1);
+            }
+            foreach ($merge_data as $user) {
+                $emailque_id = $this->emailque_model->set_emailque("add", 0, $user['emailque_data']);
             }
 
-//            wts($emailque_data);
-//            die();
-//            $email_list[$user_id]=$emailque_data;
-            $emailque_id = $this->emailque_model->set_emailque("add", 0, $emailque_data);
+        } else {
+
+            foreach ($recipient_list as $user_id) {
+                $merge_data = $this->get_merge_data($user_id, $emailmerge_data['emailmerge_linked_to'], $emailmerge_data['linked_id']);
+                $body_text = $this->fill_variables($emailmerge_data['emailmerge_body'], $merge_data);
+                $emailque_data = array(
+                    'emailque_subject' => $emailmerge_data['emailmerge_subject'],
+                    'emailque_to_address' => $merge_data['email'],
+                    'emailque_to_name' => $merge_data['name'] . " " . $merge_data['surname'],
+                    'emailque_body' => $this->set_email_html($body_text, $merge_data),
+                    'emailque_status' => 5,
+                    'emailque_from_address' => $this->ini_array['email']['from_address'],
+                    'emailque_from_name' => $this->ini_array['email']['from_name'],
+                );
+
+                if ($stop) {
+                    wts($emailque_data['emailque_body'], 1);
+                }
+
+                //            wts($emailque_data);
+                //            die();
+                //            $email_list[$user_id]=$emailque_data;
+                $emailque_id = $this->emailque_model->set_emailque("add", 0, $emailque_data);
+            }
         }
 
         if ($emailque_id) {
@@ -558,13 +659,13 @@ class Emailmerge extends Admin_Controller {
 
         return $return;
 
-//        $this->session->set_flashdata('alert', $msg);
-//        $this->session->set_flashdata('status', $status);
-//        redirect($this->return_url);
+        //        $this->session->set_flashdata('alert', $msg);
+        //        $this->session->set_flashdata('status', $status);
+        //        redirect($this->return_url);
     }
 
-    public function set_status($emailmerge_id, $status_id) {
+    public function set_status($emailmerge_id, $status_id)
+    {
         $id = $this->emailmerge_model->set_emailmerge("edit", $emailmerge_id, ["emailmerge_status" => $status_id]);
     }
-
 }

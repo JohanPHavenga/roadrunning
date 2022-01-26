@@ -69,7 +69,7 @@ var ComponentsEditors = function () {
         $('#quote_quote').summernote({height: 200});
         $('#emailque_body').summernote({height: 400});
         $('#emailtemplate_body').summernote({height: 400});
-        $('#emailmerge_body').summernote({height: 400});
+        $('#emailmerge_body').summernote({height: 250});
         //API:
         //var sHTML = $('#summernote_1').code(); // get code
         //$('#summernote_1').destroy(); // destroy
