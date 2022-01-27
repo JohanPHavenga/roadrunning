@@ -45,6 +45,7 @@ class Emailque_model extends Admin_model {
             $this->db->limit($top);
         }
         $this->db->where("emailque_status", $status);  // status 5 = pending
+        $this->db->order_by("updated_date", "DESC");
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

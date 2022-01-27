@@ -22,7 +22,7 @@ class Emailque extends Admin_Controller
         }
     }
 
-    public function view($status_id = 4, $top = 1000)
+    public function view($status_id = 4, $top = 500)
     {
         // load helpers / libraries
         $this->load->library('table');

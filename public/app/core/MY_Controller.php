@@ -1584,7 +1584,7 @@ class Admin_Controller extends MY_Controller
                     ],
                     [
                         "text" => "Sent",
-                        "url" => 'admin/emailque/view/6',
+                        "url" => 'admin/emailque/view/6/500',
                         "icon" => "like",
                     ],
                     [
