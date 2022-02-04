@@ -86,7 +86,7 @@
                 <div id="race_badges">
                   <?php
                   foreach ($edition_data['race_summary']['list'] as $race) {
-                    echo '<h3><a href="' . base_url('event/' . $slug . '/distances/' . url_title($race['name'])) . '"><span class="badge badge-' . $race['color'] . '">' . fraceDistance($race['distance'],true).'<br>'
+                    echo '<h3><a href="' . base_url('event/' . $slug . '/distances/' . url_title($race['name'])) . '"><span class="badge badge-' . $race['color'] . '">' . fraceDistance($race['distance'], true) . '<br>'
                       . '<small>' . $race['type'] . '</small></span></a></h3>';
                   }
                   ?>
@@ -157,7 +157,7 @@
                       // website link
                       if (isset($url_list[1])) {
                       ?>
-                        <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                        <a href="<?= $url_list[1][0]['url_name']; ?>" class="btn btn-light">
                           <i class="fa fa-external-link-alt"></i> Race Website</a>
 
                       <?php
@@ -173,8 +173,26 @@
                       // facebook
                       if (isset($url_list[6])) {
                       ?>
-                        <a href="<?= $url_list['6'][0]['url_name']; ?>" class="btn btn-default btn-icon-holder" target="_blank">
-                          Facebook<i class="fa fa-facebook"></i></a>
+                        <a href="<?= $url_list[6][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-facebook" target="_blank">
+                          <?= $url_list[6][0]['urltype_buttontext']; ?><i class="fa fa-facebook"></i></a>
+
+                      <?php
+                      }
+                      // twitter
+                      if (isset($url_list[13])) {
+                        // wts($url_list[13]);
+                      ?>
+                        <a href="<?= $url_list[13][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-twitter" target="_blank">
+                          <?= $url_list[13][0]['urltype_buttontext']; ?><i class="fa fa-twitter"></i></a>
+
+                      <?php
+                      }
+                      // instagram
+                      if (isset($url_list[14])) {
+                        // wts($url_list[13]);
+                      ?>
+                        <a href="<?= $url_list[14][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-instagram" target="_blank">
+                          <?= $url_list[14][0]['urltype_buttontext']; ?><i class="fa fa-instagram"></i></a>
 
                       <?php
                       }
