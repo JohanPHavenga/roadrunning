@@ -233,6 +233,12 @@
               }
               ?>
             </div>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=roadrunning.co.za">
+              Share on Facebook
+            </a>
+            <a href="https://twitter.com/intent/tweet?url=<?=urlencode("roadrunning.co.za")?>">
+            Share on Twitter
+          </a>
           </div>
 
 

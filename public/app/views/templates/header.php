@@ -87,6 +87,8 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     });
   </script>
   <!-- auto ads end -->
+  <!-- share this -->
+  <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=61fd1fb6e7702a0019bef495&product=sop' async='async'></script>
   <?php
   if (isset($structured_data)) :
     echo $structured_data;
