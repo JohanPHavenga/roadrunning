@@ -26,7 +26,7 @@
                     <div class="col-lg-12">
 
                         <?php
-                        if ((empty($route_maps))&&(empty($route_profile))) {
+                        if ((empty($route_maps)) && (empty($route_profile))) {
                             $mailing_list_notice = "<p>If you would like to be notified once route maps are loaded, "
                                 . "please enter your email below or to the right to be added to the "
                                 . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";
@@ -57,18 +57,33 @@
                             }
                             ?>
                         <?php
+
+                            // if there is route maps
                         } else {
                         ?>
                             <div role="alert" class="m-b-30 alert alert-success">
-                                <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>Route Maps has been loaded! Click below to view</b>
+                                <i class="fa fa-<?= $status_notice['icon']; ?>"></i> <b>Route Maps has been loaded!</b>
                             </div>
                             <?php
                             if (isset($route_maps['edition'])) {
                             ?>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="<?= $route_maps['edition']['url']; ?>" class="btn btn-light">
-                                            <i class="fa fa-<?= $route_maps['edition']['icon']; ?>"></i> <?= $route_maps['edition']['text']; ?></a>
+                                        <?php
+                                        if (is_image($route_maps['edition']['url'])) {
+                                        ?>
+                                            <h4>Route Map</h4>
+                                            <p>
+                                                <img style="max-width: 100%;" src="<?= $route_maps['edition']['url']; ?>" title="<?= $edition_data['edition_name']; ?> Route Map" />
+                                            </p>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <a href="<?= $route_maps['edition']['url']; ?>" class="btn btn-light">
+                                                <i class="fa fa-<?= $route_maps['edition']['icon']; ?>"></i> <?= $route_maps['edition']['text']; ?></a>
+                                        <?php
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             <?php
@@ -79,10 +94,21 @@
                                     <div class="col-md-12">
                                         <?php
                                         foreach ($route_maps['race'] as $race_map) {
+                                            if (is_image($race_map['url'])) {
                                         ?>
-                                            <a href="<?= $race_map['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $race_map['icon']; ?>"></i>
-                                                <?= $race_map['text']; ?></a>
+                                                <h4><?= $race_map['text']; ?></h4>
+                                                <p style="margin-bottom: 10px;">
+                                                    <img style="max-width: 100%;" src="<?= $race_map['url']; ?>" title="<?= $race_map['text']; ?>" style="border: 1px solid #333;" />
+                                                </p>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <p>
+                                                    <a href="<?= $race_map['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $race_map['icon']; ?>"></i>
+                                                        <?= $race_map['text']; ?></a>
+                                                </p>
                                         <?php
+                                            }
                                         }
                                         ?>
                                     </div>
@@ -93,8 +119,21 @@
                             ?>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <a href="<?= $route_profile['edition']['url']; ?>" class="btn btn-light">
-                                            <i class="fa fa-<?= $route_profile['edition']['icon']; ?>"></i> <?= $route_profile['edition']['text']; ?></a>
+                                        <?php
+                                        if (is_image($route_profile['edition']['url'])) {
+                                        ?>
+                                            <h4>Route Profile</h4>
+                                            <p>
+                                                <img style="max-width: 100%;" src="<?= $route_profile['edition']['url']; ?>" title="<?= $edition_data['edition_name']; ?> Route Profile" />
+                                            </p>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <a href="<?= $route_profile['edition']['url']; ?>" class="btn btn-light">
+                                                <i class="fa fa-<?= $route_profile['edition']['icon']; ?>"></i> <?= $route_profile['edition']['text']; ?></a>
+                                        <?php
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             <?php
@@ -105,10 +144,21 @@
                                     <div class="col-md-12">
                                         <?php
                                         foreach ($route_profile['race'] as $race_map) {
+                                            if (is_image($race_map['url'])) {
                                         ?>
-                                            <a href="<?= $race_map['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $race_map['icon']; ?>"></i>
-                                                <?= $race_map['text']; ?></a>
+                                                <h4><?= $race_map['text']; ?></h4>
+                                                <p style="margin-bottom: 10px;">
+                                                    <img style="max-width: 100%;" src="<?= $race_map['url']; ?>" title="<?= $race_map['text']; ?>" style="border: 1px solid #333;" />
+                                                </p>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <p>
+                                                    <a href="<?= $race_map['url']; ?>" class="btn btn-light"><i class="fa fa-<?= $race_map['icon']; ?>"></i>
+                                                        <?= $race_map['text']; ?></a>
+                                                </p>
                                         <?php
+                                            }
                                         }
                                         ?>
                                     </div>
