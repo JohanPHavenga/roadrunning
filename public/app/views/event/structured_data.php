@@ -30,9 +30,10 @@ if (isset($date_list[3])) {
     $valid_to_date = fdateStructured($date_list[3][0]['date_end']);
     $avail = '"availability": "https://schema.org/InStock"';
     // as dit nog moet oop maak
-    if (strtotime($date_list[3][0]['date_start']) > time()) {
-        $avail = '"validFrom": "' . fdateStructured($date_list[3][0]['date_start']) . '"';
-    }
+    // hierdie veroorsaak 'n error
+    // if (strtotime($date_list[3][0]['date_start']) > time()) {
+    //     $avail = '"validFrom": "' . fdateStructured($date_list[3][0]['date_start']) . '"';
+    // }
     // reeds toegemaak
     if (strtotime($date_list[3][0]['date_end']) < time()) {
         $avail = '"availability": "https://schema.org/SoldOut"';

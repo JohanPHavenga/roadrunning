@@ -172,6 +172,23 @@ class Frontend_model extends MY_model {
         return false;
     }
 
+    public function remove_old_searches($before_date)
+    {
+        // get count for records older than date provided
+        $this->db->select("search_id");
+        $this->db->from("searches");
+        $this->db->where('created_date < ', $before_date);
+        $record_count = $this->db->count_all_results();
+
+        // remove old records
+        $this->db->trans_start();
+        $this->db->where('created_date < ', $before_date);
+        $this->db->delete('searches');
+        $this->db->trans_complete();
+
+        return $record_count;
+    }
+
     public function log_runtime($runtime_data) {
         return $this->db->insert('runtimes', $runtime_data);
     }

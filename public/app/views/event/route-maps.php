@@ -26,7 +26,7 @@
                     <div class="col-lg-12">
 
                         <?php
-                        if (empty($route_maps)) {
+                        if ((empty($route_maps))&&(empty($route_profile))) {
                             $mailing_list_notice = "<p>If you would like to be notified once route maps are loaded, "
                                 . "please enter your email below or to the right to be added to the "
                                 . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";

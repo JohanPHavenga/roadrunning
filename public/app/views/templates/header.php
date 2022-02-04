@@ -112,6 +112,16 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     ga('create', 'UA-85900175-2', 'auto');
     ga('send', 'pageview');
   </script>
+
+  <?php
+  if ($this->ini_array['enviroment']['server'] != "production") {
+  ?>
+    <div role="alert" class="alert alert-warning">
+      <i class="fa fa-check-circle" aria-hidden="true"></i> <b>DEVELOPMENT</b> - You are wokring on the dev site
+    </div>
+  <?php
+  }
+  ?>
   <div class="body-inner">
 
     <!-- Topbar -->
@@ -281,7 +291,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                 <ul>
                   <?php
                   // get url bits
-                  $url_bits = explode("/", uri_string());                  
+                  $url_bits = explode("/", uri_string());
                   // set whitelist to show in top menu
                   $white_list = ["races", "results", "resources", "about", "contact"];
                   foreach ($this->session->static_pages as $key => $page) {
