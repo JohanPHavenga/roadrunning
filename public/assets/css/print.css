@@ -1,0 +1,25 @@
+div.header-extras,
+div#mainMenu-trigger,
+div#topbar,
+div#search,
+div#mainMenu,
+div.alert,
+section.search-form-over,
+div.widget-sponsored,
+ins.adsbygoogle,
+footer#footer,
+div.modal,
+div.modal-strip,
+div.my-stuff,
+div.accordion
+{
+    display: none; 
+}
+
+#header .header-inner {
+    border: 0;
+}
+
+#print-race-table {
+    display:block;
+}

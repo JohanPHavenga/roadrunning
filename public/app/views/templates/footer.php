@@ -323,29 +323,33 @@ if ($this->ini_array['enviroment']['server'] != "production") {
   //if (($logged_in_user) && (in_array(1, $logged_in_user['role_list'])) && (isset($_GET['debug']))) {
   //    wts($this->session->most_viewed_pages);
 ?>
-  <h4 class="text-uppercase">Environment info</h4>
-  <p>
-    <?php
-    echo "Enviroment: " . $this->ini_array['enviroment']['server'] . "<br>";
-    echo "Controller: " . $this->router->fetch_class() . "<br>";
-    echo "Method: " . $this->router->fetch_method();
+  <div class="my-stuff">
+    <h4 class="text-uppercase">Environment info</h4>
+    <p>
+      <?php
+      echo "Enviroment: " . $this->ini_array['enviroment']['server'] . "<br>";
+      echo "Controller: " . $this->router->fetch_class() . "<br>";
+      echo "Method: " . $this->router->fetch_method();
+      ?>
+    </p>
+    <h4 class="text-uppercase">New site</h4>
+    <?php wts($new_page_count); ?>
+
+    <h4 class="text-uppercase">User info</h4>
+    <?php //wts($logged_in_user); 
     ?>
-  </p>
-  <h4 class="text-uppercase">New site</h4>
-  <?php wts($new_page_count); ?>
 
-  <h4 class="text-uppercase">User info</h4>
-  <?php //wts($logged_in_user); 
-  ?>
+    <h4 class="text-uppercase">SESSION</h4>
+    <?php //wts($_SESSION); 
+    ?>
 
-  <h4 class="text-uppercase">SESSION</h4>
-  <?php //wts($_SESSION); 
-  ?>
-
-  <h4 class="text-uppercase">COOKIE</h4>
+    <h4 class="text-uppercase">COOKIE</h4>
+    <?php
+    wts($_COOKIE);
+    wts($rr_cookie);
+    ?>
+  </div>
 <?php
-  wts($_COOKIE);
-  wts($rr_cookie);
 }
 ?>
 </body>

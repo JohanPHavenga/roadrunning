@@ -1,6 +1,9 @@
 /*
     CUSTOM CSS RULES
 */
+#print-race-table {
+	display: none;
+}
 #slider .lazy {
 	background-image: none !important;
 	background-color: #f1f1fa !important;
