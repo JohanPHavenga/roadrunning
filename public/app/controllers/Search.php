@@ -28,6 +28,7 @@ class Search extends Frontend_Controller
             $search_params['like']["edition_name"] = $this->input->post_get("query");
             $search_params['or_like']["event_name"] = $this->input->post_get("query");
             $search_params['or_like']["town_name"] = $this->input->post_get("query");
+            $search_params['or_like']["town_name_alt"] = $this->input->post_get("query");
             $search_params['or_like']["province_name"] = $this->input->post_get("query");
             $search_params['or_where']["province_abbr"] = $this->input->post_get("query");
             $search_params['group_end'] = "";
@@ -173,8 +174,7 @@ class Search extends Frontend_Controller
 
 
         
-        // SORT
-       
+        // SORT       
         switch ($this->input->post("when")) {
             case "any":
             case "minus_6m":
@@ -192,7 +192,7 @@ class Search extends Frontend_Controller
         // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
 
         // NEW
-        $search_table_result = $this->edition_model->search($search_params);
+        $search_table_result = $this->edition_model->search($search_params,0);
         foreach ($search_table_result as $result) {
             $this->data_to_views['edition_list'][$result['edition_id']]=$result;
             // status msg

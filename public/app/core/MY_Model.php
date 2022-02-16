@@ -100,6 +100,8 @@ class MY_model extends CI_Model
                 $data[$row['edition_id']] = $row;
             }
             return $data;
+        } else {
+            return [];
         }
     }
 }

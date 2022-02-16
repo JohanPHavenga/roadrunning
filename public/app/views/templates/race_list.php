@@ -14,7 +14,7 @@
                         ?>
                         <div class="accordion accordion-simple m-t-10">
                             <?php
-                            if ($edition_list) {
+                            if (isset($edition_list)) {
                                 foreach ($edition_list as $edition_id => $edition) {
                                     $badge_state = false;
                                     foreach ($edition['race_list'] as $race) {
