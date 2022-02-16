@@ -14,6 +14,7 @@ class Search extends Frontend_Controller
 
     public function index()
     {
+        // wts($_POST);
 
         $this->load->model('admin/result_model');
 
@@ -95,8 +96,8 @@ class Search extends Frontend_Controller
                 $to_dist = 1000;
                 break;
         }
-        $race_search_params['where']['race_distance >='] = $from_dist;
-        $race_search_params['where']['race_distance <'] = $to_dist;
+        $search_params['where']['race_distance >='] = $from_dist;
+        $search_params['where']['race_distance <'] = $to_dist;
 
 
         // STATUS
@@ -130,7 +131,7 @@ class Search extends Frontend_Controller
             case "any":
                 $from_date = date("2016-10-01 00:00:00");
                 $to_date = date("Y-m-d H:i:s", strtotime("2 years"));
-                $search_params['limit'] = 250;
+                $search_params['limit'] = 500;
                 break;
             case "weekend":
                 $to_date = date("Y-m-d 23:59:59", strtotime("next sunday"));
@@ -143,11 +144,11 @@ class Search extends Frontend_Controller
                 break;
             case "plus_6m":
                 $to_date = date("Y-m-d 23:59:59", strtotime("6 months"));
-                $search_params['limit'] = 250;
+                $search_params['limit'] = 500;
                 break;
             case "plus_1y":
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
-                $search_params['limit'] = 250;
+                $search_params['limit'] = 500;
                 break;
             case "minus_6m":
                 $from_date = date("Y-m-d 00:00:00", strtotime("-6 months"));
@@ -155,7 +156,7 @@ class Search extends Frontend_Controller
                 break;
             default:
                 $to_date = date("Y-m-d 23:59:59", strtotime("1 year"));
-                $search_params['limit'] = 250;
+                $search_params['limit'] = 500;
                 break;
         }
         $search_params['where']["edition_date >= "] = $from_date;
@@ -170,38 +171,48 @@ class Search extends Frontend_Controller
             $view_to_load = 'race_list';
         }
 
+
+        
         // SORT
-        $sort = "ASC";
-        if (strtotime($from_date) < strtotime("Y-m-d 00:00:00")) {
-            $sort = "DESC";
+       
+        switch ($this->input->post("when")) {
+            case "any":
+            case "minus_6m":
+                $sort = "DESC";
+                break;
+            default:
+                $sort = "ASC";
+                break;
         }
         $search_params['order_by']["edition_date"] = $sort;
-        // LIMIT
-        // limit does not work properly. added limit to time case above
-        // $search_params['limit'] = 50;
 
-        //    wts($search_params,true);
+        // wts($search_params,true);
         // DO THE SEARCH
-        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
-        if (!empty($this->data_to_views['edition_list'])) {
-            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
-                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
-                // set has result field for both races and editions
-                $this->data_to_views['edition_list'][$edition_id]['has_results'] = false;
-                foreach ($edition_data['race_list'] as $race_id => $race) {
-                    $has_result = $this->result_model->result_exist_for_race($race_id);
-                    $this->data_to_views['edition_list'][$edition_id]['race_list'][$race_id]['has_results'] = $has_result;
-                    if ($has_result) {
-                        $this->data_to_views['edition_list'][$edition_id]['has_results'] = $has_result;
-                    }
-                }
+        // OLD
+        // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
+
+        // NEW
+        $search_table_result = $this->edition_model->search($search_params);
+        foreach ($search_table_result as $result) {
+            $this->data_to_views['edition_list'][$result['edition_id']]=$result;
+            // status msg
+            $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);            
+            // race stuffs
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]=$result;
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color']=$this->edition_model->get_race_color($result['race_distance']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][]=fraceDistance($result['race_distance']);
+            // results
+            $this->data_to_views['edition_list'][$result['edition_id']]['has_results'] = false;
+            $has_result = $this->result_model->result_exist_for_race($result['race_id']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['has_results'] = $has_result;
+            if ($has_result) {
+                $this->data_to_views['edition_list'][$result['edition_id']]['has_results'] = $has_result;
             }
         }
 
-        //        echo $view_to_load;
-        //        wts($this->input->post());
-        //        wts($search_params, true);
-        //        wts($this->data_to_views['edition_list'], true);
+        // wts($this->input->post());
+        // wts($search_params, true);
+        // wts($this->data_to_views['edition_list'], true);
 
         $this->data_to_views['page_title'] = "Search";
         $this->load->view($this->header_url, $this->data_to_views);

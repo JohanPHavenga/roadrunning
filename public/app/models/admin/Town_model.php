@@ -134,7 +134,8 @@ class Town_model extends Admin_model {
         $this->db->join('regions', 'region_id', 'left');
         $this->db->join('town_area', 'town_id', 'left');
         $this->db->join('areas', 'area_id', 'left');
-        $this->db->where("town_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("town_name LIKE '%" . addslashes($ss) . "%'");
+        $this->db->or_where("town_name_alt LIKE '%" . addslashes($ss) . "%'");
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -171,6 +172,7 @@ class Town_model extends Admin_model {
     public function set_town($action, $town_id) {
         $town_data = array(
             'town_name' => $this->input->post('town_name'),
+            'town_name_alt' => $this->input->post('town_name_alt'),
             'latitude_num' => $this->input->post('latitude_num'),
             'longitude_num' => $this->input->post('longitude_num'),
             'province_id' => $this->input->post('province_id'),

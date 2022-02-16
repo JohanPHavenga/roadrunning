@@ -38,6 +38,8 @@ class Cron extends Frontend_Controller
     $this->update_event_info_status();
     $this->autoemails_closing_date();
     $this->runtime_log_purge();
+    $this->build_search_table();
+
     // $this->add_baseurl(1500);
     // removed to own stand-alone script
     // $this->history_summary();
@@ -462,5 +464,66 @@ class Cron extends Frontend_Controller
     // LOG RUNTIME DATA
     $log_data['end'] = $this->get_date();
     $this->log_runtime($log_data);
+  }
+
+
+  function build_search_table()
+  {
+    $log_data['runtime_jobname'] = __FUNCTION__;
+    $log_data['start'] = $this->get_date();
+    echo "** BUILD SEARCH TABLE \n";
+    echo "Start timestamp: " . date("Y-m-d H:i:s") . "\n";
+    $control_count=0;
+
+    $this->load->model('edition_model');
+    $this->load->model('race_model');
+    $this->load->model('admin/result_model');
+
+    $this->race_model->clear_search_table();
+
+    // $edition_list = $this->race_model->add_race_info($this->edition_model->get_edition_list());
+    $edition_list = $this->edition_model->get_edition_list_search();    
+    $race_list = $this->race_model->get_race_list_search(); 
+
+    foreach ($race_list as $race) {
+      $search_data=$edition_list[$race['edition_id']];
+      $search_data['race_id']=$race['race_id'];
+      $search_data['race_name']=$race['race_name'];
+      $search_data['race_distance']=$race['race_distance'];
+      $search_data['race_distance_int']=intval($race['race_distance']);
+      $search_data['race_time_start']=$race['race_time_start'];
+      $search_data['racetype_abbr']=$race['racetype_abbr'];
+      $search_data['racetype_icon']=$race['racetype_icon'];
+      // wts($search_data,1);
+      $search_id = $this->race_model->set_search_table($search_data);
+      $control_count++;
+    }
+
+    $log_data['runtime_count'] = $control_count;
+    echo "SEARCH TABLE BUILD Done: " . date("Y-m-d H:i:s") . "\n";
+    echo "$control_count races listed \n\r";
+
+    // LOG RUNTIME DATA
+    $log_data['end'] = $this->get_date();
+    $this->log_runtime($log_data);
+
+
+    // if (!empty($edition_list)) {
+    //   foreach ($edition_list as $edition_id => $edition_data) {
+    //     $edition_list[$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+    //     // set has result field for both races and editions
+    //     $edition_list[$edition_id]['has_results'] = false;
+    //     foreach ($edition_data['race_list'] as $race_id => $race) {
+    //       $has_result = $this->result_model->result_exist_for_race($race_id);
+    //       $edition_list[$edition_id]['race_list'][$race_id]['has_results'] = $has_result;
+    //       if ($has_result) {
+    //         $edition_list[$edition_id]['has_results'] = $has_result;
+    //       }
+    //     }
+    //   }
+    // }
+    // wts($race_list,1);
+    // wts($edition_list);
+    // wts($status_list,1);
   }
 }

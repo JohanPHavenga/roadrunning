@@ -322,4 +322,30 @@ class Edition_model extends Frontend_model {
         return $this->db->count_all_results(); 
     }
 
+    public function get_edition_list_search($edition_id=NULL) {
+       
+        $field_arr = [
+            "edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured","edition_status", "edition_info_status",
+            "event_name", "town_name", "town_name_alt", "region_id","region_name", "province_name", "province_abbr"
+        ];
+        $select = implode(",", $field_arr);
+        $this->db->select($select);
+        $this->db->from("editions");  
+        $this->db->join('events', 'event_id');
+        $this->db->join('towns', 'town_id');
+        $this->db->join('regions', 'region_id');
+        $this->db->join('provinces', 'regions.province_id=provinces.province_id');
+        if ($edition_id) {
+            $this->db->where('edition_id', $edition_id);
+        }
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']]=$row;                
+            }
+            return $data;
+        }
+        return false;
+    }
+
 }

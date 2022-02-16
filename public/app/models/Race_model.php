@@ -229,4 +229,26 @@ class Race_model extends Frontend_model {
         return false;
     }
 
+
+    public function get_race_list_search() {
+       
+        $field_arr = [
+            "race_id", "edition_id", "race_name","race_distance", "race_time_start", "racetype_abbr", "racetype_icon"
+        ];
+        $select = implode(",", $field_arr);
+        $this->db->select($select);
+        $this->db->from("races");  
+        $this->db->join("racetypes","racetype_id");  
+        // $this->db->order_by("race_time_start", "ASC");  
+        $query = $this->db->get();
+        return $query->result_array();
+        // if ($query->num_rows() > 0) {
+        //     foreach ($query->result_array() as $row) {
+        //         $data[$row['edition_id']]['race_list'][$row['race_id']] = $row;
+        //     }
+        //     return $data;
+        // }
+        // return false;
+    }
+
 }

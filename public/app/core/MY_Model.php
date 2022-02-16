@@ -1,13 +1,16 @@
 <?php
 
-class MY_model extends CI_Model {
+class MY_model extends CI_Model
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
-    
-    public function get_race_color($distance) {
+
+    public function get_race_color($distance)
+    {
 
         switch (true) {
             case $distance <= 9:
@@ -42,18 +45,78 @@ class MY_model extends CI_Model {
         return $color;
     }
 
+    function set_search_table($search_data, $race_id = NULL)
+    {
+        if ($race_id) {
+            $query = $this->db->get_where('temp_search', array('race_id', $race_id));
+            if ($query->num_rows() > 0) { 
+                $this->db->trans_start();
+                $this->db->update('temp_search', $search_data, array('race_id' => $race_id));
+                $this->db->trans_complete();
+            }
+            $this->db->trans_start();
+            $this->db->update('temp_search', $search_data, array('race_id' => $race_id));
+            $this->db->trans_complete();
+        } else {
+            // ADD
+            $this->db->trans_start();
+            $this->db->insert('temp_search', $search_data);
+            // get event ID from Insert
+            $race_id = $this->db->insert_id();
+            $this->db->trans_complete();
+        }
+        return $race_id;
+    }
+
+    function clear_search_table()
+    {
+        $this->db->trans_start();
+        $this->db->truncate('temp_search');
+        $this->db->trans_complete();
+    }
+
+    function search($query_params, $show_query=false) {
+        $this->db->select("*");
+        $this->db->from("temp_search");
+        foreach ($query_params as $operator => $clause_arr) {
+            if (is_array($clause_arr)) {
+                foreach ($clause_arr as $field => $value) {
+                    $this->db->$operator($field, $value);
+                }
+            } else {
+                $this->db->$operator($clause_arr);
+            }
+        }
+        if (!isset($query_params['order_by'])) {
+            $this->db->order_by('edition_date', 'ASC');
+        }
+        if ($show_query) {
+            die($this->db->get_compiled_select());
+        }
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['edition_id']] = $row;
+            }
+            return $data;
+        }
+    }
 }
 //------------------------------------------------------------------------------
 //  FRONT END MODEL
 //------------------------------------------------------------------------------
-class Frontend_model extends MY_model {
+class Frontend_model extends MY_model
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
     // new way to pull status list using the status_
-    public function get_status_name($status_id) {
+    public function get_status_name($status_id)
+    {
         $this->db->select("status_name");
         $this->db->from("status");
         $this->db->where('status_id', $status_id);
@@ -67,8 +130,23 @@ class Frontend_model extends MY_model {
         }
         return false;
     }
+    public function get_status_list()
+    {
+        $this->db->select("status_id, status_name");
+        $this->db->from("status");
+        $query = $this->db->get();
 
-    public function get_edition_img_url($edition_id, $slug) {
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['status_id']] = $row['status_name'];
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function get_edition_img_url($edition_id, $slug)
+    {
         $file_detail = $this->file_exists("edition", $edition_id, 1);
         if ($file_detail) {
             return base_url("file/edition/" . $slug . "/logo/" . $file_detail['file_name']);
@@ -81,7 +159,8 @@ class Frontend_model extends MY_model {
         }
     }
 
-    public function file_exists($linked_to, $linked_id, $filetype_id) {
+    public function file_exists($linked_to, $linked_id, $filetype_id)
+    {
 
         $this->db->select("*");
         $this->db->from("files");
@@ -97,7 +176,8 @@ class Frontend_model extends MY_model {
         return false;
     }
 
-    public function get_edition_entrytype_list($edition_id = null) {
+    public function get_edition_entrytype_list($edition_id = null)
+    {
         if (!$edition_id) {
             return false;
         }
@@ -108,12 +188,13 @@ class Frontend_model extends MY_model {
             }
         } else {
             //$data = [$this->no_info_id];
-            $data=[];
+            $data = [];
         }
         return $data;
     }
 
-    public function log_search($search_query) {
+    public function log_search($search_query)
+    {
         $query = $this->db->get_where('searches', array('search_term' => $search_query));
         if ($query->num_rows() > 0) {
             $result = $query->result_array();
@@ -147,7 +228,8 @@ class Frontend_model extends MY_model {
         }
     }
 
-    public function get_most_searched($query_params = []) {
+    public function get_most_searched($query_params = [])
+    {
 
         $this->db->select("*");
         $this->db->from("searches");
@@ -160,7 +242,7 @@ class Frontend_model extends MY_model {
                 $this->db->$operator($clause_arr);
             }
         }
-//        die($this->db->get_compiled_select());
+        //        die($this->db->get_compiled_select());
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -189,16 +271,18 @@ class Frontend_model extends MY_model {
         return $record_count;
     }
 
-    public function log_runtime($runtime_data) {
+    public function log_runtime($runtime_data)
+    {
         return $this->db->insert('runtimes', $runtime_data);
     }
-    
-    public function runtime_log_cleanup($before_date) {
+
+    public function runtime_log_cleanup($before_date)
+    {
         // get count for records older than date provided
         $this->db->select("*");
         $this->db->from("runtimes");
         $this->db->where('runtime_end < ', $before_date);
-        $record_count=$this->db->count_all_results();
+        $record_count = $this->db->count_all_results();
 
         // remove old records
         $this->db->trans_start();
@@ -209,6 +293,7 @@ class Frontend_model extends MY_model {
         return $record_count;
     }
 
+    
 }
 
 
@@ -216,14 +301,17 @@ class Frontend_model extends MY_model {
 //  ADMIN MODEL
 //------------------------------------------------------------------------------
 
-class Admin_model extends MY_model {
+class Admin_model extends MY_model
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         // Load any front-end only dependencies
     }
 
-    public function get_status_dropdown() {
+    public function get_status_dropdown()
+    {
         $this->db->select("*");
         $this->db->from("status");
         $this->db->limit(3);
@@ -240,7 +328,8 @@ class Admin_model extends MY_model {
     }
 
     // new way to pull status list using the status_
-    public function get_status_list($use = NULL) {
+    public function get_status_list($use = NULL)
+    {
         $this->db->select("*");
         $this->db->from("status");
         if ($use) {
@@ -258,8 +347,9 @@ class Admin_model extends MY_model {
         }
         return false;
     }
-    
-    public function get_status_name($status_id) {
+
+    public function get_status_name($status_id)
+    {
         $this->db->select("status_name");
         $this->db->from("status");
         $this->db->where("status_id", $status_id);
@@ -272,7 +362,8 @@ class Admin_model extends MY_model {
         return false;
     }
 
-    public function get_linked_to_dropdown($count = 6, $start = 0) {
+    public function get_linked_to_dropdown($count = 6, $start = 0)
+    {
         $this->db->select("*");
         $this->db->from("linked_to");
         $this->db->limit($count, $start);
@@ -288,7 +379,8 @@ class Admin_model extends MY_model {
         return false;
     }
 
-    public function get_linked_to_list($count = 6, $start = 0) {
+    public function get_linked_to_list($count = 6, $start = 0)
+    {
         $this->db->select("*");
         $this->db->from("linked_to");
         $this->db->limit($count, $start);
@@ -303,7 +395,8 @@ class Admin_model extends MY_model {
         return false;
     }
 
-    public function set_results_flag($linked_to, $linked_id, $flag) {
+    public function set_results_flag($linked_to, $linked_id, $flag)
+    {
         $id_field = $linked_to . "_id";
         $table = $linked_to . "s";
         // new results status field also needs to be set
@@ -315,8 +408,8 @@ class Admin_model extends MY_model {
                 $this->db->update($table, ["edition_info_status" => $status], array($id_field => $linked_id));
             }
             $this->db->trans_complete();
-        } 
-        
+        }
+
         // return ID if transaction successfull
         if ($this->db->trans_status()) {
             return true;
@@ -325,8 +418,8 @@ class Admin_model extends MY_model {
         }
     }
 
-    public function log_runtime($runtime_data) {
+    public function log_runtime($runtime_data)
+    {
         return $this->db->insert('runtimes', $runtime_data);
     }
-
 }

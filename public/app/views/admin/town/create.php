@@ -21,6 +21,17 @@
                 ]);
 
                 echo "</div>";
+                
+                echo "<div class='form-group'>";
+                echo form_label('Alternate Name', 'town_name_alt');
+                echo form_input([
+                    'name' => 'town_name_alt',
+                    'id' => 'town_name_alt',
+                    'value' => set_value('town_name_alt', @$town_detail['town_name_alt'], false),
+                    'class' => 'form-control',
+                ]);
+
+                echo "</div>";
 
                 //  GPS
                 echo "<div class='form-group'>";

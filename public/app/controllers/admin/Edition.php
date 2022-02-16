@@ -261,12 +261,18 @@ class Edition extends Admin_Controller
       $this->load->view($this->create_url, $this->data_to_view);
       $this->load->view($this->footer_url, $this->data_to_footer);
     } else {
+      // actual save
       $old_edition_id = $this->edition_model->set_edition($action, $edition_id, [], false);
+
       if ($old_edition_id) {
         $alert = "<b>" . $this->input->post('edition_name') . "</b> has been successfully saved";
         $status = "success";
         $new_edition_detail = $this->edition_model->get_edition_detail($old_edition_id);
         if ($action == "edit") {
+
+          // update search table
+          $this->update_search_table($new_edition_detail, $this->data_to_view['race_list']);
+
           if ($this->input->post('edition_status') !== $this->data_to_view['edition_detail']['edition_status']) {
             $this->race_status_update(array_keys($this->data_to_view['race_list']), $this->input->post('edition_status'));
             $alert .= "<br>Status change on races also actioned";
@@ -318,6 +324,33 @@ class Edition extends Admin_Controller
 
       $this->session->set_flashdata(['alert' => $alert, 'status' => $status,]);
       redirect($this->return_url);
+    }
+  }
+
+  // updates search table when edition is saved
+  // does not add new races, nor removes them
+  function update_search_table($edition_detail,$race_detail) {
+    // wts($race_detail);
+    // wts($edition_detail);
+
+    $field_arr=["edition_id","edition_name","edition_slug","edition_date","edition_isfeatured","edition_status",
+    "edition_info_status","event_name","town_name","town_name_alt","region_id","region_name","province_name",
+    "province_abbr"];
+
+    foreach ($race_detail as $race_id=>$race) {
+    
+      $search_data['race_id']=$race_id;
+      foreach($field_arr as $field) {
+        $search_data[$field]=$edition_detail[$field];
+      }     
+      $search_data['race_name']=$race['race_name'];
+      $search_data['race_distance']=$race['race_distance'];
+      $search_data['race_distance_int']=intval($race['race_distance']);
+      $search_data['race_time_start']=$race['race_time_start'];
+      $search_data['racetype_abbr']=$race['racetype_abbr'];
+      $search_data['racetype_icon']=$race['racetype_icon'];
+      
+      $search_id = $this->edition_model->set_search_table($search_data,$race_id);
     }
   }
 
