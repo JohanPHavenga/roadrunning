@@ -97,7 +97,7 @@ class MY_model extends CI_Model
 
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $data[$row['edition_id']] = $row;
+                $data[$row['race_id']] = $row;
             }
             return $data;
         } else {

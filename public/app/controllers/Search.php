@@ -173,7 +173,7 @@ class Search extends Frontend_Controller
         }
 
 
-        
+
         // SORT       
         switch ($this->input->post("when")) {
             case "any":
@@ -192,15 +192,18 @@ class Search extends Frontend_Controller
         // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
 
         // NEW
-        $search_table_result = $this->edition_model->search($search_params,0);
+        $search_table_result = $this->edition_model->search($search_params, 0);
+        // wts($search_table_result);
         foreach ($search_table_result as $result) {
-            $this->data_to_views['edition_list'][$result['edition_id']]=$result;
-            // status msg
-            $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);            
+            if (!isset($this->data_to_views['edition_list'][$result['edition_id']])) {
+                $this->data_to_views['edition_list'][$result['edition_id']] = $result;
+                // status msg
+                $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);
+            }
             // race stuffs
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]=$result;
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color']=$this->edition_model->get_race_color($result['race_distance']);
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][]=fraceDistance($result['race_distance']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
             // results
             $this->data_to_views['edition_list'][$result['edition_id']]['has_results'] = false;
             $has_result = $this->result_model->result_exist_for_race($result['race_id']);
