@@ -75,7 +75,7 @@ class MY_model extends CI_Model
         $this->db->trans_complete();
     }
 
-    function search($query_params, $show_query=false) {
+    function main_search($query_params, $show_query=false) {
         $this->db->select("*");
         $this->db->from("temp_search");
         foreach ($query_params as $operator => $clause_arr) {

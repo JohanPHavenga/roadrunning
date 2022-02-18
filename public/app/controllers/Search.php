@@ -53,7 +53,7 @@ class Search extends Frontend_Controller
                     }
                     // PROVINCE
                     if ($field_parts[0] == "pro") {
-                        $search_params['where']["provinces.province_id"] = $field_parts[1];
+                        $search_params['where']["province_id"] = $field_parts[1];
                     }
                     break;
             }
@@ -192,7 +192,7 @@ class Search extends Frontend_Controller
         // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($search_params, NULL, false), $race_search_params);
 
         // NEW
-        $search_table_result = $this->edition_model->search($search_params, 0);
+        $search_table_result = $this->edition_model->main_search($search_params, 0);
         // wts($search_table_result);
         foreach ($search_table_result as $result) {
             if (!isset($this->data_to_views['edition_list'][$result['edition_id']])) {

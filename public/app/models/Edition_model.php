@@ -326,7 +326,7 @@ class Edition_model extends Frontend_model {
        
         $field_arr = [
             "edition_id", "edition_name", "edition_slug", "edition_date", "edition_isfeatured","edition_status", "edition_info_status",
-            "event_name", "town_name", "town_name_alt", "region_id","region_name", "province_name", "province_abbr"
+            "event_name", "town_name", "town_name_alt", "region_id","region_name", "regions.province_id", "province_name", "province_abbr"
         ];
         $select = implode(",", $field_arr);
         $this->db->select($select);

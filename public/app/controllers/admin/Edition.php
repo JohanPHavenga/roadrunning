@@ -334,7 +334,7 @@ class Edition extends Admin_Controller
     // wts($edition_detail);
 
     $field_arr=["edition_id","edition_name","edition_slug","edition_date","edition_isfeatured","edition_status",
-    "edition_info_status","event_name","town_name","town_name_alt","region_id","region_name","province_name",
+    "edition_info_status","event_name","town_name","town_name_alt","region_id","region_name","province_name","province_id",
     "province_abbr"];
 
     foreach ($race_detail as $race_id=>$race) {
