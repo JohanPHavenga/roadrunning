@@ -109,12 +109,28 @@ class Region extends Frontend_Controller {
 
 //        wts($region_id_arr, 1);
         // kry al die editions vir die region 
-        $query_params["where_in"] = ["regions.region_id" => $region_id_arr];
+        $query_params["where_in"] = ["region_id" => $region_id_arr];
 
-        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        if ($this->data_to_views['edition_list']) {
-            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
-                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+        // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        
+        $search_table_result = $this->edition_model->main_search($query_params, 0);
+        
+
+
+        if ($search_table_result) {
+            // foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+            //     $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+            // }
+            foreach ($search_table_result as $result) {
+                if (!isset($this->data_to_views['edition_list'][$result['edition_id']])) {
+                    $this->data_to_views['edition_list'][$result['edition_id']] = $result;
+                    // status msg
+                    $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);
+                }
+                // race stuffs
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);            
             }
             $region_pages = $this->session->region_pages;
             $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of " . $province_name;

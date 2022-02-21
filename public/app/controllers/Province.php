@@ -46,15 +46,27 @@ class Province extends Frontend_Controller {
         // kry al die editions vir die provinsie 
         $query_params = [
             "order_by" => ["edition_date" => "ASC"],
-            "where" => ["provinces.province_id" => $province_id, "edition_date >= " => date("Y-m-d H:i:s")],
+            "where" => ["province_id" => $province_id, "edition_date >= " => date("Y-m-d H:i:s")],
         ];
         
-        $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        if ($this->data_to_views['edition_list']) {
-            foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
-                $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+        // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
+        // if ($this->data_to_views['edition_list']) {
+        //     foreach ($this->data_to_views['edition_list'] as $edition_id => $edition_data) {
+        //         $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
+        //     }
+        // } 
+        $search_table_result = $this->edition_model->main_search($query_params, 0);
+        foreach ($search_table_result as $result) {
+            if (!isset($this->data_to_views['edition_list'][$result['edition_id']])) {
+                $this->data_to_views['edition_list'][$result['edition_id']] = $result;
+                // status msg
+                $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);
             }
-        } 
+            // race stuffs
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);            
+        }
         
         $this->data_to_views['page_title'] = "Races in " . str_replace("-"," ",$slug) . " province";
         $this->data_to_views['banner_img'] = "run_04";
