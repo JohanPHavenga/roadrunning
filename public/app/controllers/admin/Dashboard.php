@@ -304,7 +304,7 @@ class Dashboard extends Admin_Controller {
         if ($this->input->get('query')) {
             $params = ["ss" => $this->input->get('query'), "inc_all" => true, "inc_non_active" => true];
 //            $this->data_to_view['search_results'] = $this->event_model->get_event_list_summary($from = "search", $params);
-            $search_results = $this->event_model->main_search($this->input->get('query'));
+            $search_results = $this->event_model->main_search_admin($this->input->get('query'));
             $this->data_to_view['msg'] = "<p>We could <b>not find</b> any event matching your search.<br>Please try again.</p>";
 
             // check for results

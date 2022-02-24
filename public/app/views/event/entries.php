@@ -105,7 +105,7 @@
                                 // Manual entries
                                 if (isset($edition_data['entrytype_list'][2])) {
                                     // check if values are set
-                                    if (strtotime($date_list[5][0]['date_start']) != strtotime($edition_data['edition_date'])) {
+                                    if (strtotime($date_list[5][0]['date_end']) != strtotime($edition_data['edition_date'])) {
                                         if (!empty($date_list[5][0]['venue_name'])) {
                                             echo "<li>Pre-Entries can also be completed at " . $date_list[5][0]['venue_name'] . "</li>";
                                         }
@@ -185,10 +185,25 @@
                                 echo $edition_data['edition_entry_detail'];
                             }
                         }
+                        if ((isset($tshirt['edition']))||($edition_data['edition_tshirt_amount']>0)) {
                         ?>
-                        <div class="row m-t-30">
+                        <div class="row m-t-20">
                             <div class="col-lg-12">
-                                <?php
+                                <h4>Race T-Shirt</h4>
+                                <?php                               
+                                // TSHIRT
+                                if ($edition_data['edition_tshirt_amount'] > 0) {
+                                    echo "<ul>";
+                                    if (!empty($edition_data['edition_tshirt_text'])) {
+                                        echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
+                                    } else {
+                                        echo "<li>An event <strong>T-Shirt</strong> is available for purchase as part of the entry process for <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong></li>";
+                                    }
+                                    echo "</ul>";
+                                } elseif (!empty($edition_data['edition_tshirt_text'])) {
+                                    echo "<ul><li><b>T-Shirt</b>:  " . $edition_data['edition_tshirt_text'] . "</li></ul>";
+                                }
+
                                 if (isset($tshirt['edition'])) {
                                 ?>
                                     <a href="<?= $tshirt['edition']['url']; ?>" class="btn btn-light">
@@ -197,29 +212,16 @@
                                 <?php
                                 }
                                 ?>
-                                <ul>
-                                    <?php
-                                    // TSHIRT
-                                    if ($edition_data['edition_tshirt_amount'] > 0) {
-                                        if (!empty($edition_data['edition_tshirt_text'])) {
-                                            echo "<li>T-Shirt <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong>: " . $edition_data['edition_tshirt_text'] . "</li>";
-                                        } else {
-                                            echo "<li>An event <strong>T-Shirt</strong> is available for purchase as part of the entry process for <strong>R" . $edition_data['edition_tshirt_amount'] . "</strong></li>";
-                                        }
-                                    } elseif (!empty($edition_data['edition_tshirt_text'])) {
-                                        echo "<li><b>T-Shirt</b>:  " . $edition_data['edition_tshirt_text'] . "</li>";
-                                    }
-                                    ?>
-                                </ul>
                             </div>
                         </div>
 
                         <?php
+                        }
                         if (!in_array(3, $edition_data['regtype_list'])) {
                         ?>
-                            <div class="row">
-                                <div class="col-md-12">     
-                                    <h3 class="text-uppercase">Registration / Number Collection</h3>                              
+                            <div class="row m-t-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-uppercase">Registration / Number Collection</h3>
                                     <ul>
                                         <?php
                                         // OTD Reg
@@ -256,7 +258,7 @@
                         }
                         ?>
 
-                        <div class="row m-t-30">
+                        <div class="row m-t-20">
                             <div class="col-lg-12">
                                 <?php
                                 if (isset($flyer['edition'])) {
@@ -293,7 +295,7 @@
                             </div>
                         </div>
 
-                        
+
 
                     </div>
 

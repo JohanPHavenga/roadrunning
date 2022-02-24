@@ -641,7 +641,7 @@ class Event_model extends Admin_model {
         return false;
     }
 
-    public function main_search($ss) {
+    public function main_search_admin($ss) {
 
         $data = [];
 

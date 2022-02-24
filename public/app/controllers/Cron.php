@@ -334,7 +334,7 @@ class Cron extends Frontend_Controller
     $this->load->model('emailque_model');
 
     // remove hisroty records older than a year
-    $log_data['runtime_count'] = $this->emailque_model->remove_old_searches(date("Y-m-d", strtotime("-1 year")));
+    $log_data['runtime_count'] = $this->emailque_model->remove_old_searches(date("Y-m-d", strtotime("-1 month")));
 
     // LOG RUNTIME DATA
     $log_data['end'] = $this->get_date();
