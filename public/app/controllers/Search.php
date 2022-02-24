@@ -227,6 +227,8 @@ class Search extends Frontend_Controller
 
     public function tag($tag_type, $query)
     {
+        //STATUS
+        $search_params['where_in']["edition_status"] = [1, 17];
 
         $search_params['where']["edition_date >= "] = date("Y-m-d 00:00:00");
         $search_params['where']["edition_date <= "] = date("Y-m-d 23:59:59", strtotime("1 year"));
