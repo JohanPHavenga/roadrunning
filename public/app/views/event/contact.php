@@ -32,7 +32,38 @@
                     <div class="col-lg-12">
                         <h3 class="text-uppercase">Get In Touch</h3>
                         <p>Got a question regarding this race? Use the form below to contact the race organisers directly. You will receive a copy of the email in your inbox as well.</p>
-
+                        <div class="heading-text heading-line m-t-20">
+                            <h4>Race Organisers info</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <?php
+                                if ($edition_data['club_id'] != 8) {
+                                ?>
+                                    <p>This event is organised by the
+                                        <?php
+                                        if (isset($edition_data['club_url_list'][0])) {
+                                            echo "<b><a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a></b>";
+                                        } else {
+                                            echo "<b>".$edition_data['club_name']."</b>";
+                                        }
+                                        ?>
+                                    </p>
+                                <?php
+                                }
+                                ?>
+                                <p class="contact_info">
+                                    <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?= $edition_data['event_name']; ?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
+                                    <?php
+                                    if ($edition_data['user_contact']) {
+                                    ?>
+                                        <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
+                                    <?php
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+                        </div>
                         <div class="m-t-30">
                             <?php
                             $attributes = array('class' => 'contact_form', 'role' => 'form');
@@ -124,38 +155,6 @@
                     <!-- end: Product additional tabs -->
                 </div>
 
-                <div class="heading-text heading-line m-t-50">
-                    <h4>Race Organisers info</h4>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <?php
-                        if ($edition_data['club_id'] != 8) {
-                        ?>
-                            <p>This event is organised by the
-                                <?php
-                                if (isset($edition_data['club_url_list'][0])) {
-                                    echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
-                                } else {
-                                    echo $edition_data['club_name'];
-                                }
-                                ?>
-                            </p>
-                        <?php
-                        }
-                        ?>
-                        <p class="contact_info">
-                        <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?=$edition_data['event_name'];?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
-                            <?php
-                            if ($edition_data['user_contact']) {
-                            ?>
-                                <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
-                            <?php
-                            }
-                            ?>
-                        </p>
-                    </div>
-                </div>
             </div>
             <!-- end: Content-->
 
