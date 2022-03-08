@@ -1,8 +1,10 @@
 <?php
 
-class User extends Frontend_Controller {
+class User extends Frontend_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('user_model');
         $this->load->library('table');
@@ -11,7 +13,8 @@ class User extends Frontend_Controller {
     }
 
     // check if method exists, if not calls "view" method
-    public function _remap($method, $params = array()) {
+    public function _remap($method, $params = array())
+    {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         } else {
@@ -19,7 +22,8 @@ class User extends Frontend_Controller {
         }
     }
 
-    private function check_login() {
+    private function check_login()
+    {
         if (empty($this->logged_in_user)) {
             $this->session->set_flashdata([
                 'alert' => "You are not currently logged in, or your session has expired. Please use the form below to log in or register",
@@ -31,7 +35,8 @@ class User extends Frontend_Controller {
     }
 
     // DASHBOARD
-    public function dashboard() {
+    public function dashboard()
+    {
         $this->check_login();
         // load helpers / libraries        
         $this->load->model('admin/userresult_model');
@@ -48,17 +53,17 @@ class User extends Frontend_Controller {
             base_url("assets/js/amchart_10.js"),
             base_url("assets/js/amchart_5.js"),
         ];
-        
+
         // get list of results
-        $result_list=$this->userresult_model->get_userresult_list($this->logged_in_user['user_id']);    
+        $result_list = $this->userresult_model->get_userresult_list($this->logged_in_user['user_id']);
         foreach ($result_list as $result) {
-            $key="dist_".round($result['race_distance']);
-            $this->data_to_views["result_list"][$key][$result['result_id']]=$result;
+            $key = "dist_" . round($result['race_distance']);
+            $this->data_to_views["result_list"][$key][$result['result_id']] = $result;
         }
         // get result count
-        $this->data_to_views["result_count"]=$this->userresult_model->get_userresult_count($this->logged_in_user['user_id']);
-//        wts($result_count,1);
-        
+        $this->data_to_views["result_count"] = $this->userresult_model->get_userresult_count($this->logged_in_user['user_id']);
+        //        wts($result_count,1);
+
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -68,7 +73,8 @@ class User extends Frontend_Controller {
     }
 
     // VIEW PROFILE
-    public function profile() {
+    public function profile()
+    {
         $this->check_login();
         // load helpers / libraries        
         $this->data_to_views['page_title'] = "User Profile";
@@ -83,7 +89,8 @@ class User extends Frontend_Controller {
     }
 
     // EDIT PROFILE
-    public function edit() {
+    public function edit()
+    {
         $this->check_login();
         // load helpers / libraries        
         $this->load->library('table');
@@ -106,7 +113,7 @@ class User extends Frontend_Controller {
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
         $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email');
         $this->form_validation->set_rules('user_contact', 'Phone Number', 'trim|min_length[10]|max_length[12]');
-//        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
+        //        $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
         // load correct view
         if ($this->form_validation->run() === FALSE) {
             $this->load->view($this->header_url, $this->data_to_views);
@@ -123,7 +130,7 @@ class User extends Frontend_Controller {
                 $user_data[$field] = $value;
                 $_SESSION['user'][$field] = $value;
             }
-//            wts($this->logged_in_user,1);
+            //            wts($this->logged_in_user,1);
             $user_data['user_id'] = $this->logged_in_user['user_id'];
             $params = [
                 "action" => "edit",
@@ -144,7 +151,8 @@ class User extends Frontend_Controller {
     }
 
     // MY RESULTS
-    public function my_results() {
+    public function my_results()
+    {
         $this->load->model('admin/userresult_model');
 
         $this->data_to_views['banner_img'] = "run_07";
@@ -174,7 +182,8 @@ class User extends Frontend_Controller {
     }
 
     // SUBSCRIPTIONS
-    public function my_subscriptions() {
+    public function my_subscriptions()
+    {
         $this->check_login();
         $this->load->model('usersubscription_model');
         $this->data_to_views['page_title'] = "My Subscriptions";
@@ -188,7 +197,7 @@ class User extends Frontend_Controller {
                 $this->data_to_views['newsletter_subs'][] = $sub;
             }
         }
-//        wts($this->data_to_views['newsletter_subs'], 1);
+        //        wts($this->data_to_views['newsletter_subs'], 1);
         $edition_subs = $this->usersubscription_model->get_usersubscription_list($this->logged_in_user['user_id'], "edition");
         if ($edition_subs) {
             foreach ($edition_subs as $sub) {
@@ -196,7 +205,7 @@ class User extends Frontend_Controller {
                 $this->data_to_views['edition_subs'][] = $sub;
             }
         }
-//        wts($this->data_to_views['edition_subs'], 1);
+        //        wts($this->data_to_views['edition_subs'], 1);
         // load view
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
@@ -206,7 +215,8 @@ class User extends Frontend_Controller {
     }
 
     // CALL BACK FUNCTIONS
-    public function is_password_strong($password) {
+    public function is_password_strong($password)
+    {
         $uppercase = preg_match('@[A-Z]@', $password);
         $lowercase = preg_match('@[a-z]@', $password);
         $number = preg_match('@[0-9]@', $password);
@@ -218,7 +228,8 @@ class User extends Frontend_Controller {
         }
     }
 
-    public function email_exists($email) {
+    public function email_exists($email)
+    {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             if ($this->user_model->check_email($email) == 1) {
                 return TRUE;
@@ -227,7 +238,8 @@ class User extends Frontend_Controller {
         return FALSE;
     }
 
-    public function subscribe($type, $slug = false) {
+    public function subscribe($type, $slug = false)
+    {
         $this->load->model('edition_model');
         $this->load->helper('email');
         $return_url = base_url();
@@ -270,11 +282,11 @@ class User extends Frontend_Controller {
                 break;
         }
 
-//        wts($linked_to_id);
-//        wts($slug);
-//        wts($type);
-//        wts($_POST);
-//        wts($edition_data, true);
+        //        wts($linked_to_id);
+        //        wts($slug);
+        //        wts($type);
+        //        wts($_POST);
+        //        wts($edition_data, true);
         // check vir valid email
         if (valid_email($this->input->post("user_email"))) {
             set_cookie("sub_email", $this->input->post("user_email"), 172800);
@@ -286,7 +298,7 @@ class User extends Frontend_Controller {
                 redirect($return_url);
             } else {
                 $this->data_to_views['scripts_to_load'] = ["https://www.google.com/recaptcha/api.js"];
-                
+
                 $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
                 $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
                 $this->form_validation->set_rules('user_email', 'Email', 'trim|required|valid_email');
@@ -317,7 +329,8 @@ class User extends Frontend_Controller {
         }
     }
 
-    public function unsubscribe($crypt) {
+    public function unsubscribe($crypt)
+    {
         // get data
         $str = my_decrypt($crypt);
         $data = explode("|", $str);
@@ -332,6 +345,8 @@ class User extends Frontend_Controller {
             'status' => "danger",
             'icon' => "minus-circle",
         ]);
+
+        // wts($data, 1);
 
         // check if the subscription exists
         if ($this->usersubscription_model->exists($user_id, $linked_to, $linked_id)) {
@@ -348,9 +363,10 @@ class User extends Frontend_Controller {
         // check if logged in, then redirect to my-subscriptions, else, go to edition that is being unsubscribed from, or newsletter page
         if (empty($this->logged_in_user)) {
             if ($linked_to == "edition") {
-                $this->load->model('edition_model');
-                $slug = $this->edition_model->get_edition_slug($linked_id);
-                redirect(base_url("event/" . $slug));
+                // $this->load->model('edition_model');
+                // $slug = $this->edition_model->get_edition_slug($linked_id);
+                // redirect(base_url("event/" . $slug));
+                redirect(base_url("user/unsub_success/" . $crypt));
             }
             redirect(base_url("newsletter"));
         } else {
@@ -358,8 +374,23 @@ class User extends Frontend_Controller {
         }
     }
 
+    public function unsub_success($crypt)
+    {
+        $str = my_decrypt($crypt);
+        $data = explode("|", $str);
+        $linked_id = $data[2];
+        
+        $this->load->model('edition_model');
+        $this->data_to_views['edition_info'] = $this->edition_model->get_edition_sum($linked_id);
+
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view('user/unsub_success', $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
     // REGISTER 
-    public function register() {
+    public function register()
+    {
         $this->load->model('user_model');
         $this->load->model('role_model');
         $this->data_to_views['page_title'] = "Register";
@@ -371,17 +402,23 @@ class User extends Frontend_Controller {
         // validation rules
         $this->form_validation->set_rules('user_name', 'Name', 'trim|required');
         $this->form_validation->set_rules('user_surname', 'Surname', 'trim|required');
-        $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email|is_unique[users.user_email]',
-                array(
-                    'required' => 'You have not provided an %s.',
-                    'is_unique' => 'This %s is already in use. Please <a href="' . base_url('login') . '">login</a> or <a href="' . base_url('forgot-password') . '">reset your password</a> if you have forgotten it.'
-                )
+        $this->form_validation->set_rules(
+            'user_email',
+            'email address',
+            'trim|required|valid_email|is_unique[users.user_email]',
+            array(
+                'required' => 'You have not provided an %s.',
+                'is_unique' => 'This %s is already in use. Please <a href="' . base_url('login') . '">login</a> or <a href="' . base_url('forgot-password') . '">reset your password</a> if you have forgotten it.'
+            )
         );
         $this->form_validation->set_rules('user_contact', 'Phone Number', 'trim|min_length[10]|alpha_numeric_spaces');
-        $this->form_validation->set_rules('user_password', 'Password', 'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
-                array(
-                    "is_password_strong" => "Password should be between 8 & 32 characters in length and should include at least one upper case letter and one number",
-                )
+        $this->form_validation->set_rules(
+            'user_password',
+            'Password',
+            'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
+            array(
+                "is_password_strong" => "Password should be between 8 & 32 characters in length and should include at least one upper case letter and one number",
+            )
         );
         $this->form_validation->set_rules('user_password_conf', 'Password Confirmation', 'trim|required|matches[user_password]');
         $this->form_validation->set_rules('g-recaptcha-response', 'Captcha', 'callback_recaptcha');
@@ -419,7 +456,7 @@ class User extends Frontend_Controller {
             ];
             $user_id = $this->user_model->set_user($params);
             if ($user_id) {
-                $mail_id = $this->send_confirmation_email($user_data);      
+                $mail_id = $this->send_confirmation_email($user_data);
                 $this->poke_mail_que();
                 $this->data_to_views['conf_type'] = "register";
                 $this->data_to_views['mail_id'] = $mail_id;
@@ -434,18 +471,22 @@ class User extends Frontend_Controller {
     }
 
     // PASSWORD RESET 
-    public function forgot_password() {
+    public function forgot_password()
+    {
         $this->data_to_views['page_title'] = "Password Reset";
         $this->data_to_views['meta_description'] = "Reset your password for roadrunning.co.za";
         $this->data_to_views['form_url'] = '/forgot-password';
         $this->data_to_views['error_url'] = '/forgot-password';
 
         // validation rules
-        $this->form_validation->set_rules('user_email', 'email address', 'trim|required|valid_email|callback_email_exists',
-                array(
-                    'required' => 'You have not provided an %s.',
-                    'email_exists' => 'The email address you provided was not found. Please try again'
-                )
+        $this->form_validation->set_rules(
+            'user_email',
+            'email address',
+            'trim|required|valid_email|callback_email_exists',
+            array(
+                'required' => 'You have not provided an %s.',
+                'email_exists' => 'The email address you provided was not found. Please try again'
+            )
         );
 
         // load correct view
@@ -457,14 +498,14 @@ class User extends Frontend_Controller {
             $user_id = $this->user_model->get_user_id($this->input->post("user_email"));
             $user_data['user_email'] = $this->input->post("user_email");
             // commenting this out as then anyone can come and clear out your password
-//            $user_data['user_password'] = "";
-//            $user_data['user_isconfirmed'] = false;
+            //            $user_data['user_password'] = "";
+            //            $user_data['user_isconfirmed'] = false;
             $user_data['user_confirm_guid'] = md5(uniqid(rand(), true));
             $user_data['user_guid_expire'] = date("Y-m-d H:i:s", strtotime($this->ini_array['register']['guid_valid']));
 
             $update_user = $this->user_model->update_user_field($user_data, $user_id);
             if ($update_user) {
-                $mail_id = $this->send_confirmation_email($user_data, "forgot_password");      
+                $mail_id = $this->send_confirmation_email($user_data, "forgot_password");
                 $this->poke_mail_que();
                 $this->data_to_views['conf_type'] = "forgot_password";
                 $this->data_to_views['mail_id'] = $mail_id;
@@ -479,7 +520,8 @@ class User extends Frontend_Controller {
         }
     }
 
-    public function reset_password($guid = null) {
+    public function reset_password($guid = null)
+    {
         if (is_null($guid)) {
             redirect("/404");
             die();
@@ -491,10 +533,13 @@ class User extends Frontend_Controller {
         $user_id = $this->user_model->check_user_guid($guid);
         if ($user_id) {
 
-            $this->form_validation->set_rules('user_password', 'Password', 'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
-                    array(
-                        "is_password_strong" => "Your password should be <u>between 8 & 32 characters</u> in length, contain <u>one upper case letter</u> and <u>one number</u>",
-                    )
+            $this->form_validation->set_rules(
+                'user_password',
+                'Password',
+                'trim|required|min_length[8]|max_length[32]|callback_is_password_strong',
+                array(
+                    "is_password_strong" => "Your password should be <u>between 8 & 32 characters</u> in length, contain <u>one upper case letter</u> and <u>one number</u>",
+                )
             );
             $this->form_validation->set_rules('user_password_conf', 'Password Confirmation', 'trim|required|matches[user_password]');
             // load correct view
@@ -536,7 +581,8 @@ class User extends Frontend_Controller {
     }
 
     // CONFIRM EMAIL ADDRESS
-    public function confirm_email($guid = null) {
+    public function confirm_email($guid = null)
+    {
         if (is_null($guid)) {
             redirect("/404");
             die();
@@ -562,7 +608,8 @@ class User extends Frontend_Controller {
     }
 
     // SEND CONFIRMATION EMAIL
-    private function send_confirmation_email($user_data, $conf_type = "register") {
+    private function send_confirmation_email($user_data, $conf_type = "register")
+    {
         // test email
         switch ($conf_type) {
             case "register":
@@ -571,11 +618,11 @@ class User extends Frontend_Controller {
                     "to" => $user_data['user_email'],
                     "subject" => "Registration on RoadRunning.co.za",
                     "body" => "<h2>Welcome</h2>"
-                    . "<p>Hi " . $user_data['user_name']
-                    . "<p>Please click on the link below to confirm your email address to complete creating an account on "
-                    . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a>."
-                    . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
-                    . "<p>If this was not you, you can safely ignore this email.</p>",
+                        . "<p>Hi " . $user_data['user_name']
+                        . "<p>Please click on the link below to confirm your email address to complete creating an account on "
+                        . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a>."
+                        . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
+                        . "<p>If this was not you, you can safely ignore this email.</p>",
                     "from" => "noreply@roadrunning.co.za",
                     "from_name" => "noreply@roadrunning.co.za",
                 ];
@@ -586,12 +633,12 @@ class User extends Frontend_Controller {
                     "to" => $user_data['user_email'],
                     "subject" => "Password Reset for RoadRunning.co.za",
                     "body" => "<h2>Password Reset</h2>"
-                    . "<p>We have received a password reset request on "
-                    . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a> for the email address "
-                    . "<b>" . $user_data['user_email'] . "</b>."
-                    . "<p>Please click on the link below to confirm this was you, and set a new password:</p>"
-                    . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
-                    . "<p>If this was not you, you can safely ignore this email.</p>",
+                        . "<p>We have received a password reset request on "
+                        . "<a href = 'https://www.roadrunning.co.za/' style = 'color:#222222 !important;text-decoration:underline !important;'>RoadRunning.co.za</a> for the email address "
+                        . "<b>" . $user_data['user_email'] . "</b>."
+                        . "<p>Please click on the link below to confirm this was you, and set a new password:</p>"
+                        . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
+                        . "<p>If this was not you, you can safely ignore this email.</p>",
                     "from" => "noreply@roadrunning.co.za",
                     "from_name" => "noreply@roadrunning.co.za",
                 ];
@@ -600,5 +647,4 @@ class User extends Frontend_Controller {
 
         return $this->set_email($data);
     }
-
 }
