@@ -517,15 +517,14 @@ class Result extends Admin_Controller {
                 break;
             case 4: // AGW
                 $data['pre']["A"] = "result_pos";
-                $data['pre']["B"] = "result_asanum";
-                $data['pre']["C"] = "result_time";
-                $data['pre']["D"] = "result_name";
-                $data['pre']["E"] = "result_surname";
+                $data['pre']["B"] = "result_time";
+                $data['pre']["C"] = "result_racenum";
+                $data['pre']["D"] = "result_surname";
+                $data['pre']["E"] = "result_name";
                 $data['pre']["F"] = "result_sex";
-                $data['pre']["G"] = "";
-                $data['pre']["H"] = "result_age";
-                $data['pre']["I"] = "";
-                $data['pre']["J"] = "result_club";
+                $data['pre']["G"] = "result_age";
+                $data['pre']["H"] = "result_cat";
+                $data['pre']["I"] = "result_club";
                 break;
             default:
                 $data['pre']["A"] = "result_pos";

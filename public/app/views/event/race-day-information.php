@@ -116,7 +116,7 @@
 
                                 // SOCIAL WALKERS
                                 if ($edition_data['edition_info_socialwalkers']) {
-                                    echo "<li><b>SOCIAL WALKERS:</b> Social walkers are welcome</li>";
+                                    echo "<li><b>WALKERS:</b> Walkers are welcome</li>";
                                 }
 
                                 // HEADPHONES
