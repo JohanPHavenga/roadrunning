@@ -266,10 +266,10 @@
 
           <!-- more race info -->
           <div class="heading-text heading-line m-t-30">
-            <h4>More race information</h4>
+            <h4 class="text-uppercase">More race information</h4>
           </div>
 
-          <div class="row">
+          <div class="row m-b-40">
             <div class="col-lg-6">
               <div class="row">
                 <div class="col-lg-12">
@@ -348,9 +348,9 @@
 
           <!-- race organisers info -->
           <div class="heading-text heading-line m-t-50">
-            <h4>Race Organisers info</h4>
+            <h4 class="text-uppercase">Race Organisers info</h4>
           </div>
-          <div class="row">
+          <div class="row m-b-40">
             <div class="col-lg-12">
 
               <p>
@@ -391,7 +391,39 @@
                 ?>
               </p>
             </div>
+
           </div>
+
+
+          <!-- ENTRIES info -->
+          <div class="heading-text heading-line">
+            <h4 class="text-uppercase">How to enter</h4>
+          </div>
+          <?php
+          $this->load->view('event/content/entries');
+          ?>
+
+          <!-- RACE DAY info -->
+          <?php
+          // if you touvh this, update the race-day-info view as well
+          if (
+            (strlen($edition_data['edition_general_detail']) > 10) ||
+            ($edition_data['edition_info_medals']) ||
+            ($edition_data['edition_info_togbag']) ||
+            ($edition_data['edition_info_headphones']) ||
+            ($edition_data['edition_info_prizegizing'] != "00:00:00")
+          ) {
+            $this->load->view('event/content/race-day-information');
+          }
+          ?>
+
+          <!-- Accommodation -->
+          <div class="heading-text heading-line">
+            <h4 class="text-uppercase">Accomodation near the race</h4>
+          </div>
+          <?php
+          $this->load->view('event/content/accommodation');
+          ?>
 
           <!-- <div class="heading-text heading-line text-center m-t-30">
             <h4>Event Reviews</h4>
