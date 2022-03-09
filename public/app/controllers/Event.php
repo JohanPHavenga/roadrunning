@@ -256,7 +256,7 @@ class Event extends Frontend_Controller
       $this->load->view('widgets/virtual_race_notice');
     }
     $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
-    $this->load->view('event/' . $view_to_load, $this->data_to_views);
+    $this->load->view('event/' . $view_to_load, $this->data_to_views);   
     $this->load->view($this->footer_url, $this->data_to_views);
 
     // TBR
