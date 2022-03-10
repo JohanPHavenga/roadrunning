@@ -32,13 +32,13 @@ class Cron extends Frontend_Controller
   public function daily()
   {
     // set to run at midnight
-    // $this->history_purge();
-    // $this->emailque_purge();
-    // $this->search_purge();
-    // $this->update_event_info_status();
+    $this->history_purge();
+    $this->emailque_purge();
+    $this->search_purge();
+    $this->update_event_info_status();
     $this->autoemails_closing_date();
-    // $this->runtime_log_purge();
-    // $this->build_search_table();
+    $this->runtime_log_purge();
+    $this->build_search_table();
 
     // $this->add_baseurl(1500);
     // removed to own stand-alone script
