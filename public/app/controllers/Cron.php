@@ -32,13 +32,13 @@ class Cron extends Frontend_Controller
   public function daily()
   {
     // set to run at midnight
-    $this->history_purge();
-    $this->emailque_purge();
-    $this->search_purge();
-    $this->update_event_info_status();
+    // $this->history_purge();
+    // $this->emailque_purge();
+    // $this->search_purge();
+    // $this->update_event_info_status();
     $this->autoemails_closing_date();
-    $this->runtime_log_purge();
-    $this->build_search_table();
+    // $this->runtime_log_purge();
+    // $this->build_search_table();
 
     // $this->add_baseurl(1500);
     // removed to own stand-alone script
@@ -388,10 +388,16 @@ class Cron extends Frontend_Controller
     ];
     $edition_list = $this->date_model->add_dates($this->edition_model->get_edition_list($query_params));
 
+    // wts($edition_list, 1);
+
     $n = 0;
     foreach ($edition_list as $edition_id => $edition) {
-      if (isset($edition['date_list'][3][0]['date_end'])) {
-        $online_close_date = strtotime($edition['date_list'][3][0]['date_end']);
+      if (isset($edition['date_list'][3][0]['date_end'])) {      
+        if (date("Y-m-d", strtotime($edition['date_list'][3][0]['date_end'])) == date("Y-m-d", strtotime($edition['edition_date']))) {
+          $online_close_date = 0;
+        } else {
+          $online_close_date = strtotime($edition['date_list'][3][0]['date_end']);
+        }
       } else {
         $online_close_date = 0;
       }
@@ -473,7 +479,7 @@ class Cron extends Frontend_Controller
     $log_data['start'] = $this->get_date();
     echo "** BUILD SEARCH TABLE \n";
     echo "Start timestamp: " . date("Y-m-d H:i:s") . "\n";
-    $control_count=0;
+    $control_count = 0;
 
     $this->load->model('edition_model');
     $this->load->model('race_model');
@@ -482,18 +488,18 @@ class Cron extends Frontend_Controller
     $this->race_model->clear_search_table();
 
     // $edition_list = $this->race_model->add_race_info($this->edition_model->get_edition_list());
-    $edition_list = $this->edition_model->get_edition_list_search();    
-    $race_list = $this->race_model->get_race_list_search(); 
+    $edition_list = $this->edition_model->get_edition_list_search();
+    $race_list = $this->race_model->get_race_list_search();
 
     foreach ($race_list as $race) {
-      $search_data=$edition_list[$race['edition_id']];
-      $search_data['race_id']=$race['race_id'];
-      $search_data['race_name']=$race['race_name'];
-      $search_data['race_distance']=$race['race_distance'];
-      $search_data['race_distance_int']=intval($race['race_distance']);
-      $search_data['race_time_start']=$race['race_time_start'];
-      $search_data['racetype_abbr']=$race['racetype_abbr'];
-      $search_data['racetype_icon']=$race['racetype_icon'];
+      $search_data = $edition_list[$race['edition_id']];
+      $search_data['race_id'] = $race['race_id'];
+      $search_data['race_name'] = $race['race_name'];
+      $search_data['race_distance'] = $race['race_distance'];
+      $search_data['race_distance_int'] = intval($race['race_distance']);
+      $search_data['race_time_start'] = $race['race_time_start'];
+      $search_data['racetype_abbr'] = $race['racetype_abbr'];
+      $search_data['racetype_icon'] = $race['racetype_icon'];
       // wts($search_data,1);
       $search_id = $this->race_model->set_search_table($search_data);
       $control_count++;
