@@ -416,6 +416,13 @@
             $this->load->view('event/content/race-day-information');
           }
           ?>
+          <!-- Route Maps -->
+          <div class="heading-text heading-line">
+            <h4 class="text-uppercase">Race Route Maps</h4>
+          </div>
+          <?php
+          $this->load->view('event/content/route-maps');
+          ?>
 
           <!-- Accommodation -->
           <div class="heading-text heading-line">
@@ -424,6 +431,8 @@
           <?php
           $this->load->view('event/content/accommodation');
           ?>
+
+
 
           <!-- <div class="heading-text heading-line text-center m-t-30">
             <h4>Event Reviews</h4>

@@ -30,6 +30,7 @@ class Search extends Frontend_Controller
             $search_params['or_like']["town_name"] = $this->input->post_get("query");
             $search_params['or_like']["town_name_alt"] = $this->input->post_get("query");
             $search_params['or_like']["province_name"] = $this->input->post_get("query");
+            $search_params['or_like']["race_name"] = $this->input->post_get("query");
             $search_params['or_where']["province_abbr"] = $this->input->post_get("query");
             $search_params['group_end'] = "";
 

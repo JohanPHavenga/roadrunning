@@ -22,7 +22,11 @@
                     </div>
                 </div>
 
-                
+                <?php
+                // ACCOMMODATION CONTENT
+                $this->load->view('event/content/accommodation');
+                ?>
+
             </div>
             <!-- end: Content-->
 
