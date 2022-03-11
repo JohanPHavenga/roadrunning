@@ -11,8 +11,8 @@
     <?php $this->load->view('widgets/race_meta'); ?>
     <div class="row m-t-40">
       <!-- Content-->
-      <div class="content col-lg-9">
-        <div class="product">
+      <div class="content col-lg-9" style="margin-bottom: 0;">
+        <div class="product" style="margin-bottom: 0;">
           <div class="row m-b-10">
             <div class="col-lg-5">
               <div class="product-image m-b-20">
@@ -92,17 +92,32 @@
                   ?>
                 </div>
                 <div class="seperator m-t-10 m-b-10"></div>
-                <div class="col-lg-12">
+                <!-- <div class="col-lg-12">  -->
+                <p style='font-size: 0.9em;'>
                   <?php
+                  // CLUB
+                  if ($edition_data['club_id'] != 8) {
+                  ?>
+                    Organised by the
+                    <?php
+                    if (isset($edition_data['club_url_list'][0])) {
+                      echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
+                    } else {
+                      echo $edition_data['club_name'];
+                    }
+                    ?>
+                    <br>
+                  <?php
+                  }
                   // ASA MEMBERSHIP
                   if ($edition_data['asa_member_id'] > 0) {
-                    echo "<p style='font-size: 0.9em;'>This event is held under the rules and regulations of "
+                    echo "Held under the rules and regulations of "
                       . "<u><a href='https://www.athletics.org.za/' target='_blank' title='Athletics South Africa'>ASA</a></u> "
-                      . "and <u><a href='" . $edition_data['asa_member_url'] . "' target='_blank' title='" . $edition_data['asa_member_abbr'] . "'>"
-                      . "" . $edition_data['asa_member_name'] . "</a></u></p>";
+                      . "and <u><a href='" . $edition_data['asa_member_url'] . "' target='_blank' title='" . $edition_data['asa_member_abbr'] . "'>" . "" . $edition_data['asa_member_name'] . "</a></u>";
                   }
                   ?>
-                </div>
+                </p>
+                <!-- </div> -->
               </div>
               <?php
               if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
@@ -264,6 +279,165 @@
             </div>
           </div>
 
+          <!-- ENTRIES info -->
+          <div class="heading-text heading-line">
+            <h4 class="text-uppercase">How to enter</h4>
+          </div>
+          <?php
+          $this->load->view('event/content/entries');
+          ?>
+
+          <!-- RACE DAY info -->
+          <?php
+          // if you touvh this, update the race-day-info view as well
+          if (
+            (strlen($edition_data['edition_general_detail']) > 10) ||
+            ($edition_data['edition_info_medals']) ||
+            ($edition_data['edition_info_togbag']) ||
+            ($edition_data['edition_info_headphones']) ||
+            ($edition_data['edition_info_prizegizing'] != "00:00:00")
+          ) {
+            $this->load->view('event/content/race-day-information');
+          }
+          ?>
+          <!-- Route Maps -->
+          <div class="heading-text heading-line">
+            <h4 class="text-uppercase">Race Route Maps</h4>
+          </div>
+          <?php
+          $this->load->view('event/content/route-maps');
+          ?>
+
+          <!-- Accommodation -->
+          <div class="heading-text heading-line">
+            <h4 class="text-uppercase">Accomodation near the race</h4>
+          </div>
+          <?php
+          $this->load->view('event/content/accommodation');
+          ?>
+
+          <!-- race organisers info -->
+          <div class="heading-text heading-line m-t-50">
+            <h4 class="text-uppercase">Race Organisers info</h4>
+          </div>
+          <div class="row m-b-60">
+            <div class="col-lg-12">
+              <p class="contact_info">
+                <?php
+                if ($edition_data['club_id'] != 8) {
+                ?>
+                  This event is organised by the
+                  <?php
+                  if (isset($edition_data['club_url_list'][0])) {
+                    echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
+                  } else {
+                    echo $edition_data['club_name'];
+                  }
+                  ?>
+                  <br>
+                <?php
+                }
+                ?>
+                <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?= $edition_data['event_name']; ?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
+                <?php
+                if ($edition_data['user_contact']) {
+                ?>
+                  <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
+                <?php
+                }
+                ?>
+              </p>
+              <p>Got a question regarding this race? Use the form below to contact the race organisers directly. You will receive a copy of the email in your inbox as well.</p>
+              <div class="m-t-30">
+                <?php
+                $attributes = array('class' => 'contact_form', 'role' => 'form');
+                echo form_open($contact_url, $attributes);
+                ?>
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <?php
+                    echo form_label('Name *', 'user_name');
+                    echo form_input([
+                      'name' => 'user_name',
+                      'id' => 'user_name',
+                      'value' => set_value('user_name'),
+                      'class' => 'form-control required',
+                      'placeholder' => 'Enter your Name',
+                      'required' => '',
+                    ]);
+                    ?>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <?php
+                    echo form_label('Surname *', 'user_surname');
+                    echo form_input([
+                      'name' => 'user_surname',
+                      'id' => 'user_surname',
+                      'value' => set_value('user_surname'),
+                      'class' => 'form-control required',
+                      'placeholder' => 'Enter your Surname',
+                      'required' => '',
+                    ]);
+                    ?>
+                  </div>
+                  <div class="form-group col-md-5">
+                    <?php
+                    echo form_label('Email', 'user_email');
+                    echo form_input([
+                      'name' => 'user_email',
+                      'id' => 'user_email',
+                      'type' => 'email',
+                      'value' => set_value('user_email'),
+                      'class' => 'form-control required',
+                      'placeholder' => 'Enter your Email',
+                      'required' => '',
+                    ]);
+                    ?>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <?php
+                  echo form_label('Query', 'user_message');
+                  echo form_textarea([
+                    'name' => 'user_message',
+                    'id' => 'user_message',
+                    'value' => set_value('user_message'),
+                    'class' => 'form-control required',
+                    'placeholder' => 'Enter your Query',
+                    'required' => '',
+                    'rows' => 5,
+                  ]);
+                  // hidden field for the slug
+                  echo form_input([
+                    'name' => 'edition_name',
+                    'type' => 'hidden',
+                    'value' => $edition_data['edition_name'],
+                  ]);
+                  ?>
+                </div>
+                <div class="form-group g-recaptcha" data-sitekey="6LcxdoYUAAAAAADszn1zvLq3C9UFfwnafqzMWYoV"></div>
+                <?php
+                $data = array(
+                  'id' => 'form-submit',
+                  'type' => 'submit',
+                  'content' => '<i class="fa fa-paper-plane"></i>&nbsp;Send message',
+                  'class' => 'btn',
+                );
+                echo form_button($data);
+                $data = array(
+                  'id' => 'form-clear',
+                  'type' => 'reset',
+                  'content' => '<i class="fa fa-eraser"></i>&nbsp;Clear',
+                  'class' => 'btn btn-light',
+                );
+                echo form_button($data);
+                echo form_close();
+                ?>
+              </div>
+            </div>
+
+          </div>
+
           <!-- more race info -->
           <div class="heading-text heading-line m-t-30">
             <h4 class="text-uppercase">More race information</h4>
@@ -344,94 +518,6 @@
               ?>
             </div>
           </div>
-
-
-          <!-- race organisers info -->
-          <div class="heading-text heading-line m-t-50">
-            <h4 class="text-uppercase">Race Organisers info</h4>
-          </div>
-          <div class="row m-b-40">
-            <div class="col-lg-12">
-
-              <p>
-                <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/contact"); ?>" class="btn btn-light">
-                  <i class="fa fa-envelope-open" aria-hidden="true"></i>&nbsp;Contact Race Organisers</a>
-                <?php
-                if (!$in_past) {
-                ?>
-                  <a href="<?= base_url("event/" . $edition_data['edition_slug'] . "/accommodation"); ?>" class="btn btn-light">
-                    <i class="fa fa-bed"></i> Get Accommodation</a>
-                <?php
-                }
-                ?>
-              </p>
-              <?php
-              if ($edition_data['club_id'] != 8) {
-              ?>
-                <p>This event is organised by the
-                  <?php
-                  if (isset($edition_data['club_url_list'][0])) {
-                    echo "<a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a>";
-                  } else {
-                    echo $edition_data['club_name'];
-                  }
-                  ?>
-                </p>
-              <?php
-              }
-              ?>
-              <p class="contact_info">
-                <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?= $edition_data['event_name']; ?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
-                <?php
-                if ($edition_data['user_contact']) {
-                ?>
-                  <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>
-                <?php
-                }
-                ?>
-              </p>
-            </div>
-
-          </div>
-
-
-          <!-- ENTRIES info -->
-          <div class="heading-text heading-line">
-            <h4 class="text-uppercase">How to enter</h4>
-          </div>
-          <?php
-          $this->load->view('event/content/entries');
-          ?>
-
-          <!-- RACE DAY info -->
-          <?php
-          // if you touvh this, update the race-day-info view as well
-          if (
-            (strlen($edition_data['edition_general_detail']) > 10) ||
-            ($edition_data['edition_info_medals']) ||
-            ($edition_data['edition_info_togbag']) ||
-            ($edition_data['edition_info_headphones']) ||
-            ($edition_data['edition_info_prizegizing'] != "00:00:00")
-          ) {
-            $this->load->view('event/content/race-day-information');
-          }
-          ?>
-          <!-- Route Maps -->
-          <div class="heading-text heading-line">
-            <h4 class="text-uppercase">Race Route Maps</h4>
-          </div>
-          <?php
-          $this->load->view('event/content/route-maps');
-          ?>
-
-          <!-- Accommodation -->
-          <div class="heading-text heading-line">
-            <h4 class="text-uppercase">Accomodation near the race</h4>
-          </div>
-          <?php
-          $this->load->view('event/content/accommodation');
-          ?>
-
 
 
           <!-- <div class="heading-text heading-line text-center m-t-30">
@@ -535,16 +621,6 @@
         ?>
       </div>
       <!-- end: Sidebar-->
-    </div>
-
-    <div class="row">
-      <div class="content col-lg-9">
-
-      </div>
-
-      <div class="sidebar col-lg-3">
-
-      </div>
     </div>
   </div>
 </section>

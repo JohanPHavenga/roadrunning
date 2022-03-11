@@ -45,7 +45,7 @@
                                         if (isset($edition_data['club_url_list'][0])) {
                                             echo "<b><a href='" . $edition_data['club_url_list'][0]['url_name'] . "' target='_blank' title='Visit club website' class='link'>" . $edition_data['club_name'] . "</a></b>";
                                         } else {
-                                            echo "<b>".$edition_data['club_name']."</b>";
+                                            echo "<b>" . $edition_data['club_name'] . "</b>";
                                         }
                                         ?>
                                     </p>

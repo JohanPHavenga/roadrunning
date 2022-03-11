@@ -122,7 +122,7 @@ if ($edition_data['edition_status'] != 17) {
     <div class="row m-b-40">
         <div class="col-lg-12">
             <div class="heading-text heading-line">
-                <h4 class="text-uppercase">Map</h4>
+                <h4 class="text-uppercase">Location Map</h4>
             </div>
             <iframe width="100%" height="350" frameborder="0" style="border:0; margin-bottom: 10px;" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBERO5xjCtTOmjQ_zSSUvlp5YN_l-4yKQw&q=<?= $address_nospaces; ?>" allowfullscreen>
             </iframe>
