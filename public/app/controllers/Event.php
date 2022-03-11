@@ -244,9 +244,8 @@ class Event extends Frontend_Controller
       $this->data_to_views['entry_form'] = $this->get_entry_form_arr($slug);
     }
 
-    //        wts($this->data_to_views['route_maps'],true);
-
-
+    // debug
+    // wts($this->data_to_views['url_list'],true);
 
     $this->load->view($this->header_url, $this->data_to_views);
     $this->load->view($this->notice_url, $this->data_to_views);

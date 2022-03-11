@@ -236,20 +236,34 @@
                   <?php
                   }
                 } else {
+                  // IF IN PAST        
+                  // results button        
                   ?>
                   <div class="row">
                     <div class="col-lg-12">
-                      <a class="btn btn-default btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">View results
+                      <a class="btn btn-default btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">
+                        View results
                         <i class="fa fa-arrow-right"></i></a>
                     </div>
                   </div>
+                  <?php
+                  // photos button
+                  if (isset($url_list[9])) {
+                  ?>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <a class="btn btn-secondary btn-icon-holder" href="<?= $url_list[9][0]['url_name']; ?>" target="_blank">
+                          <?= $url_list[9][0]['urltype_buttontext']; ?>
+                          <i class="fa fa-arrow-right"></i></a>
+                      </div>
+                    </div>
               <?php
+                  }
                 }
               }
               ?>
             </div>
           </div>
-
 
           <!-- ad box -->
           <div class="row m-b-30">
