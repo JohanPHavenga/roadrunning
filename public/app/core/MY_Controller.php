@@ -185,6 +185,8 @@ EOT;
         }
         if ($data['emailque_bcc_address']) {
             $bcc_arr[$data['emailque_bcc_address']] = $data['emailque_bcc_address'];
+        } else {
+            $bcc_arr[$this->ini_array['email']['bcc_address']] = $this->ini_array['email']['bcc_address'];
         }
         $bcc_arr[$this->ini_array['email']['bcc_address']] = $this->ini_array['email']['bcc_address'];
         $this->email->bcc($bcc_arr);
@@ -469,6 +471,10 @@ class Frontend_Controller extends MY_Controller
                 $from_name = $this->ini_array['email']['from_name'];
             }
 
+            if (isset($data['bcc'])) {
+                $bcc = $data['bcc'];
+            } 
+
             $emailque_data = array(
                 'emailque_subject' => $data['subject'],
                 'emailque_to_address' => $data['to'],
@@ -476,7 +482,7 @@ class Frontend_Controller extends MY_Controller
                 'emailque_status' => 5,
                 'emailque_from_address' => $from,
                 'emailque_from_name' => $from_name,
-                'emailque_bcc_address' => $this->ini_array['email']['bcc_address'],
+                'emailque_bcc_address' => $bcc,
             );
             if (isset($data['to_name'])) {
                 $emailque_data['emailque_to_name'] = $data['to_name'];

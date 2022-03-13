@@ -339,6 +339,7 @@ class User extends Frontend_Controller
         $linked_id = $data[2];
         // load moadels        
         $this->load->model('usersubscription_model');
+        $this->load->model('user_model');
         // set negative return msg
         $this->session->set_flashdata([
             'alert' => "Subscription not found. Please contact the site administrator.",
@@ -350,6 +351,10 @@ class User extends Frontend_Controller
 
         // check if the subscription exists
         if ($this->usersubscription_model->exists($user_id, $linked_to, $linked_id)) {
+
+            $user_data = $this->user_model->get_user_detail($user_id);
+            // wts($user_data);
+
             $remove = $this->usersubscription_model->remove_usersubscription($user_id, $linked_to, $linked_id);
             if ($remove) {
                 $this->session->set_flashdata([
@@ -358,19 +363,35 @@ class User extends Frontend_Controller
                     'icon' => "minus-circle",
                 ]);
             }
-        }
 
-        // check if logged in, then redirect to my-subscriptions, else, go to edition that is being unsubscribed from, or newsletter page
-        if (empty($this->logged_in_user)) {
             if ($linked_to == "edition") {
-                // $this->load->model('edition_model');
-                // $slug = $this->edition_model->get_edition_slug($linked_id);
-                // redirect(base_url("event/" . $slug));
-                redirect(base_url("user/unsub_success/" . $crypt));
+                $this->load->model('edition_model');
+                $edition_data = $this->edition_model->get_edition_sum($linked_id);
+                $user_data['edition_name']=$edition_data['edition_name'];
+                // mail vir user
+                $mail_id = $this->send_confirmation_email($user_data, "unsubscribe_edition");
+                // een vir my
+                $user_data['user_email']=$this->ini_array['email']['from_address'];
+                $mail_id = $this->send_confirmation_email($user_data, "unsubscribe_edition");
             }
-            redirect(base_url("newsletter"));
+
+            // check if logged in, then redirect to my-subscriptions, else, go to edition that is being unsubscribed from, or newsletter page
+            if (empty($this->logged_in_user)) {
+                if ($linked_to == "edition") {
+                    redirect(base_url("user/unsub_success/" . $crypt));
+                } else {
+                    redirect(base_url("newsletter"));
+                }
+            } else {
+                redirect(base_url("user/my-subscriptions"));
+            }
         } else {
-            redirect(base_url("user/my-subscriptions"));
+            $this->session->set_flashdata([
+                'alert' => "Subsciption could not be found",
+                'status' => "danger",
+                'icon' => "minus-circle",
+            ]);
+            redirect(base_url());
         }
     }
 
@@ -379,7 +400,7 @@ class User extends Frontend_Controller
         $str = my_decrypt($crypt);
         $data = explode("|", $str);
         $linked_id = $data[2];
-        
+
         $this->load->model('edition_model');
         $this->data_to_views['edition_info'] = $this->edition_model->get_edition_sum($linked_id);
 
@@ -639,6 +660,18 @@ class User extends Frontend_Controller
                         . "<p>Please click on the link below to confirm this was you, and set a new password:</p>"
                         . "<p style='padding-left: 15px; border-left: 4px solid #ccc;'><b>Click to confirm:</b><br><a href='$url' style = 'color:#222222 !important;text-decoration:underline !important;'>$url</a></p>"
                         . "<p>If this was not you, you can safely ignore this email.</p>",
+                    "from" => "noreply@roadrunning.co.za",
+                    "from_name" => "noreply@roadrunning.co.za",
+                ];
+                break;
+            case "unsubscribe_edition":
+                $data = [
+                    "to" => $user_data['user_email'],
+                    "bcc" => $this->ini_array['email']['from_address'],
+                    "subject" => "Removed from mailing list: ".$user_data['edition_name'],
+                    "body" => "<h2>Mailing list removal confirmation</h2>"
+                        . "<p>".$user_data['user_name']."</p>"
+                        . "<p>You have successfully been unsubscribed from the <b>".$user_data['edition_name']."</b> mailing list.</p>",
                     "from" => "noreply@roadrunning.co.za",
                     "from_name" => "noreply@roadrunning.co.za",
                 ];
