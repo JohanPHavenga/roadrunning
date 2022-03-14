@@ -43,7 +43,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
         <link href="<?= base_url('assets/css/responsive.css'); ?>" rel="stylesheet" media="screen"> -->
 
   <!-- critical path css -->
-  <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet preload" type="text/css">
+  <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet" type="text/css">
   <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
   <link href="<?= base_url('assets/css/print.css'); ?>" rel="stylesheet" type="text/css" media="print"/>
 
