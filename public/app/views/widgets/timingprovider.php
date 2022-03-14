@@ -92,13 +92,34 @@ switch ($edition_data['timingprovider_id']) {
                 <div class="col-lg-4 col-sm-4">
                     <p class="text-center">
                         <a href="<?= $url; ?>" title="View results on EventTiming site">
-                            <img src="/assets/img/eventtiming_logo.jpg" alt="EventTiming Logo" style="width: 70%;"  />
+                            <img src="/assets/img/eventtiming_logo.jpg" alt="EventTiming Logo" style="width: 70%;" />
                         </a>
                     </p>
                 </div>
 
                 <div class="col-lg-7 col-sm-7">
                     <h5>Official time keeping done by <a href="<?= $url; ?>" title="View results on EventTiming site">
+                            <?= $edition_data['timingprovider_name']; ?></a></h5>
+                    <p style="font-size: 0.9em;">Click on their logo to view the official results on their site</p>
+                </div>
+            </div>
+        </div>
+    <?php
+        break;
+    case 7:
+    ?>
+        <div class="content col-lg-12">
+            <div class="row">
+                <div class="col-lg-3 col-sm-3">
+                    <p class="text-center">
+                        <a href="<?= $url; ?>" title="View results on MobiTiming site">
+                            <img src="/assets/img/mobi_timing_logo.png" alt="Mobi Timing Logo" style="width: 50%;" />
+                        </a>
+                    </p>
+                </div>
+
+                <div class="col-lg-7 col-sm-7">
+                    <h5>Official time keeping done by <a href="<?= $url; ?>" title="View results on MobiTiming site">
                             <?= $edition_data['timingprovider_name']; ?></a></h5>
                     <p style="font-size: 0.9em;">Click on their logo to view the official results on their site</p>
                 </div>

@@ -241,9 +241,9 @@
                   ?>
                   <div class="row">
                     <div class="col-lg-12">
-                      <a class="btn btn-default btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">
+                      <a class="btn btn-default btn-icon-holder btn-creative" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">
                         View results
-                        <i class="fa fa-arrow-right"></i></a>
+                        <i class="fa fa-arrow-right" style="position: relative; right: -12px;"></i></a>
                     </div>
                   </div>
                   <?php
@@ -275,61 +275,68 @@
             </div>
           </div>
 
-          <div class="row m-b-20">
-            <div class="col-lg-12">
-              <div class="accordion accordion-shadow">
-                <?php
-                foreach ($race_list as $race_id => $race) {
-                  $ac_data['race'] = $race;
-                  $ac_data['active'] = '';
-                  if ($race_id === array_key_first($race_list)) {
-                    $ac_data['active'] = "ac-active";
-                  }
 
-                  $this->load->view('widgets/race_accordion_item', $ac_data);
-                }
-                ?>
+          <?php
+          if (!$in_past) {
+          ?>
+            <div class="row m-b-20">
+              <div class="col-lg-12">
+                <div class="accordion accordion-shadow">
+                  <?php
+                  foreach ($race_list as $race_id => $race) {
+                    $ac_data['race'] = $race;
+                    $ac_data['active'] = '';
+                    if ($race_id === array_key_first($race_list)) {
+                      $ac_data['active'] = "ac-active";
+                    }
+
+                    $this->load->view('widgets/race_accordion_item', $ac_data);
+                  }
+                  ?>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- ENTRIES info -->
-          <div class="heading-text heading-line">
-            <h4 class="text-uppercase">How to enter</h4>
-          </div>
-          <?php
-          $this->load->view('event/content/entries');
-          ?>
+            <!-- ENTRIES info -->
+            <div class="heading-text heading-line">
+              <h4 class="text-uppercase">How to enter</h4>
+            </div>
+            <?php
+            $this->load->view('event/content/entries');
+            ?>
 
-          <!-- RACE DAY info -->
+            <!-- RACE DAY info -->
+            <?php
+            // if you touvh this, update the race-day-info view as well
+            if (
+              (strlen($edition_data['edition_general_detail']) > 10) ||
+              ($edition_data['edition_info_medals']) ||
+              ($edition_data['edition_info_togbag']) ||
+              ($edition_data['edition_info_headphones']) ||
+              ($edition_data['edition_info_prizegizing'] != "00:00:00")
+            ) {
+              $this->load->view('event/content/race-day-information');
+            }
+            ?>
+            <!-- Route Maps -->
+            <div class="heading-text heading-line">
+              <h4 class="text-uppercase">Race Route Maps</h4>
+            </div>
+            <?php
+            $this->load->view('event/content/route-maps');
+            ?>
+
+            <!-- Accommodation -->
+            <div class="heading-text heading-line">
+              <h4 class="text-uppercase">Accomodation near the race</h4>
+            </div>
+            <?php
+            $this->load->view('event/content/accommodation');
+            ?>
+
           <?php
-          // if you touvh this, update the race-day-info view as well
-          if (
-            (strlen($edition_data['edition_general_detail']) > 10) ||
-            ($edition_data['edition_info_medals']) ||
-            ($edition_data['edition_info_togbag']) ||
-            ($edition_data['edition_info_headphones']) ||
-            ($edition_data['edition_info_prizegizing'] != "00:00:00")
-          ) {
-            $this->load->view('event/content/race-day-information');
           }
           ?>
-          <!-- Route Maps -->
-          <div class="heading-text heading-line">
-            <h4 class="text-uppercase">Race Route Maps</h4>
-          </div>
-          <?php
-          $this->load->view('event/content/route-maps');
-          ?>
-
-          <!-- Accommodation -->
-          <div class="heading-text heading-line">
-            <h4 class="text-uppercase">Accomodation near the race</h4>
-          </div>
-          <?php
-          $this->load->view('event/content/accommodation');
-          ?>
-
           <!-- race organisers info -->
           <div class="heading-text heading-line m-t-50">
             <h4 class="text-uppercase">Race Organisers info</h4>
@@ -449,7 +456,6 @@
                 ?>
               </div>
             </div>
-
           </div>
 
           <!-- more race info -->

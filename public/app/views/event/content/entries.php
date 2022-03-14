@@ -25,8 +25,8 @@
                 }
             ?>
                 <p>
-                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-<?= $btn_state; ?> btn-creative btn-icon-holder btn-shadow btn-light-hover"><?= $btn_text; ?>
-                        <i class="fa fa-<?= $icon; ?>"></i></a>
+                    <a href="<?= $url_list[5][0]['url_name']; ?>" class="btn btn-<?= $btn_state; ?> btn-creative btn-icon-holder btn-shadow btn-light-hover" style="padding: 20px 30px;"><?= $btn_text; ?>
+                        <i class="fa fa-<?= $icon; ?>"  style="position: relative; right: -6px;"></i></a>
                 </p>
             <?php
             }
