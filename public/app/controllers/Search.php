@@ -202,16 +202,19 @@ class Search extends Frontend_Controller
                 $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);
             }
             // race stuffs
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_distance_int']] = $result;
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_distance_int']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
             $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
             // results
             $this->data_to_views['edition_list'][$result['edition_id']]['has_results'] = false;
-            $has_result = $this->result_model->result_exist_for_race($result['race_id']);
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['has_results'] = $has_result;
+            $has_result = $this->result_model->result_exist_for_race($result['race_distance_int']);
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_distance_int']]['has_results'] = $has_result;
             if ($has_result) {
                 $this->data_to_views['edition_list'][$result['edition_id']]['has_results'] = $has_result;
             }
+
+            // sort array according to the distance (key) decending
+            krsort($this->data_to_views['edition_list'][$result['edition_id']]['race_list']);
         }
 
         // wts($this->input->post());
