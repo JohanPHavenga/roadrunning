@@ -153,9 +153,38 @@ class Event extends Frontend_Controller
 
     // GPS
     $gps_parts = explode(",", $edition_data['edition_gps']);
-    $this->data_to_views['gps']['lat'] = $gps_parts[0];
-    $this->data_to_views['gps']['long'] = $gps_parts[1];
-    $this->data_to_views['edition_date_minus_one'] = date("Y-m-d", strtotime($edition_data['edition_date']) - 86400);
+
+    // STAY 22
+    $map_params = [
+      "lat" => $gps_parts[0],
+      "long" => $gps_parts[1],
+      "checkin" => date("Y-m-d", strtotime($edition_data['edition_date']) - 86400),
+      "checkout" => date("Y-m-d", strtotime($edition_data['edition_date']) + 86400),
+      "maincolor" => "26B8F3",
+      "showgmapsicon" => "true",
+      "markerimage" => "image's url",
+      "venue" => $edition_data['edition_address'],
+      "zoom" => "15",
+      "openmenu" => "null",
+      "freezeviewport" => "true"
+    ];
+    if (isset($file_list[1])) {
+      $map_params['markerimage'] = base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'];
+    }
+    foreach ($this->data_to_views['race_list'] as $race_id => $race) {
+      $race_file_list = $this->file_model->get_file_list("race", $race_id, true);
+
+      if (isset($race_file_list[13])) {
+        $map_params['gpx'] = base_url("file/race/" . $slug . "/gpx/" . url_title($race['race_name']) . "/" . $race_file_list[13][0]['file_name']);
+
+        // $route_maps['race'][$race_id]['url'] = base_url("file/race/" . $slug . "/route map/" . url_title($race['race_name']) . "/" . $race_file_list[7][0]['file_name']);
+      }
+    }
+    // wts($map_params,1);
+    $this->data_to_views['map_param_str'] = "aid=roadrunning";
+    foreach ($map_params as $key => $value) {
+      $this->data_to_views['map_param_str'] .= "&" . $key . "=" . $value;
+    }
 
     // SET PAGE TITLE AND META DESCRIPTIONS
     $view_to_load = $url_params[0];
@@ -255,7 +284,7 @@ class Event extends Frontend_Controller
       $this->load->view('widgets/virtual_race_notice');
     }
     $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
-    $this->load->view('event/' . $view_to_load, $this->data_to_views);   
+    $this->load->view('event/' . $view_to_load, $this->data_to_views);
     $this->load->view($this->footer_url, $this->data_to_views);
 
     // TBR
@@ -469,7 +498,7 @@ class Event extends Frontend_Controller
     // wts($race_list);
 
     $start_datetime = strtotime($edition_date) + 86400;
-    
+
     foreach ($race_list as $race) {
       // START TIME
       if (strtotime($race['race_date']) == strtotime($edition_date)) {

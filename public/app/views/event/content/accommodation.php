@@ -8,7 +8,7 @@
         } else {
         ?>
             <p>Use the interactive map below to find accommodation close to the race.</p>
-            <iframe src="https://www.stay22.com/embed/gm?aid=roadrunning&lat=<?= $gps['lat']; ?>&lng=<?= $gps['long']; ?>&checkin=<?= $edition_date_minus_one; ?>&maincolor=26B8F3&venue=<?= $edition_data['edition_address']; ?>" id="stay22-widget" width="100%" height="560" frameborder="0"></iframe>
+            <iframe src="https://www.stay22.com/embed/gm?<?=$map_param_str;?>" id="stay22-widget" width="100%" height="560" frameborder="0"></iframe>
         <?php
         }
         ?>

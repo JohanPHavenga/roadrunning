@@ -458,88 +458,6 @@
             </div>
           </div>
 
-          <!-- more race info -->
-          <div class="heading-text heading-line m-t-30">
-            <h4 class="text-uppercase">More race information</h4>
-          </div>
-
-          <div class="row m-b-40">
-            <div class="col-lg-6">
-              <div class="row">
-                <div class="col-lg-12">
-                  <?php
-                  if (isset($flyer['edition'])) {
-                  ?>
-                    <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
-                      <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
-
-                  <?php
-                  }
-                  if (isset($url_list[1])) {
-                  ?>
-                    <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
-                      <i class="fa fa-external-link-alt"></i> Race <?= $url_list['1'][0]['urltype_buttontext']; ?></a>
-
-                  <?php
-                  }
-                  ?>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <?php
-                  // BUTTONS
-                  if (!in_array(5, $edition_data['entrytype_list'])) {
-                  ?>
-                    <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>">Entry Details</a>
-                  <?php
-                  }
-                  ?>
-                  <a class="btn btn-light" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info</a>
-
-                </div>
-              </div>
-              <?php
-              // running mann link
-              if (isset($url_list[10])) {
-              ?>
-                <div class="row">
-                  <div class="col-lg-12">
-                    <a href="<?= $url_list['10'][0]['url_name']; ?>" class="btn btn-light" title="<?= $url_list['10'][0]['urltype_helptext']; ?>">
-                      <i class="fa fa-external-link-alt"></i> <i class="fa fa-running"></i> <?= $url_list['10'][0]['urltype_buttontext']; ?></a>
-                  </div>
-                </div>
-              <?php
-              }
-              ?>
-            </div>
-            <div class="col-lg-6">
-              <?php
-              // VIDEO
-              // You Tube
-              if (isset($url_list[11])) {
-                // wts($url_list[11]);
-                $pos = strpos($url_list[11][0]['url_name'], "=");
-                $video_code = substr($url_list[11][0]['url_name'], $pos + 1);
-                // echo $video_code;
-                // echo $pos;
-              ?>
-                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/<?= $video_code; ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              <?php
-              }
-              if (isset($file_list[11])) {
-                $video_url = $flyer_list['edition']['url'] = base_url("file/edition/" . $slug . "/video/" . $this->data_to_views['file_list'][11][0]['file_name']);
-                // wts($file_list[11]);
-                // add code for local video here
-              ?>
-                <video src="<?= $video_url; ?>" width="100%" controls></video>
-              <?php
-              }
-              ?>
-            </div>
-          </div>
-
-
           <!-- <div class="heading-text heading-line text-center m-t-30">
             <h4>Event Reviews</h4>
           </div>
@@ -629,9 +547,9 @@
 
         // MAP WIDGET
         // if not virtual
-        if ($edition_data['edition_status'] != 17) {
-          $this->load->view('widgets/map');
-        }
+        // if ($edition_data['edition_status'] != 17) {
+        //   $this->load->view('widgets/map');
+        // }
 
         // RACE STATUS
         // if ($edition_data['edition_status'] == 1) {
@@ -641,6 +559,113 @@
         ?>
       </div>
       <!-- end: Sidebar-->
+    </div>
+
+
+    <!-- more info row -->
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- more race info -->
+        <div class="heading-text heading-line m-t-30">
+          <h4 class="text-uppercase">More race information</h4>
+        </div>
+
+        <div class="row m-b-40">
+          <div class="col-lg-12">
+            <?php
+            if ($edition_data['edition_status'] == 17) {
+            ?>
+              <a class="btn btn-primary btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">How do I track my run?
+                <i class="fa fa-arrow-right"></i></a>
+            <?php
+            }
+            // BUTTONS
+            if (!in_array(5, $edition_data['entrytype_list'])) {
+              switch ($online_entry_status) {
+                case "open":
+                  $btn_text = "Entries Open!";
+                  $btn_type = "success";
+                  break;
+                case "closed":
+                  $btn_text = "Entries Closed";
+                  $btn_type = "danger";
+                  break;
+                default:
+                  $btn_text = "Entry Details";
+                  $btn_type = "light";
+                  break;
+              }
+            ?>
+              <a class="btn btn-<?= $btn_type; ?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?= $btn_text; ?>
+                <i class="fa fa-arrow-right"></i></a>
+            <?php
+            }
+            ?>
+            <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
+              <i class="fa fa-arrow-right"></i></a>
+          </div>
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-lg-12">
+                <?php
+                if (isset($flyer['edition'])) {
+                ?>
+                  <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                    <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+                <?php
+                }
+                if (isset($url_list[1])) {
+                ?>
+                  <a href="<?= $url_list['1'][0]['url_name']; ?>" class="btn btn-light">
+                    <i class="fa fa-external-link-alt"></i> Race <?= $url_list['1'][0]['urltype_buttontext']; ?></a>
+
+                <?php
+                }
+                ?>
+              </div>
+            </div>
+            
+            <?php
+            // running mann link
+            if (isset($url_list[10])) {
+            ?>
+              <div class="row">
+                <div class="col-lg-12">
+                  <a href="<?= $url_list['10'][0]['url_name']; ?>" class="btn btn-light" title="<?= $url_list['10'][0]['urltype_helptext']; ?>">
+                    <i class="fa fa-external-link-alt"></i> <i class="fa fa-running"></i> <?= $url_list['10'][0]['urltype_buttontext']; ?></a>
+                </div>
+              </div>
+            <?php
+            }
+            ?>
+          </div>
+          <div class="col-lg-6">
+            <?php
+            // VIDEO
+            // You Tube
+            if (isset($url_list[11])) {
+              // wts($url_list[11]);
+              $pos = strpos($url_list[11][0]['url_name'], "=");
+              $video_code = substr($url_list[11][0]['url_name'], $pos + 1);
+              // echo $video_code;
+              // echo $pos;
+            ?>
+              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/<?= $video_code; ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <?php
+            }
+            if (isset($file_list[11])) {
+              $video_url = $flyer_list['edition']['url'] = base_url("file/edition/" . $slug . "/video/" . $this->data_to_views['file_list'][11][0]['file_name']);
+              // wts($file_list[11]);
+              // add code for local video here
+            ?>
+              <video src="<?= $video_url; ?>" width="100%" controls></video>
+            <?php
+            }
+            ?>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
