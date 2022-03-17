@@ -154,6 +154,8 @@ class Event extends Frontend_Controller
     // GPS
     $gps_parts = explode(",", $edition_data['edition_gps']);
 
+    // wts($edition_data,1);
+
     // STAY 22
     $map_params = [
       "lat" => $gps_parts[0],
@@ -163,10 +165,9 @@ class Event extends Frontend_Controller
       "maincolor" => "26B8F3",
       "showgmapsicon" => "true",
       "markerimage" => "image's url",
-      "venue" => $edition_data['edition_address'],
+      "venue" => $edition_data['edition_address'].",".$edition_data['town_name'],
       "zoom" => "15",
       "openmenu" => "null",
-      "freezeviewport" => "true"
     ];
     if (isset($file_list[1])) {
       $map_params['markerimage'] = base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'];
@@ -176,11 +177,8 @@ class Event extends Frontend_Controller
 
       if (isset($race_file_list[13])) {
         $map_params['gpx'] = base_url("file/race/" . $slug . "/gpx/" . url_title($race['race_name']) . "/" . $race_file_list[13][0]['file_name']);
-
-        // $route_maps['race'][$race_id]['url'] = base_url("file/race/" . $slug . "/route map/" . url_title($race['race_name']) . "/" . $race_file_list[7][0]['file_name']);
       }
     }
-    // wts($map_params,1);
     $this->data_to_views['map_param_str'] = "aid=roadrunning";
     foreach ($map_params as $key => $value) {
       $this->data_to_views['map_param_str'] .= "&" . $key . "=" . $value;
