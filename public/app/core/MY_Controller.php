@@ -38,12 +38,11 @@ class MY_Controller extends CI_Controller
 <head>
 <meta http-equiv = "Content-Type" content = "text/html; charset=utf-8" />
 <meta name = "viewport" content = "width=device-width, initial-scale=1.0"/>
-<style>a, a[x-apple-data-detectors] { color:inherit!important;
+<style>a, a[x-apple-data-detectors] { color:#0000EE!important;
 font-family:inherit!important;
 font-size:inherit!important;
 font-weight:inherit!important;
 line-height:inherit!important;
-text-decoration:none!important;
 }</style>
 </head>
 <body style = "background-color:#FFFFFF;margin:0;padding:0;">
@@ -69,6 +68,9 @@ $post_text
 </body>
 </html>
 EOT;
+        $html=str_replace("<a href=","<u><a style='text-decoration:underline; color:#0000EE;' href=",$html);
+        $html=str_replace("</a>","</a></u>",$html);
+        // wts($html,1);
         return $html;
     }
 
@@ -470,11 +472,7 @@ class Frontend_Controller extends MY_Controller
             } else {
                 $from_name = $this->ini_array['email']['from_name'];
             }
-
-            if (isset($data['bcc'])) {
-                $bcc = $data['bcc'];
-            } 
-
+     
             $emailque_data = array(
                 'emailque_subject' => $data['subject'],
                 'emailque_to_address' => $data['to'],
@@ -482,13 +480,15 @@ class Frontend_Controller extends MY_Controller
                 'emailque_status' => 5,
                 'emailque_from_address' => $from,
                 'emailque_from_name' => $from_name,
-                'emailque_bcc_address' => $bcc,
             );
             if (isset($data['to_name'])) {
                 $emailque_data['emailque_to_name'] = $data['to_name'];
             }
             if (isset($data['cc'])) {
                 $emailque_data['emailque_cc_address'] = $data['cc'];
+            }
+            if (isset($data['bcc'])) {
+                $emailque_data['emailque_bcc_address'] = $data['bcc'];
             }
             $params = [
                 "action" => "add",
