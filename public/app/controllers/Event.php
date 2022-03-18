@@ -164,10 +164,13 @@ class Event extends Frontend_Controller
       "checkout" => date("Y-m-d", strtotime($edition_data['edition_date']) + 86400),
       "maincolor" => "26B8F3",
       "showgmapsicon" => "true",
-      "markerimage" => "image's url",
       "venue" => $edition_data['edition_address'].",".$edition_data['town_name'],
       "zoom" => "15",
       "openmenu" => "null",
+      "hidesearchbar" => "true",
+      "hidefilters" => "true",
+      "hideguestpicker" => "true",
+      "hidecheckinout" => "true",      
     ];
     if (isset($file_list[1])) {
       $map_params['markerimage'] = base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'];

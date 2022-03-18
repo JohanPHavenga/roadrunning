@@ -24,10 +24,10 @@
                   }
                   // potential to add photos here
                   ?>
-                  <!--                                    <a href="images/shop/products/product-large.jpg" data-lightbox="image" title="Shop product image!"><img alt="Shop product image!" src="images/shop/products/1.jpg">
-                    </a>
-                    <a href="images/shop/products/product-large.jpg" data-lightbox="image" title="Shop product image!"><img alt="Shop product image!" src="images/shop/products/2.jpg">
-                    </a>-->
+                  <!-- <a href="images/shop/products/product-large.jpg" data-lightbox="image" title="Shop product image!"><img alt="Shop product image!" src="images/shop/products/1.jpg">
+                  </a>
+                  <a href="images/shop/products/product-large.jpg" data-lightbox="image" title="Shop product image!"><img alt="Shop product image!" src="images/shop/products/2.jpg">
+                  </a> -->
                 </div>
                 <!-- Carousel slider -->
               </div>
@@ -318,20 +318,21 @@
               $this->load->view('event/content/race-day-information');
             }
             ?>
+
+            <!-- Accommodation -->
+            <div class="heading-text heading-line">
+              <h4 class="text-uppercase">Map</h4>
+            </div>
+            <?php
+            $this->load->view('event/content/accommodation');
+            ?>
+
             <!-- Route Maps -->
             <div class="heading-text heading-line">
               <h4 class="text-uppercase">Race Route Maps</h4>
             </div>
             <?php
             $this->load->view('event/content/route-maps');
-            ?>
-
-            <!-- Accommodation -->
-            <div class="heading-text heading-line">
-              <h4 class="text-uppercase">Accomodation near the race</h4>
-            </div>
-            <?php
-            $this->load->view('event/content/accommodation');
             ?>
 
           <?php
@@ -547,9 +548,9 @@
 
         // MAP WIDGET
         // if not virtual
-        // if ($edition_data['edition_status'] != 17) {
-        //   $this->load->view('widgets/map');
-        // }
+        if ($edition_data['edition_status'] != 17) {
+          $this->load->view('widgets/map');
+        }
 
         // RACE STATUS
         // if ($edition_data['edition_status'] == 1) {
@@ -625,7 +626,7 @@
                 ?>
               </div>
             </div>
-            
+
             <?php
             // running mann link
             if (isset($url_list[10])) {

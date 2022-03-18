@@ -76,6 +76,12 @@
 
                 // ADS WIDGET
                 $this->load->view('widgets/side_ad');
+
+                // MAP WIDGET
+                // if not virtual
+                if ($edition_data['edition_status'] != 17) {
+                    $this->load->view('widgets/map');
+                }
                 ?>
             </div>
             <!-- end: Sidebar-->

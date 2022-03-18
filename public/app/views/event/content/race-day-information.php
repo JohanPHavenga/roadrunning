@@ -119,7 +119,7 @@ if (!in_array(3, $edition_data['regtype_list'])) {
 <?php
 if ($edition_data['edition_status'] != 17) {
 ?>
-    <div class="row m-b-40">
+    <!-- <div class="row m-b-40">
         <div class="col-lg-12">
             <div class="heading-text heading-line">
                 <h4 class="text-uppercase">Location Map</h4>
@@ -139,7 +139,7 @@ if ($edition_data['edition_status'] != 17) {
                 ?>
             </p>
         </div>
-    </div>
+    </div> -->
 <?php
 }
 ?>
