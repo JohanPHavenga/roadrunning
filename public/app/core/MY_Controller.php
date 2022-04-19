@@ -1841,6 +1841,8 @@ class Admin_Controller extends MY_Controller
             } else {
                 $racetype_name = $race_data['racetype_name'];
             }
+            // verander "road" na race
+            if (strtolower($racetype_name)=="road") { $racetype_name="Race"; }
             $race_data['race_name'] = $this->get_race_name_from_status($race_data['race_name'], $race_data['race_distance'], $racetype_name, $race_data['race_status']);
         }
         // check for empty minimum age

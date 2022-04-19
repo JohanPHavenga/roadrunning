@@ -153,9 +153,29 @@
                     }
                     echo "</li>";
                 }
+
+                if (isset($edition_data['race_summary']['fees_per_race'])) {
+                    echo "<li><b>Race entry fees:</b>";
+                    echo "<ul>";
+                        foreach ($edition_data['race_summary']['fees_per_race'] as $race_fee) {
+                            echo "<li>";
+                            echo $race_fee['name'].": ";
+                            if (array_key_exists("race_fee_flat",$race_fee['fees'])) {
+                                echo "R<b>".floatval($race_fee['fees']['race_fee_flat'])."</b>";
+                            } else {
+                                echo "R<b>".floatval($race_fee['fees']['race_fee_senior_licenced'])."</b> - R<b>".floatval($race_fee['fees']['race_fee_senior_unlicenced'])."</b>";
+                            }
+                            echo "</li>";
+                        }
+                    echo "</ul></li>";
+                }
+
                 ?>
             </ul>
             <?php
+            // wts($edition_data['race_summary']);
+
+
             // always show what is in the box
             if (strlen($edition_data['edition_entry_detail']) > 10) {
                 echo $edition_data['edition_entry_detail'];
