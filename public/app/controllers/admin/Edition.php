@@ -606,7 +606,7 @@ class Edition extends Admin_Controller
     $this->date_model->set_date("add", NULL, $date_data, false);
 
     // copy files over
-    $filetypes_to_copy = [1, 7]; // 1=logo; 7=route_maps
+    $filetypes_to_copy = [1, 7, 12, 13]; // 1=logo; 7=route_maps; 12=route_profile; 13=GPX
     foreach ($filetypes_to_copy as $filetype_id) {
       // edition files
       if (isset($file_list[$filetype_id])) {
@@ -630,7 +630,7 @@ class Edition extends Admin_Controller
     }
 
     // copy URLs over
-    $urltypes_to_copy = [1, 6, 8, 10]; // 1=website; 6=facebook; 8=routemap; 10=running mann
+    $urltypes_to_copy = [1, 6, 8, 10, 12, 13, 14]; // 1=website; 6=facebook; 8=routemap; 10=running mann; 12=routeprofile; 13=Twitter; 14=insta
     foreach ($urltypes_to_copy as $urltype_id) {
       // edition files
       if (isset($url_list[$urltype_id])) {

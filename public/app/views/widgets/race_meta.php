@@ -22,6 +22,18 @@
             <span class="post-meta"><i class="fa fa-map-marker"></i> Virtual Race</span>
         <?php
         } else {
+            $btn_class="btn-light";
+            if (!$this->session->user['logged_in']) {
+                $fav_link = "href='".base_url("login")."'";
+                $fav_id = "";                
+            } else {
+                $fav_link = "";
+                $fav_id = "fav_but_add";
+                if ($edition_data['is_favourite']) {
+                    $btn_class="btn-primary";
+                    $fav_id = "fav_but_remove";
+                } 
+            }
         ?>
             <span class="post-meta"><i class="fa fa-clock"></i>
                 <time datetime="<?= ftimeSort($edition_data['race_summary']['times']['start']); ?>">
@@ -45,9 +57,16 @@
                     <i class="fa fa-map-marked"></i> <?= $edition_data['edition_gps']; ?>
                 </a>
             </span>
+            <span class="post-meta">
+                <a <?= $fav_link; ?> class="btn <?=$btn_class;?> btn-xs" id="<?= $fav_id; ?>">
+                    <i class="far fa-heart" aria-hidden="true"></i> Favourite</a>
+            </span>
         <?php
         }
+
         ?>
 
     </div>
 </div>
+
+

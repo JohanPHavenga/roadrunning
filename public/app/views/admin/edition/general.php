@@ -326,6 +326,19 @@
                     ?>
                 </div>
             </div>
+            <div class="row">
+                <div class='col-sm-12'>
+                    <?php
+                    echo form_label('Redirect URL', 'edition_redirect_url');
+                    echo form_input([
+                        'name' => 'edition_redirect_url',
+                        'id' => 'edition_redirect_url',
+                        'value' => set_value('edition_redirect_url', $edition_detail['edition_redirect_url']),
+                        'class' => 'form-control',
+                    ]);
+                    ?>
+                </div>
+            </div>
         </div>
 
     </div>

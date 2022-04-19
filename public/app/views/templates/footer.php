@@ -227,7 +227,58 @@ if (isset($scripts_to_load)) :
 endif;
 ?>
 
+<script type="text/javascript">
+  // Ajax post
+  $(document).ready(function() {
+    $("#fav_but_add").click(function() {
+      $('#fav_but_add').removeClass('btn-light');
+      $('#fav_but_add').addClass('btn-primary');
+      jQuery.ajax({
+        type: "POST",
+        url: "<?php echo base_url('/favourite/add_fav'); ?>",
+        dataType: 'html',
+        data: {
+          user_id: <?= $logged_in_user['user_id']; ?>,
+          edition_id: <?= $edition_data['edition_id']; ?>
+        },
+        success: function(res) {
+          if (res == 1) {
+            // alert('Data saved successfully');
+          } else {
+            // alert('Data not saved');
+          }
+        },
+        error: function() {
+          // alert('data not saved');
+        }
+      });
+    });
 
+    $("#fav_but_remove").click(function() {
+      $('#fav_but_remove').removeClass('btn-primary');
+      $('#fav_but_remove').addClass('btn-light');
+      jQuery.ajax({
+        type: "POST",
+        url: "<?php echo base_url('/favourite/remove_fav'); ?>",
+        dataType: 'html',
+        data: {
+          user_id: <?= $logged_in_user['user_id']; ?>,
+          edition_id: <?= $edition_data['edition_id']; ?>
+        },
+        success: function(res) {
+          if (res == 1) {
+            // alert('Data saved successfully');
+          } else {
+            // alert('Data not saved');
+          }
+        },
+        error: function() {
+          // alert('data not saved');
+        }
+      });
+    });
+  });
+</script>
 
 <script>
   <?php
@@ -317,6 +368,28 @@ endif;
     }
   })
 </script>
+<script data-cfasync="false" type="text/javascript" id="clever-core">
+  (function(document, window) {
+    var a, c = document.createElement("script");
+
+    c.id = "CleverCoreLoader57832";
+    c.src = "//scripts.cleverwebserver.com/cad3fbe52f17ce161d687847c744ea9d.js";
+
+    c.async = !0;
+    c.type = "text/javascript";
+    c.setAttribute("data-target", window.name);
+    c.setAttribute("data-callback", "put-your-callback-macro-here");
+
+    try {
+      a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
+    } catch (e) {
+      a = !1;
+    }
+
+    a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
+    a.parentNode.insertBefore(c, a);
+  })(document, window);
+</script>
 
 <?php
 if ($this->ini_array['enviroment']['server'] != "production") {
@@ -351,7 +424,10 @@ if ($this->ini_array['enviroment']['server'] != "production") {
   </div>
 <?php
 }
+
+// hierdie is die code vir die onrunads.com
 ?>
+
 </body>
 
 </html>

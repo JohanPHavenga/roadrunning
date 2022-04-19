@@ -38,12 +38,16 @@ class Event extends Frontend_Controller
 
     // gebruik slug om ID te kry
     $edition_sum = $this->edition_model->get_edition_id_from_slug($slug);
+    // wts($edition_sum,1);
     if ($edition_sum) {
       // AS DIE NAAM WAT INKOM, NIE DIELFDE AS DIE OFFICIAL NAAM IS NIE, DAN DOEN HY 'N 301 REDIRECT.
       if ($edition_sum['source'] == "past") {
         $new_slug = $this->edition_model->get_edition_slug($edition_sum['edition_id']);
         $url = base_url("event/" . $new_slug);
         redirect($url, 'location', 301);
+      } elseif ($edition_sum['edition_redirect_url']) {
+        // check vir 'n redirect URL
+        redirect($edition_sum['edition_redirect_url'], 'location', 301);
       } else {
         // if all is well
         $edition_id = $edition_sum['edition_id'];
@@ -89,6 +93,7 @@ class Event extends Frontend_Controller
     $this->load->model('entrytype_model');
     $this->load->model('regtype_model');
     $this->load->model('tag_model');
+    $this->load->model('favourite_model');
     // set a few vars to use
     $this->data_to_views['slug'] = $slug;
     $this->data_to_views['contact_url'] = base_url("contact/event/" . $slug);
@@ -118,6 +123,9 @@ class Event extends Frontend_Controller
     if (array_keys_exists([4], $this->data_to_views['edition_data']['sponsor_list'])) {
       unset($this->data_to_views['edition_data']['sponsor_list']);
     }
+
+    // favourite
+    $this->data_to_views['edition_data']['is_favourite'] = $this->favourite_model->get_favourite_edition($this->logged_in_user['user_id'],$edition_id);
 
     // calc values
     if (strtotime($edition_data['edition_date']) < time()) {
@@ -164,7 +172,7 @@ class Event extends Frontend_Controller
       "checkout" => date("Y-m-d", strtotime($edition_data['edition_date']) + 86400),
       "maincolor" => "26B8F3",
       "showgmapsicon" => "true",
-      "venue" => $edition_data['edition_address'].",".$edition_data['town_name'],
+      "venue" => $edition_data['edition_address_end'].",".$edition_data['town_name'].",South Africa",
       "zoom" => "15",
       "openmenu" => "null",
       "hidesearchbar" => "true",

@@ -45,7 +45,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
   <!-- critical path css -->
   <link href="<?= base_url('assets/css/combined_min.css'); ?>" rel="stylesheet" type="text/css">
   <link href="<?= base_url('assets/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
-  <link href="<?= base_url('assets/css/print.css'); ?>" rel="stylesheet" type="text/css" media="print"/>
+  <link href="<?= base_url('assets/css/print.css'); ?>" rel="stylesheet" type="text/css" media="print" />
 
   <?php
   if (isset($css_to_load)) :
@@ -115,6 +115,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
     ga('create', 'UA-85900175-2', 'auto');
     ga('send', 'pageview');
   </script>
+ 
 
   <?php
   if ($this->ini_array['enviroment']['server'] != "production") {

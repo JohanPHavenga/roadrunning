@@ -1,8 +1,10 @@
 <?php
 
-class File extends Frontend_Controller {
+class File extends Frontend_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->helper('download');
         $this->load->model('file_model');
@@ -10,7 +12,8 @@ class File extends Frontend_Controller {
         $this->load->model('race_model');
     }
 
-    public function _remap($method, $params = array()) {
+    public function _remap($method, $params = array())
+    {
         if (method_exists(__CLASS__, $method)) {
             $this->$method($params);
         } else {
@@ -18,7 +21,8 @@ class File extends Frontend_Controller {
         }
     }
 
-    public function handler($linked_to, $params = []) {
+    public function handler($linked_to, $params = [])
+    {
         if (($linked_to == "index") || (empty($params))) {
             redirect("/race-calendar");
         }
@@ -34,9 +38,11 @@ class File extends Frontend_Controller {
                 $file_list = $this->file_model->get_file_list("edition", $edition_info['edition_id'], true);
                 $filetype_list = $this->file_model->get_filetype_list();
                 $filetype_id = $filetype_list[$filetype_name];
-                foreach ($file_list[$filetype_id] as $key => $file_detail) {
-                    if ($file_detail['file_name'] == $file_name) {
-                        $file_id = $file_detail['file_id'];
+                if ($file_list[$filetype_id]) {
+                    foreach ($file_list[$filetype_id] as $key => $file_detail) {
+                        if ($file_detail['file_name'] == $file_name) {
+                            $file_id = $file_detail['file_id'];
+                        }
                     }
                 }
                 break;
@@ -53,7 +59,7 @@ class File extends Frontend_Controller {
                         break;
                     }
                 }
-//                echo $race_id;
+                //                echo $race_id;
                 $file_list = $this->file_model->get_file_list("race", $race_id, true);
                 $filetype_list = $this->file_model->get_filetype_list();
                 $filetype_id = $filetype_list[$filetype_name];
@@ -68,19 +74,19 @@ class File extends Frontend_Controller {
                 $file_id = my_decrypt($file_id);
                 break;
         }
-//        wts($file_id);
-//        wts($params);
-//        wts($file_list);
-//        wts($filetype_list);
-//        echo $filetype_id;
-//        die();
+        //        wts($file_id);
+        //        wts($params);
+        //        wts($file_list);
+        //        wts($filetype_list);
+        //        echo $filetype_id;
+        //        die();
         // check for INT
         if (!preg_match('/^\d+$/', $file_id)) {
             $this->show_my_404("File could not be found", "danger");
         }
         // Get details
         $file_detail = $this->file_model->get_file_detail($file_id);
-//        wts($file_detail,1);
+        //        wts($file_detail,1);
         // If there is no details
         if (!$file_detail) {
             $this->show_my_404("No file found with that file ID", "danger");
@@ -96,7 +102,7 @@ class File extends Frontend_Controller {
             switch ($file_detail['file_ext']) {
                 case ".xls":
                 case ".xlsx":
-//                    die("oops");
+                    //                    die("oops");
                     header("X-Robots-Tag: noindex, nofollow", true);
                     // We'll be outputting a XLS
                     header('Content-Type: application/xls');
@@ -114,16 +120,17 @@ class File extends Frontend_Controller {
         }
     }
 
-    public function download($path) {
+    public function download($path)
+    {
         force_download($path, NULL);
     }
 
-    public function display($content_type, $path) {
-//        $path = base_url($path);
+    public function display($content_type, $path)
+    {
+        //        $path = base_url($path);
         $this->output
-                ->set_content_type($content_type)
-                ->set_output(file_get_contents($path));
-//        die($path);
+            ->set_content_type($content_type)
+            ->set_output(file_get_contents($path));
+        //        die($path);
     }
-
 }

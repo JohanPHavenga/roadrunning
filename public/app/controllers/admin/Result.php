@@ -1,11 +1,13 @@
 <?php
 
-class Result extends Admin_Controller {
+class Result extends Admin_Controller
+{
 
     private $return_url = "/admin/result/view";
     private $create_url = "/admin/result/create";
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('admin/result_model');
         $this->load->model('admin/Import_model_phpexcel', 'import');
@@ -13,7 +15,8 @@ class Result extends Admin_Controller {
         $this->load->library('form_validation');
     }
 
-    public function _remap($method, $params = array()) {
+    public function _remap($method, $params = array())
+    {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         } else {
@@ -21,7 +24,8 @@ class Result extends Admin_Controller {
         }
     }
 
-    public function search($search_string = null) {
+    public function search($search_string = null)
+    {
         $this->session->unset_userdata('edition_return_url');
 
         // add models+helpers
@@ -72,7 +76,8 @@ class Result extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function view($race_id = 0) {
+    public function view($race_id = 0)
+    {
         $this->session->unset_userdata('edition_return_url');
         // load helpers / libraries
         $this->load->library('table');
@@ -95,11 +100,11 @@ class Result extends Admin_Controller {
                 "icon" => "login",
                 "uri" => "result/import",
             ],
-//            [
-//                "name" => "Manually Add Result",
-//                "icon" => "plus",
-//                "uri" => "result/create/add",
-//            ],
+            //            [
+            //                "name" => "Manually Add Result",
+            //                "icon" => "plus",
+            //                "uri" => "result/create/add",
+            //            ],
         ];
 
         $this->data_to_view['url'] = $this->url_disect();
@@ -127,7 +132,8 @@ class Result extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    public function create($action, $id = 0) {
+    public function create($action, $id = 0)
+    {
         // block add
         if ($action != "edit") {
             $this->session->set_flashdata('alert', "Can only edit results, not add them");
@@ -222,9 +228,10 @@ class Result extends Admin_Controller {
         }
     }
 
-    public function delete($result_id = 0) {
+    public function delete($result_id = 0)
+    {
 
-        if (($result_id == 0) AND ( !is_int($result_id))) {
+        if (($result_id == 0) and (!is_int($result_id))) {
             $this->session->set_flashdata('alert', 'Cannot delete record: ' . $result_id);
             $this->session->set_flashdata('status', 'danger');
             redirect($this->return_url);
@@ -246,18 +253,18 @@ class Result extends Admin_Controller {
         redirect($this->return_url);
     }
 
-    public function delete_result_set($race_id = 0) {
+    public function delete_result_set($race_id = 0)
+    {
         $this->load->model('admin/race_model');
 
         // set return url to session should it exists
         if ($this->session->has_userdata('edition_return_url')) {
             $this->return_url = $this->session->edition_return_url;
         } else {
-            $this->return_url = base_url("admin/result/search");
-            ;
+            $this->return_url = base_url("admin/result/search");;
         }
 
-//        wts($race_id,1);
+        //        wts($race_id,1);
         // get race detail for nice delete message
         $race_detail = $this->race_model->get_race_detail($race_id);
         // delete record
@@ -276,7 +283,8 @@ class Result extends Admin_Controller {
         redirect($this->return_url);
     }
 
-    public function import($race_id = 0) {
+    public function import($race_id = 0)
+    {
 
         $this->load->library('upload');
         $this->load->library('table');
@@ -298,12 +306,15 @@ class Result extends Admin_Controller {
         $this->upload->initialize($config);
 
         // set validation rules
-        $this->form_validation->set_rules('race_id', 'Race', 'required|numeric|greater_than[0]',
-//        $this->form_validation->set_rules('race_id', 'Race', 'required|numeric|greater_than[0]|callback_check_result_file',
-                [
-//                    "check_result_file" => "This race already <b>has a result file loaded</b> against it",
-                    "greater_than" => "Select a <b>race</b> to upload the result set against",
-                ]
+        $this->form_validation->set_rules(
+            'race_id',
+            'Race',
+            'required|numeric|greater_than[0]',
+            //        $this->form_validation->set_rules('race_id', 'Race', 'required|numeric|greater_than[0]|callback_check_result_file',
+            [
+                //                    "check_result_file" => "This race already <b>has a result file loaded</b> against it",
+                "greater_than" => "Select a <b>race</b> to upload the result set against",
+            ]
         );
 
         // first check form validation
@@ -330,7 +341,7 @@ class Result extends Admin_Controller {
                 $objPHPExcel = $objReader->load($inputFileName);
             } catch (Exception $e) {
                 die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
-                        . '": ' . $e->getMessage());
+                    . '": ' . $e->getMessage());
             }
 
             // SET SESSION
@@ -356,17 +367,18 @@ class Result extends Admin_Controller {
             // set results flag 
             $set = $this->set_results_flag("race", $this->input->post('race_id'));
 
-//            wts($file_db_w);
-//            wts($set);
-//            wts($inputFileName);
-//            wts($this->input->post());
-//            wts($_SESSION['import']);
-//            die();
+            //            wts($file_db_w);
+            //            wts($set);
+            //            wts($inputFileName);
+            //            wts($this->input->post());
+            //            wts($_SESSION['import']);
+            //            die();
             redirect("/admin/result/import_confirm");
         }
     }
 
-    function import_confirm() {
+    function import_confirm()
+    {
         $page = "import_confirm";
         $this->load->library('table');
 
@@ -392,8 +404,8 @@ class Result extends Admin_Controller {
             }
             $this->data_to_view['skip'] = $skip_display;
         }
-        
-        $rows_to_display=$this->data_to_view['skip']+3;
+
+        $rows_to_display = $this->data_to_view['skip'] + 3;
 
 
         //set skip arr
@@ -407,7 +419,7 @@ class Result extends Admin_Controller {
         $this->data_to_view['columns'] = array_keys($_SESSION['import']['result_data'][1]);
         $this->data_to_view['import_data'] = array_slice($_SESSION['import']['result_data'], 0, $rows_to_display);
 
-//        wts($this->data_to_view, 1);
+        //        wts($this->data_to_view, 1);
 
         $race = $_SESSION['import']['race'];
         $distance = str_pad(round($race['race_distance'], 0), 2, '0', STR_PAD_LEFT);
@@ -420,11 +432,11 @@ class Result extends Admin_Controller {
 
                 if ($field) {
                     // exceptions
-//                    if ($field == "result_name_surname") {
-//                        $input_data = $this->set_exception_fields($input_data, "result_name_surname", $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column]);
-//                    } else {
-//                        $input_data[$field] = $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column];
-//                    }
+                    //                    if ($field == "result_name_surname") {
+                    //                        $input_data = $this->set_exception_fields($input_data, "result_name_surname", $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column]);
+                    //                    } else {
+                    //                        $input_data[$field] = $_SESSION['import']['result_data'][$this->input->post('skip') + $skip_add][$column];
+                    //                    }
                     if (!isset($input_data)) {
                         $input_data = [];
                     }
@@ -433,7 +445,7 @@ class Result extends Admin_Controller {
             }
             $this->data_to_view['input_data'] = $input_data;
 
-//            // save_only takes you back to the edit page.
+            //            // save_only takes you back to the edit page.
             if (array_key_exists("upload", $this->input->post())) {
                 // set column_map and skip values
                 $_SESSION['import']['column_map'] = $this->input->post("columns");
@@ -458,20 +470,22 @@ class Result extends Admin_Controller {
         $this->load->view($this->footer_url, $this->data_to_footer);
     }
 
-    private function add_exception_fields($field_arr) {
+    private function add_exception_fields($field_arr)
+    {
         $field_arr["result_name_surname"] = "name_surname";
         return $field_arr;
     }
 
-    private function set_exception_fields($input_data = [], $field = null, $value = null) {
+    private function set_exception_fields($input_data = [], $field = null, $value = null)
+    {
         switch ($field) {
-            case "result_name_surname" :
+            case "result_name_surname":
                 $value_parts = explode(" ", $value);
                 $input_data["result_name"] = $value_parts[0];
                 unset($value_parts[0]);
                 $input_data["result_surname"] = implode(" ", $value_parts);
                 break;
-            case "result_sex" :
+            case "result_sex":
                 $input_data[$field] = strtoupper(substr($value, 0, 1));
                 break;
             default:
@@ -481,7 +495,8 @@ class Result extends Admin_Controller {
         return $input_data;
     }
 
-    private function pre_load_per_asa($asa_member_id, $skip) {
+    private function pre_load_per_asa($asa_member_id, $skip)
+    {
         switch ($asa_member_id) {
             case 1: //WPA
                 $data['pre']["A"] = "result_pos";
@@ -526,6 +541,18 @@ class Result extends Admin_Controller {
                 $data['pre']["H"] = "result_cat";
                 $data['pre']["I"] = "result_club";
                 break;
+            case 12: // EPA
+                $data['pre']["A"] = "result_pos";
+                $data['pre']["B"] = "result_asanum";
+                $data['pre']["C"] = "result_name";
+                $data['pre']["D"] = "result_surname";
+                $data['pre']["E"] = "result_club";
+                $data['pre']["F"] = "result_sex";
+                $data['pre']["G"] = "result_age";
+                $data['pre']["H"] = "result_cat";
+                $data['pre']["I"] = "";
+                $data['pre']["J"] = "result_time";
+                break;
             default:
                 $data['pre']["A"] = "result_pos";
                 $data['pre']["B"] = "result_surname";
@@ -546,9 +573,10 @@ class Result extends Admin_Controller {
         return $data;
     }
 
-    function run_import() {
-//        wts($_SESSION['import']);
-//        die();
+    function run_import()
+    {
+        //        wts($_SESSION['import']);
+        //        die();
         // IMPORT LOGIC
         $this->load->model('admin/result_model');
         if ($_SESSION['import']) {
@@ -568,11 +596,11 @@ class Result extends Admin_Controller {
                     }
                     foreach ($row as $col => $value) {
                         if ($import['column_map'][$col]) {
-//                            if ($import['column_map'][$col] == "result_name_surname") {
-//                                $result_data = $this->set_exception_fields($result_data, "result_name_surname", $value);
-//                            } else {
-//                                $result_data[$import['column_map'][$col]] = $value;
-//                            }
+                            //                            if ($import['column_map'][$col] == "result_name_surname") {
+                            //                                $result_data = $this->set_exception_fields($result_data, "result_name_surname", $value);
+                            //                            } else {
+                            //                                $result_data[$import['column_map'][$col]] = $value;
+                            //                            }
                             $result_data = $this->set_exception_fields($result_data, $import['column_map'][$col], $value);
                         }
                     }
@@ -610,7 +638,8 @@ class Result extends Admin_Controller {
         redirect("./admin/result/import_confirmation");
     }
 
-    public function import_confirmation() {
+    public function import_confirmation()
+    {
 
         $this->data_to_header['crumbs'] = [
             "Home" => "/admin",
@@ -634,7 +663,8 @@ class Result extends Admin_Controller {
     // CUSTOM VALIDATIONS
     // =========================================================================
 
-    function check_result_file() {
+    function check_result_file()
+    {
         // check if a result file exists for the race
         $this->load->model('admin/file_model');
         if ($this->file_model->check_filetype_exists("race", $this->input->post("race_id"), 4)) {
@@ -643,5 +673,4 @@ class Result extends Admin_Controller {
             return true;
         }
     }
-
 }

@@ -548,22 +548,21 @@ class Frontend_Controller extends MY_Controller
                 "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                 "priority" => 1,
                 "changefreq" => "daily",
-                "sub-menu" => [
-                    "virtual" => [
-                        "display" => "Virtual",
-                        "loc" => base_url("race/virtual"), //calendar
-                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
-                        "priority" => 1,
-                        "changefreq" => "daily",
-                        "badge" => "POPULAR",
-                    ],
+                "sub-menu" => [                    
                     "upcoming" => [
                         "display" => "Upcoming",
                         "loc" => base_url("race/upcoming"), //calendar
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
-                        //                        "badge" => "POPULAR",
+                        "badge" => "POPULAR",
+                    ],
+                    "favourite" => [
+                        "display" => "My Favourites",
+                        "loc" => base_url("race/favourite"),
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
+                        "priority" => 1,
+                        "changefreq" => "daily",
                     ],
                     "featured" => [
                         "display" => "Featured",
@@ -578,6 +577,14 @@ class Frontend_Controller extends MY_Controller
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
+                    ],
+                    "virtual" => [
+                        "display" => "Virtual",
+                        "loc" => base_url("race/virtual"), //calendar
+                        "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
+                        "priority" => 0.8,
+                        "changefreq" => "daily",
+                        // "badge" => "POPULAR",
                     ],
                     "history" => [
                         "display" => "History",
@@ -1015,6 +1022,11 @@ class Frontend_Controller extends MY_Controller
                 "display" => "My Profile",
                 "loc" => base_url("user/profile"),
                 "icon" => "icon-user11",
+            ],
+            "favourite" => [
+                "display" => "My Favourite Races",
+                "loc" => base_url("race/favourite"),
+                "icon" => "icon-heart21",
             ],
             "results" => [
                 "display" => "My Results",

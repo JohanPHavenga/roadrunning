@@ -8,10 +8,10 @@ class Edition_model extends Frontend_model {
 
     public function get_edition_id_from_slug($edition_slug) {
         // CHECK Editions table vir die naame
-        $this->db->select("edition_id, edition_name, edition_status");
+        $this->db->select("edition_id, edition_name, edition_status, edition_redirect_url");
         $this->db->from("editions");
         $this->db->where("edition_slug", $edition_slug);
-        $this->db->where("edition_status !=", 2); // added this to enable routing for Spar virtual challenge
+        // $this->db->where("edition_status !=", 2); // added this to enable routing for Spar virtual challenge
         $editions_query = $this->db->get();
 
         // CHECK Editions_Past vir as die naam van die edition verander

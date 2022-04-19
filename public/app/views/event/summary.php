@@ -37,7 +37,9 @@
             <div class="col-lg-7">
               <?php
               // if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
-              echo $edition_data['edition_intro_detail'];
+              if (strlen($edition_data['edition_intro_detail']) > 13) {
+                echo $edition_data['edition_intro_detail'];
+              }
 
               if (isset($edition_data['sponsor_list'])) {
                 echo "<p><b>Sponsored</b> by ";
@@ -81,7 +83,7 @@
                                                     <div class="product-reviews"><a href="#">3 customer reviews</a>
                                                     </div>
                 -->
-                <!--<div class="seperator m-b-10"></div>-->
+                <!-- <div class="seperator m-b-10"></div> -->
                 <div class="m-b-20"></div>
                 <div id="race_badges">
                   <?php
@@ -317,25 +319,29 @@
             ) {
               $this->load->view('event/content/race-day-information');
             }
+
+            // virtual check
+            if ($edition_data['edition_status'] != 17) {
             ?>
 
-            <!-- Accommodation -->
-            <div class="heading-text heading-line">
-              <h4 class="text-uppercase">Map</h4>
-            </div>
-            <?php
-            $this->load->view('event/content/accommodation');
-            ?>
+              <!-- Accommodation -->
+              <div class="heading-text heading-line">
+                <h4 class="text-uppercase">Map</h4>
+              </div>
+              <?php
+              $this->load->view('event/content/accommodation');
+              ?>
 
-            <!-- Route Maps -->
-            <div class="heading-text heading-line">
-              <h4 class="text-uppercase">Race Route Maps</h4>
-            </div>
-            <?php
-            $this->load->view('event/content/route-maps');
-            ?>
+              <!-- Route Maps -->
+              <div class="heading-text heading-line">
+                <h4 class="text-uppercase">Race Route Maps</h4>
+              </div>
+              <?php
+              $this->load->view('event/content/route-maps');
+              ?>
 
           <?php
+            }
           }
           ?>
           <!-- race organisers info -->

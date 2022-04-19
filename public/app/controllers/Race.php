@@ -1,31 +1,34 @@
 <?php
 
 // Race Calendar
-class Race extends Frontend_Controller {
+class Race extends Frontend_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('edition_model');
         $this->load->model('race_model');
     }
 
-//    public function _remap($method, $params = array()) {
-//        if (method_exists($this, $method)) {
-//            return call_user_func_array(array($this, $method), $params);
-//        } else {
-//            $this->list($method, $params);
-//        }
-//    }
+    //    public function _remap($method, $params = array()) {
+    //        if (method_exists($this, $method)) {
+    //            return call_user_func_array(array($this, $method), $params);
+    //        } else {
+    //            $this->list($method, $params);
+    //        }
+    //    }
 
-    public function list($year = null, $month = null, $day = null) {
+    public function list($year = null, $month = null, $day = null)
+    {
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 9, 17]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months")),],
             "order_by" => ["edition_date" => "ASC"],
         ];
 
-//        wts($this->uri->segment(1));
-//        wts($this->router->fetch_class(),1);
+        //        wts($this->uri->segment(1));
+        //        wts($this->router->fetch_class(),1);
 
         if ($year !== null) {
             if (is_numeric($year)) {
@@ -79,7 +82,7 @@ class Race extends Frontend_Controller {
             // race stuffs
             $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
             $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);            
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
         }
 
         // check cookie vir listing preference.
@@ -95,13 +98,14 @@ class Race extends Frontend_Controller {
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         // if (($this->uri->segment(1) == "race") || (!($this->data_to_views['edition_list']))) {
-            $this->load->view('templates/search_form');
+        $this->load->view('templates/search_form');
         // }
         $this->load->view('templates/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-    
-    public function virtual() {
+
+    public function virtual()
+    {
         $query_params = [
             "where_in" => ["edition_status" => [17]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s")],
@@ -124,7 +128,7 @@ class Race extends Frontend_Controller {
             // race stuffs
             $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
             $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);            
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
         }
 
 
@@ -142,12 +146,67 @@ class Race extends Frontend_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
-//        $this->load->view('templates/search_form');
+        //        $this->load->view('templates/search_form');
         $this->load->view('templates/' . $view_to_load, $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function featured() {
+    public function favourite()
+    {
+        // wts("2",1);
+        $this->load->model('favourite_model');
+        if ($this->logged_in_user) {
+            $fav_edition_arr = $this->favourite_model->get_favourite_list($this->logged_in_user['user_id']);
+            $query_params = [
+                "where_in" => ["edition_id" => $fav_edition_arr, "edition_status" => [1, 3, 9, 17]],
+                "where" => ["edition_date >= " => date("Y-m-d H:i:s", strtotime("-1 month")),],
+                "order_by" => ["edition_date" => "ASC"],
+            ];
+            $search_table_result = $this->edition_model->main_search($query_params, 0);
+            // wts($search_table_result, 1);
+
+
+            foreach ($search_table_result as $result) {
+                if (!isset($this->data_to_views['edition_list'][$result['edition_id']])) {
+                    $this->data_to_views['edition_list'][$result['edition_id']] = $result;
+                    // status msg
+                    $this->data_to_views['edition_list'][$result['edition_id']]['status_info'] = $this->formulate_status_notice($result);
+                }
+                // race stuffs
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
+            }
+
+            // check cookie vir listing preference.
+            if (get_cookie("listing_pref") == "grid") {
+                $view_to_load = 'race_grid';
+            } else {
+                $view_to_load = 'race_list';
+            }
+            if (empty($search_table_result)) { $view_to_load = 'favourite_msg'; }
+        } else {
+            $view_to_load = 'favourite_msg';
+        }
+
+        $this->data_to_views['banner_img'] = "run_11";
+        $this->data_to_views['banner_pos'] = "40%";
+        $this->data_to_views['page_title'] = "Favourite Races";
+        $this->data_to_views['meta_description'] = "List of your favourite events";
+
+        $this->load->view($this->header_url, $this->data_to_views);
+        $this->load->view($this->banner_url, $this->data_to_views);
+        $this->load->view($this->notice_url, $this->data_to_views);
+        if ($this->logged_in_user) {
+            $this->data_to_views['page_menu'] = $this->get_user_menu();
+            $this->load->view('templates/page_menu', $this->data_to_views);
+        }
+        $this->load->view('templates/' . $view_to_load, $this->data_to_views);
+        $this->load->view($this->footer_url, $this->data_to_views);
+    }
+
+    public function featured()
+    {
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 9, 17]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s"), "edition_isfeatured " => 1,],
@@ -170,7 +229,7 @@ class Race extends Frontend_Controller {
             // race stuffs
             $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
             $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
-            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);            
+            $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
         }
 
         // check cookie vir listing preference.
@@ -192,7 +251,8 @@ class Race extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function most_viewed() {
+    public function most_viewed()
+    {
         $this->load->model('history_model');
         $this->data_to_views['edition_list'] = [];
         $query_params = [
@@ -226,11 +286,12 @@ class Race extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function history($year = null) {
+    public function history($year = null)
+    {
 
         if ($year) {
             $query_params = [
-//            "where" => ["edition_date >= " => date("Y-m-d H:i:s"),"edition_date < " => date("Y-m-d H:i:s", strtotime($time_span)),],
+                //            "where" => ["edition_date >= " => date("Y-m-d H:i:s"),"edition_date < " => date("Y-m-d H:i:s", strtotime($time_span)),],
                 "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 3, 9, 17]],
                 "order_by" => ["edition_date" => "DESC"],
             ];
@@ -260,7 +321,8 @@ class Race extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function results() {
+    public function results()
+    {
         $query_params = [
             "where_in" => ["region_id" => $this->session->region_selection, "edition_status" => [1, 17]],
             "where" => ["edition_date >= " => date("Y-m-d H:i:s", strtotime("-2 months")), "edition_date <= " => date("Y-m-d H:i:s"),],
@@ -273,7 +335,7 @@ class Race extends Frontend_Controller {
                 $this->data_to_views['edition_list'][$edition_id]['status_info'] = $this->formulate_status_notice($edition_data);
             }
         }
-//        wts($this->data_to_views['edition_list'],true);
+        //        wts($this->data_to_views['edition_list'],true);
 
         $this->data_to_views['banner_img'] = "run_14";
         $this->data_to_views['banner_pos'] = "50%";
@@ -282,12 +344,13 @@ class Race extends Frontend_Controller {
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
-//        $this->load->view('templates/search_form');
+        //        $this->load->view('templates/search_form');
         $this->load->view('templates/race_list', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function parkrun() {
+    public function parkrun()
+    {
         $this->data_to_views['banner_img'] = "run_04";
         $this->data_to_views['banner_pos'] = "15%";
         $this->data_to_views['page_title'] = "parkrun";
@@ -298,5 +361,4 @@ class Race extends Frontend_Controller {
         $this->load->view('race/parkrun', $this->data_to_views);
         $this->load->view($this->footer_url, $this->data_to_views);
     }
-
 }
