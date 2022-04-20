@@ -103,6 +103,7 @@ class Search extends Frontend_Controller
 
 
         // STATUS
+        set_cookie("search_status_pref", $this->input->post("status"), 172800);
         switch ($this->input->post("status")) {
             case 'active':
                 $search_params['where_in']['edition_status'] = [1, 17];

@@ -41,10 +41,15 @@
                 $status_options = array(
                     'all' => 'All',
                     'active' => 'Active',
-                    'confirmed' => 'Confirmed',
+                    // 'confirmed' => 'Confirmed',
                     'verified' => 'Verified',                    
                 );
-                echo form_dropdown('status', $status_options, set_value('status'), ["id" => "status"]);
+                if(get_cookie("search_status_pref")) {
+                    $init_status_value = get_cookie("search_status_pref");
+                } else {
+                    $init_status_value = 'active';
+                }
+                echo form_dropdown('status', $status_options, set_value('status',$init_status_value), ["id" => "status"]);
                 ?>
             </div>
             <div class="col-lg-2 col-6">
@@ -63,7 +68,7 @@
                 if(get_cookie("search_when_pref")) {
                     $init_when_value = get_cookie("search_when_pref");
                 } else {
-                    $init_when_value = 'plus_1y';
+                    $init_when_value = 'plus_3m';
                 }
                 echo form_dropdown('when', $time_options, set_value('when', $init_when_value), ["id" => "when"]);
                 ?>

@@ -563,6 +563,7 @@ class Frontend_Controller extends MY_Controller
                         "lastmod" => date('Y-m-d\TH:i:s' . '+02:00', strtotime("-2 day")),
                         "priority" => 1,
                         "changefreq" => "daily",
+                        "badge" => "BETA",
                     ],
                     "featured" => [
                         "display" => "Featured",
