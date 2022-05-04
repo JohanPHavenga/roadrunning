@@ -109,7 +109,7 @@ class Region extends Frontend_Controller {
 
 //        wts($region_id_arr, 1);
         // kry al die editions vir die region 
-        $query_params["where_in"] = ["region_id" => $region_id_arr];
+        $query_params["where_in"] = ["region_id" => $region_id_arr, "edition_status" =>[1,17]];
 
         // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
         

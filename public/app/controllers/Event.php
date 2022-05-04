@@ -126,9 +126,9 @@ class Event extends Frontend_Controller
 
     // header map image
     $this->data_to_views['edition_data']['img_url'] = "https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=TfJdtiWUXW_RiwrtcR0gi6CFDpx2OEBOmSYGORDmx48&c=" . $edition_data['edition_gps'] . "&z=13&nodot&h=161&w=1920&r=10k&sb=mk&t=2";
-        
+
     // favourite
-    $this->data_to_views['edition_data']['is_favourite'] = $this->favourite_model->get_favourite_edition($this->logged_in_user['user_id'],$edition_id);
+    $this->data_to_views['edition_data']['is_favourite'] = $this->favourite_model->get_favourite_edition($this->logged_in_user['user_id'], $edition_id);
 
     // calc values
     if (strtotime($edition_data['edition_date']) < time()) {
@@ -175,13 +175,13 @@ class Event extends Frontend_Controller
       "checkout" => date("Y-m-d", strtotime($edition_data['edition_date']) + 86400),
       "maincolor" => "26B8F3",
       "showgmapsicon" => "true",
-      "venue" => $edition_data['edition_address_end'].",".$edition_data['town_name'].",South Africa",
+      "venue" => $edition_data['edition_address_end'] . "," . $edition_data['town_name'] . ",South Africa",
       "zoom" => "15",
       "openmenu" => "null",
       "hidesearchbar" => "true",
       "hidefilters" => "true",
       "hideguestpicker" => "true",
-      "hidecheckinout" => "true",      
+      "hidecheckinout" => "true",
     ];
     if (isset($file_list[1])) {
       $map_params['markerimage'] = base_url("file/edition/" . $edition_data['edition_slug']) . "/logo/" . $file_list[1][0]['file_name'];
@@ -288,16 +288,26 @@ class Event extends Frontend_Controller
     // debug
     // wts($this->data_to_views['url_list'],true);
 
-    $this->load->view($this->header_url, $this->data_to_views);
-    $this->load->view($this->notice_url, $this->data_to_views);
-    $this->load->view('templates/banner_event', $this->data_to_views);
-    $this->load->view('templates/page_menu', $this->data_to_views);
-    if ($this->data_to_views['edition_data']['edition_status'] == 17) {
-      $this->load->view('widgets/virtual_race_notice');
+    // if cancelled
+    if ($edition_status == 3) {
+      $this->load->view($this->header_url, $this->data_to_views);
+      $this->load->view($this->notice_url, $this->data_to_views);
+      $this->load->view('templates/banner_event', $this->data_to_views);
+      $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
+      $this->load->view('event/cancelled', $this->data_to_views);
+      $this->load->view($this->footer_url, $this->data_to_views);
+    } else {
+      $this->load->view($this->header_url, $this->data_to_views);
+      $this->load->view($this->notice_url, $this->data_to_views);
+      $this->load->view('templates/banner_event', $this->data_to_views);
+      $this->load->view('templates/page_menu', $this->data_to_views);
+      if ($this->data_to_views['edition_data']['edition_status'] == 17) {
+        $this->load->view('widgets/virtual_race_notice');
+      }
+      $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
+      $this->load->view('event/' . $view_to_load, $this->data_to_views);
+      $this->load->view($this->footer_url, $this->data_to_views);
     }
-    $this->load->view('widgets/race_status', $this->data_to_views['status_notice']);
-    $this->load->view('event/' . $view_to_load, $this->data_to_views);
-    $this->load->view($this->footer_url, $this->data_to_views);
 
     // TBR
     //        $this->benchmark->mark('detail_end');
@@ -537,8 +547,8 @@ class Event extends Frontend_Controller
             $return_arr['fees']['to'] = $race[$field];
           }
 
-          $return_arr['fees_per_race'][intval($race['race_distance'])]['name']=$race['race_name'];
-          $return_arr['fees_per_race'][intval($race['race_distance'])]['fees'][$field]=$race[$field];
+          $return_arr['fees_per_race'][intval($race['race_distance'])]['name'] = $race['race_name'];
+          $return_arr['fees_per_race'][intval($race['race_distance'])]['fees'][$field] = $race[$field];
         }
       }
       // LIST
@@ -550,7 +560,9 @@ class Event extends Frontend_Controller
         'name' => $race['race_name'],
       ];
     }
-    krsort($return_arr['fees_per_race']);
+    if (isset($return_arr['fees_per_race'])) {
+      krsort($return_arr['fees_per_race']);
+    }
     // wts($return_arr, 1);
     return $return_arr;
   }

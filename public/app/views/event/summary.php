@@ -123,124 +123,10 @@
               </div>
               <?php
               if (($edition_data['edition_status'] == 1) || ($edition_data['edition_status'] == 17)) {
-                if (!$in_past) {
-              ?>
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <?php
-                      if ($edition_data['edition_status'] == 17) {
-                      ?>
-                        <a class="btn btn-primary btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">How do I track my run?
-                          <i class="fa fa-arrow-right"></i></a>
-                      <?php
-                      }
-                      // BUTTONS
-                      if (!in_array(5, $edition_data['entrytype_list'])) {
-                        switch ($online_entry_status) {
-                          case "open":
-                            $btn_text = "Entries Open!";
-                            $btn_type = "success";
-                            break;
-                          case "closed":
-                            $btn_text = "Entries Closed";
-                            $btn_type = "danger";
-                            break;
-                          default:
-                            $btn_text = "Entry Details";
-                            $btn_type = "light";
-                            break;
-                        }
-                      ?>
-                        <a class="btn btn-<?= $btn_type; ?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?= $btn_text; ?>
-                          <i class="fa fa-arrow-right"></i></a>
-                      <?php
-                      }
-                      ?>
-                      <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
-                        <i class="fa fa-arrow-right"></i></a>
-                    </div>
-                  </div>
-                  <div class="row m-b-10">
-                    <div class="col-lg-12">
-                      <?php
-                      // flyer
-                      if (isset($flyer['edition'])) {
-                      ?>
-                        <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
-                          <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
-
-                      <?php
-                      }
-                      // website link
-                      if (isset($url_list[1])) {
-                      ?>
-                        <a href="<?= $url_list[1][0]['url_name']; ?>" class="btn btn-light">
-                          <i class="fa fa-external-link-alt"></i> Race Website</a>
-
-                      <?php
-                      }
-                      // press release
-                      if (isset($file_list[10])) {
-                      ?>
-                        <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-default">
-                          <i class="fa fa-file-pdf"></i> Official Press Release</a>
-
-                      <?php
-                      }
-                      // facebook
-                      if (isset($url_list[6])) {
-                      ?>
-                        <a href="<?= $url_list[6][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-facebook" target="_blank">
-                          <?= $url_list[6][0]['urltype_buttontext']; ?><i class="fa fa-facebook"></i></a>
-
-                      <?php
-                      }
-                      // twitter
-                      if (isset($url_list[13])) {
-                        // wts($url_list[13]);
-                      ?>
-                        <a href="<?= $url_list[13][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-twitter" target="_blank">
-                          <?= $url_list[13][0]['urltype_buttontext']; ?><i class="fa fa-twitter"></i></a>
-
-                      <?php
-                      }
-                      // instagram
-                      if (isset($url_list[14])) {
-                        // wts($url_list[13]);
-                      ?>
-                        <a href="<?= $url_list[14][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-instagram" target="_blank">
-                          <?= $url_list[14][0]['urltype_buttontext']; ?><i class="fa fa-instagram"></i></a>
-
-                      <?php
-                      }
-                      ?>
-                    </div>
-                  </div>
-
-                  <?php
-                  if (isset($date_list[3])) {
-                  ?>
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <?php
-                        // check vir closing date
-                        if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
-                          $d = '';
-                          // check if already closed
-                          if (strtotime($date_list[3][0]['date_end']) < time()) {
-                            $d = "d";
-                          }
-                          echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
-                        }
-                        ?>
-                      </div>
-                    </div>
-                  <?php
-                  }
-                } else {
+                if ($in_past) {
                   // IF IN PAST        
                   // results button        
-                  ?>
+              ?>
                   <div class="row">
                     <div class="col-lg-12">
                       <a class="btn btn-default btn-icon-holder btn-creative" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/results"); ?>">
@@ -259,8 +145,122 @@
                           <i class="fa fa-arrow-right"></i></a>
                       </div>
                     </div>
-              <?php
+                <?php
                   }
+                }
+                ?>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <?php
+                    if ($edition_data['edition_status'] == 17) {
+                    ?>
+                      <a class="btn btn-primary btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">How do I track my run?
+                        <i class="fa fa-arrow-right"></i></a>
+                    <?php
+                    }
+                    // BUTTONS
+                    if (!in_array(5, $edition_data['entrytype_list'])) {
+                      switch ($online_entry_status) {
+                        case "open":
+                          $btn_text = "Entries Open!";
+                          $btn_type = "success";
+                          break;
+                        case "closed":
+                          $btn_text = "Entries Closed";
+                          $btn_type = "danger";
+                          break;
+                        default:
+                          $btn_text = "Entry Details";
+                          $btn_type = "light";
+                          break;
+                      }
+                    ?>
+                      <a class="btn btn-<?= $btn_type; ?> btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/entries"); ?>"><?= $btn_text; ?>
+                        <i class="fa fa-arrow-right"></i></a>
+                    <?php
+                    }
+                    ?>
+                    <a class="btn btn-light btn-icon-holder" href="<?= base_url("event/" . $edition_data['edition_slug'] . "/race-day-information"); ?>">Race day info
+                      <i class="fa fa-arrow-right"></i></a>
+
+                  </div>
+                </div>
+                <div class="row m-b-10">
+                  <div class="col-lg-12">
+                    <?php
+                    // flyer
+                    if (isset($flyer['edition'])) {
+                    ?>
+                      <a href="<?= $flyer['edition']['url']; ?>" class="btn btn-light">
+                        <i class="fa fa-<?= $flyer['edition']['icon']; ?>"></i> <?= $flyer['edition']['text']; ?></a>
+
+                    <?php
+                    }
+                    // website link
+                    if (isset($url_list[1])) {
+                    ?>
+                      <a href="<?= $url_list[1][0]['url_name']; ?>" class="btn btn-light">
+                        <i class="fa fa-external-link-alt"></i> Race Website</a>
+
+                    <?php
+                    }
+                    // press release
+                    if (isset($file_list[10])) {
+                    ?>
+                      <a href="<?= base_url("file/edition/" . $slug . "/press release/" . $this->data_to_views['file_list'][10][0]['file_name']); ?>" class="btn btn-default">
+                        <i class="fa fa-file-pdf"></i> Official Press Release</a>
+
+                    <?php
+                    }
+                    // facebook
+                    if (isset($url_list[6])) {
+                    ?>
+                      <a href="<?= $url_list[6][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-facebook" target="_blank">
+                        <?= $url_list[6][0]['urltype_buttontext']; ?><i class="fa fa-facebook"></i></a>
+
+                    <?php
+                    }
+                    // twitter
+                    if (isset($url_list[13])) {
+                      // wts($url_list[13]);
+                    ?>
+                      <a href="<?= $url_list[13][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-twitter" target="_blank">
+                        <?= $url_list[13][0]['urltype_buttontext']; ?><i class="fa fa-twitter"></i></a>
+
+                    <?php
+                    }
+                    // instagram
+                    if (isset($url_list[14])) {
+                      // wts($url_list[13]);
+                    ?>
+                      <a href="<?= $url_list[14][0]['url_name']; ?>" class="btn btn-default btn-icon-holder btn-instagram" target="_blank">
+                        <?= $url_list[14][0]['urltype_buttontext']; ?><i class="fa fa-instagram"></i></a>
+
+                    <?php
+                    }
+                    ?>
+                  </div>
+                </div>
+
+                <?php
+                if ((isset($date_list[3])) && (!$in_past)) {
+                ?>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <?php
+                      // check vir closing date
+                      if (strtotime($date_list[3][0]['date_end']) != strtotime($edition_data['edition_date'])) {
+                        $d = '';
+                        // check if already closed
+                        if (strtotime($date_list[3][0]['date_end']) < time()) {
+                          $d = "d";
+                        }
+                        echo "<div class='alert alert-info' role='alert'><i class='fa fa-info-circle' aria-hidden='true'></i> Online entries close$d on <b>" . fdateEntries($date_list[3][0]['date_end']) . "</b></div>";
+                      }
+                      ?>
+                    </div>
+                  </div>
+              <?php
                 }
               }
               ?>
