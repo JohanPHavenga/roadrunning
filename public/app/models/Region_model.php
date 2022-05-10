@@ -164,7 +164,7 @@ class Region_model extends Frontend_model {
             return $data;
         } else {
             $this->db->select("region_id");
-            $this->db->from("region");
+            $this->db->from("regions");
             $query = $this->db->get();
             foreach ($query->result_array() as $row) {
                 $data[] = $row['region_id'];

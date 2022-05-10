@@ -366,8 +366,11 @@
                 <?php
                 }
                 ?>
-                <i class="fa fa-envelope"></i> <a href="mailto:<?= $edition_data['user_email']; ?>?subject=<?= $edition_data['event_name']; ?> query from roadrunning.co.za"><?= $edition_data['user_email']; ?></a>
+                <i class="fa fa-envelope"></i>
                 <?php
+                $attributes = [];
+                echo safe_mailto($edition_data['user_email'].'?subject='.$edition_data['event_name']. ' query from roadrunning.co.za', $edition_data['user_email'], $attributes);
+                
                 if ($edition_data['user_contact']) {
                 ?>
                   <br><i class="fa fa-phone"></i> <?= fphone($edition_data['user_contact']); ?>

@@ -162,8 +162,15 @@ class Contact extends Frontend_Controller
             // find spam using the string STOLEN IMAGE
             // $pos = strpos($this->input->post("user_message"), "stolen image");
 
-            $spam = array('Digital Millennium Copyright Act', 'firebasestorage.googleapis.com', 'violating the copyrighted', 'copyright-protected','copyright protected images');
-            $i = $this->contains($spam, $this->input->post("user_message"));          
+            $spam = array(
+                'Digital Millennium Copyright Act',
+                'firebasestorage.googleapis.com',
+                'violating the copyrighted',
+                'copyright-protected',
+                'copyright protected images',
+                'viagra',
+            );
+            $i = $this->contains($spam, $this->input->post("user_message"));
 
             if ($i === false) {
                 // set user_data from post
