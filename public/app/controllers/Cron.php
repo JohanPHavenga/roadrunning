@@ -38,11 +38,11 @@ class Cron extends Frontend_Controller
     $this->update_event_info_status();
     $this->autoemails_closing_date();
     $this->runtime_log_purge();
-    $this->build_search_table();
 
     // $this->add_baseurl(1500);
     // removed to own stand-alone script
     // $this->history_summary();
+    // $this->build_search_table();
   }
 
   // ========================================================================

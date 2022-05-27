@@ -97,6 +97,7 @@ class Timingprovider extends Admin_Controller {
         $this->form_validation->set_rules('timingprovider_abbr', 'Timing Provider Abbrivation', 'required');
         $this->form_validation->set_rules('timingprovider_status', 'Timing Provider Status', 'required');
         $this->form_validation->set_rules('timingprovider_url', 'Timing Provider URL', 'required');
+        $this->form_validation->set_rules('timingprovider_img', 'Timing Provider Image', 'required');
 
         // load correct view
         if ($this->form_validation->run() === FALSE) {

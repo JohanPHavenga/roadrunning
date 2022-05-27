@@ -15,6 +15,7 @@
         <div class="row m-t-30">
           <!-- Content-->
           <?php
+                $this->load->view('widgets/timingprovider');
           $mailing_list_notice = "<p>If you would like to be <b>notified once results are loaded</b>, "
             . "please enter your email below or to the right to be added to the "
             . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";
@@ -61,7 +62,6 @@
               case 11;
                 // loaded
                 // add time provider info
-                $this->load->view('widgets/timingprovider');
                 if (isset($results['race'])) {
                 ?>
                   <div class="col-lg-12">

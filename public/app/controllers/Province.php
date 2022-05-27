@@ -47,6 +47,7 @@ class Province extends Frontend_Controller {
         $query_params = [
             "order_by" => ["edition_date" => "ASC"],
             "where" => ["province_id" => $province_id, "edition_date >= " => date("Y-m-d H:i:s")],
+            "where_in" =>  ["edition_status" => [1, 17]]
         ];
         
         // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));

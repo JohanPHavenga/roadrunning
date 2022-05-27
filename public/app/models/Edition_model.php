@@ -187,7 +187,7 @@ class Edition_model extends Frontend_model {
     public function get_edition_detail($id) {
         $this->db->select("editions.*,events.event_id, event_name, "
                 . "clubs.club_id, club_name, users.user_id, user_name, user_surname, user_email, user_contact, "
-                . "asa_members.asa_member_id, asa_member_name, asa_member_abbr, asa_member_url, timingprovider_name, timingprovider_url, "
+                . "asa_members.asa_member_id, asa_member_name, asa_member_abbr, asa_member_url, timingprovider_name, timingprovider_url, timingprovider_img, "
                 . "towns.town_id, town_name, regions.region_id, region_name, provinces.province_id, province_name");
         $this->db->from("editions");
         $this->db->join('events', 'event_id');

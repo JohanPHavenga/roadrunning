@@ -1,15 +1,18 @@
 <?php
 
 // MAIN Region controller
-class Region extends Frontend_Controller {
+class Region extends Frontend_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('region_model');
     }
 
     // check if method exists, if not calls "view" method
-    public function _remap($method, $params = array()) {
+    public function _remap($method, $params = array())
+    {
         if (method_exists($this, $method)) {
             return call_user_func_array(array($this, $method), $params);
         } else {
@@ -17,7 +20,8 @@ class Region extends Frontend_Controller {
         }
     }
 
-    function add_edition_count($region_list) {
+    function add_edition_count($region_list)
+    {
         foreach ($region_list as $province_id => $province) {
             $province_count = $this->edition_model->edition_count($province_id);
             $return_list[$province_id] = $province;
@@ -32,7 +36,8 @@ class Region extends Frontend_Controller {
         return $return_list;
     }
 
-    public function list() {
+    public function list()
+    {
         $this->load->model('edition_model');
 
         $this->data_to_views['banner_img'] = "run_04";
@@ -42,10 +47,10 @@ class Region extends Frontend_Controller {
 
         $region_list = $this->region_model->get_region_list(true);
         unset($region_list["No Province"]);
-//        wts($region_list, 1);
+        //        wts($region_list, 1);
         $this->data_to_views['region_list'] = $this->add_edition_count($region_list);
 
-//        wts($this->data_to_views['region_list'], 1);
+        //        wts($this->data_to_views['region_list'], 1);
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
@@ -53,7 +58,8 @@ class Region extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function calendar($slug) {
+    public function calendar($slug)
+    {
 
         $slug = strtolower($slug);
 
@@ -63,6 +69,10 @@ class Region extends Frontend_Controller {
         if ($slug == "index") {
             redirect("/region/list");
         }
+
+        // default banner image
+        $this->data_to_views['banner_img'] = "run_04";
+        $this->data_to_views['banner_pos'] = "45%";
 
         $query_params["where"] = ["edition_date >= " => date("Y-m-d H:i:s")];
         $query_params["order_by"] = ["edition_date" => "ASC"];
@@ -77,6 +87,8 @@ class Region extends Frontend_Controller {
                     $region_name = "Cape Town";
                     $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], ucwords(str_replace("-", " ", $slug)), $region_name);
                     $province_name = "Western Cape";
+                    $this->data_to_views['banner_img'] = "cpt_02";
+                    $this->data_to_views['banner_pos'] = "50%";
                     break;
                 case "gauteng":
                     $region_id_arr = [26, 27, 28, 29, 30];
@@ -107,14 +119,14 @@ class Region extends Frontend_Controller {
             $this->data_to_views['where'] = "reg_" . $region_id;
         }
 
-//        wts($region_id_arr, 1);
+        //        wts($region_id_arr, 1);
         // kry al die editions vir die region 
-        $query_params["where_in"] = ["region_id" => $region_id_arr, "edition_status" =>[1,17]];
+        $query_params["where_in"] = ["region_id" => $region_id_arr, "edition_status" => [1, 17]];
 
         // $this->data_to_views['edition_list'] = $this->race_model->add_race_info($this->edition_model->get_edition_list($query_params));
-        
+
         $search_table_result = $this->edition_model->main_search($query_params, 0);
-        
+
 
 
         if ($search_table_result) {
@@ -130,7 +142,7 @@ class Region extends Frontend_Controller {
                 // race stuffs
                 $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']] = $result;
                 $this->data_to_views['edition_list'][$result['edition_id']]['race_list'][$result['race_id']]['race_color'] = $this->edition_model->get_race_color($result['race_distance']);
-                $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);            
+                $this->data_to_views['edition_list'][$result['edition_id']]['race_distance_arr'][] = fraceDistance($result['race_distance']);
             }
             $region_pages = $this->session->region_pages;
             $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of " . $province_name;
@@ -140,7 +152,7 @@ class Region extends Frontend_Controller {
             }
             $this->data_to_views['page_title'] = "Running Races in " . $region_name . " region of " . $province_name;
         }
-        $this->data_to_views['meta_description'] = "A list of running races in the " . $region_name . " region with in the " . $province_name . " province of South Africa";
+        $this->data_to_views['meta_description'] = "A list of road running races in the " . $region_name . " region with in the " . $province_name . " province of South Africa";
 
         // GET REGION LIST FOR FOOTER
         $region_list = $this->region_model->get_region_list(true);
@@ -153,12 +165,10 @@ class Region extends Frontend_Controller {
             $view_to_load = 'race_list';
         }
 
-        $this->data_to_views['banner_img'] = "run_04";
-        $this->data_to_views['banner_pos'] = "45%";
 
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->banner_url, $this->data_to_views);
-//        $this->load->view('region/calendar', $this->data_to_views);
+        //        $this->load->view('region/calendar', $this->data_to_views);
         if (!$this->data_to_views['edition_list']) {
             $this->load->view('templates/search_form');
         }
@@ -167,7 +177,8 @@ class Region extends Frontend_Controller {
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 
-    public function switch() {
+    public function switch()
+    {
         $this->data_to_views['page_title'] = "Region Selection";
         $this->data_to_views['meta_description'] = "Select the regions for which you would like to limit your view to";
         $this->load->model('region_model');
@@ -212,5 +223,4 @@ class Region extends Frontend_Controller {
             redirect(base_url("region/switch"));
         }
     }
-
 }

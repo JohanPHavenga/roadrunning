@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class='col-md-9'>
+                    <div class='col-md-8'>
                         <div class='form-group'>
                             <?php
                             echo form_label('URL', 'timingprovider_url');
@@ -60,6 +60,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class='col-md-9'>
+                        <div class='form-group'>
+                            <?php
+                            echo form_label('Image', 'timingprovider_img');
+                            echo form_input([
+                                'name' => 'timingprovider_img',
+                                'id' => 'timingprovider_img',
+                                'value' => set_value('timingprovider_img', $timingprovider_detail['timingprovider_img']),
+                                'class' => 'form-control',
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
             <?php
             $this->load->view('templates/admin/create_footer');

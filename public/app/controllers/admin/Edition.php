@@ -126,6 +126,7 @@ class Edition extends Admin_Controller
     $this->load->model('admin/result_model');
     $this->load->model('admin/tag_model');
     $this->load->model('admin/timingprovider_model');
+    $this->load->model('admin/comment_model');
 
     // load helpers / libraries
     $this->load->helper('form');
@@ -217,6 +218,7 @@ class Edition extends Admin_Controller
       $this->data_to_view['sponsor_list'] = $this->sponsor_model->get_edition_sponsor_list($edition_id);
       $this->data_to_view['entrytype_list'] = $this->entrytype_model->get_edition_entrytype_list($edition_id);
       $this->data_to_view['regtype_list'] = $this->regtype_model->get_edition_regtype_list($edition_id);
+      $this->data_to_view['comment_list'] = $this->comment_model->get_comment_list($edition_id);
     } else {
       $this->data_to_view['edition_detail'] = $this->edition_model->get_edition_field_array();
       $this->data_to_view['edition_detail']['edition_status'] = 1;
