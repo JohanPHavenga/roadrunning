@@ -226,7 +226,9 @@ class Search extends Frontend_Controller
         $this->load->view($this->header_url, $this->data_to_views);
         $this->load->view($this->notice_url, $this->data_to_views);
         $this->load->view('templates/search_form');
-        $this->load->view('templates/' . $view_to_load, $this->data_to_views);
+        // $this->load->view('templates/' . $view_to_load, $this->data_to_views);
+        $this->load->view('templates/race_list', $this->data_to_views);
+        
         $this->load->view($this->footer_url, $this->data_to_views);
     }
 

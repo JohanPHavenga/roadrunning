@@ -14,8 +14,13 @@
                         ?>
                         <div class="accordion accordion-simple m-t-10">
                             <?php
-                            if (isset($edition_list)&&(is_array($edition_list))&&(!empty($edition_list))) {
+                            $n=0;
+                            if (isset($edition_list) && (is_array($edition_list)) && (!empty($edition_list))) {
                                 foreach ($edition_list as $edition_id => $edition) {
+                                    $n++;
+                                    if ($n == 5) {
+                                        $this->load->view('widgets/horizontal_ad_sweatshop');
+                                    }
                                     $badge_state = false;
                                     foreach ($edition['race_list'] as $race) {
                                         if ($race['racetype_abbr'] == "R/W") {
@@ -143,7 +148,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach ($edition_list as $edition_id => $edition) {                                        
+                                    foreach ($edition_list as $edition_id => $edition) {
                                         echo "<tr>";
                                         echo "<th scope='row'>" . date("d M Y", strtotime($edition['edition_date'])) . "</th>";
                                         echo "<td>" . $edition['edition_name'];
@@ -151,7 +156,7 @@
                                             echo " [" . $edition['badge']['text'] . "]";
                                         }
                                         echo "</td>";
-                                        echo "<td>". implode("/",$edition['race_summary']['distance_int'])."</td>";
+                                        echo "<td>" . implode("/", $edition['race_summary']['distance_int']) . "</td>";
                                         echo "<td>" . ftimeSort($edition['race_time_start']) . "</td>";
                                         echo "<td>" . $edition['town_name'] . "</td>";
                                         echo "</tr>";
@@ -166,11 +171,12 @@
 
                 </div>
                 <!-- add box -->
-                <div class="row m-b-10 m-t-10">
-                    <div class="col-lg-12">
+                <div class="row m-b-10">
+                    <div class="col-lg-12" style="border-top: 1px solid #ececec;">
                         <?php
                         // LANDSCAPE ADS WIDGET
-                        $this->load->view('widgets/horizontal_ad');
+                        // $this->load->view('widgets/horizontal_ad');
+                        $this->load->view('widgets/horizontal_ad_sweatshop');
                         ?>
                     </div>
                 </div>
@@ -181,7 +187,8 @@
             <div class="sidebar col-lg-3 m-t-15">
                 <?php
                 // ADS WIDGET
-                $this->load->view('widgets/side_ad');
+                // $this->load->view('widgets/side_ad');
+                $this->load->view('widgets/side_ad_sweatshop');
                 ?>
             </div>
             <!-- end: Sidebar-->

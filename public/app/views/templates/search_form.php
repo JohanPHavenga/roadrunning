@@ -5,7 +5,7 @@
         echo form_open(base_url("search"), $attributes);
         ?>
         <div class="row">
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-2 col-6">
                 <?php
                 echo form_label('Query', 'query');
                 echo form_input([
@@ -19,7 +19,7 @@
                 ]);
                 ?>
             </div>
-            <div class="col-lg-1 col-3">
+            <div class="col-lg-2 col-3">
                 <?php
                 echo form_label('Distance', 'distance');
                 $dist_options = array(
@@ -35,14 +35,14 @@
                 echo form_dropdown('distance', $dist_options, set_value('distance'), ["id" => "distance"]);
                 ?>
             </div>
-            <div class="col-lg-1 col-3">
+            <div class="col-lg-2 col-3">
                 <?php
                 echo form_label('Status', 'status');
                 $status_options = array(
                     'all' => 'All',
                     'active' => 'Active',
                     // 'confirmed' => 'Confirmed',
-                    'verified' => 'Verified',                    
+                    'verified' => 'Info Verified',                    
                 );
                 if(get_cookie("search_status_pref")) {
                     $init_status_value = get_cookie("search_status_pref");
@@ -68,7 +68,7 @@
                 if(get_cookie("search_when_pref")) {
                     $init_when_value = get_cookie("search_when_pref");
                 } else {
-                    $init_when_value = 'plus_3m';
+                    $init_when_value = 'plus_6m';
                 }
                 echo form_dropdown('when', $time_options, set_value('when', $init_when_value), ["id" => "when"]);
                 ?>
@@ -90,21 +90,21 @@
                 echo form_dropdown('where', $loc_options, set_value('where',$where), ["id" => "where"]);
                 ?>
             </div>
-            <div class="col-lg-1 col-6">
+            <!-- <div class="col-lg-1 col-6">
                 <?php
-                echo form_label('Show as', 'show');
-                $show_options = array(
-                    'list' => 'List',
-                    'grid' => 'Grid',
-                );
-                if (get_cookie("listing_pref") == "grid") {
-                    $init_value = "grid";
-                } else {
-                    $init_value = "list";
-                }
-                echo form_dropdown('show', $show_options, set_value('show', $init_value), ["id" => "show"]);
+                // echo form_label('Show as', 'show');
+                // $show_options = array(
+                //     'list' => 'List',
+                //     'grid' => 'Grid',
+                // );
+                // if (get_cookie("listing_pref") == "grid") {
+                //     $init_value = "grid";
+                // } else {
+                //     $init_value = "list";
+                // }
+                // echo form_dropdown('show', $show_options, set_value('show', $init_value), ["id" => "show"]);
                 ?>
-            </div>
+            </div> -->
             <div class="col-1">
                 <?php
                 echo form_label('', 'form-submit');

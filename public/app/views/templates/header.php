@@ -197,6 +197,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
             ]);
             echo form_hidden("when", get_cookie("search_when_pref"));
             echo form_hidden("show", get_cookie("listing_pref"));
+            echo form_hidden("status", get_cookie("search_status_pref"));
             ?>
             <span class="text-muted">Start typing & press "Enter" or "ESC" to close</span>
             <?php
