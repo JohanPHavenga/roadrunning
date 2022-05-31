@@ -23,11 +23,11 @@ class Race extends Frontend_Controller
     {
         $query_params = [
             "where_in" => [
-                "region_id" => $this->session->region_selection, 
+                "region_id" => $this->session->region_selection,
                 "edition_status" => [1, 17],
             ],
             "where" => [
-                "edition_date >= " => date("Y-m-d 00:00:00"), 
+                "edition_date >= " => date("Y-m-d 00:00:00"),
                 "edition_date <= " => date("Y-m-d H:i:s", strtotime("3 months")),
             ],
             "order_by" => ["edition_date" => "ASC"],
@@ -42,7 +42,6 @@ class Race extends Frontend_Controller
                 $this->data_to_views['meta_description'] = "List of upcoming running races in " . $year;
                 $query_params = [
                     "where" => ["edition_date >= " => "$year-1-1 00:00:00", "edition_date <= " => "$year-12-31 23:59:59",],
-                    "edition_status" => [1, 17],
                 ];
 
                 if ($month !== null) {
@@ -52,7 +51,6 @@ class Race extends Frontend_Controller
                         $this->data_to_views['meta_description'] = "List of upcoming running races in " . $month_name . " " . date($year);
                         $query_params = [
                             "where" => ["edition_date >= " => "$year-$month-1 00:00:00", "edition_date <= " => date("$year-$month-t 23:59:59")],
-                            "edition_status" => [1, 17],
                         ];
                         $this->data_to_views['crumbs_arr'] = replace_key($this->data_to_views['crumbs_arr'], $month, $month_name);
 
@@ -62,7 +60,6 @@ class Race extends Frontend_Controller
                                 $this->data_to_views['meta_description'] = "List of running races on " . $day . " " . $month_name . " " . date($year);
                                 $query_params = [
                                     "where" => ["edition_date >= " => "$year-$month-$day 00:00:00", "edition_date <= " => "$year-$month-$day 23:59:59"],
-                                    "edition_status" => [1, 17],
                                 ];
                             } else {
                                 redirect("404");
@@ -71,6 +68,11 @@ class Race extends Frontend_Controller
                     } else {
                         redirect("404");
                     }
+                    // add status and region to query params for all
+                    $query_params["where_in"] = [
+                        "region_id" => $this->session->region_selection,
+                        "edition_status" => [1, 17],
+                    ];
                 }
             } else {
                 redirect("404");
@@ -193,7 +195,9 @@ class Race extends Frontend_Controller
             } else {
                 $view_to_load = 'race_list';
             }
-            if (empty($search_table_result)) { $view_to_load = 'favourite_msg'; }
+            if (empty($search_table_result)) {
+                $view_to_load = 'favourite_msg';
+            }
         } else {
             $view_to_load = 'favourite_msg';
         }
