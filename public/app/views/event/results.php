@@ -15,20 +15,25 @@
         <div class="row m-t-30">
           <!-- Content-->
           <?php
-                $this->load->view('widgets/timingprovider');
+          $this->load->view('widgets/timingprovider');
           $mailing_list_notice = "<p>If you would like to be <b>notified once results are loaded</b>, "
             . "please enter your email below or to the right to be added to the "
             . "<a href='" . base_url('event/' . $slug . '/subscribe') . "' title='Add yourself to the mailing list'>mailing list</a> for this race.</p>";
           // if date in future
           if (!$in_past) {
-            $days_from_now = date("d", strtotime($edition_data['edition_date']) - time());
+            $days_from_now = convert_seconds(strtotime($edition_data['edition_date']) - time())+1;
           ?>
             <div class="content col-lg-12">
               <p><b class='text-danger'>No results available yet.</b></p>
               <p>
                 This race is scheduled to take place on
-                <b><?= fdateHumanFull($edition_data['edition_date']); ?></b>,
-                <?= $days_from_now; ?> days from now.
+                <b><?= fdateHumanFull($edition_data['edition_date']); ?></b><?php
+                if ($days_from_now > 0) {
+                  echo ", " . $days_from_now . " day";
+                  if ($days_from_now > 1) { echo "s"; }
+                  echo " from now.";
+                }
+                ?>
               </p>
               <p>Once the race has run, depending on the timing method used, results can take <u>up to 7 working days</u> to be released.
                 As soon as results are published by the organisers I will load it here.</p>

@@ -7,7 +7,7 @@ if (isset($url_list[4][0])) {
     $url = $edition_data['timingprovider_url'];
 }
 
-if ($edition_data['timingprovider_id']) {
+if ($edition_data['timingprovider_id']>1) {
 ?>
 <div class="content row">
     <div class="col-lg-5 col-sm-5">

@@ -164,6 +164,8 @@ class Contact extends Frontend_Controller
 
             $spam = array(
                 'Digital Millennium Copyright Act',
+                'Digital millennium copyright act',
+                'DMCA',
                 'firebasestorage.googleapis.com',
                 'violating the copyrighted',
                 'copyright-protected',
