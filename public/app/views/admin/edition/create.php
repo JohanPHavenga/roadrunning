@@ -23,7 +23,7 @@ echo form_open_multipart($form_url);
 
 <?php
 if ($action == "edit") {
-  ?>
+?>
   <div class="row">
     <div class="col-md-6">
       <?php
@@ -34,19 +34,31 @@ if ($action == "edit") {
       <?php
       $this->load->view('/admin/edition/urls');
       $this->load->view('/admin/edition/files');
+      ?>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-9">
+      <?php
+      $this->load->view('/admin/edition/comments');
+      ?>
+    </div>
+    <div class="col-md-3">
+      <?php
       $this->load->view('/admin/edition/created_updated');
       ?>
     </div>
   </div>
-  <?php
+<?php
 } // IF EDIT
 ?>
 <div class="row">
   <div class="col-md-12">
     <div class='btn-group' style='padding-bottom: 20px;'>
-      <?php      
-      if ($action == "edit") {      
-      echo fbutton($text = "Apply", $type = "submit", $status = "primary", NULL, "save_only");
+      <?php
+      if ($action == "edit") {
+        echo fbutton($text = "Apply", $type = "submit", $status = "primary", NULL, "save_only");
       }
       echo fbutton($text = "Save", $type = "submit", $status = "success");
       ?>
