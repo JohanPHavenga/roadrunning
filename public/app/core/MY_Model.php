@@ -49,7 +49,7 @@ class MY_model extends CI_Model
     {
         if ($race_id) {
             $query = $this->db->get_where('temp_search', array('race_id', $race_id));
-            if ($query->num_rows() > 0) { 
+            if ($query->num_rows() > 0) {
                 $this->db->trans_start();
                 $this->db->update('temp_search', $search_data, array('race_id' => $race_id));
                 $this->db->trans_complete();
@@ -68,6 +68,16 @@ class MY_model extends CI_Model
         return $race_id;
     }
 
+    function set_search_table_bulk($bulk_search_data)
+    {
+
+        $this->db->trans_start();
+        $this->db->insert_batch('temp_search', $bulk_search_data);
+        $this->db->trans_complete();
+
+        return true;
+    }
+
     function clear_search_table()
     {
         $this->db->trans_start();
@@ -75,7 +85,8 @@ class MY_model extends CI_Model
         $this->db->trans_complete();
     }
 
-    function main_search($query_params, $show_query=false) {
+    function main_search($query_params, $show_query = false)
+    {
         $this->db->select("*");
         $this->db->from("temp_search");
         foreach ($query_params as $operator => $clause_arr) {
@@ -294,8 +305,6 @@ class Frontend_model extends MY_model
 
         return $record_count;
     }
-
-    
 }
 
 
