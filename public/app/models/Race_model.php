@@ -1,17 +1,21 @@
 <?php
 
-class Race_model extends Frontend_model {
+class Race_model extends Frontend_model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all("races");
     }
 
-    public function get_race_list($query_params = [], $field_arr = NULL, $show_query = false) {
+    public function get_race_list($query_params = [], $field_arr = NULL, $show_query = false)
+    {
 
         if (is_null($field_arr)) {
             $field_arr = [
@@ -54,7 +58,8 @@ class Race_model extends Frontend_model {
         return false;
     }
 
-    public function get_race_dropdown() {
+    public function get_race_dropdown()
+    {
         $this->db->select("race_id, race_name, race_distance, edition_name, racetype_abbr");
         $this->db->from("races");
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
@@ -76,24 +81,28 @@ class Race_model extends Frontend_model {
         return false;
     }
 
-    public function get_race_detail($id) {
+    public function get_race_detail($id)
+    {
         if (!($id)) {
             return false;
         } else {
-            $this->db->select("races.*, edition_name");
+            $this->db->select("races.*, edition_name, edition_date");
             $this->db->from("races");
             $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
             $this->db->where('race_id', $id);
             $query = $this->db->get();
 
             if ($query->num_rows() > 0) {
-                return $query->row_array();
+                $data = $query->row_array();
+                $data['race_color'] = $this->get_race_color($data['race_distance']);
+                return $data;
             }
             return false;
         }
     }
 
-    public function remove_race($id) {
+    public function remove_race($id)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -105,7 +114,8 @@ class Race_model extends Frontend_model {
         }
     }
 
-    public function get_edition_id($race_id) {
+    public function get_edition_id($race_id)
+    {
         if (!($race_id)) {
             return false;
         } else {
@@ -125,7 +135,8 @@ class Race_model extends Frontend_model {
         }
     }
 
-    public function add_race_info($edition_arr, $race_search_params = []) {
+    public function add_race_info($edition_arr, $race_search_params = [])
+    {
         if ($edition_arr) {
             // ADD RACE INFORMATION TO THE EDITION
             $return_arr = [];
@@ -158,7 +169,8 @@ class Race_model extends Frontend_model {
         }
     }
 
-    public function get_race_list_with_results($query, $limit_results = false) {
+    public function get_race_list_with_results($query = NULL, $limit_results = false)
+    {
         $this->db->distinct();
         $this->db->select("races.race_id, race_name, race_distance, edition_name, edition_date, event_name, racetype_abbr, racetype_name");
         $this->db->from("races");
@@ -166,10 +178,12 @@ class Race_model extends Frontend_model {
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
         $this->db->join('events', 'editions.event_id=events.event_id', 'left');
         $this->db->join('racetypes', 'racetypes.racetype_id=races.racetype_id', 'left');
-        $this->db->group_start();
-        $this->db->like('edition_name', $query);
-        $this->db->or_like('event_name', $query);
-        $this->db->group_end();
+        if ($query) {
+            $this->db->group_start();
+            $this->db->like('edition_name', $query);
+            $this->db->or_like('event_name', $query);
+            $this->db->group_end();
+        }
         // limit the list a little
         if ($limit_results) {
             $this->db->where("edition_date > ", date("Y-m-d", strtotime("3 months ago")));
@@ -177,9 +191,9 @@ class Race_model extends Frontend_model {
         }
         $this->db->order_by('edition_date', "DESC");
         $this->db->order_by('race_distance', "DESC");
-        $this->db->limit("50");
-//        echo $this->db->get_compiled_select();
-//        die();
+        // $this->db->limit("50");
+        //        echo $this->db->get_compiled_select();
+        //        die();
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -195,17 +209,18 @@ class Race_model extends Frontend_model {
         return false;
     }
 
-    public function get_race_detail_with_results($params = []) {
+    public function get_race_detail_with_results($params = [])
+    {
         $this->db->select("results.*,race_name, race_distance, edition_name, edition_date, edition_slug, event_name, town_name, file_name");
         $this->db->from("races");
         $this->db->join('results', 'results.race_id = races.race_id', 'inner');
-        $this->db->join('files', 'results.file_id = files.file_id', 'inner');
+        $this->db->join('files', 'results.file_id = files.file_id', 'left');
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
         $this->db->join('events', 'editions.event_id=events.event_id', 'left');
         $this->db->join('towns', 'town_id', 'left');
         if (isset($params['race_id'])) {
             $this->db->where("races.race_id", $params['race_id']);
-        } 
+        }
         if (isset($params['result_id'])) {
             $this->db->where("results.result_id", $params['result_id']);
         }
@@ -215,8 +230,8 @@ class Race_model extends Frontend_model {
             $this->db->or_like('result_surname', $params['surname']);
             $this->db->group_end();
         }
-//        echo $this->db->get_compiled_select();
-//        die();
+        //        echo $this->db->get_compiled_select();
+        //        die();
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -230,25 +245,26 @@ class Race_model extends Frontend_model {
     }
 
 
-    public function get_race_list_search() {
-       
+    public function get_race_list_search()
+    {
+
         $field_arr = [
-            "race_id", "edition_id", "race_name","race_distance", "race_time_start", "racetype_abbr", "racetype_icon"
+            "race_id", "edition_id", "race_name", "race_distance", "race_time_start", "racetype_abbr", "racetype_icon"
         ];
         $select = implode(",", $field_arr);
         $this->db->select($select);
-        $this->db->from("races");  
-        $this->db->join("racetypes","racetype_id");  
+        $this->db->from("races");
+        $this->db->join("racetypes", "racetype_id");
         // $this->db->order_by("race_time_start", "ASC");  
         $query = $this->db->get();
-        return $query->result_array();
-        // if ($query->num_rows() > 0) {
-        //     foreach ($query->result_array() as $row) {
-        //         $data[$row['edition_id']]['race_list'][$row['race_id']] = $row;
-        //     }
-        //     return $data;
-        // }
-        // return false;
+        // return $query->result_array();
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $row) {
+                $data[$row['race_id']] = $row;
+                $data[$row['race_id']]['race_color'] = $this->get_race_color($row['race_distance']);
+            }
+            return $data;
+        }
+        return false;
     }
-
 }

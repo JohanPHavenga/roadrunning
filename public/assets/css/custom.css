@@ -159,7 +159,7 @@ a.btn btn-twitter {
 	background-color: #1da1f2;
 }
 a.btn btn-instagram {
-	background-color: #C13584;
+	background-color: #c13584;
 }
 
 a.btn:hover,
@@ -171,7 +171,7 @@ button.btn:hover {
 }
 
 .btn.btn-icon-holder i {
-    margin-right: -4px;
+	margin-right: -4px;
 }
 
 /* a:not(.btn):hover, a:not(.btn):focus, a:not(.btn):active {    
@@ -596,6 +596,43 @@ table.race_table th {
 .graph_holder {
 	width: 100%;
 	height: 400px;
+}
+
+/* AUTO COMPLETE */
+/*the container must be positioned relative:*/
+.autocomplete {
+	position: relative;
+		display: inline-block;
+}
+
+.autocomplete-items {
+	position: absolute;
+	border: 1px solid #d4d4d4;
+	border-bottom: none;
+	border-top: none;
+	z-index: 99;
+	/*position the autocomplete items to be the same width as the container:*/
+	top: 86%;
+	left: 5px;
+	right: 0;
+}
+
+.autocomplete-items div {
+	padding: 10px;
+	cursor: pointer;
+	background-color: #fff;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+	background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+	background-color: DodgerBlue !important;
+	color: #ffffff;
 }
 
 /* net groot */

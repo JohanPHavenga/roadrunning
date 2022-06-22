@@ -38,6 +38,7 @@ class Cron extends Frontend_Controller
     $this->update_event_info_status();
     $this->autoemails_closing_date();
     $this->runtime_log_purge();
+    // $this->gen_temp_files(); // not used. leaving for reference
 
     // $this->add_baseurl(1500);
     // removed to own stand-alone script
@@ -392,7 +393,7 @@ class Cron extends Frontend_Controller
 
     $n = 0;
     foreach ($edition_list as $edition_id => $edition) {
-      if (isset($edition['date_list'][3][0]['date_end'])) {      
+      if (isset($edition['date_list'][3][0]['date_end'])) {
         if (date("Y-m-d", strtotime($edition['date_list'][3][0]['date_end'])) == date("Y-m-d", strtotime($edition['edition_date']))) {
           $online_close_date = 0;
         } else {
@@ -490,20 +491,32 @@ class Cron extends Frontend_Controller
     // $edition_list = $this->race_model->add_race_info($this->edition_model->get_edition_list());
     $edition_list = $this->edition_model->get_edition_list_search();
     $race_list = $this->race_model->get_race_list_search();
+    $race_result_list = $this->race_model->get_race_list_with_results();
 
-    foreach ($race_list as $race) {
-      $search_data = $edition_list[$race['edition_id']];
-      $search_data['race_id'] = $race['race_id'];
-      $search_data['race_name'] = $race['race_name'];
-      $search_data['race_distance'] = $race['race_distance'];
-      $search_data['race_distance_int'] = intval($race['race_distance']);
-      $search_data['race_time_start'] = $race['race_time_start'];
-      $search_data['racetype_abbr'] = $race['racetype_abbr'];
-      $search_data['racetype_icon'] = $race['racetype_icon'];
+    // wts($race_result_list);
+    // wts($race_list,1);
+
+    foreach ($race_list as $race_id=>$race) {
+      $search_data[$race_id] = $edition_list[$race['edition_id']];
+      $search_data[$race_id]['race_id'] = $race['race_id'];
+      $search_data[$race_id]['race_name'] = $race['race_name'];
+      $search_data[$race_id]['race_distance'] = $race['race_distance'];
+      $search_data[$race_id]['race_distance_int'] = intval($race['race_distance']);
+      $search_data[$race_id]['race_time_start'] = $race['race_time_start'];
+      $search_data[$race_id]['race_color'] = $race['race_color'];
+      $search_data[$race_id]['racetype_abbr'] = $race['racetype_abbr'];
+      $search_data[$race_id]['racetype_icon'] = $race['racetype_icon'];
+      if (array_key_exists($race_id, $race_result_list)) {
+        $has_local_results = 1;
+      } else {
+        $has_local_results = 0;
+      }
+      $search_data[$race_id]['has_local_results'] = $has_local_results;
       // wts($search_data,1);
-      $search_id = $this->race_model->set_search_table($search_data);
+      // $search_id = $this->race_model->set_search_table($search_data);
       $control_count++;
     }
+    $this->race_model->set_search_table_bulk($search_data);
 
     $log_data['runtime_count'] = $control_count;
     echo "SEARCH TABLE BUILD Done: " . date("Y-m-d H:i:s") . "\n";
@@ -531,5 +544,25 @@ class Cron extends Frontend_Controller
     // wts($race_list,1);
     // wts($edition_list);
     // wts($status_list,1);
+  }
+
+  function gen_temp_files()
+  {
+    $this->load->helper('file');
+    $this->load->model('race_model');
+
+    $race_list = $this->race_model->get_race_list_with_results();
+    foreach ($race_list as $race_id => $race) {
+      $w_t_file[$race_id] = $race['race_sum'];
+    }
+    ksort($w_t_file);
+    // wts($w_t_file,1);
+    // $sampleArray=["Two Oceans","Comrades"];
+    $data = 'var races_with_results = ["' . implode('", "', $w_t_file) . '"];';
+    if (!write_file('./uploads/temp/races_with_results.js', $data)) {
+      echo 'Unable to write the file';
+    } else {
+      echo 'File written!';
+    }
   }
 }
