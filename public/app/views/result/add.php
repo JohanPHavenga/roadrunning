@@ -211,6 +211,7 @@
                             'class' => 'btn btn-light',
                         );
                         echo form_button($data);
+                        echo "<a href='".base_url('user/my-results')."' class='btn btn-secondary'><i class='fa fa-arrow-left'></i>&nbsp;Back</a>";
                         echo form_close();
 
                         // wts($race_info);
