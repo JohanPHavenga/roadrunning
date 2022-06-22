@@ -318,7 +318,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                       }
                     }
                     // set link for the "contact" link in the main menu to the organisers if on an event page
-                    if (($url_bits[0] == "event") && ($page['display'] == "Contact")) {
+                    if (($url_bits[0] == "event") && ($url_bits[1] != "add") &&($page['display'] == "Contact")) {
                       $page['loc'] = base_url("event/" . $slug . "/contact");
                     }
                     echo "<li class='$d_cl $i_cl'><a href='$page[loc]'>$page[display]</a>";

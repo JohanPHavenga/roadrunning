@@ -86,14 +86,16 @@ class Race_model extends Frontend_model
         if (!($id)) {
             return false;
         } else {
-            $this->db->select("races.*, edition_name");
+            $this->db->select("races.*, edition_name, edition_date");
             $this->db->from("races");
             $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
             $this->db->where('race_id', $id);
             $query = $this->db->get();
 
             if ($query->num_rows() > 0) {
-                return $query->row_array();
+                $data = $query->row_array();
+                $data['race_color'] = $this->get_race_color($data['race_distance']);
+                return $data;
             }
             return false;
         }
@@ -212,7 +214,7 @@ class Race_model extends Frontend_model
         $this->db->select("results.*,race_name, race_distance, edition_name, edition_date, edition_slug, event_name, town_name, file_name");
         $this->db->from("races");
         $this->db->join('results', 'results.race_id = races.race_id', 'inner');
-        $this->db->join('files', 'results.file_id = files.file_id', 'inner');
+        $this->db->join('files', 'results.file_id = files.file_id', 'left');
         $this->db->join('editions', 'editions.edition_id=races.edition_id', 'left');
         $this->db->join('events', 'editions.event_id=events.event_id', 'left');
         $this->db->join('towns', 'town_id', 'left');

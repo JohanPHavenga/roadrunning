@@ -1,17 +1,21 @@
 <?php
 
-class Club_model extends Admin_model {
+class Club_model extends Admin_model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    public function record_count() {
+    public function record_count()
+    {
         return $this->db->count_all("clubs");
     }
 
-    public function club_search($ss) {
+    public function club_search($ss)
+    {
         $this->db->select("clubs.*, town_name, province_name");
         $this->db->from("clubs");
         $this->db->join('towns', 'town_id', 'left');
@@ -31,7 +35,8 @@ class Club_model extends Admin_model {
     }
 
 
-    public function get_club_id($club_name, $create = []) {
+    public function get_club_id($club_name, $create = [])
+    {
         $this->db->select("club_id");
         $this->db->from("clubs");
         $this->db->where('LOWER(club_name)', strtolower($club_name));
@@ -43,12 +48,13 @@ class Club_model extends Admin_model {
             }
             return $data;
         } elseif (!empty($create)) {
-            return($this->set_club("add",0,$create));
+            return ($this->set_club("add", 0, $create));
         }
         return false;
     }
 
-    public function get_club_list() {
+    public function get_club_list()
+    {
 
         $this->db->select("clubs.*, town_name, province_name, sponsor_name");
         $this->db->from("clubs");
@@ -68,7 +74,8 @@ class Club_model extends Admin_model {
         return false;
     }
 
-    public function get_club_dropdown() {
+    public function get_club_dropdown($name_as_key = false)
+    {
         $this->db->select("club_id, club_name");
         $this->db->from("clubs");
         $this->db->order_by('club_name');
@@ -77,15 +84,20 @@ class Club_model extends Admin_model {
         if ($query->num_rows() > 0) {
             $data[] = "Please Select";
             foreach ($query->result_array() as $row) {
-                $data[$row['club_id']] = $row['club_name'];
+                if ($name_as_key) {
+                    $data[$row['club_name']] = $row['club_name'];
+                } else {
+                    $data[$row['club_id']] = $row['club_name'];
+                }
             }
-//                return array_slice($data, 0, 500, true);
+            //                return array_slice($data, 0, 500, true);
             return $data;
         }
         return false;
     }
 
-    public function get_club_detail($id) {
+    public function get_club_detail($id)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -103,7 +115,8 @@ class Club_model extends Admin_model {
         }
     }
 
-    public function get_club_races($club_id) {
+    public function get_club_races($club_id)
+    {
         if (!($club_id)) {
             return false;
         } else {
@@ -123,7 +136,8 @@ class Club_model extends Admin_model {
         }
     }
 
-    public function set_club($action, $club_id, $club_data=[]) {
+    public function set_club($action, $club_id, $club_data = [])
+    {
         if (empty($club_data)) {
             $club_data = array(
                 'club_name' => $this->input->post('club_name'),
@@ -174,7 +188,8 @@ class Club_model extends Admin_model {
         }
     }
 
-    public function remove_club($id) {
+    public function remove_club($id)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -184,8 +199,9 @@ class Club_model extends Admin_model {
             return $this->db->trans_status();
         }
     }
-    
-    public function update_field($id, $field, $value) {
+
+    public function update_field($id, $field, $value)
+    {
         if (!($id)) {
             return false;
         } else {
@@ -195,5 +211,4 @@ class Club_model extends Admin_model {
             return $this->db->trans_status();
         }
     }
-
 }

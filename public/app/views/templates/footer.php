@@ -409,7 +409,7 @@ if ($this->ini_array['enviroment']['server'] != "production") {
     <?php wts($new_page_count); ?>
 
     <h4 class="text-uppercase">User info</h4>
-    <?php //wts($logged_in_user); 
+    <?php wts($logged_in_user); 
     ?>
 
     <h4 class="text-uppercase">SESSION</h4>
