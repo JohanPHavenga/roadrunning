@@ -402,14 +402,16 @@ if ($this->ini_array['enviroment']['server'] != "production") {
       <?php
       echo "Enviroment: " . $this->ini_array['enviroment']['server'] . "<br>";
       echo "Controller: " . $this->router->fetch_class() . "<br>";
-      echo "Method: " . $this->router->fetch_method();
+      echo "Method: " . $this->router->fetch_method() . "<br>";
+      echo "PHP Version: " . phpversion() . "<br>";
+      echo "Codeigniter Version: " . CI_VERSION;
       ?>
     </p>
     <h4 class="text-uppercase">New site</h4>
     <?php wts($new_page_count); ?>
 
     <h4 class="text-uppercase">User info</h4>
-    <?php wts($logged_in_user); 
+    <?php wts($logged_in_user);
     ?>
 
     <h4 class="text-uppercase">SESSION</h4>

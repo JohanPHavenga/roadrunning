@@ -2,4 +2,5 @@
 *.sql
 /html
 /public_backup_20201103
+/public_backup_20220630
 public/cron_scripts/history_summary.php
