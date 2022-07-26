@@ -128,7 +128,9 @@ class Event extends Frontend_Controller
     $this->data_to_views['edition_data']['img_url'] = "https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey=TfJdtiWUXW_RiwrtcR0gi6CFDpx2OEBOmSYGORDmx48&c=" . $edition_data['edition_gps'] . "&z=13&nodot&h=161&w=1920&r=10k&sb=mk&t=2";
 
     // favourite
-    $this->data_to_views['edition_data']['is_favourite'] = $this->favourite_model->get_favourite_edition($this->logged_in_user['user_id'], $edition_id);
+    if (isset($this->session->user['logged_in'])) {
+      $this->data_to_views['edition_data']['is_favourite'] = $this->favourite_model->get_favourite_edition($this->logged_in_user['user_id'], $edition_id);
+    }
 
     // calc values
     if (strtotime($edition_data['edition_date']) < time()) {

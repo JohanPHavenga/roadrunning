@@ -19,7 +19,8 @@
                                 foreach ($edition_list as $edition_id => $edition) {
                                     $n++;
                                     if ($n == 5) {
-                                        $this->load->view('widgets/horizontal_ad_sweatshop');
+                                        $this->load->view('widgets/horizontal_ad');
+                                        // $this->load->view('widgets/horizontal_ad_sweatshop');
                                     }
                                     $badge_state = false;
                                     foreach ($edition['race_list'] as $race) {
@@ -175,8 +176,8 @@
                     <div class="col-lg-12" style="border-top: 1px solid #ececec;">
                         <?php
                         // LANDSCAPE ADS WIDGET
-                        // $this->load->view('widgets/horizontal_ad');
-                        $this->load->view('widgets/horizontal_ad_sweatshop');
+                        $this->load->view('widgets/horizontal_ad');
+                        // $this->load->view('widgets/horizontal_ad_sweatshop');
                         ?>
                     </div>
                 </div>
@@ -187,8 +188,8 @@
             <div class="sidebar col-lg-3 m-t-15">
                 <?php
                 // ADS WIDGET
-                // $this->load->view('widgets/side_ad');
-                $this->load->view('widgets/side_ad_sweatshop');
+                $this->load->view('widgets/side_ad');
+                // $this->load->view('widgets/side_ad_sweatshop');
                 ?>
             </div>
             <!-- end: Sidebar-->

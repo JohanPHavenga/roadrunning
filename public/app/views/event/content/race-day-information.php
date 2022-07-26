@@ -100,7 +100,7 @@ if (!in_array(3, $edition_data['regtype_list'])) {
 
                 // HEADPHONES
                 if ($edition_data['edition_info_headphones']) {
-                    echo "<li><b>HEADPHONES:</b> The use of music players with headphones is not allowed and may result in disqualification</li>";
+                    echo "<li><b>MUSIC:</b> The use of music players with headphones is not allowed and may result in disqualification</li>";
                 }
                 ?>
             </ul>

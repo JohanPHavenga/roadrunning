@@ -1,0 +1,25 @@
+version: "3"
+services:
+
+  laravel:
+    build: .
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    volumes:
+      - .:/var/www/html:cached
+    depends_on:
+      - laravel-db
+
+  laravel-db:
+    image: mysql:5.6
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    volumes:
+      - laravel-db:/var/lib/mysql
+
+volumes:
+  laravel-db:

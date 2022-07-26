@@ -23,7 +23,7 @@
         <?php
         } else {
             $btn_class="btn-light";
-            if (!$this->session->user['logged_in']) {
+            if (!isset($this->session->user['logged_in'])) {
                 $fav_link = "href='".base_url("login")."'";
                 $fav_id = "";                
             } else {

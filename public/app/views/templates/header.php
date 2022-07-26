@@ -135,7 +135,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
           <div class="col-md-6">
             <div class="topbar-dropdown">
               <?php
-              if ($this->session->user['logged_in']) {
+              if (isset($this->session->user['logged_in'])) {
                 echo "<a class='title' href='" . base_url("user") . "'><i class='fa fa-user'></i> " . $logged_in_user['user_name'] . "</a>";
               } else {
                 echo "<a class='title' href='" . base_url('login') . "'><i class='fa fa-user'></i> Login</a>";
@@ -341,7 +341,7 @@ if (($this->router->fetch_class() == "main") && ($this->router->fetch_method() =
                     }
                     echo "</li>";
                   }
-                  if ($this->session->user['logged_in']) {
+                  if (isset($this->session->user['logged_in'])) {
                     $i_cl = $menu_html = null;
                     foreach ($user_menu as $key => $menu_item) {
                       if ($menu_item['loc'] == current_url()) {
